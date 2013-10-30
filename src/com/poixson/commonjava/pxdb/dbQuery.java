@@ -13,8 +13,7 @@ public abstract class dbQuery {
 	protected volatile String sql = null;
 	protected volatile boolean quiet = false;
 	protected volatile int resultInt = -1;
-
-	protected final Object lock = new Object();
+	private final Object qLock = new Object();
 
 
 	// worker methods
@@ -25,10 +24,16 @@ public abstract class dbQuery {
 	public abstract boolean getLock();
 
 
+	// get worker lock (shortcut)
+	public static dbQuery get(String dbKey) {
+		return dbManager.get(dbKey).getWorker();
+	}
+
+
 	// prepare query
 	public dbQuery prepare(String sql) {
 		if(sql == null || sql.isEmpty()) throw new IllegalArgumentException("sql cannot be empty!");
-		synchronized(lock) {
+		synchronized(qLock) {
 			clean();
 			if(this.hasError())
 				return null;
@@ -51,7 +56,7 @@ public abstract class dbQuery {
 		return exec();
 	}
 	public boolean exec() {
-		synchronized(lock) {
+		synchronized(qLock) {
 			if(this.st == null) return false;
 			if(this.sql == null) return false;
 			String sql = this.sql;
@@ -94,9 +99,19 @@ public abstract class dbQuery {
 		clean();
 	}
 	public void clean() {
-		synchronized(lock) {
-			st = null;
-			rs = null;
+		synchronized(qLock) {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException ignore) {}
+				rs = null;
+			}
+			if(st != null) {
+				try {
+					st.close();
+				} catch (SQLException ignore) {}
+				st = null;
+			}
 			sql = null;
 //			args = "";
 			quiet = false;
@@ -107,9 +122,8 @@ public abstract class dbQuery {
 
 	// has next row
 	public boolean hasNext() {
-		synchronized(lock) {
-			if(rs == null)
-				return false;
+		synchronized(qLock) {
+			if(rs == null) return false;
 			try {
 				return rs.next();
 			} catch (SQLException e) {
