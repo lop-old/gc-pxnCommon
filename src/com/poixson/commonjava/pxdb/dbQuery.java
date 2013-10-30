@@ -146,4 +146,143 @@ public abstract class dbQuery {
 	}
 
 
+	// query parameters
+	public dbQuery setString(int index, String value) {
+		synchronized(qLock) {
+			if(st == null) return null;
+			try {
+				st.setString(index, value);
+//				args += " String: "+value;
+			} catch (SQLException e) {
+				e.printStackTrace();
+				clean();
+				return null;
+			}
+		}
+		return this;
+	}
+	// set int
+	public dbQuery setInt(int index, int value) {
+		synchronized(qLock) {
+			if(st == null) return null;
+			try {
+				st.setInt(index, value);
+//				args += " Int: "+Integer.toString(value);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				clean();
+				return null;
+			}
+		}
+		return this;
+	}
+	// set double
+	public dbQuery setFloat(int index, double value) {
+		synchronized(qLock) {
+			if(st == null) return null;
+			try {
+				st.setDouble(index, value);
+//				args += " Double: "+Double.toString(value);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				clean();
+				return null;
+			}
+		}
+		return this;
+	}
+	// set long
+	public dbQuery setLong(int index, long value) {
+		synchronized(qLock) {
+			if(st == null) return null;
+			try {
+				st.setLong(index, value);
+//				args += " Long: "+Long.toString(value);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				clean();
+				return null;
+			}
+		}
+		return this;
+	}
+	// set boolean
+	public dbQuery setBool(int index, boolean value) {
+		synchronized(qLock) {
+			if(st == null) return null;
+			try {
+				st.setBoolean(index, value);
+//				args += " Bool: "+Boolean.toString(value);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				clean();
+				return null;
+			}
+		}
+		return this;
+	}
+
+
+	// get query results
+	public String getString(String label) {
+		synchronized(qLock) {
+			try {
+				if(rs != null)
+					return rs.getString(label);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	// get int
+	public Integer getInt(String label) {
+		synchronized(qLock) {
+			try {
+				if(rs != null)
+					return rs.getInt(label);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	// get double
+	public Double getFloat(String label) {
+		synchronized(qLock) {
+			try {
+				if(rs != null)
+					return rs.getDouble(label);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	// get long
+	public Long getLong(String label) {
+		synchronized(qLock) {
+			try {
+				if(rs != null)
+					return rs.getLong(label);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	// get boolean
+	public Boolean getBool(String label) {
+		synchronized(qLock) {
+			try {
+				if(rs != null)
+					return rs.getBoolean(label);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+
+
 }
