@@ -15,16 +15,18 @@ public final class dbManager {
 	private static volatile dbManager manager = null;
 	private static final Object lock = new Object();
 	public static dbManager get() {
+		if(manager != null)
+			return manager;
 		synchronized(lock) {
 			if(manager == null)
 				manager = new dbManager();
-			return manager;
 		}
+		return manager;
 	}
 	public static dbPool get(String dbKey) {
 		return get().getPool(dbKey);
 	}
-	public dbManager() {
+	private dbManager() {
 	}
 
 
