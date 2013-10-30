@@ -9,12 +9,24 @@ import java.util.Map;
 import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xTime;
+import com.poixson.webxbukkit.WebAPI;
 
 
 public class dbConfig {
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		throw new CloneNotSupportedException();
+	}
+
+	// never change this while running
+	private static volatile Boolean HASH_KEY = null;
+	private static final Object lock_HASH_KEY = new Object();
+	private static boolean get_HASH_KEY() {
+		synchronized(lock_HASH_KEY) {
+			if(HASH_KEY == null)
+				HASH_KEY = !WebAPI.get().isDebug();
+			return HASH_KEY;
+		}
 	}
 
 	private final String host;
@@ -133,9 +145,14 @@ public class dbConfig {
 
 	// user@host:port/db
 	private static String buildKey(String host, int port, String db, String user) {
-		if(user != null && !user.isEmpty())
+		if(user == null || user.isEmpty())
+			user = null;
+		else
 			user += "@";
-		return utilsString.add(null, "mysql://", user, host, ":", Integer.toString(port), "/", db);
+		String key = utilsString.add(null, "mysql://", user, host, ":", Integer.toString(port), "/", db);
+		if(get_HASH_KEY() && user != null)
+			return utilsString.MD5(key);
+		return key;
 	}
 
 
