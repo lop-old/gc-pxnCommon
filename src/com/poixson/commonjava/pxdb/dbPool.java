@@ -21,8 +21,8 @@ public class dbPool {
 
 	protected dbPool(dbConfig config) {
 		this.config = config;
-		// connect
-		getWorker();
+		// force first connect
+		getWorker().release();
 	}
 
 
