@@ -29,6 +29,7 @@ public class dbWorker extends dbQuery {
 	// close connection
 	@Override
 	public void close() {
+		super.close();
 		if(conn != null) {
 			try {
 				conn.close();
@@ -38,7 +39,7 @@ public class dbWorker extends dbQuery {
 	}
 	// has errored / disconnected
 	@Override
-	public boolean hasError() {
+	public boolean hasClosed() {
 		return (conn == null);
 	}
 
@@ -54,8 +55,8 @@ public class dbWorker extends dbQuery {
 		synchronized(inUse) {
 			if(inUse == true) return false;
 			inUse = true;
-			return true;
 		}
+		return true;
 	}
 	@Override
 	public void release() {
