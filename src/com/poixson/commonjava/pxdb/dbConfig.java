@@ -9,6 +9,7 @@ import java.util.Map;
 import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xTime;
+import com.poixson.commonjava.Utils.xTimeU;
 import com.poixson.webxbukkit.WebAPI;
 
 
@@ -78,19 +79,25 @@ public class dbConfig {
 		this.pass = pass;
 		this.key = buildKey(host, port, db, user);
 		// hook back to db manager (register config)
-		dbManager.get().newConfig(this);
+		//TODO: I think this fails because this object hasn't actually been created yet.
+		//dbManager.get().newConfig(this);
 	}
 
 
 	// connect to db
 	public synchronized Connection getConnection() {
-		if(failed) return null;
+		if(failed) {
+			System.out.println("Database connection previously failed. We're not gonna hammer the server, but rather give up.");
+			return null;
+		}
 		Connection conn = null;
 		// try connecting 5 times max
-		for(int i=0; i<5; i++) {
+		for(int i=1; i<=5; i++) {
 			conn = doConnect();
 			if(conn != null) break;
-			utilsThread.Sleep(xTime.get("1s"));
+			xTime sleepTime = xTime.get((long) i, xTimeU.MS);
+			System.out.println("Failed to connect to database, waiting "+sleepTime.toLongString()+" to try again..");
+			utilsThread.Sleep(sleepTime);
 		}
 		// failed to connect
 		if(conn == null) {
