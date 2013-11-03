@@ -14,14 +14,27 @@ public final class utilsMath {
 
 
 	// parse number from string
-	public static Long ParseNumber(StringBuilder string) {
-		return ParseNumber(string.toString());
-	}
-	public static Long ParseNumber(String string) {
-		long number = 0;
+	public static Integer parseInt(String string) {
 		try {
-			number = Long.parseLong(string);
-			return number;
+			return Integer.parseInt(string);
+		} catch (NumberFormatException ignore) {}
+		return null;
+	}
+	public static Long parseLong(String string) {
+		try {
+			return Long.parseLong(string);
+		} catch (NumberFormatException ignore) {}
+		return null;
+	}
+	public static Double parseDouble(String string) {
+		try {
+			return Double.parseDouble(string);
+		} catch (NumberFormatException ignore) {}
+		return null;
+	}
+	public static Float parseFloat(String string) {
+		try {
+			return Float.parseFloat(string);
 		} catch (NumberFormatException ignore) {}
 		return null;
 	}
