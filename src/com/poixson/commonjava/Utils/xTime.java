@@ -1,6 +1,7 @@
 package com.poixson.commonjava.Utils;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
@@ -23,27 +24,27 @@ public class xTime {
 	public static final long WEEK  = DAY * 7L;
 	public static final long MONTH = DAY * 30L;
 	public static final long YEAR  = DAY * 365L;
-	protected static final HashMap<Character, Long> timeValues = new HashMap<Character, Long>() {
+	protected static final HashMap<Character, Long> timeValues = new LinkedHashMap<Character, Long>() {
 		private static final long serialVersionUID = 1L;
 	{
-		// ms
-		put('n', MS);
-		// ticks in ms
-		put('t', TICK);
-		// seconds
-		put('s', SEC);
-		// minutes
-		put('m', MIN);
-		// hours
-		put('h', HOUR);
-		// days
-		put('d', DAY);
-		// weeks
-		put('w', WEEK);
-		// months
-		put('m', MONTH);
 		// years
 		put('y', YEAR);
+		// months
+		put('o', MONTH);
+		// weeks
+		put('w', WEEK);
+		// days
+		put('d', DAY);
+		// hours
+		put('h', HOUR);
+		// minutes
+		put('m', xTime.MIN);
+		// seconds
+		put('s', SEC);
+		// ticks in ms
+		put('t', TICK);
+		// ms
+		put('n', MS);
 	}};
 
 
@@ -74,6 +75,16 @@ public class xTime {
 	}
 
 
+	// final value
+	public xTime setFinal() {
+		this.isFinal = true;
+		return this;
+	}
+	public boolean isFinal() {
+		return this.isFinal;
+	}
+
+
 	// get value
 	public long get(TimeUnit unit) {
 		if(unit == null)
@@ -91,18 +102,19 @@ public class xTime {
 	}
 	// set value
 	public xTime set(long value, TimeUnit unit) {
-		if(!isFinal) {
-			if(unit == null) unit = (TimeUnit) xTimeU.MS;
-			this.value = xTimeU.MS.convert(value, unit);
-		}
+		if(isFinal) return null;
+		if(unit == null) unit = (TimeUnit) xTimeU.MS;
+		this.value = xTimeU.MS.convert(value, unit);
 		return this;
 	}
 	public xTime set(String string) {
+		if(isFinal) return null;
 		if(string != null && !string.isEmpty())
 			this.value = parseLong(string);
 		return this;
 	}
 	public xTime set(xTime time) {
+		if(isFinal) return null;
 		if(time != null)
 			this.value = time.getMS();
 		return this;
@@ -130,8 +142,8 @@ public class xTime {
 			if(Character.isLetter(c)) {
 				c = Character.toLowerCase(c);
 				if(timeValues.containsKey(c)) {
-					long mult = timeValues.get(c);
-					time += (utilsMath.ParseNumber(tmp) * mult);
+					double u = (double) timeValues.get(c);
+					time += (utilsMath.parseDouble(tmp.toString()) * u);
 				}
 				tmp = new StringBuilder();
 			}
@@ -140,33 +152,76 @@ public class xTime {
 	}
 
 
+	// to string
+	@Override
+	public String toString() {
+		return toString(this);
+	}
 	public static String toString(xTime time) {
 		return toString(time.getMS());
 	}
 	public static String toString(long ms) {
+		return buildString(ms, false);
+	}
+	// long format
+	public String toLongString() {
+		return toString(this, true);
+	}
+	public static String toString(xTime time, boolean longFormat) {
+		return buildString(time.getMS(), longFormat);
+	}
+	public static String buildString(long ms, boolean longFormat) {
+		if(ms <= 0)
+			return null;
+		StringBuilder string = new StringBuilder();
 		for(Entry<Character, Long> entry : timeValues.entrySet()) {
-			System.out.println(entry.getKey());
-//			long timeMod = entry.getValue();
+			char c    = entry.getKey();
+			long u = entry.getValue();
+			if(ms < u) continue;
+			long val = (long) Math.floor(
+				((double) ms) / ((double) u)
+			);
+			// append to string
+			if(string.length() > 0)
+				string.append(' ');
+			string.append(Long.toString(val));
+			if(!longFormat) {
+				string.append(c);
+			} else {
+				switch(c) {
+				case 'y':
+					string.append(" year");
+					break;
+				case 'o':
+					string.append(" month");
+					break;
+				case 'w':
+					string.append(" week");
+					break;
+				case 'd':
+					string.append(" day");
+					break;
+				case 'h':
+					string.append(" hour");
+					break;
+				case 'm':
+					string.append(" month");
+					break;
+				case 's':
+					string.append(" second");
+					break;
+				case 'n':
+					string.append(" ms");
+					break;
+				default:
+					continue;
+				}
+				if(c != 'n' && val > 1)
+					string.append('s');
+			}
+			ms = ms % u;
 		}
-		return "<TIME>";
-	}
-//	private String buildString(long value, long unitValue, String unit) {
-//		value = (long) Math.floor(
-//			((double)value) / ((double)unitValue)
-//		);
-//		if(value <= 0)
-//			return null;
-//		return Long.toString(value)+unit;
-//	}
-
-
-	// final value
-	public xTime setFinal() {
-		this.isFinal = true;
-		return this;
-	}
-	public boolean isFinal() {
-		return this.isFinal;
+		return string.toString();
 	}
 
 
