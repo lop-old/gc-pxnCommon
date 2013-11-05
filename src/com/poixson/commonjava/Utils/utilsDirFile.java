@@ -20,18 +20,6 @@ public final class utilsDirFile {
 	private utilsDirFile() {}
 
 
-	public static String mergePaths(String... strings) {
-		StringBuilder merged = new StringBuilder();
-		for(String path : strings) {
-			if(path == null || path.isEmpty()) continue;
-			if(merged.length() > 0)
-				merged.append(File.separatorChar);
-			merged.append(path);
-		}
-		return merged.toString();
-	}
-
-
 	// single instance lock
 	public static boolean lockInstance(final String lockFile) {
 		try {
@@ -188,6 +176,18 @@ public final class utilsDirFile {
 		if(filePath.endsWith("/") || filePath.endsWith("\\") || fileName.startsWith("/") || fileName.startsWith("\\"))
 			return filePath+fileName;
 		return filePath+File.separator+fileName;
+	}
+
+
+	public static String mergePaths(String... strings) {
+		StringBuilder merged = new StringBuilder();
+		for(String path : strings) {
+			if(path == null || path.isEmpty()) continue;
+			if(merged.length() > 0)
+				merged.append(File.separatorChar);
+			merged.append(path);
+		}
+		return merged.toString();
 	}
 
 
