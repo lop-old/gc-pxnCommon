@@ -40,7 +40,11 @@ public abstract class xLanguage {
 
 	// load language file
 	public void load(Plugin plugin, String lang) {
-		if(lang == null || lang.isEmpty()) return;
+		// defaults only
+		if(lang == null || lang.isEmpty()) {
+			reloadDefaults();
+			return;
+		}
 		//if(lang.length() != 2) throw new IllegalArgumentException("lang must be specified as 2 letters");
 		if(plugin == null)
 			plugin = WebAPI.get();
