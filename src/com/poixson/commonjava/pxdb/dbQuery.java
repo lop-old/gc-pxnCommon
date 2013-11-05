@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.poixson.commonjava.Utils.utilsSan;
+
 
 public abstract class dbQuery {
 
@@ -117,6 +119,12 @@ public abstract class dbQuery {
 			quiet = false;
 			resultInt = -1;
 		}
+	}
+
+
+	// san string for sql
+	public static String san(String text) {
+		return utilsSan.AlphaNum(text);
 	}
 
 

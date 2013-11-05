@@ -191,4 +191,9 @@ public final class utilsDirFile {
 	}
 
 
+	public static String san(String text) {
+		return utilsSan.FileName(text);
+	}
+
+
 }
