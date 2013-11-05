@@ -167,15 +167,25 @@ public final class utilsDirFile {
 
 
 	// build path+file
-	public static String BuildFilePath(String filePath, String fileName) {
+	public static String buildFilePath(String filePath, String fileName, String ext) {
 		if(fileName == null)   throw new NullPointerException("fileName cannot be null!");
 		if(fileName.isEmpty()) throw new NullPointerException("fileName cannot be empty!");
-		if(!fileName.endsWith(".yml")) fileName += ".yml";
+		// file extension
+		if(ext == null || ext.isEmpty())
+			ext = ".yml";
+		if(!ext.startsWith("."))
+			ext = "." + ext;
+		if(!fileName.endsWith(ext))
+			fileName += ext;
 		if(filePath == null || filePath.isEmpty())
 			return fileName;
-		if(filePath.endsWith("/") || filePath.endsWith("\\") || fileName.startsWith("/") || fileName.startsWith("\\"))
-			return filePath+fileName;
-		return filePath+File.separator+fileName;
+		boolean a = (filePath.endsWith("/") || filePath.endsWith("\\"));
+		boolean b = (fileName.startsWith("/") || fileName.startsWith("\\"));
+		if(a && b)
+			return filePath + fileName.substring(1);
+		if(a || b)
+			return filePath + fileName;
+		return filePath + File.separator + fileName;
 	}
 
 
@@ -183,6 +193,10 @@ public final class utilsDirFile {
 		StringBuilder merged = new StringBuilder();
 		for(String path : strings) {
 			if(path == null || path.isEmpty()) continue;
+			if(path.startsWith("/") || path.startsWith("\\"))
+				path = path.substring(1);
+			if(path.endsWith("/") || path.endsWith("\\"))
+				path = path.substring(0, -1);
 			if(merged.length() > 0)
 				merged.append(File.separatorChar);
 			merged.append(path);
