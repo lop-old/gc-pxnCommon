@@ -159,7 +159,7 @@ System.out.println("FAILED TO GET LOCK!!!!");
 			return null;
 		}
 		// successful connection
-		dbWorker worker = new dbWorker(conn);
+		dbWorker worker = new dbWorker(config.getKey(), conn);
 		synchronized(workers) {
 			workers.add(worker);
 			if(worker.getLock())

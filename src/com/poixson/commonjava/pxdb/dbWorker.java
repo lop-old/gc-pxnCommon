@@ -10,12 +10,14 @@ public class dbWorker {
 		throw new CloneNotSupportedException();
 	}
 
+	private final String dbKey;
 	private volatile Connection conn = null;
 	private final int id;
 	private volatile Boolean inUse = false;
 
 
-	protected dbWorker(Connection conn) {
+	protected dbWorker(String dbKey, Connection conn) {
+		this.dbKey = dbKey;
 		this.conn = conn;
 		this.id = getNextId();
 	}
@@ -23,6 +25,9 @@ public class dbWorker {
 
 	protected Connection getConnection() {
 		return conn;
+	}
+	public String getKey() {
+		return dbKey;
 	}
 
 
