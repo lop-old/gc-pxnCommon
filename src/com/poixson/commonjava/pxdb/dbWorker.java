@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 
-public class dbWorker extends dbQuery {
+public class dbWorker {
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		throw new CloneNotSupportedException();
@@ -27,9 +27,7 @@ public class dbWorker extends dbQuery {
 
 
 	// close connection
-	@Override
 	public void close() {
-		super.close();
 		if(conn != null) {
 			try {
 				conn.close();
@@ -38,18 +36,15 @@ public class dbWorker extends dbQuery {
 		conn = null;
 	}
 	// has errored / disconnected
-	@Override
 	public boolean hasClosed() {
 		return (conn == null);
 	}
 
 
 	// in-use lock
-	@Override
 	public boolean inUse() {
 		return (inUse == true);
 	}
-	@Override
 	public boolean getLock() {
 		if(inUse == true) return false;
 		synchronized(inUse) {
@@ -59,9 +54,7 @@ public class dbWorker extends dbQuery {
 		}
 		return true;
 	}
-	@Override
 	public void release() {
-		super.release();
 		//System.out.println("RELEASING "+id);
 		inUse = false;
 	}

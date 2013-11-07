@@ -1,6 +1,5 @@
 package com.poixson.commonjava.pxdb;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,42 +7,41 @@ import java.sql.SQLException;
 import com.poixson.commonjava.Utils.utilsSan;
 
 
-public abstract class dbQuery {
+public class dbQuery {
 
+	protected final dbWorker worker;
 	protected volatile PreparedStatement st = null;
 	protected volatile ResultSet rs = null;
 	protected volatile String sql = null;
 	protected volatile boolean quiet = false;
 	protected volatile int resultInt = -1;
-	private final Object qLock = new Object();
+	private final Object lock = new Object();
 
 
-	// worker methods
-	protected abstract Connection getConnection();
-	public abstract boolean hasClosed();
-	public abstract boolean inUse();
-	public abstract boolean getLock();
-
-
-	// get worker lock (shortcut)
+	// new query
 	public static dbQuery get(String dbKey) {
 		dbPool pool = dbManager.get(dbKey);
 		if(pool == null)
 			return null;
-		return pool.getWorker();
+		return new dbQuery(pool.getWorker());
+	}
+	// new query (must have lock already)
+	public dbQuery(dbWorker worker) {
+		if(worker == null) throw new NullPointerException("worker cannot be null");
+		this.worker = worker;
 	}
 
 
-	// prepare query
+	// prepared query
 	public dbQuery prepare(String sql) {
 		if(sql == null || sql.isEmpty()) throw new IllegalArgumentException("sql cannot be empty!");
-		synchronized(qLock) {
+		synchronized(lock) {
 			clean();
-			if(this.hasClosed())
+			if(worker.hasClosed())
 				return null;
 			this.sql = sql;
 			try {
-				st = getConnection().prepareStatement(sql);
+				st = worker.getConnection().prepareStatement(sql);
 			} catch (SQLException e) {
 				e.printStackTrace();
 				clean();
@@ -61,7 +59,7 @@ public abstract class dbQuery {
 		return exec();
 	}
 	public boolean exec() {
-		synchronized(qLock) {
+		synchronized(lock) {
 			if(this.st == null) return false;
 			if(this.sql == null || sql.isEmpty()) return false;
 			String sql = this.sql;
@@ -102,7 +100,7 @@ System.out.println("QUERY: "+sql);
 
 	// clean vars
 	public void clean() {
-		synchronized(qLock) {
+		synchronized(lock) {
 			if(rs != null) {
 				try {
 					rs.close();
@@ -123,9 +121,11 @@ System.out.println("QUERY: "+sql);
 	}
 	public void release() {
 		clean();
+		worker.release();
 	}
 	public void close() {
 		clean();
+		worker.close();
 	}
 
 
@@ -137,7 +137,7 @@ System.out.println("QUERY: "+sql);
 
 	// has next row
 	public boolean hasNext() {
-		synchronized(qLock) {
+		synchronized(lock) {
 			if(rs == null) return false;
 			try {
 				return rs.next();
@@ -163,7 +163,7 @@ System.out.println("QUERY: "+sql);
 
 	// query parameters
 	public dbQuery setString(int index, String value) {
-		synchronized(qLock) {
+		synchronized(lock) {
 			if(st == null) return null;
 			try {
 				st.setString(index, value);
@@ -178,7 +178,7 @@ System.out.println("QUERY: "+sql);
 	}
 	// set int
 	public dbQuery setInt(int index, int value) {
-		synchronized(qLock) {
+		synchronized(lock) {
 			if(st == null) return null;
 			try {
 				st.setInt(index, value);
@@ -197,7 +197,7 @@ System.out.println("QUERY: "+sql);
 	}
 	// set double
 	public dbQuery setDouble(int index, double value) {
-		synchronized(qLock) {
+		synchronized(lock) {
 			if(st == null) return null;
 			try {
 				st.setDouble(index, value);
@@ -212,7 +212,7 @@ System.out.println("QUERY: "+sql);
 	}
 	// set float
 	public dbQuery setFloat(int index, float value) {
-		synchronized(qLock) {
+		synchronized(lock) {
 			if(st == null) return null;
 			try {
 				st.setFloat(index, value);
@@ -227,7 +227,7 @@ System.out.println("QUERY: "+sql);
 	}
 	// set long
 	public dbQuery setLong(int index, long value) {
-		synchronized(qLock) {
+		synchronized(lock) {
 			if(st == null) return null;
 			try {
 				st.setLong(index, value);
@@ -242,7 +242,7 @@ System.out.println("QUERY: "+sql);
 	}
 	// set boolean
 	public dbQuery setBool(int index, boolean value) {
-		synchronized(qLock) {
+		synchronized(lock) {
 			if(st == null) return null;
 			try {
 				st.setBoolean(index, value);
@@ -259,7 +259,7 @@ System.out.println("QUERY: "+sql);
 
 	// get query results
 	public String getString(String label) {
-		synchronized(qLock) {
+		synchronized(lock) {
 			try {
 				if(rs != null)
 					return rs.getString(label);
@@ -271,7 +271,7 @@ System.out.println("QUERY: "+sql);
 	}
 	// get int
 	public Integer getInt(String label) {
-		synchronized(qLock) {
+		synchronized(lock) {
 			try {
 				if(rs != null)
 					return rs.getInt(label);
@@ -287,7 +287,7 @@ System.out.println("QUERY: "+sql);
 	}
 	// get double
 	public Double getDouble(String label) {
-		synchronized(qLock) {
+		synchronized(lock) {
 			try {
 				if(rs != null)
 					return rs.getDouble(label);
@@ -299,7 +299,7 @@ System.out.println("QUERY: "+sql);
 	}
 	// get float
 	public Float getFloat(String label) {
-		synchronized(qLock) {
+		synchronized(lock) {
 			try {
 				if(rs != null)
 					return rs.getFloat(label);
@@ -311,7 +311,7 @@ System.out.println("QUERY: "+sql);
 	}
 	// get long
 	public Long getLong(String label) {
-		synchronized(qLock) {
+		synchronized(lock) {
 			try {
 				if(rs != null)
 					return rs.getLong(label);
@@ -323,7 +323,7 @@ System.out.println("QUERY: "+sql);
 	}
 	// get boolean
 	public Boolean getBool(String label) {
-		synchronized(qLock) {
+		synchronized(lock) {
 			try {
 				if(rs != null)
 					return rs.getBoolean(label);
