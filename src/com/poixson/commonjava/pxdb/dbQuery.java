@@ -75,7 +75,8 @@ public abstract class dbQuery {
 //			if(!quiet)
 //				getLog().debug("query", this.sql+(args.isEmpty() ? "" : "  ["+args+" ]") );
 			try {
-				if(queryType.equals("INSERT") || queryType.equals("UPDATE") || queryType.equals("DELETE"))
+System.out.println("QUERY: "+sql);
+				if(queryType.equals("INSERT") || queryType.equals("UPDATE") || queryType.equals("CREATE") || queryType.equals("DELETE"))
 					resultInt = st.executeUpdate();
 				else
 					rs = st.executeQuery();
@@ -190,13 +191,32 @@ public abstract class dbQuery {
 		}
 		return this;
 	}
+	// set decimal
+	public dbQuery setDecimal(int index, double value) {
+		return setDouble(index, value);
+	}
 	// set double
-	public dbQuery setFloat(int index, double value) {
+	public dbQuery setDouble(int index, double value) {
 		synchronized(qLock) {
 			if(st == null) return null;
 			try {
 				st.setDouble(index, value);
 //				args += " Double: "+Double.toString(value);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				clean();
+				return null;
+			}
+		}
+		return this;
+	}
+	// set float
+	public dbQuery setFloat(int index, float value) {
+		synchronized(qLock) {
+			if(st == null) return null;
+			try {
+				st.setFloat(index, value);
+//				args += " Float: "+Double.toString(value);
 			} catch (SQLException e) {
 				e.printStackTrace();
 				clean();
@@ -261,12 +281,28 @@ public abstract class dbQuery {
 		}
 		return null;
 	}
+	// get decimal
+	public Double getDecimal(String label) {
+		return getDouble(label);
+	}
 	// get double
-	public Double getFloat(String label) {
+	public Double getDouble(String label) {
 		synchronized(qLock) {
 			try {
 				if(rs != null)
 					return rs.getDouble(label);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	// get float
+	public Float getFloat(String label) {
+		synchronized(qLock) {
+			try {
+				if(rs != null)
+					return rs.getFloat(label);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
