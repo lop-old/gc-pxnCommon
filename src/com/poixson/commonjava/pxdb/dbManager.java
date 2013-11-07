@@ -10,6 +10,9 @@ public final class dbManager {
 		throw new CloneNotSupportedException();
 	}
 
+	// db connection pools
+	private static final Map<dbConfig, dbPool> pools = new HashMap<dbConfig, dbPool>();
+
 
 	// db manager instance
 	private static volatile dbManager manager = null;
@@ -23,15 +26,26 @@ public final class dbManager {
 		}
 		return manager;
 	}
-	public static dbPool get(String dbKey) {
-		return get().getPool(dbKey);
-	}
 	private dbManager() {
 	}
-
-
-	// db connection pools
-	private static final Map<dbConfig, dbPool> pools = new HashMap<dbConfig, dbPool>();
+	// get pool
+	public static dbPool getPool(String dbKey) {
+		synchronized(pools) {
+			dbConfig config = dbConfig.get(dbKey);
+			if(config != null)
+				if(pools.containsKey(config))
+					return pools.get(config);
+			System.out.println("db config not found for key: "+dbKey);
+			return null;
+		}
+	}
+	// get worker
+	public static dbWorker getWorker(String dbKey) {
+		dbPool pool = getPool(dbKey);
+		if(pool == null)
+			return null;
+		return pool.getWorker();
+	}
 
 
 	// new db connection pool
@@ -48,17 +62,6 @@ public final class dbManager {
 		}
 		// unique key for this pool
 		return config.getKey();
-	}
-	// get pool
-	public dbPool getPool(String key) {
-		synchronized(pools) {
-			dbConfig config = dbConfig.get(key);
-			if(config != null)
-				if(pools.containsKey(config))
-					return pools.get(config);
-			System.out.println("db config not found for key: "+key);
-			return null;
-		}
 	}
 
 
