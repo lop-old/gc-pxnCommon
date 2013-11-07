@@ -20,10 +20,10 @@ public class dbQuery {
 
 	// new query
 	public static dbQuery get(String dbKey) {
-		dbPool pool = dbManager.get(dbKey);
-		if(pool == null)
+		dbWorker worker = dbManager.getWorker(dbKey);
+		if(worker == null)
 			return null;
-		return new dbQuery(pool.getWorker());
+		return new dbQuery(worker);
 	}
 	// new query (must have lock already)
 	public dbQuery(dbWorker worker) {

@@ -12,7 +12,10 @@ public class dbQueryThenDelete extends dbQuery {
 
 	// new query
 	public static dbQueryThenDelete get(String dbKey) {
-		return new dbQueryThenDelete(dbManager.getWorker(dbKey));
+		dbWorker worker = dbManager.getWorker(dbKey);
+		if(worker == null)
+			return null;
+		return new dbQueryThenDelete(worker);
 	}
 	// new query (must have lock already)
 	public dbQueryThenDelete(dbWorker worker) {
