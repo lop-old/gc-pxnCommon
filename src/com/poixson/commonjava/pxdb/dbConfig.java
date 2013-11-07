@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.poixson.commonjava.Utils.CoolDown;
 import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xTime;
@@ -45,6 +46,8 @@ public class dbConfig {
 
 	// get config object
 	public static dbConfig get(String dbKey) {
+		if(dbKey == null || dbKey.isEmpty())
+			return null;
 		synchronized(configs) {
 			if(configs.containsKey(dbKey))
 				return configs.get(dbKey);
@@ -85,17 +88,19 @@ public class dbConfig {
 
 
 	// connect to db
+	private final CoolDown coolFail = CoolDown.get("2s");
 	public synchronized Connection getConnection() {
 		if(failed) {
-			System.out.println("Database connection previously failed. We're not gonna hammer the server, but rather give up.");
+			if(coolFail.runAgain())
+				System.out.println("Database connection previously failed. We're not gonna hammer the server, but rather give up.");
 			return null;
 		}
 		Connection conn = null;
 		// try connecting 5 times max
-		for(int i=1; i<=5; i++) {
+		for(long i=0; i<5L; i++) {
 			conn = doConnect();
 			if(conn != null) break;
-			xTime sleepTime = xTime.get((long) i, xTimeU.MS);
+			xTime sleepTime = xTime.get( (i * 2L) + 1, xTimeU.S);
 			System.out.println("Failed to connect to database, waiting "+sleepTime.toLongString()+" to try again..");
 			utilsThread.Sleep(sleepTime);
 		}
