@@ -20,15 +20,17 @@ public abstract class dbQuery {
 
 	// worker methods
 	protected abstract Connection getConnection();
-	public abstract void close();
-	public abstract boolean hasError();
+	public abstract boolean hasClosed();
 	public abstract boolean inUse();
 	public abstract boolean getLock();
 
 
 	// get worker lock (shortcut)
 	public static dbQuery get(String dbKey) {
-		return dbManager.get(dbKey).getWorker();
+		dbPool pool = dbManager.get(dbKey);
+		if(pool == null)
+			return null;
+		return pool.getWorker();
 	}
 
 
@@ -37,8 +39,9 @@ public abstract class dbQuery {
 		if(sql == null || sql.isEmpty()) throw new IllegalArgumentException("sql cannot be empty!");
 		synchronized(qLock) {
 			clean();
-			if(this.hasError())
+			if(this.hasClosed())
 				return null;
+			this.sql = sql;
 			try {
 				st = getConnection().prepareStatement(sql);
 			} catch (SQLException e) {
@@ -60,7 +63,7 @@ public abstract class dbQuery {
 	public boolean exec() {
 		synchronized(qLock) {
 			if(this.st == null) return false;
-			if(this.sql == null) return false;
+			if(this.sql == null || sql.isEmpty()) return false;
 			String sql = this.sql;
 			while(sql.startsWith(" "))
 				sql = sql.substring(1);
@@ -97,9 +100,6 @@ public abstract class dbQuery {
 
 
 	// clean vars
-	public void release() {
-		clean();
-	}
 	public void clean() {
 		synchronized(qLock) {
 			if(rs != null) {
@@ -119,6 +119,12 @@ public abstract class dbQuery {
 			quiet = false;
 			resultInt = -1;
 		}
+	}
+	public void release() {
+		clean();
+	}
+	public void close() {
+		clean();
 	}
 
 
