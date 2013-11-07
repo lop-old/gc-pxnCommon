@@ -54,7 +54,7 @@ public class dbConfig {
 		}
 		return null;
 	}
-	public static dbConfig get(String host, int port, String db, String user, String pass) {
+	public static dbConfig load(String host, int port, String db, String user, String pass) {
 		if(host == null || host.isEmpty() || host.equalsIgnoreCase("localhost"))
 			host = "127.0.0.1";
 		if(port < 1 || port > 65536)
@@ -70,6 +70,8 @@ public class dbConfig {
 			// new config
 			dbConfig config = new dbConfig(host, port, db, user, pass);
 			configs.put(key, config);
+			// hook back to db manager (register config)
+			dbManager.register(config);
 			return config;
 		}
 	}
@@ -81,9 +83,6 @@ public class dbConfig {
 		this.user = user;
 		this.pass = pass;
 		this.key = buildKey(host, port, db, user);
-		// hook back to db manager (register config)
-		//TODO: I think this fails because this object hasn't actually been created yet.
-		//dbManager.get().newConfig(this);
 	}
 
 

@@ -36,7 +36,7 @@ public final class dbManager {
 
 	// new db connection pool
 	// returns dbKey, used to reference connection later
-	protected String newConfig(dbConfig config) {
+	protected static String register(dbConfig config) {
 		synchronized(pools) {
 			if(pools.containsKey(config)) {
 				System.out.println("Using an existing db pool :-)");
