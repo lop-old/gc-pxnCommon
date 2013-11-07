@@ -39,12 +39,14 @@ public final class dbManager {
 	protected String newConfig(dbConfig config) {
 		synchronized(pools) {
 			if(pools.containsKey(config)) {
-//				log.info("db", "Using an existing db pool :-)");
+				System.out.println("Using an existing db pool :-)");
 			} else {
+				System.out.println("Starting new db pool..");
 				dbPool pool = new dbPool(config);
 				pools.put(config, pool);
 			}
 		}
+		// unique key for this pool
 		return config.getKey();
 	}
 	// get pool
@@ -54,6 +56,7 @@ public final class dbManager {
 			if(config != null)
 				if(pools.containsKey(config))
 					return pools.get(config);
+			System.out.println("db config not found for key: "+key);
 			return null;
 		}
 	}

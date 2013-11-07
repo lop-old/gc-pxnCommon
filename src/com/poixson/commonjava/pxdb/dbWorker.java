@@ -54,6 +54,7 @@ public class dbWorker extends dbQuery {
 		if(inUse == true) return false;
 		synchronized(inUse) {
 			if(inUse == true) return false;
+			//System.out.println("LOCKING "+id);
 			inUse = true;
 		}
 		return true;
@@ -61,6 +62,7 @@ public class dbWorker extends dbQuery {
 	@Override
 	public void release() {
 		super.release();
+		//System.out.println("RELEASING "+id);
 		inUse = false;
 	}
 
