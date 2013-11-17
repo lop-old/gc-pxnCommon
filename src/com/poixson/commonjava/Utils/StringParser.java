@@ -104,12 +104,18 @@ public class StringParser {
 	public boolean firstEqualsIgnoreCase(String str) {
 		return utilsString.strEqualsIgnoreCase(str, this.first);
 	}
+	public boolean isFirst(String str) {
+		return firstEqualsIgnoreCase(str);
+	}
 	// current part equals
 	public boolean partEquals(String str) {
 		return utilsString.strEquals(str, this.part);
 	}
 	public boolean partEqualsIgnoreCase(String str) {
 		return utilsString.strEqualsIgnoreCase(str, this.part);
+	}
+	public boolean isPart(String str) {
+		return partEqualsIgnoreCase(str);
 	}
 
 
