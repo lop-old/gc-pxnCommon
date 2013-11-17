@@ -136,7 +136,7 @@ System.out.println("QUERY: "+sql);
 
 
 	// has next row
-	public boolean hasNext() {
+	public boolean next() {
 		synchronized(lock) {
 			if(rs == null) return false;
 			try {
