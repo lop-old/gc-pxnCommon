@@ -18,6 +18,48 @@ public final class utilsString {
 	private utilsString() {}
 
 
+	// string equals
+	public static boolean strEquals(String a, String b) {
+		if(a == null || a.isEmpty()) return false;
+		if(b == null || b.isEmpty()) return false;
+		return a.equals(b);
+	}
+	public static boolean strEqualsIgnoreCase(String a, String b) {
+		if(a == null || a.isEmpty()) return false;
+		if(b == null || b.isEmpty()) return false;
+		return a.equalsIgnoreCase(b);
+	}
+
+
+	// trim from string
+	public static String trim(String str, String data) {
+		if(str  == null || str.isEmpty())  return null;
+		if(data == null || data.isEmpty()) return null;
+		int size = str.length();
+		while(data.startsWith(str))
+			data = data.substring(size);
+		while(data.endsWith(str))
+			data = data.substring(0, 0-size);
+		return data;
+	}
+
+
+	// repeat string with deliminator
+	public static String repeat(String delim, String str, int repeat) {
+		if(delim == null || delim.isEmpty())
+			return StringUtils.repeat(str, repeat);
+		if(str == null || str.isEmpty()) return null;
+		if(repeat < 1) return null;
+		StringBuilder out = new StringBuilder();
+		for(int i=0; i<repeat; i++) {
+			if(out.length() > 0)
+				out.append(delim);
+			out.append(str);
+		}
+		return out.toString();
+	}
+
+
 	// exception to string
 	public static String ExceptionToString(Throwable e) {
 		if(e == null) return null;
@@ -89,20 +131,6 @@ public final class utilsString {
 	}
 
 
-	// repeat string with deliminator
-	public static String repeat(String delim, String str, int repeat) {
-		if(delim == null || delim.isEmpty())
-			return StringUtils.repeat(str, repeat);
-		if(str == null || str.isEmpty()) return null;
-		if(repeat < 1) return null;
-		StringBuilder out = new StringBuilder();
-		for(int i=0; i<repeat; i++) {
-			if(out.length() > 0)
-				out.append(delim);
-			out.append(str);
-		}
-		return out.toString();
-	}
 
 
 }
