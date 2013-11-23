@@ -9,10 +9,15 @@ public final class utilsSan {
 	private utilsSan() {}
 
 
-	public static String AlphaNum(String text) {
+	public static String AlphaNumOnly(String text) {
 		if(text == null) return null;
 		if(text.isEmpty()) return "";
 		return text.replaceAll("[^a-zA-Z0-9]+", "");
+	}
+	public static String AlphaNumSafe(String text) {
+		if(text == null) return null;
+		if(text.isEmpty()) return "";
+		return text.replaceAll("[^a-zA-Z0-9\\-\\_\\.]+", "");
 	}
 
 
