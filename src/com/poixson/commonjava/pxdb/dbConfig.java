@@ -150,6 +150,7 @@ public class dbConfig {
 			return null;
 		}
 		// connection ok
+		System.out.println("Connected to db: "+key);
 		return conn;
 	}
 

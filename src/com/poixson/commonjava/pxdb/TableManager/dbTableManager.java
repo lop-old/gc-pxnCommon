@@ -24,21 +24,21 @@ public abstract class dbTableManager {
 			db.prepare("SHOW TABLES LIKE ?");
 			db.setString(1, tableName);
 			db.exec();
-			return db.hasNext();
+			return db.next();
 		} finally {
 			db.release();
 		}
 	}
 	// create if needed
 	public void createIfMissing(TableDAO table) {
-		if(!tableExists(table.name)) {
-			System.out.println("Creating db table: "+table.name);
+		if(!tableExists(table.tableName)) {
+			System.out.println("Creating db table: "+table.tableName);
 			// create table
 			dbQuery db = getDB();
 			try {
 				String sql = "";
 				db.prepare("CREATE TABLE ? ( "+sql+" )");
-				db.setString(1, table.name);
+				db.setString(1, table.tableName);
 				db.exec();
 				return;
 			} finally {

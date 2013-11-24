@@ -131,7 +131,7 @@ System.out.println("QUERY: "+sql);
 
 	// san string for sql
 	public static String san(String text) {
-		return utilsSan.AlphaNum(text);
+		return utilsSan.AlphaNumSafe(text);
 	}
 
 
