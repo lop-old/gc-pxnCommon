@@ -7,8 +7,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.commons.lang.StringUtils;
-
 
 public final class utilsString {
 	@Override
@@ -46,8 +44,12 @@ public final class utilsString {
 
 	// repeat string with deliminator
 	public static String repeat(String delim, String str, int repeat) {
-		if(delim == null || delim.isEmpty())
-			return StringUtils.repeat(str, repeat);
+		if(delim == null || delim.isEmpty()) {
+			StringBuilder out = new StringBuilder();
+			for(int i=0; i<repeat; i++)
+				out.append(str);
+			return out.toString();
+		}
 		if(str == null || str.isEmpty()) return null;
 		if(repeat < 1) return null;
 		StringBuilder out = new StringBuilder();
