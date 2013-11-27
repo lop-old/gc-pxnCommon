@@ -100,7 +100,7 @@ public class dbConfig {
 			conn = doConnect();
 			if(conn != null) break;
 			xTime sleepTime = xTime.get( (i * 2L) + 1, xTimeU.S);
-			System.out.println("Failed to connect to database, waiting "+sleepTime.toLongString()+" to try again..");
+			System.out.println("Failed to connect to database, waiting "+sleepTime.toFullString()+" to try again..");
 			utilsThread.Sleep(sleepTime);
 		}
 		// failed to connect

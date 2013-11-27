@@ -163,14 +163,14 @@ public class xTime {
 	public static String toString(long ms) {
 		return buildString(ms, false);
 	}
-	// long format
-	public String toLongString() {
+	// full format
+	public String toFullString() {
 		return toString(this, true);
 	}
-	public static String toString(xTime time, boolean longFormat) {
-		return buildString(time.getMS(), longFormat);
+	public static String toString(xTime time, boolean fullFormat) {
+		return buildString(time.getMS(), fullFormat);
 	}
-	public static String buildString(long ms, boolean longFormat) {
+	public static String buildString(long ms, boolean fullFormat) {
 		if(ms <= 0)
 			return null;
 		StringBuilder string = new StringBuilder();
@@ -185,7 +185,7 @@ public class xTime {
 			if(string.length() > 0)
 				string.append(' ');
 			string.append(Long.toString(val));
-			if(!longFormat) {
+			if(!fullFormat) {
 				string.append(c);
 			} else {
 				switch(c) {
