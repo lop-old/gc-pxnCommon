@@ -97,7 +97,7 @@ public class dbPool {
 					poolSize.HardLimitWarningMessage();
 					// stop waiting
 					if(maxHardBlocking.runAgain()) {
-						System.out.println("Failed to get a db connection! Blocked for "+maxHardBlocking.getDuration().toLongString()+".. Giving up.");
+						System.out.println("Failed to get a db connection! Blocked for "+maxHardBlocking.getDuration().toFullString()+".. Giving up.");
 						return null;
 					}
 					// wait for a free worker
