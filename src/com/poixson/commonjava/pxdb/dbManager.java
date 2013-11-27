@@ -40,11 +40,11 @@ public final class dbManager {
 		}
 	}
 	// get worker
-	public static dbWorker getWorker(String dbKey) {
+	public static dbWorker getWorkerLock(String dbKey) {
 		dbPool pool = getPool(dbKey);
 		if(pool == null)
 			return null;
-		return pool.getWorker();
+		return pool.getWorkerLock();
 	}
 
 

@@ -30,7 +30,8 @@ public class dbPool {
 		this.config = config;
 		poolSize = new dbPoolSize(this);
 		// force first connect
-		getWorker().release();
+		getWorkerLock()
+			.release();
 	}
 
 
@@ -74,7 +75,7 @@ public class dbPool {
 
 
 	// get unused worker
-	public dbWorker getWorker() {
+	public dbWorker getWorkerLock() {
 		dbWorker worker = null;
 		synchronized(workers) {
 			CoolDown maxHardBlocking = CoolDown.get("5s");
@@ -123,7 +124,7 @@ public class dbPool {
 				// errored or disconnected
 				if(worker == null || worker.hasClosed()) {
 					if(worker != null) {
-						System.out.println("Connection [ "+Integer.toString(worker.getId())+" ] dropped!!");
+						System.out.println("Connection [ "+Integer.toString(worker.getId())+" ] dropped");
 						worker.close();
 					}
 					it.remove();
