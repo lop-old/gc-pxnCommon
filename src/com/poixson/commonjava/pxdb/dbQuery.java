@@ -86,7 +86,7 @@ public class dbQuery {
 //			if(!quiet)
 //				getLog().debug("query", this.sql+(args.isEmpty() ? "" : "  ["+args+" ]") );
 			try {
-System.out.println("QUERY: "+sql);
+System.out.println("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 				if(queryType.equals("INSERT") || queryType.equals("UPDATE") || queryType.equals("CREATE") || queryType.equals("DELETE"))
 					resultInt = st.executeUpdate();
 				else
@@ -112,6 +112,13 @@ System.out.println("QUERY: "+sql);
 	public boolean quiet(boolean quiet) {
 		this.quiet = quiet;
 		return this.quiet;
+	}
+
+
+	// get db key
+	public String dbKey() {
+		if(worker == null) return null;
+		return worker.dbKey();
 	}
 
 
@@ -349,6 +356,30 @@ System.out.println("QUERY: "+sql);
 			}
 		}
 		return null;
+	}
+
+
+	// lock table
+	public boolean lockTable(String tableName) {
+		return lockTable(tableName, false);
+	}
+	public boolean lockTable(String tableName, boolean readable) {
+		if(tableName == null || tableName.isEmpty()) throw new NullPointerException("tableName cannot be null");
+		synchronized(lock) {
+			StringBuilder sql = (new StringBuilder())
+				.append("LOCK TABLES `").append(tableName).append("` ")
+				.append(readable ? "READ" : "WRITE")
+				.append(" /* lock table */");
+			prepare(sql.toString());
+			return exec();
+		}
+	}
+	// unlock table
+	public void unlockTables() {
+		synchronized(lock) {
+			prepare("UNLOCK TABLES /* unlock table */");
+			exec();
+		}
 	}
 
 
