@@ -51,8 +51,8 @@ public class dbPoolSize extends Thread {
 //			if(running) return;
 //			running = true;
 //		}
-		coolSoftLimit.Reset();
-		coolHardLimit.Reset();
+		coolSoftLimit.reset();
+		coolHardLimit.reset();
 		int count = getWorkerCount();
 		while(count > SOFT) {
 			// try to close unused
