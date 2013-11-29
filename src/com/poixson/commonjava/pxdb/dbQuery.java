@@ -3,6 +3,7 @@ package com.poixson.commonjava.pxdb;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLNonTransientConnectionException;
 
 import com.poixson.commonjava.Utils.utilsSan;
 
@@ -36,12 +37,19 @@ public class dbQuery {
 	public dbQuery prepare(String sql) {
 		if(sql == null || sql.isEmpty()) throw new IllegalArgumentException("sql cannot be empty!");
 		synchronized(lock) {
-			clean();
-			if(worker.hasClosed())
+			if(!worker.inUse()) {
+				(new IllegalAccessException("dbWorker not locked!"))
+					.printStackTrace();
 				return null;
+			}
+			clean();
 			this.sql = sql;
 			try {
 				st = worker.getConnection().prepareStatement(sql);
+			} catch (SQLNonTransientConnectionException | NullPointerException e) {
+				System.out.println("db connection closed!");
+				close();
+				return null;
 			} catch (SQLException e) {
 				e.printStackTrace();
 				clean();
@@ -60,6 +68,11 @@ public class dbQuery {
 	}
 	public boolean exec() {
 		synchronized(lock) {
+			if(!worker.inUse()) {
+				(new IllegalAccessException("dbWorker not locked!"))
+					.printStackTrace();
+				return false;
+			}
 			if(this.st == null) return false;
 			if(this.sql == null || sql.isEmpty()) return false;
 			String sql = this.sql;
@@ -73,11 +86,15 @@ public class dbQuery {
 //			if(!quiet)
 //				getLog().debug("query", this.sql+(args.isEmpty() ? "" : "  ["+args+" ]") );
 			try {
-System.out.println("QUERY: "+sql);
+System.out.println("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 				if(queryType.equals("INSERT") || queryType.equals("UPDATE") || queryType.equals("CREATE") || queryType.equals("DELETE"))
 					resultInt = st.executeUpdate();
 				else
 					rs = st.executeQuery();
+			} catch (SQLNonTransientConnectionException e) {
+				System.out.println("db connection closed!");
+				close();
+				return false;
 			} catch (SQLException e) {
 				e.printStackTrace();
 				clean();
@@ -95,6 +112,13 @@ System.out.println("QUERY: "+sql);
 	public boolean quiet(boolean quiet) {
 		this.quiet = quiet;
 		return this.quiet;
+	}
+
+
+	// get db key
+	public String dbKey() {
+		if(worker == null) return null;
+		return worker.dbKey();
 	}
 
 
@@ -332,6 +356,30 @@ System.out.println("QUERY: "+sql);
 			}
 		}
 		return null;
+	}
+
+
+	// lock table
+	public boolean lockTable(String tableName) {
+		return lockTable(tableName, false);
+	}
+	public boolean lockTable(String tableName, boolean readable) {
+		if(tableName == null || tableName.isEmpty()) throw new NullPointerException("tableName cannot be null");
+		synchronized(lock) {
+			StringBuilder sql = (new StringBuilder())
+				.append("LOCK TABLES `").append(tableName).append("` ")
+				.append(readable ? "READ" : "WRITE")
+				.append(" /* lock table */");
+			prepare(sql.toString());
+			return exec();
+		}
+	}
+	// unlock table
+	public void unlockTables() {
+		synchronized(lock) {
+			prepare("UNLOCK TABLES /* unlock table */");
+			exec();
+		}
 	}
 
 

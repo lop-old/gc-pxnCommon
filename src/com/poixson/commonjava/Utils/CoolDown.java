@@ -50,7 +50,7 @@ public class CoolDown {
 	}
 
 
-	public void Reset() {
+	public void reset() {
 		synchronized(lock) {
 			last = -1L;
 		}

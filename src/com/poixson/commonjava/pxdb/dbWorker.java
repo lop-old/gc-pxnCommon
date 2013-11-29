@@ -11,8 +11,8 @@ public class dbWorker {
 	}
 
 	private final String dbKey;
-	private volatile Connection conn = null;
 	private final int id;
+	private volatile Connection conn = null;
 	private volatile Boolean inUse = false;
 
 
@@ -23,10 +23,12 @@ public class dbWorker {
 	}
 
 
+	// get db connection
 	protected Connection getConnection() {
 		return conn;
 	}
-	public String getKey() {
+	// get db key
+	public String dbKey() {
 		return dbKey;
 	}
 
