@@ -3,6 +3,7 @@ package com.poixson.commonjava.pxdb;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLNonTransientConnectionException;
 
 import com.poixson.commonjava.Utils.utilsSan;
 
@@ -45,6 +46,10 @@ public class dbQuery {
 			this.sql = sql;
 			try {
 				st = worker.getConnection().prepareStatement(sql);
+			} catch (SQLNonTransientConnectionException | NullPointerException e) {
+				System.out.println("db connection closed!");
+				close();
+				return null;
 			} catch (SQLException e) {
 				e.printStackTrace();
 				clean();
@@ -86,6 +91,10 @@ System.out.println("QUERY: "+sql);
 					resultInt = st.executeUpdate();
 				else
 					rs = st.executeQuery();
+			} catch (SQLNonTransientConnectionException e) {
+				System.out.println("db connection closed!");
+				close();
+				return false;
 			} catch (SQLException e) {
 				e.printStackTrace();
 				clean();
