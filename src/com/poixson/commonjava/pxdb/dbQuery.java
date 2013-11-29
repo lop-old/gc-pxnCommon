@@ -36,9 +36,12 @@ public class dbQuery {
 	public dbQuery prepare(String sql) {
 		if(sql == null || sql.isEmpty()) throw new IllegalArgumentException("sql cannot be empty!");
 		synchronized(lock) {
-			clean();
-			if(worker.hasClosed())
+			if(!worker.inUse()) {
+				(new IllegalAccessException("dbWorker not locked!"))
+					.printStackTrace();
 				return null;
+			}
+			clean();
 			this.sql = sql;
 			try {
 				st = worker.getConnection().prepareStatement(sql);
@@ -60,6 +63,11 @@ public class dbQuery {
 	}
 	public boolean exec() {
 		synchronized(lock) {
+			if(!worker.inUse()) {
+				(new IllegalAccessException("dbWorker not locked!"))
+					.printStackTrace();
+				return false;
+			}
 			if(this.st == null) return false;
 			if(this.sql == null || sql.isEmpty()) return false;
 			String sql = this.sql;
