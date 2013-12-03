@@ -92,7 +92,7 @@ public class dbConfig {
 	public synchronized Connection getConnection() {
 		if(failed) {
 			if(coolFail.runAgain())
-				System.out.println("Database connection previously failed. We're not gonna hammer the server, but rather give up.");
+				log().severe("Database connection previously failed. We're not gonna hammer the server, but rather give up.");
 			return null;
 		}
 		Connection conn = null;
@@ -101,7 +101,7 @@ public class dbConfig {
 			conn = doConnect();
 			if(conn != null) break;
 			xTime sleepTime = xTime.get( (i * 2L) + 1, xTimeU.S);
-			System.out.println("Failed to connect to database, waiting "+sleepTime.toFullString()+" to try again..");
+			log().warning("Failed to connect to database, waiting "+sleepTime.toFullString()+" to try again..");
 			utilsThread.Sleep(sleepTime);
 		}
 		// failed to connect
@@ -151,7 +151,7 @@ public class dbConfig {
 			return null;
 		}
 		// connection ok
-		System.out.println("Connected to db: "+key);
+		log().info("Connected to db: "+key);
 		return conn;
 	}
 

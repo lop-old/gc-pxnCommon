@@ -48,7 +48,7 @@ public class dbQuery {
 			try {
 				st = worker.getConnection().prepareStatement(sql);
 			} catch (SQLNonTransientConnectionException | NullPointerException e) {
-				System.out.println("db connection closed!");
+				log().severe("db connection closed!");
 				close();
 				return null;
 			} catch (SQLException e) {
@@ -87,13 +87,14 @@ public class dbQuery {
 //			if(!quiet)
 //				getLog().debug("query", this.sql+(args.isEmpty() ? "" : "  ["+args+" ]") );
 			try {
-System.out.println("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
+//TODO: replace ? with values
+log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 				if(queryType.equals("INSERT") || queryType.equals("UPDATE") || queryType.equals("CREATE") || queryType.equals("DELETE"))
 					resultInt = st.executeUpdate();
 				else
 					rs = st.executeQuery();
 			} catch (SQLNonTransientConnectionException e) {
-				System.out.println("db connection closed!");
+				log().severe("db connection closed!");
 				close();
 				return false;
 			} catch (SQLException e) {

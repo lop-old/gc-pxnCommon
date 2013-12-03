@@ -53,7 +53,7 @@ public abstract class xLanguage {
 		lang = utilsSan.FileName(lang);
 		YamlConfiguration yml = loadYml(plugin, lang);
 		if(yml == null) {
-			System.out.println("Failed to load "+lang+".yml");
+			log().warning("Failed to load "+lang+".yml");
 			return;
 		}
 		synchronized(phrases) {
@@ -72,13 +72,13 @@ public abstract class xLanguage {
 		// load from plugins/name/languages/lang.yml
 		yml = loadFromFileSystem(plugin, lang);
 		if(yml != null) {
-			System.out.println("Loaded language file "+lang+".yml");
+			log().stats("Loaded language file "+lang+".yml");
 			return yml;
 		}
 		// load from jar resource
 		yml = loadFromResource(plugin, lang);
 		if(yml != null) {
-			System.out.println("Loaded language resource "+lang+".yml");
+			log().stats("Loaded language resource "+lang+".yml");
 			return yml;
 		}
 		return null;
@@ -122,7 +122,7 @@ public abstract class xLanguage {
 					return phrase;
 			}
 		}
-		System.out.println("Language message/phrase not found: "+key);
+		log().severe("Language message/phrase not found: "+key);
 		return "<lang:"+key+">";
 	}
 

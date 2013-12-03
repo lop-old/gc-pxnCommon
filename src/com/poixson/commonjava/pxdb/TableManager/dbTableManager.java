@@ -34,7 +34,7 @@ public abstract class dbTableManager {
 	// create if needed
 	public void createIfMissing(TableDAO table) {
 		if(!tableExists(table.tableName)) {
-			System.out.println("Creating db table: "+table.tableName);
+			log().info("Creating db table: "+table.tableName);
 			// create table
 			dbQuery db = getDB();
 			try {

@@ -99,7 +99,7 @@ public class dbPool {
 					poolSize.HardLimitWarningMessage();
 					// stop waiting
 					if(maxHardBlocking.runAgain()) {
-						System.out.println("Failed to get a db connection! Blocked for "+maxHardBlocking.getDuration().toFullString()+".. Giving up.");
+						log().severe("Failed to get a db connection! Blocked for "+maxHardBlocking.getDuration().toFullString()+".. Giving up.");
 						return null;
 					}
 					// wait for a free worker
@@ -125,7 +125,7 @@ public class dbPool {
 				// errored or disconnected
 				if(worker == null || worker.hasClosed()) {
 					if(worker != null) {
-						System.out.println("Connection [ "+Integer.toString(worker.getId())+" ] dropped");
+						log().warning("Connection [ "+Integer.toString(worker.getId())+" ] dropped");
 						worker.close();
 					}
 					it.remove();
@@ -140,8 +140,6 @@ public class dbPool {
 //						log.debug("db", "Connection pool size: "+Integer.toString(pool.size()));
 					return worker;
 				}
-else
-System.out.println("FAILED TO GET LOCK!!!!");
 			}
 			return null;
 		}
@@ -157,7 +155,7 @@ System.out.println("FAILED TO GET LOCK!!!!");
 		// failed to connect
 		if(conn == null) {
 			if(coolFail.runAgain())
-				System.out.println("Failed to connect to database! "+config.getKey());
+				log().severe("Failed to connect to database! "+config.getKey());
 			return null;
 		}
 		// successful connection

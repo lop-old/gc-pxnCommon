@@ -58,14 +58,14 @@ public class dbWorker {
 		if(inUse == true) return false;
 		synchronized(inUse) {
 			if(inUse == true) return false;
-			//System.out.println("LOCKING "+id);
 			inUse = true;
 		}
+		log().finest("LOCKED "+id);
 		return true;
 	}
 	public void release() {
-		//System.out.println("RELEASING "+id);
 		inUse = false;
+		log().finest("RELEASED "+id);
 	}
 
 

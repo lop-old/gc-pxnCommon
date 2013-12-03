@@ -46,7 +46,7 @@ public class dbPoolSize extends Thread {
 	}
 	@Override
 	public void run() {
-		System.out.println("Started warning thread.. "+this.getName());
+		log().finer("Started warning thread.. "+this.getName());
 		running = true;
 //		synchronized(thread) {
 //			if(running) return;
@@ -77,7 +77,7 @@ public class dbPoolSize extends Thread {
 			// sleep thread
 			utilsThread.Sleep(250L);
 		}
-		System.out.println("Stopped warning thread. "+this.getName());
+		log().finer("Stopped warning thread. "+this.getName());
 		running = false;
 	}
 
@@ -89,7 +89,7 @@ public class dbPoolSize extends Thread {
 		if(count <= SOFT) return;
 		// don't spam/flood console
 		if(coolSoftLimit.runAgain())
-			System.out.println("DB connection pool nearing limit! [ "+Integer.toString(count)+" max: "+Integer.toString(HARD)+" ] "+pool.getKey());
+			log().warning("DB connection pool nearing limit! [ "+Integer.toString(count)+" max: "+Integer.toString(HARD)+" ] "+pool.getKey());
 	}
 	private final CoolDown coolHardLimit = CoolDown.get("2s");
 	protected void HardLimitWarningMessage() {
@@ -97,7 +97,7 @@ public class dbPoolSize extends Thread {
 		if(count < HARD) return;
 		// don't spam/flood console
 		if(coolHardLimit.runAgain())
-			System.out.println("DB connection pool HARD LIMIT REACHED!! [ "+Integer.toString(count)+" max: "+Integer.toString(HARD)+" ] "+pool.getKey());
+			log().severe("DB connection pool HARD LIMIT REACHED!! [ "+Integer.toString(count)+" max: "+Integer.toString(HARD)+" ] "+pool.getKey());
 	}
 
 
