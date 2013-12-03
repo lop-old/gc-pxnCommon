@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.SQLNonTransientConnectionException;
 
 import com.poixson.commonjava.Utils.utilsSan;
+import com.poixson.commonjava.xLogger.xLog;
 
 
 public class dbQuery {
@@ -380,6 +381,12 @@ System.out.println("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 			prepare("UNLOCK TABLES /* unlock table */");
 			exec();
 		}
+	}
+
+
+	// logger
+	public static xLog log() {
+		return dbManager.log();
 	}
 
 

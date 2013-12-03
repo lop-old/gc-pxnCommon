@@ -3,6 +3,9 @@ package com.poixson.commonjava.pxdb;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.poixson.commonjava.xVars;
+import com.poixson.commonjava.xLogger.xLog;
+
 
 public final class dbManager {
 	@Override
@@ -62,6 +65,12 @@ public final class dbManager {
 		}
 		// unique key for this pool
 		return config.getKey();
+	}
+
+
+	// logger
+	public static xLog log() {
+		return xVars.getLog("db");
 	}
 
 

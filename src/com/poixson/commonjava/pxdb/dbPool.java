@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.poixson.commonjava.Utils.CoolDown;
 import com.poixson.commonjava.Utils.utilsThread;
+import com.poixson.commonjava.xLogger.xLog;
 
 
 public class dbPool {
@@ -167,6 +168,12 @@ System.out.println("FAILED TO GET LOCK!!!!");
 				return worker;
 		}
 		return null;
+	}
+
+
+	// logger
+	public static xLog log() {
+		return dbManager.log();
 	}
 
 

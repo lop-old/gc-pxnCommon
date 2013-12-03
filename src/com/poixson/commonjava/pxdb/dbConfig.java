@@ -12,6 +12,7 @@ import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xTime;
 import com.poixson.commonjava.Utils.xTimeU;
+import com.poixson.commonjava.xLogger.xLog;
 
 
 public class dbConfig {
@@ -184,6 +185,12 @@ public class dbConfig {
 	}
 	public String getKey() {
 		return key;
+	}
+
+
+	// logger
+	public static xLog log() {
+		return dbManager.log();
 	}
 
 

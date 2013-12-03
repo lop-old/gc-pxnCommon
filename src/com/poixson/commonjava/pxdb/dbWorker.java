@@ -3,6 +3,8 @@ package com.poixson.commonjava.pxdb;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import com.poixson.commonjava.xLogger.xLog;
+
 
 public class dbWorker {
 	@Override
@@ -77,6 +79,12 @@ public class dbWorker {
 	}
 	public int getId() {
 		return id;
+	}
+
+
+	// logger
+	public static xLog log() {
+		return dbManager.log();
 	}
 
 

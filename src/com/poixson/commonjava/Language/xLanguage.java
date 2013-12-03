@@ -7,8 +7,10 @@ import java.util.HashMap;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
+import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.Utils.utilsDirFile;
 import com.poixson.commonjava.Utils.utilsSan;
+import com.poixson.commonjava.xLogger.xLog;
 import com.poixson.webxbukkit.WebAPI;
 
 
@@ -122,6 +124,25 @@ public abstract class xLanguage {
 		}
 		System.out.println("Language message/phrase not found: "+key);
 		return "<lang:"+key+">";
+	}
+
+
+	// logger
+	private static volatile xLog _log = null;
+	private static final Object logLock = new Object();
+	public static xLog log() {
+		if(_log == null) {
+			synchronized(logLock) {
+				if(_log == null)
+					_log = xVars.getLog();
+			}
+		}
+		return _log;
+	}
+	public static void setLog(xLog log) {
+		synchronized(logLock) {
+			_log = log;
+		}
 	}
 
 

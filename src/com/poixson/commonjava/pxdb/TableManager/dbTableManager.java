@@ -1,6 +1,8 @@
 package com.poixson.commonjava.pxdb.TableManager;
 
+import com.poixson.commonjava.pxdb.dbManager;
 import com.poixson.commonjava.pxdb.dbQuery;
+import com.poixson.commonjava.xLogger.xLog;
 
 
 public abstract class dbTableManager {
@@ -49,6 +51,12 @@ public abstract class dbTableManager {
 //		for(FieldDAO field : table.fields){
 //
 //		}
+	}
+
+
+	// logger
+	public static xLog log() {
+		return dbManager.log();
 	}
 
 

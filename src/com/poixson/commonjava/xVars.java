@@ -1,5 +1,7 @@
 package com.poixson.commonjava;
 
+import com.poixson.commonjava.xLogger.xLog;
+
 
 public final class xVars {
 	@Override
@@ -18,6 +20,28 @@ public final class xVars {
 		if(globalDebug == null)
 			return false;
 		return globalDebug.booleanValue();
+	}
+
+
+	// global logger
+	private static volatile xLog _log = null;
+	private static final Object logLock = new Object();
+	public static xLog getLog() {
+		if(_log == null) {
+			synchronized(logLock) {
+				if(_log == null)
+					_log = xLog.getRoot();
+			}
+		}
+		return _log;
+	}
+	public static xLog getLog(String name) {
+		return getLog().get(name);
+	}
+	public static void setLog(xLog log) {
+		synchronized(logLock) {
+			_log = log;
+		}
 	}
 
 

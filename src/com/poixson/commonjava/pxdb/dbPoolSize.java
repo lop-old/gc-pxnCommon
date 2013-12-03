@@ -3,6 +3,7 @@ package com.poixson.commonjava.pxdb;
 import com.poixson.commonjava.Utils.CoolDown;
 import com.poixson.commonjava.Utils.utilsMath;
 import com.poixson.commonjava.Utils.utilsThread;
+import com.poixson.commonjava.xLogger.xLog;
 
 
 public class dbPoolSize extends Thread {
@@ -119,6 +120,12 @@ public class dbPoolSize extends Thread {
 	// db connections count
 	public int getWorkerCount() {
 		return pool.getWorkerCount();
+	}
+
+
+	// logger
+	public static xLog log() {
+		return dbManager.log();
 	}
 
 
