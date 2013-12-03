@@ -30,6 +30,15 @@ public abstract class xLogPrinting {
 	}
 
 
+	// exception
+	public void trace(Exception e) {
+		publish(
+			xLevel.SEVERE,
+			utilsString.ExceptionToString(e)
+		);
+	}
+
+
 	// finest
 	public void finest(String msg) {
 		publish(

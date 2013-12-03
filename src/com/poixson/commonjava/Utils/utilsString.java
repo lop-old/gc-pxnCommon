@@ -43,6 +43,9 @@ public final class utilsString {
 		// float
 		if(obj instanceof Float)
 			return Float.toString((Float) obj);
+		// exception
+		if(obj instanceof Exception)
+			return ExceptionToString((Exception) obj);
 		// unknown object
 		return obj.toString();
 	}
