@@ -38,6 +38,7 @@ public class xLogRecord {
 	}
 
 
+	// [logger] [crumbs]
 	public List<String> getNameTree() {
 		return log.getNameTree();
 	}

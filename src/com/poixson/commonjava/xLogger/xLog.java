@@ -12,6 +12,36 @@ import com.poixson.commonjava.xLogger.handlers.logHandlerConsole;
 
 public class xLog extends xLogPrinting {
 
+
+// minimal
+//
+//	// logger
+//	public static xLog log() {
+//		return xVars.getLog();
+//	}
+
+
+// full with local caching
+//
+//	// logger
+//	private static volatile xLog _log = null;
+//	private static final Object logLock = new Object();
+//	public static xLog log() {
+//		if(_log == null) {
+//			synchronized(logLock) {
+//				if(_log == null)
+//					_log = xVars.getLog();
+//			}
+//		}
+//		return _log;
+//	}
+//	public static void setLog(xLog log) {
+//		synchronized(logLock) {
+//			_log = log;
+//		}
+//	}
+
+
 	// root logger
 	protected static volatile xLog root = null;
 	protected static final Object lock = new Object();
@@ -101,6 +131,7 @@ public class xLog extends xLogPrinting {
 	}
 
 
+	// [logger] [crumbs]
 	// recursive name tree
 	private void buildNameTree(List<String> list) {
 		if(parent != null) {
