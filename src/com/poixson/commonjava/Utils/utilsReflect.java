@@ -3,6 +3,9 @@ package com.poixson.commonjava.Utils;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import com.poixson.commonjava.xVars;
+import com.poixson.commonjava.xLogger.xLog;
+
 
 public final class utilsReflect {
 	@Override
@@ -21,7 +24,7 @@ public final class utilsReflect {
 			object = method.invoke(clss, params);
 		} catch (NoSuchMethodException | SecurityException
 				| InvocationTargetException | IllegalAccessException e) {
-			e.printStackTrace();
+			log().trace(e);
 		}
 		return object;
 	}
@@ -31,6 +34,12 @@ public final class utilsReflect {
 		for(int i = 0; i < classes.length; i++)
 			classes[i] = params[i].getClass();
 		return classes;
+	}
+
+
+	// logger
+	public static xLog log() {
+		return xVars.getLog();
 	}
 
 

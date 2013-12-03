@@ -7,6 +7,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.UUID;
 
+import com.poixson.commonjava.xVars;
+import com.poixson.commonjava.xLogger.xLog;
+
 
 public final class utilsString {
 	@Override
@@ -112,7 +115,7 @@ public final class utilsString {
 		try {
 			md = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			log().trace(e);
 		}
 		md.update(str.getBytes());
 		byte[] byteData = md.digest();
@@ -165,6 +168,12 @@ public final class utilsString {
 			string.append(line);
 		}
 		return string.toString();
+	}
+
+
+	// logger
+	public static xLog log() {
+		return xVars.getLog();
 	}
 
 

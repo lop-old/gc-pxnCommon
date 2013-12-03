@@ -131,19 +131,19 @@ public class dbConfig {
 				return null;
 		} catch (SQLException e) {
 //			parent.plugin.errorMsg("SQL Error!");
-			e.printStackTrace();
+			log().trace(e);
 			conn = null;
 		} catch (InstantiationException e) {
 //			parent.plugin.errorMsg("Unable to create database driver!");
-			e.printStackTrace();
+			log().trace(e);
 			conn = null;
 		} catch (IllegalAccessException e) {
 //			parent.plugin.errorMsg("Unable to create database driver!");
-			e.printStackTrace();
+			log().trace(e);
 			conn = null;
 		} catch (ClassNotFoundException e) {
 //			parent.plugin.errorMsg("Unable to load database driver!");
-			e.printStackTrace();
+			log().trace(e);
 			conn = null;
 		}
 		if(conn == null) {

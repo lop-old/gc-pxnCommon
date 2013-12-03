@@ -39,8 +39,9 @@ public class dbQuery {
 		if(sql == null || sql.isEmpty()) throw new IllegalArgumentException("sql cannot be empty!");
 		synchronized(lock) {
 			if(!worker.inUse()) {
-				(new IllegalAccessException("dbWorker not locked!"))
-					.printStackTrace();
+				log().trace(
+					new IllegalAccessException("dbWorker not locked!")
+				);
 				return null;
 			}
 			clean();
@@ -52,7 +53,7 @@ public class dbQuery {
 				close();
 				return null;
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log().trace(e);
 				clean();
 				return null;
 			}
@@ -70,8 +71,9 @@ public class dbQuery {
 	public boolean exec() {
 		synchronized(lock) {
 			if(!worker.inUse()) {
-				(new IllegalAccessException("dbWorker not locked!"))
-					.printStackTrace();
+				log().trace(
+					new IllegalAccessException("dbWorker not locked!")
+				);
 				return false;
 			}
 			if(this.st == null) return false;
@@ -98,7 +100,7 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 				close();
 				return false;
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log().trace(e);
 				clean();
 				return false;
 			}
@@ -168,7 +170,7 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 			try {
 				return rs.next();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log().trace(e);
 			}
 		}
 		return false;
@@ -195,7 +197,7 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 				st.setString(index, value);
 //				args += " String: "+value;
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log().trace(e);
 				clean();
 				return null;
 			}
@@ -210,7 +212,7 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 				st.setInt(index, value);
 //				args += " Int: "+Integer.toString(value);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log().trace(e);
 				clean();
 				return null;
 			}
@@ -229,7 +231,7 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 				st.setDouble(index, value);
 //				args += " Double: "+Double.toString(value);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log().trace(e);
 				clean();
 				return null;
 			}
@@ -244,7 +246,7 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 				st.setFloat(index, value);
 //				args += " Float: "+Double.toString(value);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log().trace(e);
 				clean();
 				return null;
 			}
@@ -259,7 +261,7 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 				st.setLong(index, value);
 //				args += " Long: "+Long.toString(value);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log().trace(e);
 				clean();
 				return null;
 			}
@@ -274,7 +276,7 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 				st.setBoolean(index, value);
 //				args += " Bool: "+Boolean.toString(value);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log().trace(e);
 				clean();
 				return null;
 			}
@@ -290,7 +292,7 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 				if(rs != null)
 					return rs.getString(label);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log().trace(e);
 			}
 		}
 		return null;
@@ -302,7 +304,7 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 				if(rs != null)
 					return rs.getInt(label);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log().trace(e);
 			}
 		}
 		return null;
@@ -318,7 +320,7 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 				if(rs != null)
 					return rs.getDouble(label);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log().trace(e);
 			}
 		}
 		return null;
@@ -330,7 +332,7 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 				if(rs != null)
 					return rs.getFloat(label);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log().trace(e);
 			}
 		}
 		return null;
@@ -342,7 +344,7 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 				if(rs != null)
 					return rs.getLong(label);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log().trace(e);
 			}
 		}
 		return null;
@@ -354,7 +356,7 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 				if(rs != null)
 					return rs.getBoolean(label);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log().trace(e);
 			}
 		}
 		return null;
