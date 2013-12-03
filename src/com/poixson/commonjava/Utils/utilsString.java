@@ -16,6 +16,38 @@ public final class utilsString {
 	private utilsString() {}
 
 
+	// object to string
+	public static String toString(Object obj) {
+		// null
+		if(obj == null)
+			return null;
+		// string
+		if(obj instanceof String)
+			return (String) obj;
+		// boolean
+		if(obj instanceof Boolean) {
+			if( ((boolean) obj) == true)
+				return "TRUE";
+			else
+				return "false";
+		}
+		// int
+		if(obj instanceof Integer)
+			return Integer.toString((Integer) obj);
+		// long
+		if(obj instanceof Long)
+			return Long.toString((Long) obj);
+		// double
+		if(obj instanceof Double)
+			return Double.toString((Double) obj);
+		// float
+		if(obj instanceof Float)
+			return Float.toString((Float) obj);
+		// unknown object
+		return obj.toString();
+	}
+
+
 	// string equals
 	public static boolean strEquals(String a, String b) {
 		if(a == null || a.isEmpty()) return false;
@@ -131,8 +163,6 @@ public final class utilsString {
 		}
 		return string.toString();
 	}
-
-
 
 
 }
