@@ -199,6 +199,11 @@ public class xLog extends xLogPrinting {
 	private static final Object consoleLock = new Object();
 
 
+	public static void setConsole(xConsole console) {
+		synchronized(consoleLock) {
+			xLog._console = console;
+		}
+	}
 	public static xConsole getConsole() {
 		if(_console == null) {
 			synchronized(consoleLock) {
