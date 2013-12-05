@@ -200,7 +200,7 @@ System.out.println("***>"+line+"<***");
 
 	// logger
 	public static xLog log() {
-		return xVars.getLog();
+		return xVars.log();
 	}
 
 
