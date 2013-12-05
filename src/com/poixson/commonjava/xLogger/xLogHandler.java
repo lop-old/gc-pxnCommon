@@ -10,14 +10,16 @@ public abstract class xLogHandler {
 
 
 	public abstract void publish(xLogRecord record);
-	protected String doFormat(xLogRecord record) {
+	protected String msgFormat(xLogRecord record) {
 		return getFormatter().formatMsg(record);
 	}
 
 
 	// formatter
 	public void setFormatter(xLogFormatter formatter) {
-		this.formatter = formatter;
+		synchronized(formatLock) {
+			this.formatter = formatter;
+		}
 	}
 	protected xLogFormatter getFormatter() {
 		if(formatter != null)
