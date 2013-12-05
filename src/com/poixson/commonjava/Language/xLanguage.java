@@ -128,9 +128,9 @@ public abstract class xLanguage {
 
 
 	// logger
-	private static volatile xLog _log = null;
-	private static final Object logLock = new Object();
-	public static xLog log() {
+	private volatile xLog _log = null;
+	private final Object logLock = new Object();
+	public xLog log() {
 		if(_log == null) {
 			synchronized(logLock) {
 				if(_log == null)
@@ -139,7 +139,7 @@ public abstract class xLanguage {
 		}
 		return _log;
 	}
-	public static void setLog(xLog log) {
+	public void setLog(xLog log) {
 		synchronized(logLock) {
 			_log = log;
 		}
