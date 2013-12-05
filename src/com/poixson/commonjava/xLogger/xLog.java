@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.poixson.commonjava.xLogger.console.xNoConsole;
 import com.poixson.commonjava.xLogger.formatters.defaultLogFormatter;
 import com.poixson.commonjava.xLogger.handlers.logHandlerConsole;
 
@@ -163,6 +164,31 @@ public class xLog extends xLogPrinting {
 		if(!handlers.isEmpty())
 			for(xLogHandler handler : this.handlers)
 				handler.publish(record);
+	}
+
+
+	// ### console handler
+
+
+	private static volatile xConsole _console = null;
+	private static final Object consoleLock = new Object();
+
+
+	public static xConsole getConsole() {
+		if(_console == null) {
+			synchronized(consoleLock) {
+				if(_console == null)
+					_console = new xNoConsole();
+			}
+		}
+		return _console;
+	}
+	public static xConsole peekConsole() {
+		return _console;
+	}
+	public static void shutdown() {
+		if(peekConsole() != null)
+			peekConsole().shutdown();
 	}
 
 

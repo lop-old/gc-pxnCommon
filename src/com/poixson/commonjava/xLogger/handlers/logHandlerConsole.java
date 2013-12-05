@@ -1,6 +1,7 @@
 package com.poixson.commonjava.xLogger.handlers;
 
 import com.poixson.commonjava.xLogger.xConsole;
+import com.poixson.commonjava.xLogger.xLog;
 import com.poixson.commonjava.xLogger.xLogHandler;
 import com.poixson.commonjava.xLogger.xLogRecord;
 
@@ -12,7 +13,7 @@ public class logHandlerConsole extends xLogHandler {
 
 	public logHandlerConsole() {
 		if(console == null)
-			console = xConsole.get();
+			console = xLog.getConsole();
 	}
 
 
