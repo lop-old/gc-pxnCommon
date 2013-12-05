@@ -20,34 +20,18 @@ public class jlineConsole implements xConsole {
 		throw new CloneNotSupportedException();
 	}
 
-	protected static final Object lock = new Object();
-	protected static volatile xConsole console = null;
-	protected static volatile ConsoleReader reader = null;
-	protected static volatile Boolean jlineEnabled = null;
+	private static final Object lock = new Object();
+	private static volatile ConsoleReader reader = null;
+	private static volatile Boolean jlineEnabled = null;
 
 	private volatile String prompt = null;
 
 	// console input thread
-	protected volatile Thread thread = null;
+	private volatile Thread thread = null;
 	private volatile boolean running = false;
 	private volatile boolean stopping = false;
 
 
-	// get console instance
-	public static xConsole get() {
-		if(console == null) {
-			synchronized(lock) {
-				if(console == null)
-					console = new xConsole();
-			}
-		}
-		return console;
-	}
-	public static void set(xConsole console) {
-		synchronized(lock) {
-			xConsole.console = console;
-		}
-	}
 	// new instance
 	public jlineConsole() {
 		// console reader
@@ -105,8 +89,7 @@ public class jlineConsole implements xConsole {
 	public void shutdown() {
 		synchronized(lock) {
 			// stop console input
-			if(console != null)
-				console.stop();
+			this.stop();
 			if(reader != null) {
 				// save command history
 				try {

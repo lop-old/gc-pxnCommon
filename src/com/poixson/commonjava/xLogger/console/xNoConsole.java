@@ -7,19 +7,12 @@ public class xNoConsole implements xConsole {
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		throw new CloneNotSupportedException();
-
-	public static void set() {
-		xConsole.set(new xNoConsole());
 	}
 
+	protected static final Object lock = new Object();
+	protected static volatile xConsole console = null;
 
-		if(xConsole.console != null) {
-			xConsole.shutdown();
-			xConsole.console = null;
-		}
-		xConsole.reader = null;
-		xConsole.jlineEnabled = false;
-		//xConsole.thread = null;
+
 	public xNoConsole() {
 	}
 
@@ -51,11 +44,7 @@ public class xNoConsole implements xConsole {
 	}
 	@Override
 	public void print(String msg) {
-		System.out.println(
-			renderAnsi(
-				msg
-			)
-		);
+		System.out.println(msg);
 	}
 	@Override
 	public void redraw() {
