@@ -15,32 +15,57 @@ public class xLog extends xLogPrinting {
 
 
 // minimal
-//
-//	// logger
-//	public static xLog log() {
-//		return xVars.getLog();
-//	}
+/*
+	// logger
+	public static xLog log() {
+		return xVars.log();
+	}
+*/
 
+// local caching
+/*
+	// logger
+	private volatile xLog _log = null;
+	private final Object logLock = new Object();
+	public xLog log() {
+		if(_log == null) {
+			synchronized(logLock) {
+				if(_log == null)
+					_log = xVars.log();
+			}
+		}
+		return _log;
+	}
+	public void setLog(xLog log) {
+		synchronized(logLock) {
+			_log = log;
+		}
+	}
+*/
 
 // full with local caching
-//
-//	// logger
-//	private static volatile xLog _log = null;
-//	private static final Object logLock = new Object();
-//	public static xLog log() {
-//		if(_log == null) {
-//			synchronized(logLock) {
-//				if(_log == null)
-//					_log = xVars.getLog();
-//			}
-//		}
-//		return _log;
-//	}
-//	public static void setLog(xLog log) {
-//		synchronized(logLock) {
-//			_log = log;
-//		}
-//	}
+/*
+	// logger
+	private volatile xLog _log = null;
+	private final Object logLock = new Object();
+	public xLog log() {
+		if(_log == null) {
+			synchronized(logLock) {
+				if(_log == null)
+					_log = xVars.log();
+			}
+		}
+		return _log;
+	}
+	public xLog log(String name) {
+		return log().get(name);
+	}
+	public void setLog(xLog log) {
+		synchronized(logLock) {
+			_log = log;
+		}
+	}
+*/
 
 
 	// root logger
