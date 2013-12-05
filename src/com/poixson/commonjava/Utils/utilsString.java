@@ -173,7 +173,7 @@ public final class utilsString {
 
 	// logger
 	public static xLog log() {
-		return xVars.getLog();
+		return xVars.log();
 	}
 
 

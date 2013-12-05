@@ -39,7 +39,7 @@ public final class utilsReflect {
 
 	// logger
 	public static xLog log() {
-		return xVars.getLog();
+		return xVars.log();
 	}
 
 

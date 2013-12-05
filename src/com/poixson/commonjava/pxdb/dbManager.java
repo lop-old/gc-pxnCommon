@@ -70,7 +70,7 @@ public final class dbManager {
 
 	// logger
 	public static xLog log() {
-		return xVars.getLog("db");
+		return xVars.log("db");
 	}
 
 

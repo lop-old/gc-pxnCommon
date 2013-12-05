@@ -26,7 +26,7 @@ public final class xVars {
 	// global logger
 	private static volatile xLog _log = null;
 	private static final Object logLock = new Object();
-	public static xLog getLog() {
+	public static xLog log() {
 		if(_log == null) {
 			synchronized(logLock) {
 				if(_log == null)
@@ -35,8 +35,8 @@ public final class xVars {
 		}
 		return _log;
 	}
-	public static xLog getLog(String name) {
-		return getLog().get(name);
+	public static xLog log(String name) {
+		return log().get(name);
 	}
 	public static void setLog(xLog log) {
 		synchronized(logLock) {

@@ -134,7 +134,7 @@ public abstract class xLanguage {
 		if(_log == null) {
 			synchronized(logLock) {
 				if(_log == null)
-					_log = xVars.getLog();
+					_log = xVars.log();
 			}
 		}
 		return _log;
