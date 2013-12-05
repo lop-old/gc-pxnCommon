@@ -1,4 +1,4 @@
-package com.poixson.commonjava.xLogger;
+package com.poixson.commonjava.xLogger.console;
 
 import java.io.IOException;
 
@@ -10,9 +10,11 @@ import org.fusesource.jansi.AnsiConsole;
 
 import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.Utils.utilsThread;
+import com.poixson.commonjava.xLogger.xConsole;
+import com.poixson.commonjava.xLogger.xLog;
 
 
-public class xConsole implements Runnable {
+public class jlineConsole implements xConsole {
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		throw new CloneNotSupportedException();
@@ -47,7 +49,7 @@ public class xConsole implements Runnable {
 		}
 	}
 	// new instance
-	protected xConsole() {
+	public jlineConsole() {
 		// console reader
 		if(reader == null) {
 			jlineEnabled = null;
@@ -100,7 +102,7 @@ public class xConsole implements Runnable {
 			System.in.close();
 		} catch (Exception ignore) {}
 	}
-	public static void shutdown() {
+	public void shutdown() {
 		synchronized(lock) {
 			// stop console input
 			if(console != null)
