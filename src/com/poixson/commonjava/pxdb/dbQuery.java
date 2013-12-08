@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLNonTransientConnectionException;
 
+import com.poixson.commonjava.Utils.utilsMath;
 import com.poixson.commonjava.Utils.utilsSan;
 import com.poixson.commonjava.xLogger.xLog;
 
@@ -177,7 +178,7 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 	}
 
 
-	// result int
+	// result count
 	public int getAffectedRows() {
 		return getResultInt();
 	}
@@ -211,6 +212,21 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 			try {
 				st.setInt(index, value);
 //				args += " Int: "+Integer.toString(value);
+			} catch (SQLException e) {
+				log().trace(e);
+				clean();
+				return null;
+			}
+		}
+		return this;
+	}
+	// set long
+	public dbQuery setLong(int index, long value) {
+		synchronized(lock) {
+			if(st == null) return null;
+			try {
+				st.setLong(index, value);
+//				args += " Long: "+Long.toString(value);
 			} catch (SQLException e) {
 				log().trace(e);
 				clean();
@@ -253,21 +269,6 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 		}
 		return this;
 	}
-	// set long
-	public dbQuery setLong(int index, long value) {
-		synchronized(lock) {
-			if(st == null) return null;
-			try {
-				st.setLong(index, value);
-//				args += " Long: "+Long.toString(value);
-			} catch (SQLException e) {
-				log().trace(e);
-				clean();
-				return null;
-			}
-		}
-		return this;
-	}
 	// set boolean
 	public dbQuery setBool(int index, boolean value) {
 		synchronized(lock) {
@@ -285,81 +286,111 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 	}
 
 
-	// get query results
+	// get string
 	public String getString(String label) {
-		synchronized(lock) {
-			try {
-				if(rs != null)
-					return rs.getString(label);
-			} catch (SQLException e) {
-				log().trace(e);
-			}
+		try {
+			return getStr(label);
+		} catch (SQLException e) {
+			log().trace(e);
 		}
 		return null;
 	}
-	// get int
-	public Integer getInt(String label) {
+	public String getStr(String label) throws SQLException {
 		synchronized(lock) {
-			try {
-				if(rs != null)
-					return rs.getInt(label);
-			} catch (SQLException e) {
-				log().trace(e);
-			}
+			return rs.getString(label);
+		}
+	}
+	// get integer
+	public Integer getInteger(String label) {
+		try {
+			String value = getStr(label);
+			if(value == null)
+				return null;
+			return utilsMath.parseInteger(value);
+		} catch (SQLException e) {
+			log().trace(e);
 		}
 		return null;
+	}
+	public int getInt(String label) throws SQLException {
+		synchronized(lock) {
+			return rs.getInt(label);
+		}
+	}
+	// get long
+	public Long getLong(String label) {
+		try {
+			String value = getStr(label);
+			if(value == null)
+				return null;
+			return utilsMath.parseLong(value);
+		} catch (SQLException e) {
+			log().trace(e);
+		}
+		return null;
+	}
+	public long getLng(String label) throws SQLException {
+		synchronized(lock) {
+			return rs.getLong(label);
+		}
 	}
 	// get decimal
 	public Double getDecimal(String label) {
 		return getDouble(label);
 	}
+	public double getDec(String label) throws SQLException {
+		return getDbl(label);
+	}
 	// get double
 	public Double getDouble(String label) {
-		synchronized(lock) {
-			try {
-				if(rs != null)
-					return rs.getDouble(label);
-			} catch (SQLException e) {
-				log().trace(e);
-			}
+		try {
+			String value = getStr(label);
+			if(value == null)
+				return null;
+			return utilsMath.parseDouble(value);
+		} catch (SQLException e) {
+			log().trace(e);
 		}
 		return null;
+	}
+	public double getDbl(String label) throws SQLException {
+		synchronized(lock) {
+			return rs.getDouble(label);
+		}
 	}
 	// get float
 	public Float getFloat(String label) {
-		synchronized(lock) {
-			try {
-				if(rs != null)
-					return rs.getFloat(label);
-			} catch (SQLException e) {
-				log().trace(e);
-			}
+		try {
+			String value = getStr(label);
+			if(value == null)
+				return null;
+			return utilsMath.parseFloat(value);
+		} catch (SQLException e) {
+			log().trace(e);
 		}
 		return null;
 	}
-	// get long
-	public Long getLong(String label) {
+	public float getFlt(String label) throws SQLException {
 		synchronized(lock) {
-			try {
-				if(rs != null)
-					return rs.getLong(label);
-			} catch (SQLException e) {
-				log().trace(e);
-			}
+			return rs.getFloat(label);
 		}
-		return null;
 	}
 	// get boolean
-	public Boolean getBool(String label) {
-		synchronized(lock) {
-			try {
-				if(rs != null)
-					return rs.getBoolean(label);
-			} catch (SQLException e) {
-				log().trace(e);
-			}
+	public Boolean getBoolean(String label) {
+		try {
+			String value = getStr(label);
+			if(value == null)
+				return null;
+			return utilsMath.parseBoolean(value);
+		} catch (SQLException e) {
+			log().trace(e);
 		}
 		return null;
+	}
+	public boolean getBool(String label) throws SQLException {
+		synchronized(lock) {
+			return rs.getBoolean(label);
+		}
 	}
 
 
