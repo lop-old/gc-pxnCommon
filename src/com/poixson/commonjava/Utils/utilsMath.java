@@ -57,50 +57,50 @@ public final class utilsMath {
 	public static String FormatDecimal(String format, double value) {
 		return (new DecimalFormat(format).format(value));
 	}
-	// parse number from string
-	public static Integer parseInt(String string) {
+
+
+	// parse number
+	public static Integer parseInteger(String string) {
 		try {
-			return Integer.parseInt(string);
+			return parseInt(string);
 		} catch (NumberFormatException ignore) {}
 		return null;
 	}
+	public static int parseInt(String string) throws NumberFormatException {
+		return Integer.parseInt(string);
+	}
+	// parse long
 	public static Long parseLong(String string) {
 		try {
-			return Long.parseLong(string);
+			return parseLong(string);
 		} catch (NumberFormatException ignore) {}
 		return null;
 	}
+	public static long parseLng(String string) throws NumberFormatException {
+		return Long.parseLong(string);
+	}
+	// parse double
 	public static Double parseDouble(String string) {
 		try {
-			return Double.parseDouble(string);
+			return parseDouble(string);
 		} catch (NumberFormatException ignore) {}
 		return null;
 	}
+	public static Double parseDbl(String string) throws NumberFormatException {
+		return Double.parseDouble(string);
+	}
+	// parse float
 	public static Float parseFloat(String string) {
 		try {
-			return Float.parseFloat(string);
+			return parseFloat(string);
 		} catch (NumberFormatException ignore) {}
 		return null;
 	}
-
-
-	// integer
-	public static boolean isNumeric(String value) {
-		if(value == null || value.isEmpty()) return false;
-		return !(toNumber(value) == null);
+	public static float parseFlt(String string) throws NumberFormatException {
+		return Float.parseFloat(string);
 	}
-	public static Integer toNumber(String value) {
-		try {
-			return Integer.parseInt(value);
-		} catch (Exception ignore) {
-			return null;
-		}
-	}
-	// boolean
-	public static boolean isBoolean(String value) {
-		return !(toBoolean(value) == null);
-	}
-	public static Boolean toBoolean(String value) {
+	// parse boolean
+	public static Boolean parseBoolean(String value) {
 		if(value == null || value.isEmpty()) return null;
 		value = value.toLowerCase();
 		switch(value) {
@@ -122,6 +122,33 @@ public final class utilsMath {
 			break;
 		}
 		return null;
+	}
+	public static boolean parseBool(String value, boolean defaultValue) {
+		Boolean bool = parseBoolean(value);
+		if(bool == null)
+			bool = defaultValue;
+		return bool.booleanValue();
+	}
+
+
+	// is number
+	public static boolean isNumeric(String value) {
+		if(value == null || value.isEmpty()) return false;
+		return !(toNumber(value) == null);
+	}
+	public static Integer toNumber(String value) {
+		try {
+			return Integer.parseInt(value);
+		} catch (Exception ignore) {
+			return null;
+		}
+	}
+	// is boolean
+	public static boolean isBoolean(String value) {
+		return (parseBoolean(value) != null);
+	}
+	public static Boolean toBoolean(String value) {
+		return parseBoolean(value);
 	}
 
 
