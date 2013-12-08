@@ -72,7 +72,7 @@ public final class utilsMath {
 	// parse long
 	public static Long parseLong(String string) {
 		try {
-			return parseLong(string);
+			return parseLng(string);
 		} catch (NumberFormatException ignore) {}
 		return null;
 	}
@@ -82,7 +82,7 @@ public final class utilsMath {
 	// parse double
 	public static Double parseDouble(String string) {
 		try {
-			return parseDouble(string);
+			return parseDbl(string);
 		} catch (NumberFormatException ignore) {}
 		return null;
 	}
@@ -92,7 +92,7 @@ public final class utilsMath {
 	// parse float
 	public static Float parseFloat(String string) {
 		try {
-			return parseFloat(string);
+			return parseFlt(string);
 		} catch (NumberFormatException ignore) {}
 		return null;
 	}
