@@ -92,6 +92,14 @@ public class xLevel implements Serializable {
 	}
 
 
+	// to java level
+	public java.util.logging.Level getJavaLevel() {
+		return java.util.logging.Level.parse(
+			Integer.toString(this.value)
+		);
+	}
+
+
 	@Override
 	public String toString() {
 		return name;
