@@ -80,6 +80,28 @@ public final class utilsString {
 	}
 
 
+	// replace with array
+	public static String replaceWith(String replaceWhat, String[] withWhat, String data) {
+		if(replaceWhat == null || replaceWhat.isEmpty()) throw new NullPointerException("replaceWhat cannot be null");
+		if(withWhat == null || withWhat.length == 0) return null;
+		if(data == null || data.isEmpty()) return null;
+		StringBuilder out = new StringBuilder();
+		int count = withWhat.length;
+		int currentPos = 0;
+		for(int i=0; i<count; i++) {
+			int thisPos = data.indexOf("?", currentPos);
+			if(thisPos > 0) {
+				out.append(data.substring(currentPos, thisPos))
+					.append(withWhat[i]);
+				currentPos = thisPos+1;
+			}
+		}
+		if(data.length() > currentPos)
+			out.append(data.substring(currentPos));
+		return out.toString();
+	}
+
+
 	// repeat string with deliminator
 	public static String repeat(String delim, String str, int repeat) {
 		if(delim == null || delim.isEmpty()) {
