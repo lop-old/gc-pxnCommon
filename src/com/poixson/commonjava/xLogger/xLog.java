@@ -71,9 +71,11 @@ public class xLog extends xLogPrinting {
 	// root logger
 	protected static volatile xLog root = null;
 	protected static final Object lock = new Object();
+	private static final xLevel DEFAULT_LEVEL = xLevel.INFO;
 
 	private final String name;
 	private final xLog parent;
+	private volatile xLevel level = null;
 	// sub-loggers
 	private final Map<String, xLog> loggers = new ConcurrentHashMap<String, xLog>();
 	// handlers
@@ -154,6 +156,30 @@ public class xLog extends xLogPrinting {
 	@Override
 	public boolean isRoot() {
 		return (parent == null);
+	}
+
+
+	// log level
+	public void setLevel(xLevel lvl) {
+		this.level = lvl;
+	}
+	// is level loggable
+	public boolean isLoggable(xLevel lvl) {
+		// local logger level
+		if(level != null && level.isLoggable(lvl))
+			return true;
+		// handlers
+		for(xLogHandler handler : handlers)
+			if(handler.isLoggable(lvl))
+				return true;
+		// parents
+		if(parent != null)
+			if(parent.isLoggable(lvl))
+				return true;
+		// root logger (default to info)
+		if(parent == null && level == null)
+			return DEFAULT_LEVEL.isLoggable(lvl);
+		return false;
 	}
 
 

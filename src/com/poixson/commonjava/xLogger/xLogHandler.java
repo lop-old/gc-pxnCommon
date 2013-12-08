@@ -6,6 +6,7 @@ import com.poixson.commonjava.xLogger.formatters.defaultLogFormatter;
 public abstract class xLogHandler {
 
 	private volatile xLogFormatter formatter = null;
+	private volatile xLevel level = null;
 	private final Object formatLock = new Object();
 
 
@@ -29,6 +30,18 @@ public abstract class xLogHandler {
 				formatter = new defaultLogFormatter();
 		}
 		return formatter;
+	}
+
+
+	// log level
+	public void setLevel(xLevel lvl) {
+		this.level = lvl;
+	}
+	// is level loggable
+	public boolean isLoggable(xLevel lvl) {
+		if(level != null && level.isLoggable(lvl))
+			return true;
+		return false;
 	}
 
 
