@@ -13,33 +13,6 @@ public final class utilsMath {
 	private utilsMath() {}
 
 
-	// parse number from string
-	public static Integer parseInt(String string) {
-		try {
-			return Integer.parseInt(string);
-		} catch (NumberFormatException ignore) {}
-		return null;
-	}
-	public static Long parseLong(String string) {
-		try {
-			return Long.parseLong(string);
-		} catch (NumberFormatException ignore) {}
-		return null;
-	}
-	public static Double parseDouble(String string) {
-		try {
-			return Double.parseDouble(string);
-		} catch (NumberFormatException ignore) {}
-		return null;
-	}
-	public static Float parseFloat(String string) {
-		try {
-			return Float.parseFloat(string);
-		} catch (NumberFormatException ignore) {}
-		return null;
-	}
-
-
 	// min/max value
 	public static int MinMax(int value, int min, int max) {
 		if(value < min) value = min;
@@ -83,6 +56,31 @@ public final class utilsMath {
 	// formatDecimal("0.00", double)
 	public static String FormatDecimal(String format, double value) {
 		return (new DecimalFormat(format).format(value));
+	}
+	// parse number from string
+	public static Integer parseInt(String string) {
+		try {
+			return Integer.parseInt(string);
+		} catch (NumberFormatException ignore) {}
+		return null;
+	}
+	public static Long parseLong(String string) {
+		try {
+			return Long.parseLong(string);
+		} catch (NumberFormatException ignore) {}
+		return null;
+	}
+	public static Double parseDouble(String string) {
+		try {
+			return Double.parseDouble(string);
+		} catch (NumberFormatException ignore) {}
+		return null;
+	}
+	public static Float parseFloat(String string) {
+		try {
+			return Float.parseFloat(string);
+		} catch (NumberFormatException ignore) {}
+		return null;
 	}
 
 
