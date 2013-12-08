@@ -7,6 +7,8 @@ import java.sql.SQLNonTransientConnectionException;
 
 import com.poixson.commonjava.Utils.utilsMath;
 import com.poixson.commonjava.Utils.utilsSan;
+import com.poixson.commonjava.Utils.utilsString;
+import com.poixson.commonjava.xLogger.xLevel;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -19,6 +21,13 @@ public class dbQuery {
 	protected volatile boolean quiet = false;
 	protected volatile int resultInt = -1;
 	private final Object lock = new Object();
+
+	// args
+	protected volatile int paramCount = 0;
+	protected volatile String[] args;
+	private static final String ARG_PRE   = "[";
+	private static final String ARG_DELIM = "|";
+	private static final String ARG_POST  = "]";
 
 
 	// new query
@@ -49,6 +58,9 @@ public class dbQuery {
 			this.sql = sql;
 			try {
 				st = worker.getConnection().prepareStatement(sql);
+				paramCount = st.getParameterMetaData().getParameterCount();
+				if(paramCount > 0)
+					args = new String[paramCount];
 			} catch (SQLNonTransientConnectionException | NullPointerException e) {
 				log().severe("db connection closed!");
 				close();
@@ -90,8 +102,15 @@ public class dbQuery {
 //			if(!quiet)
 //				getLog().debug("query", this.sql+(args.isEmpty() ? "" : "  ["+args+" ]") );
 			try {
-//TODO: replace ? with values
-log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
+				// log query
+				if(log().isLoggable(xLevel.FINEST)) {
+					// replace ? with values
+					log().finest(
+						"("+Integer.toString(worker.getId())+") QUERY: "+
+						utilsString.replaceWith("?", args, sql)
+					);
+				}
+				// execute query
 				if(queryType.equals("INSERT") || queryType.equals("UPDATE") || queryType.equals("CREATE") || queryType.equals("DELETE"))
 					resultInt = st.executeUpdate();
 				else
@@ -143,7 +162,8 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 				st = null;
 			}
 			sql = null;
-//			args = "";
+			paramCount = 0;
+			args = null;
 			quiet = false;
 			resultInt = -1;
 		}
@@ -196,7 +216,8 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 			if(st == null) return null;
 			try {
 				st.setString(index, value);
-//				args += " String: "+value;
+				if(paramCount > 0)
+					args[index-1] = ARG_PRE+"str"+ARG_DELIM+value+ARG_POST;
 			} catch (SQLException e) {
 				log().trace(e);
 				clean();
@@ -211,7 +232,8 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 			if(st == null) return null;
 			try {
 				st.setInt(index, value);
-//				args += " Int: "+Integer.toString(value);
+				if(paramCount > 0)
+					args[index-1] = ARG_PRE+"int"+ARG_DELIM+Integer.toString(value)+ARG_POST;
 			} catch (SQLException e) {
 				log().trace(e);
 				clean();
@@ -226,7 +248,8 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 			if(st == null) return null;
 			try {
 				st.setLong(index, value);
-//				args += " Long: "+Long.toString(value);
+				if(paramCount > 0)
+					args[index-1] = ARG_PRE+"lng"+ARG_DELIM+Long.toString(value)+ARG_POST;
 			} catch (SQLException e) {
 				log().trace(e);
 				clean();
@@ -237,7 +260,11 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 	}
 	// set decimal
 	public dbQuery setDecimal(int index, double value) {
-		return setDouble(index, value);
+		if(setDouble(index, value) == null)
+			return null;
+		if(paramCount > 0)
+			args[index-1] = ARG_PRE+"dec"+ARG_DELIM+Double.toString(value)+ARG_POST;
+		return this;
 	}
 	// set double
 	public dbQuery setDouble(int index, double value) {
@@ -245,7 +272,8 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 			if(st == null) return null;
 			try {
 				st.setDouble(index, value);
-//				args += " Double: "+Double.toString(value);
+				if(paramCount > 0)
+					args[index-1] = ARG_PRE+"dbl"+ARG_DELIM+Double.toString(value)+ARG_POST;
 			} catch (SQLException e) {
 				log().trace(e);
 				clean();
@@ -260,7 +288,8 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 			if(st == null) return null;
 			try {
 				st.setFloat(index, value);
-//				args += " Float: "+Double.toString(value);
+				if(paramCount > 0)
+					args[index-1] = ARG_PRE+"flt"+ARG_DELIM+Float.toString(value)+ARG_POST;
 			} catch (SQLException e) {
 				log().trace(e);
 				clean();
@@ -275,7 +304,8 @@ log().finest("["+Integer.toString(worker.getId())+"] QUERY: "+sql);
 			if(st == null) return null;
 			try {
 				st.setBoolean(index, value);
-//				args += " Bool: "+Boolean.toString(value);
+				if(paramCount > 0)
+					args[index-1] = ARG_PRE+"bool"+ARG_DELIM+(value ? "True" : "False")+ARG_POST;
 			} catch (SQLException e) {
 				log().trace(e);
 				clean();
