@@ -60,13 +60,6 @@ public abstract class xLogPrinting {
 			msg
 		);
 	}
-	// debug
-	public void debug(String msg) {
-		publish(
-			xLevel.DEBUG,
-			msg
-		);
-	}
 	// stats
 	public void stats(String msg) {
 		publish(
