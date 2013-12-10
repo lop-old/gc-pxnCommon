@@ -163,6 +163,9 @@ public class xLog extends xLogPrinting {
 	// log level
 	public void setLevel(xLevel lvl) {
 		this.level = lvl;
+		// handlers
+		for(xLogHandler handler : handlers)
+			handler.setLevel(lvl);
 	}
 	// is level loggable
 	public boolean isLoggable(xLevel lvl) {
