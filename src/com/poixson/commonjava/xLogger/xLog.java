@@ -72,7 +72,7 @@ public class xLog extends xLogPrinting {
 	// root logger
 	protected static volatile xLog root = null;
 	protected static final Object lock = new Object();
-	private static final xLevel DEFAULT_LEVEL = xLevel.INFO;
+	public static final xLevel DEFAULT_LEVEL = xLevel.INFO;
 
 	private final String name;
 	private final xLog parent;

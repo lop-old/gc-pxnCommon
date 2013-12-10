@@ -24,6 +24,8 @@ public class xLogRecord {
 	}
 	// java util level type
 	public java.util.logging.Level getJavaLevel() {
+		if(level == null)
+			return null;
 		return level.getJavaLevel();
 	}
 
