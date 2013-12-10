@@ -173,20 +173,21 @@ public class xLog extends xLogPrinting {
 		if(xVars.debug())
 			return true;
 		// local logger level
-		if(level != null && level.isLoggable(lvl))
-			return true;
-		// handlers
-		for(xLogHandler handler : handlers)
-			if(handler.isLoggable(lvl))
-				return true;
-		// parents
-		if(parent != null)
-			if(parent.isLoggable(lvl))
-				return true;
-		// default level at root
-		if(parent == null && level == null)
-			return DEFAULT_LEVEL.isLoggable(lvl);
-		return false;
+		if(level != null && !level.isLoggable(lvl))
+			return false;
+//		// handlers
+//		for(xLogHandler handler : handlers)
+//			if(handler.isLoggable(lvl))
+//				return true;
+//		// parents
+//		if(parent != null)
+//			if(parent.isLoggable(lvl))
+//				return true;
+//		// default level at root
+//		if(parent == null && level == null)
+//			return DEFAULT_LEVEL.isLoggable(lvl);
+		// default to all
+		return true;
 	}
 
 
@@ -217,11 +218,17 @@ public class xLog extends xLogPrinting {
 	// publish record
 	@Override
 	public void publish(xLogRecord record) {
+		xLevel lvl = record.getLevel();
+		if(!isLoggable(lvl))
+			return;
 		if(parent != null)
 			parent.publish(record);
-		if(!handlers.isEmpty())
-			for(xLogHandler handler : this.handlers)
-				handler.publish(record);
+		if(!handlers.isEmpty()) {
+			for(xLogHandler handler : this.handlers) {
+				if(handler.isLoggable(lvl))
+					handler.publish(record);
+			}
+		}
 	}
 
 
