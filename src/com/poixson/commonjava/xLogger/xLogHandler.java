@@ -37,6 +37,9 @@ public abstract class xLogHandler {
 	public void setLevel(xLevel lvl) {
 		this.level = lvl;
 	}
+	public xLevel getLevel() {
+		return level;
+	}
 	// is level loggable
 	public boolean isLoggable(xLevel lvl) {
 		if(level != null && level.isLoggable(lvl))
