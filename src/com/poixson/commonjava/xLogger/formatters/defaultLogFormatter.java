@@ -5,7 +5,7 @@ import com.poixson.commonjava.xLogger.xLogFormatter;
 import com.poixson.commonjava.xLogger.xLogRecord;
 
 
-public class defaultLogFormatter extends xLogFormatter {
+public class defaultLogFormatter implements xLogFormatter {
 
 
 	@Override
