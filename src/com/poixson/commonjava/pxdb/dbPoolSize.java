@@ -14,7 +14,7 @@ public class dbPoolSize extends Thread {
 
 	// max connections
 	private volatile int SOFT = 5;
-	private volatile int HARD = 10;
+	private volatile int HARD = 8;
 
 	private final dbPool pool;
 

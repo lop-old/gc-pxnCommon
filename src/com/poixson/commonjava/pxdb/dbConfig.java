@@ -56,7 +56,7 @@ public class dbConfig {
 		return null;
 	}
 	public static dbConfig load(String host, int port, String db, String user, String pass) {
-		if(host == null || host.isEmpty() || host.equalsIgnoreCase("localhost"))
+		if(host == null || host.isEmpty())
 			host = "127.0.0.1";
 		if(port < 1 || port > 65536)
 			port = 3306;
