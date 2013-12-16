@@ -2,13 +2,8 @@ package com.poixson.commonjava.Utils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.UUID;
-
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.xLogger.xLog;
@@ -131,49 +126,6 @@ public final class utilsString {
 		StringWriter writer = new StringWriter(256);
 		e.printStackTrace(new PrintWriter(writer));
 		return writer.toString().trim();
-	}
-
-
-	// md5
-	public static String MD5(String str) {
-		MessageDigest md = null;
-		try {
-			md = MessageDigest.getInstance("MD5");
-		} catch (NoSuchAlgorithmException e) {
-			log().trace(e);
-		}
-		md.update(str.getBytes());
-		byte[] byteData = md.digest();
-		StringBuffer hexString = new StringBuffer();
-		for (int i = 0; i < byteData.length; i++) {
-			String hex = Integer.toHexString(0xFF & byteData[i]);
-			if (hex.length() == 1) {
-				hexString.append('0');
-			}
-			hexString.append(hex);
-		}
-		return hexString.toString();
-	}
-
-
-	// base64 encode
-	public static String base64_encode(String data) {
-		if(data == null || data.isEmpty()) return null;
-		return base64_encode(data.getBytes());
-	}
-	public static String base64_encode(byte[] data) {
-		if(data == null || data.length == 0) return null;
-		BASE64Encoder encoder = new BASE64Encoder();
-		return encoder.encodeBuffer(data);
-	}
-	// base64 decode
-	public static String base64_decode(String data) {
-		if(data == null || data.isEmpty()) return null;
-		BASE64Decoder decoder = new BASE64Decoder();
-		try {
-			return new String( decoder.decodeBuffer(data) );
-		} catch (IOException ignore) {}
-		return null;
 	}
 
 
