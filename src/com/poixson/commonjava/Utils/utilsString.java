@@ -50,6 +50,13 @@ public final class utilsString {
 		// unknown object
 		return obj.toString();
 	}
+	// exception to string
+	public static String ExceptionToString(Throwable e) {
+		if(e == null) return null;
+		StringWriter writer = new StringWriter(256);
+		e.printStackTrace(new PrintWriter(writer));
+		return writer.toString().trim();
+	}
 
 
 	// string equals
@@ -117,15 +124,6 @@ public final class utilsString {
 			out.append(str);
 		}
 		return out.toString();
-	}
-
-
-	// exception to string
-	public static String ExceptionToString(Throwable e) {
-		if(e == null) return null;
-		StringWriter writer = new StringWriter(256);
-		e.printStackTrace(new PrintWriter(writer));
-		return writer.toString().trim();
 	}
 
 
