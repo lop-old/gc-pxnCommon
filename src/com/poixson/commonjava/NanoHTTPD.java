@@ -103,16 +103,17 @@ public abstract class NanoHTTPD {
     public final String hostname;
     public final int port;
     private volatile ServerSocket socket = null;
-    private Set<Socket> openConnections = new HashSet<Socket>();
+    private final Object socketLock = new Object();
+    private final Set<Socket> openConnections = new HashSet<Socket>();
     private volatile Thread thread = null;
     /**
      * Pluggable strategy for asynchronously executing requests.
      */
-    private AsyncRunner asyncRunner;
+    private volatile AsyncRunner asyncRunner = null;
     /**
      * Pluggable strategy for creating and cleaning up temporary files.
      */
-    private TempFileManagerFactory tempFileManagerFactory;
+    private volatile TempFileManagerFactory tempFileManagerFactory = null;
 
     /**
      * Constructs an HTTP server on given port.
@@ -161,15 +162,22 @@ public abstract class NanoHTTPD {
      * @throws IOException if the socket is in use.
      */
     public void start() throws IOException {
-        myServerSocket = new ServerSocket();
-        myServerSocket.bind((hostname != null) ? new InetSocketAddress(hostname, myPort) : new InetSocketAddress(myPort));
+        synchronized(socketLock) {
+            if(socket != null)
+                return;
+            socket = new ServerSocket();
+        }
+        if(hostname == null || hostname.isEmpty())
+            socket.bind(new InetSocketAddress(port));
+        else
+            socket.bind(new InetSocketAddress(hostname, port));
 
-        myThread = new Thread(new Runnable() {
+        thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 do {
                     try {
-                        final Socket finalAccept = myServerSocket.accept();
+                        final Socket finalAccept = socket.accept();
                         registerConnection(finalAccept);
                         finalAccept.setSoTimeout(SOCKET_READ_TIMEOUT);
                         final InputStream inputStream = finalAccept.getInputStream();
@@ -205,24 +213,26 @@ public abstract class NanoHTTPD {
                         }
                     } catch (IOException e) {
                     }
-                } while (!myServerSocket.isClosed());
+                } while (!socket.isClosed());
             }
         });
-        myThread.setDaemon(true);
-        myThread.setName("NanoHttpd Main Listener");
-        myThread.start();
+        thread.setDaemon(true);
+        thread.setName("NanoHttpd Main Listener");
+        thread.start();
     }
 
     /**
      * Stop the server.
      */
     public void stop() {
-        try {
-            safeClose(myServerSocket);
-            closeAllConnections();
-            myThread.join();
-        } catch (Exception e) {
-            e.printStackTrace();
+        synchronized(socketLock) {
+            try {
+                safeClose(socket);
+                closeAllConnections();
+                thread.join();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -232,8 +242,10 @@ public abstract class NanoHTTPD {
      * @param socket
      *            the {@link Socket} for the connection.
      */
-    public synchronized void registerConnection(Socket socket) {
-        openConnections.add(socket);
+    private void registerConnection(Socket socket) {
+        synchronized(socketLock) {
+            openConnections.add(socket);
+        }
     }
 
     /**
@@ -242,16 +254,22 @@ public abstract class NanoHTTPD {
      * @param socket
      *            the {@link Socket} for the connection.
      */
-    public synchronized void unRegisterConnection(Socket socket) {
-        openConnections.remove(socket);
+    private void unRegisterConnection(Socket socket) {
+        synchronized(socketLock) {
+            openConnections.remove(socket);
+        }
     }
 
     /**
      * Forcibly closes all connections that are open.
      */
-    public synchronized void closeAllConnections() {
-        for (Socket socket : openConnections) {
-            safeClose(socket);
+    public void closeAllConnections() {
+        synchronized(socketLock) {
+            if(openConnections.size() == 0)
+                return;
+            for (Socket socket : openConnections) {
+                safeClose(socket);
+            }
         }
     }
 
@@ -478,15 +496,17 @@ public abstract class NanoHTTPD {
      * useful when profiling the application.</p>
      */
     public static class DefaultAsyncRunner implements AsyncRunner {
-        private long requestCount;
+        private volatile long requestCount = 0;
 
         @Override
         public void exec(Runnable code) {
-            ++requestCount;
-            Thread t = new Thread(code);
-            t.setDaemon(true);
-            t.setName("NanoHttpd Request Processor (#" + requestCount + ")");
-            t.start();
+            requestCount++;
+            {
+                Thread t = new Thread(code);
+                t.setDaemon(true);
+                t.setName("NanoHttpd Request Processor (#"+Long.toString(requestCount)+")");
+                t.start();
+            }
         }
     }
 
@@ -769,9 +789,9 @@ public abstract class NanoHTTPD {
     }
 
     public static final class ResponseException extends Exception {
-		private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = 1L;
 
-		private final Response.Status status;
+        private final Response.Status status;
 
         public ResponseException(Response.Status status, String message) {
             super(message);
@@ -933,7 +953,7 @@ public abstract class NanoHTTPD {
                 // throw it out to close socket object (finalAccept)
                 throw e;
             } catch (SocketTimeoutException ste) {
-            	throw ste;
+                throw ste;
             } catch (IOException ioe) {
                 Response r = new Response(Response.Status.INTERNAL_ERROR, MIME_PLAINTEXT, "SERVER INTERNAL ERROR: IOException: " + ioe.getMessage());
                 r.send(outputStream);
