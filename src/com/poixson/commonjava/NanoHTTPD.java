@@ -185,7 +185,7 @@ public abstract class NanoHTTPD {
                             safeClose(finalAccept);
                             unRegisterConnection(finalAccept);
                         } else {
-                            asyncRunner.exec(new Runnable() {
+                            exec(new Runnable() {
                                 @Override
                                 public void run() {
                                     OutputStream outputStream = null;
@@ -415,6 +415,17 @@ public abstract class NanoHTTPD {
         this.asyncRunner = asyncRunner;
     }
 
+    /**
+     * Executes a Runnable task in a new thread.
+     *
+     * @param runnable
+     */
+    public void exec(Runnable run) {
+        if(run == null) return;
+        if(asyncRunner == null) throw new NullPointerException();
+        asyncRunner.exec(run);
+    }
+
     // ------------------------------------------------------------------------------- //
     //
     // Temp file handling strategy.
@@ -428,6 +439,14 @@ public abstract class NanoHTTPD {
      */
     public void setTempFileManagerFactory(TempFileManagerFactory tempFileManagerFactory) {
         this.tempFileManagerFactory = tempFileManagerFactory;
+    }
+
+    /**
+     * Get a new temp file manager.
+     */
+    public TempFileManager newTempFileManager() {
+        if(tempFileManagerFactory == null) return null;
+        return tempFileManagerFactory.create();
     }
 
     /**
