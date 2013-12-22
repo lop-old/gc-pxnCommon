@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.Utils.CoolDown;
+import com.poixson.commonjava.Utils.utilsCrypt;
 import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xTime;
@@ -164,7 +165,7 @@ public class dbConfig {
 			user += "@";
 		String key = utilsString.add(null, "mysql://", user, host, ":", Integer.toString(port), "/", db);
 		if(get_HASH_KEY() && user != null)
-			return utilsString.MD5(key);
+			return utilsCrypt.MD5(key);
 		return key;
 	}
 
