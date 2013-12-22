@@ -1,4 +1,4 @@
-package fi.iki.elonen;
+package com.poixson.commonjava;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
