@@ -100,11 +100,11 @@ public abstract class NanoHTTPD {
      * Pseudo-Parameter to use to store the actual query string in the parameters map for later re-processing.
      */
     private static final String QUERY_STRING_PARAMETER = "NanoHttpd.QUERY_STRING";
-    private final String hostname;
-    private final int myPort;
-    private ServerSocket myServerSocket;
+    public final String hostname;
+    public final int port;
+    private volatile ServerSocket socket = null;
     private Set<Socket> openConnections = new HashSet<Socket>();
-    private Thread myThread;
+    private volatile Thread thread = null;
     /**
      * Pluggable strategy for asynchronously executing requests.
      */
@@ -126,35 +126,32 @@ public abstract class NanoHTTPD {
      */
     public NanoHTTPD(String hostname, int port) {
         this.hostname = hostname;
-        this.myPort = port;
+        this.port = port;
         setTempFileManagerFactory(new DefaultTempFileManagerFactory());
         setAsyncRunner(new DefaultAsyncRunner());
     }
 
     private static final void safeClose(ServerSocket serverSocket) {
-        if (serverSocket != null) {
-            try {
-                serverSocket.close();
-            } catch (IOException e) {
-            }
+        if (serverSocket == null) return;
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
         }
     }
 
     private static final void safeClose(Socket socket) {
-        if (socket != null) {
-            try {
-                socket.close();
-            } catch (IOException e) {
-            }
+        if (socket == null) return;
+        try {
+            socket.close();
+        } catch (IOException e) {
         }
     }
 
     private static final void safeClose(Closeable closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (IOException e) {
-            }
+        if (closeable == null) return;
+        try {
+            closeable.close();
+        } catch (IOException e) {
         }
     }
 
@@ -259,15 +256,30 @@ public abstract class NanoHTTPD {
     }
 
     public final int getListeningPort() {
-        return myServerSocket == null ? -1 : myServerSocket.getLocalPort();
+        // return myServerSocket == null ? -1 : myServerSocket.getLocalPort();
+        if(socket == null)
+            return -1;
+        return socket.getLocalPort();
     }
 
     public final boolean wasStarted() {
-        return myServerSocket != null && myThread != null;
+        // return myServerSocket != null && myThread != null;
+        if(socket == null)
+            return false;
+        if(thread == null)
+            return false;
+        return true;
     }
 
     public final boolean isAlive() {
-        return wasStarted() && !myServerSocket.isClosed() && myThread.isAlive();
+        // return wasStarted() && !myServerSocket.isClosed() && myThread.isAlive();
+        if(!wasStarted())
+            return false;
+        if(socket.isClosed())
+            return false;
+        if(!thread.isAlive())
+            return false;
+        return true;
     }
 
     /**
