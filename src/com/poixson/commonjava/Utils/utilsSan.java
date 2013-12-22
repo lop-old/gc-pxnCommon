@@ -33,4 +33,16 @@ public final class utilsSan {
 	}
 
 
+	public static String ValidateStringEnum(String value, String...valids) {
+		if(value == null || value.isEmpty()) return null;
+		if(valids.length == 0) return null;
+		for(String v : valids) {
+			if(v == null || v.isEmpty()) continue;
+			if(v.equalsIgnoreCase(value))
+				return v;
+		}
+		return null;
+	}
+
+
 }
