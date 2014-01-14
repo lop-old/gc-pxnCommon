@@ -65,22 +65,21 @@ public final class utilsCrypt {
 	}
 	// crypt with key
 	public static String crypt(final String cryptMethod, final String key, final String data) {
-		Mac mac = null;
 		try {
-			SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(), cryptMethod);
-			mac = Mac.getInstance(cryptMethod);;
-			mac.init(keySpec);
+			final Mac mac = Mac.getInstance(cryptMethod);;
+			if(mac == null) return null;
+			mac.init(new SecretKeySpec(key.getBytes(), cryptMethod));
+			return toHex(
+				mac.doFinal(
+					data.getBytes()
+				)
+			);
 		} catch (NoSuchAlgorithmException e) {
 			log().trace(e);
 		} catch (InvalidKeyException e) {
 			log().trace(e);
 		}
-		if(mac == null) return null;
-		return toHex(
-			mac.doFinal(
-				data.getBytes()
-			)
-		);
+		return null;
 	}
 
 
@@ -95,22 +94,21 @@ public final class utilsCrypt {
 		return hmac(key, data, Hmac_SHA256);
 	}
 	public static String hmac(final String key, final String data, final String cryptMethod) {
-		SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(), cryptMethod);
-		Mac mac = null;
 		try {
-			mac = Mac.getInstance(cryptMethod);
-			mac.init(keySpec);
+			final Mac mac = Mac.getInstance(cryptMethod);
+			if(mac == null) return null;
+			mac.init(new SecretKeySpec(key.getBytes(), cryptMethod));
+			return toHex(
+				mac.doFinal(
+					data.getBytes()
+				)
+			);
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		} catch (InvalidKeyException e) {
 			e.printStackTrace();
 		}
-		if(mac == null) return null;
-		return toHex(
-			mac.doFinal(
-				data.getBytes()
-			)
-		);
+		return null;
 	}
 
 

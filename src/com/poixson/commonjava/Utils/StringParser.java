@@ -8,20 +8,20 @@ import java.util.List;
 public class StringParser {
 
 	private final String original;
-	private volatile String buffer;
+	private volatile String buffer = null;
 	private final String delim;
 	private volatile String first = null;
 	private volatile String part = null;
 
 
-	public StringParser(String data) {
+	public StringParser(final String data) {
 		this(" ", data);
 	}
 	public StringParser(final String delim, final String data) {
 		if(utilsString.isEmpty(delim)) throw new NullPointerException("delim is required");
-		this.buffer = (utilsString.isEmpty(data) ? "" : data);
+		if(utilsString.isNotEmpty(data))
+			this.buffer = data;
 		this.delim = delim;
-		this.buffer = data;
 		this.original = data;
 	}
 	public String[] SplitByLine(String data) {

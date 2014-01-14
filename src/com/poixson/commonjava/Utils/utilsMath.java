@@ -135,32 +135,21 @@ public final class utilsMath {
 
 
 	// is number
-	public static boolean isNumeric(String value) {
-		return !(toNumber(value) == null);
-	}
-	public static Integer toNumber(String value) {
-		try {
-			return Integer.parseInt(value);
-		} catch (Exception ignore) {
-			return null;
-		}
+	public static boolean isNumeric(final String value) {
 		if(utilsString.isEmpty(value)) return false;
+		return (toLong(value) != null);
 	}
 	// is boolean
-	public static boolean isBoolean(String value) {
-		return (parseBoolean(value) != null);
-	}
-	public static Boolean toBoolean(String value) {
-		return parseBoolean(value);
+	public static boolean isBoolean(final String value) {
+		return (toBoolean(value) != null);
 	}
 
 
 	// compare version numbers
 	public static String compareVersions(final String oldVersion, final String newVersion) {
-		if(oldVersion == null || newVersion == null) return null;
-		oldVersion = normalisedVersion(oldVersion);
-		newVersion = normalisedVersion(newVersion);
-		int cmp = oldVersion.compareTo(newVersion);
+		if(utilsString.isEmpty(oldVersion)) return null;
+		if(utilsString.isEmpty(newVersion)) return null;
+		final int cmp = normalisedVersion(oldVersion).compareTo(normalisedVersion(newVersion));
 		if(cmp < 0) return "<";
 		if(cmp > 0) return ">";
 		return "=";
@@ -170,10 +159,10 @@ public final class utilsMath {
 		final String delim = ".";
 		final int maxWidth = 5;
 		String[] split = Pattern.compile(delim, Pattern.LITERAL).split(version);
-		String output = "";
-		for(String s : split)
-			output += String.format("%"+maxWidth+'s', s);
-		return output;
+		final StringBuilder out = new StringBuilder();
+		for(final String str : split)
+			out.append(String.format("%"+maxWidth+'s', str));
+		return out.toString();
 	}
 
 
@@ -185,15 +174,16 @@ public final class utilsMath {
 	// random number (not last)
 	public static int getNewRandom(final int minNumber, final int maxNumber, final int oldNumber) {
 		if(minNumber == maxNumber) return minNumber;
-		if((maxNumber - minNumber) == 1)
+		if((maxNumber - minNumber) == 1) {
 			if(oldNumber == minNumber)
 				return maxNumber;
 			else
 				return minNumber;
+		}
 		int newNumber;
 		while(true) {
 			newNumber = getRandom(minNumber, maxNumber);
-			if (newNumber != oldNumber) return newNumber;
+			if(newNumber != oldNumber) return newNumber;
 		}
 	}
 

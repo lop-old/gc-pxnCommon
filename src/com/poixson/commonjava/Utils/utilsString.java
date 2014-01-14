@@ -85,12 +85,13 @@ public final class utilsString {
 	public static String trim(final String str, final String data) {
 		if(isEmpty(str))  return null;
 		if(isEmpty(data)) return null;
-		while(data.startsWith(str))
-			data = data.substring(size);
-		while(data.endsWith(str))
-			data = data.substring(0, 0-size);
-		return data;
 		final int size = str.length();
+		String out = data;
+		while(out.startsWith(str))
+			out = out.substring(size);
+		while(out.endsWith(str))
+			out = out.substring(0, 0-size);
+		return out;
 	}
 
 
@@ -140,13 +141,13 @@ public final class utilsString {
 	public static String RandomString(final int length) {
 		if(length == 0) return "";
 		if(length <  0) return null;
-		String str = "";
-		while(str.length() < length) {
-			String s = UUID.randomUUID().toString();
-			if(s == null) throw new NullPointerException();
-			str += s;
+		final StringBuilder buf = new StringBuilder();
+		while(buf.length() < length) {
+			final String str = UUID.randomUUID().toString();
+			if(str == null) throw new NullPointerException();
+			buf.append(str);
 		}
-		return str.substring( 0, utilsMath.MinMax(length, 0, str.length()) );
+		return buf.toString().substring( 0, utilsMath.MinMax(length, 0, buf.length()) );
 	}
 
 
@@ -162,18 +163,19 @@ public final class utilsString {
 	public static String addList(final String baseString, final List<String> addThis, final String delim) {
 		return addArray(baseString, (String[]) addThis.toArray(new String[0]), delim);
 	}
-		if(baseString == null) baseString = "";
 	public static String addArray(final String baseString, final String[] addThis, final String delim) {
-		StringBuilder string = new StringBuilder(baseString);
-			if(line == null || line.isEmpty()) continue;
-			if(string.length() != 0 && delim != null)
-				string.append(delim);
-			string.append(line);
+		final StringBuilder str = new StringBuilder(
+			baseString == null ? null : baseString
+		);
+		if(addThis == null || addThis.length == 0) return str.toString();
 		final String d = (isEmpty(delim) ? null : delim);
 		for(final String line : addThis) {
 			if(isEmpty(line)) continue;
+			if(str.length() > 0 && delim != null)
+				str.append(delim);
+			str.append(line);
 		}
-		return string.toString();
+		return str.toString();
 	}
 
 

@@ -21,8 +21,13 @@ public final class utilsReflect {
 			final Method method = clss.getClass().getMethod(methodName, getParemeterClasses(params));
 			if(method == null) return null;
 			return method.invoke(clss, params);
-		} catch (NoSuchMethodException | SecurityException
-				| InvocationTargetException | IllegalAccessException e) {
+		} catch (NoSuchMethodException e) {
+			log().trace(e);
+		} catch (SecurityException e) {
+			log().trace(e);
+		} catch (InvocationTargetException e) {
+			log().trace(e);
+		} catch (IllegalAccessException e) {
 			log().trace(e);
 		}
 		return null;

@@ -1,7 +1,6 @@
 package com.poixson.commonjava.Utils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -15,10 +14,10 @@ public final class utilsThread {
 
 	// list running thread names
 	public static String[] getThreadNames() {
-		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+		final Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
 		if(threadSet.isEmpty()) return null;
-		List<String> list = new ArrayList<String>();
-		for(Thread thread : threadSet) {
+		final Set<String> list = new HashSet<String>();
+		for(final Thread thread : threadSet) {
 			switch(thread.getName()) {
 //			case "Main-Server-Thread":
 			case "Reference Handler":
@@ -33,8 +32,9 @@ public final class utilsThread {
 			case "Exit":
 				continue;
 			default:
-				list.add(thread.getName());
 			}
+			// add to list
+			list.add(thread.getName());
 		}
 		if(list.isEmpty()) return null;
 		return list.toArray(new String[0]);
@@ -43,6 +43,7 @@ public final class utilsThread {
 
 	// sleep thread
 	public static void Sleep(final long ms) {
+		if(ms < 1) return;
 		try {
 			Thread.sleep(ms);
 		} catch (InterruptedException ignore) {}

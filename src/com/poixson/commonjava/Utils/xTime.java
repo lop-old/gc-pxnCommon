@@ -58,7 +58,7 @@ public class xTime {
 	}
 	public static xTime get(final String value) {
 		if(utilsString.isEmpty(value)) return null;
-		return get().set(string);
+		return get().set(value);
 	}
 	public static xTime get(final xTime time) {
 		if(time == null) return null;
@@ -87,8 +87,7 @@ public class xTime {
 
 	// get value
 	public long get(final TimeUnit unit) {
-		if(unit == null)
-			return 0;
+		if(unit == null) throw new NullPointerException("unit cannot be null");
 		return unit.convert(this.value, xTimeU.MS);
 	}
 	public String getString() {
@@ -102,15 +101,15 @@ public class xTime {
 	}
 	// set value
 	public xTime set(final long value, final TimeUnit unit) {
+		if(unit == null) throw new NullPointerException("unit cannot be null");
 		if(isFinal) return null;
-		if(unit == null) unit = (TimeUnit) xTimeU.MS;
 		this.value = xTimeU.MS.convert(value, unit);
 		return this;
 	}
 	public xTime set(final String value) {
 		if(isFinal) return null;
 		if(utilsString.isNotEmpty(value))
-			this.value = parseLong(string);
+			this.value = parseLong(value);
 		return this;
 	}
 	public xTime set(final xTime time) {
@@ -124,28 +123,29 @@ public class xTime {
 	// parse time from string
 	public static xTime parse(final String value) {
 		if(utilsString.isEmpty(value)) return null;
-		Long l = parseLong(string);
-		if(l == null)
+		final Long lng = parseLong(value);
+		if(lng == null)
 			return null;
-		return xTime.get(l, xTimeU.MS);
+		return xTime.get(lng, xTimeU.MS);
 	}
 	public static Long parseLong(final String value) {
 		if(utilsString.isEmpty(value)) return null;
 		long time = 0;
 		StringBuilder tmp = new StringBuilder();
-		for(char c : string.toCharArray()) {
-			if(c == ' ') continue;
-			if(Character.isDigit(c) || c == '.' || c == ',') {
-				tmp.append(c);
+		for(char chr : value.toCharArray()) {
+			if(chr == ' ') continue;
+			if(Character.isDigit(chr) || chr == '.' || chr == ',') {
+				tmp.append(chr);
 				continue;
 			}
-			if(Character.isLetter(c)) {
-				c = Character.toLowerCase(c);
-				if(timeValues.containsKey(c)) {
-					double u = (double) timeValues.get(c);
-					time += (utilsMath.parseDouble(tmp.toString()) * u);
+			if(Character.isLetter(chr)) {
+				chr = Character.toLowerCase(chr);
+				if(timeValues.containsKey(chr)) {
+					final double u = (double) timeValues.get(chr);
+					time += (utilsMath.toDouble(tmp.toString()) * u);
 				}
 				tmp = new StringBuilder();
+				continue;
 			}
 		}
 		return time;
@@ -158,6 +158,7 @@ public class xTime {
 		return toString(this);
 	}
 	public static String toString(final xTime time) {
+		if(time == null) return null;
 		return toString(time.getMS());
 	}
 	public static String toString(final long ms) {
@@ -171,57 +172,60 @@ public class xTime {
 		return buildString(time.getMS(), fullFormat);
 	}
 	public static String buildString(final long ms, final boolean fullFormat) {
-		if(ms <= 0)
-			return null;
-		StringBuilder string = new StringBuilder();
-		for(Entry<Character, Long> entry : timeValues.entrySet()) {
-			char c    = entry.getKey();
-			long u = entry.getValue();
-			if(ms < u) continue;
-			long val = (long) Math.floor(
-				((double) ms) / ((double) u)
+		if(ms < 1) return null;
+		long tmp = ms;
+		final StringBuilder out = new StringBuilder();
+		for(final Entry<Character, Long> entry : timeValues.entrySet()) {
+			final char c = entry.getKey();
+			final long u = entry.getValue();
+			// 0 for this unit
+			if(tmp < u) continue;
+			final long val = (long) Math.floor(
+				((double) tmp) / ((double) u)
 			);
 			// append to string
-			if(string.length() > 0)
-				string.append(' ');
-			string.append(Long.toString(val));
+			if(out.length() > 0)
+				out.append(' ');
+			out.append(Long.toString(val));
 			if(!fullFormat) {
-				string.append(c);
+				// minimal format
+				out.append(c);
 			} else {
+				// full format
 				switch(c) {
 				case 'y':
-					string.append(" year");
+					out.append(" year");
 					break;
 				case 'o':
-					string.append(" month");
+					out.append(" month");
 					break;
 				case 'w':
-					string.append(" week");
+					out.append(" week");
 					break;
 				case 'd':
-					string.append(" day");
+					out.append(" day");
 					break;
 				case 'h':
-					string.append(" hour");
+					out.append(" hour");
 					break;
 				case 'm':
-					string.append(" month");
+					out.append(" month");
 					break;
 				case 's':
-					string.append(" second");
+					out.append(" second");
 					break;
 				case 'n':
-					string.append(" ms");
+					out.append(" ms");
 					break;
 				default:
 					continue;
 				}
 				if(c != 'n' && val > 1)
-					string.append('s');
+					out.append('s');
 			}
-			ms = ms % u;
+			tmp = tmp % u;
 		}
-		return string.toString();
+		return out.toString();
 	}
 
 

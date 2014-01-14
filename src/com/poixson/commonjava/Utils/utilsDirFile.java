@@ -26,15 +26,21 @@ public final class utilsDirFile {
 			final File file = new File(lockFile);
 			final RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
 			final FileLock fileLock = randomAccessFile.getChannel().tryLock();
-			int pid = getPid();
+			final int pid = getPid();
 			if(pid > 0)
 				randomAccessFile.write(Integer.toString(pid).getBytes());
 			if(fileLock == null)
 				return false;
+			// register shutdown hook
 			Runtime.getRuntime().addShutdownHook(new Thread() {
+				private volatile FileLock lock;
+				public Thread init(final FileLock lock) {
+					this.lock = lock;
+					return this;
+				}
 				public void run() {
 					try {
-						fileLock.release();
+						lock.release();
 						randomAccessFile.close();
 						file.delete();
 					} catch (Exception e) {
@@ -42,7 +48,7 @@ public final class utilsDirFile {
 //						pxnLog.get().exception(e);
 					}
 				}
-			});
+			}.init(fileLock));
 			return true;
 		} catch (Exception e) {
 //			pxnLog.get().severe("Unable to create and/or lock file: "+lockFile);
@@ -52,15 +58,16 @@ public final class utilsDirFile {
 	}
 	// get pid for process (if possible)
 	public static int getPid() {
-		int pid = -1;
 		try {
-			pid = Integer.parseInt( ( new File("/proc/self")).getCanonicalFile().getName() );
+			return Integer.parseInt(
+				(new File("/proc/self")).getCanonicalFile().getName()
+			);
 		} catch (NumberFormatException e) {
 //			pxnLog.get().exception(e);
 		} catch (IOException e) {
 //			pxnLog.get().exception(e);
 		}
-		return pid;
+		return -1;
 	}
 
 
@@ -69,7 +76,10 @@ public final class utilsDirFile {
 		if(utilsString.isEmpty(libDir)) throw new NullPointerException("libDir cannot be null/empty");
 		// get lib path
 		final File file = new File(libDir);
-		if(file==null || !file.exists() || !file.isDirectory()) return;
+		if(!file.exists() || !file.isDirectory()) {
+System.out.println("Library path not found: "+libDir);
+			return;
+		}
 		final String libPath = file.getAbsolutePath();
 		if(utilsString.isEmpty(libPath)) return;
 		// get current paths
@@ -81,7 +91,7 @@ public final class utilsDirFile {
 			System.setProperty("java.library.path", libPath);
 		} else {
 			if(currentPaths.contains(libPath)) return;
-			System.setProperty("java.library.path", currentPaths+(currentPaths.contains(";")?";":":")+libPath);
+			System.setProperty("java.library.path", currentPaths+( currentPaths.contains(";") ? ";" : ":" )+libPath);
 		}
 		// force library paths to refresh
 		try {
@@ -103,10 +113,10 @@ public final class utilsDirFile {
 	public static InputStream OpenFile(final File file) {
 		if(file == null) return null;
 		try {
-			if(!file.exists()) throw new FileNotFoundException("File not found! "+file.getAbsoluteFile());
+			if(!file.exists()) throw new FileNotFoundException("File not found: "+file.getAbsoluteFile());
 			return new FileInputStream(file);
-		} catch (FileNotFoundException ignore) {
-//			pxnLog.get().warning("Failed to load config file: "+file.getAbsoluteFile());
+		} catch (FileNotFoundException e) {
+//			pxnLog.get().warning("Failed to load file: "+file.getAbsoluteFile());
 		}
 		return null;
 	}
@@ -124,22 +134,20 @@ public final class utilsDirFile {
 	public static InputJar OpenJarResource(final File jarFile, final String fileName) {
 		if(jarFile == null) throw new NullPointerException("jarFile cannot be null");
 		if(utilsString.isEmpty(fileName)) throw new NullPointerException("fileName cannot be null/empty");
-		JarFile jar = null;
-		InputStream fileInput = null;
 		try {
-			jar = new JarFile(jarFile);
-			JarEntry entry = jar.getJarEntry(fileName);
-			if(entry != null)
-				fileInput = jar.getInputStream(entry);
+			final JarFile jar = new JarFile(jarFile);
+			final JarEntry entry = jar.getJarEntry(fileName);
+			if(entry == null) return null;
+			final InputStream fileInput = jar.getInputStream(entry);
+			if(fileInput == null) return null;
+			return new InputJar(jar, fileInput);
 		} catch (IOException ignore) {}
-		if(fileInput == null)
-			return null;
-		return new InputJar(jar, fileInput);
+		return null;
 	}
 	public static class InputJar {
-		public JarFile jar;
-		public InputStream fileInput;
-		public InputJar(JarFile jar, InputStream fileInput) {
+		public final JarFile jar;
+		public final InputStream fileInput;
+		public InputJar(final JarFile jar, final InputStream fileInput) {
 			this.jar = jar;
 			this.fileInput = fileInput;
 		}
@@ -152,13 +160,13 @@ public final class utilsDirFile {
 				try {
 					jar.close();
 				} catch (IOException ignore) {}
-				jar = null;
+//				jar = null;
 			}
 			if(fileInput != null) {
 				try {
 					fileInput.close();
 				} catch (IOException ignore) {}
-				fileInput = null;
+//				fileInput = null;
 			}
 		}
 	}
@@ -178,10 +186,8 @@ public final class utilsDirFile {
 			return fileName;
 		final boolean a = (filePath.endsWith("/")   || filePath.endsWith("\\"));
 		final boolean b = (fileName.startsWith("/") || fileName.startsWith("\\"));
-		if(a && b)
-			return filePath + fileName.substring(1);
-		if(a || b)
-			return filePath + fileName;
+		if(a && b) return filePath + fileName.substring(1);
+		if(a || b) return filePath + fileName;
 		return filePath + File.separator + fileName;
 	}
 
