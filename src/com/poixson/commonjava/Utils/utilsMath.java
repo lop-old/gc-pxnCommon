@@ -13,6 +13,26 @@ public final class utilsMath {
 	private utilsMath() {}
 
 
+	// true;
+	public static final String[] truesy = new String[] {
+		"1",
+		"t",
+		"true",
+		"on",
+		"yes",
+		"enabled"
+	};
+	// false
+	public static final String[] falsy = new String[] {
+		"0",
+		"f",
+		"false",
+		"off",
+		"no",
+		"disabled"
+	};
+
+
 	// min/max value
 	public static int MinMax(final int value, final int min, final int max) {
 		if(min > max) throw new IllegalArgumentException("min cannot be greater than max");
@@ -157,22 +177,13 @@ public final class utilsMath {
 	// parse boolean
 	public static Boolean toBoolean(final String value) {
 		if(utilsString.isEmpty(value)) return null;
-		switch(value.toLowerCase()) {
-		// true;
-		case "1":
-		case "t":
-		case "true":
-		case "on":
-		case "enabled":
-			return true;
-		// false
-		case "0":
-		case "f":
-		case "false":
-		case "off":
-		case "disabled":
-			return false;
-		}
+		final String val = value.trim().toLowerCase();
+		for(final String v : truesy)
+			if(val.equals(v))
+				return true;
+		for(final String v : falsy)
+			if(val.equals(v))
+				return false;
 		return null;
 	}
 	public static boolean toBoolean(final String value, final boolean defaultValue) {
