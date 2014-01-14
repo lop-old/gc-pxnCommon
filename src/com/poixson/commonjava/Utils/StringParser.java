@@ -18,14 +18,14 @@ public class StringParser {
 		this(" ", data);
 	}
 	public StringParser(final String delim, final String data) {
-		if(delim == null || delim.isEmpty()) throw new NullPointerException("delim is required");
-		if(data  == null || data.isEmpty()) data = "";
+		if(utilsString.isEmpty(delim)) throw new NullPointerException("delim is required");
+		this.buffer = (utilsString.isEmpty(data) ? "" : data);
 		this.delim = delim;
 		this.buffer = data;
 		this.original = data;
 	}
 	public String[] SplitByLine(String data) {
-		if(data == null || data.isEmpty()) return null;
+		if(utilsString.isEmpty(data)) return null;
 		return data.replaceAll("\r", "").split("\n");
 	}
 	@Override
@@ -61,7 +61,7 @@ public class StringParser {
 		return get();
 	}
 	public boolean hasNext() {
-		return (buffer != null && !buffer.isEmpty());
+		return utilsString.isNotEmpty(buffer);
 	}
 	// get current part
 	public String get() {

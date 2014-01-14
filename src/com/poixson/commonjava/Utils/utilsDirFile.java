@@ -66,12 +66,12 @@ public final class utilsDirFile {
 
 	// add lib to paths
 	public static void addLibraryPath(final String libDir) {
-		if(libDir == null) throw new NullPointerException("libDir cannot be null");
+		if(utilsString.isEmpty(libDir)) throw new NullPointerException("libDir cannot be null/empty");
 		// get lib path
 		final File file = new File(libDir);
 		if(file==null || !file.exists() || !file.isDirectory()) return;
-		if(libPath == null || libPath.isEmpty()) return;
 		final String libPath = file.getAbsolutePath();
+		if(utilsString.isEmpty(libPath)) return;
 		// get current paths
 		final String currentPaths = System.getProperty("java.library.path");
 		if(currentPaths == null) return;
@@ -97,7 +97,7 @@ public final class utilsDirFile {
 
 	// open file
 	public static InputStream OpenFile(final String fileStr) {
-		if(fileStr == null | fileStr.isEmpty()) return null;
+		if(utilsString.isEmpty(fileStr)) return null;
 		return OpenFile(new File(fileStr));
 	}
 	public static InputStream OpenFile(final File file) {
@@ -112,7 +112,7 @@ public final class utilsDirFile {
 	}
 	// load resource
 	public static InputStream OpenResource(final String fileStr) {
-		if(fileStr == null || fileStr.isEmpty()) return null;
+		if(utilsString.isEmpty(fileStr)) return null;
 		try {
 			return utilsDirFile.class.getResourceAsStream(fileStr);
 		} catch(Exception ignore) {
@@ -122,9 +122,8 @@ public final class utilsDirFile {
 	}
 	// load yml from jar
 	public static InputJar OpenJarResource(final File jarFile, final String fileName) {
-		if(jarFile  == null)   throw new NullPointerException("jarFile cannot be null!");
-		if(fileName == null)   throw new NullPointerException("fileName cannot be null!");
-		if(fileName.isEmpty()) throw new NullPointerException("fileName cannot be empty!");
+		if(jarFile == null) throw new NullPointerException("jarFile cannot be null");
+		if(utilsString.isEmpty(fileName)) throw new NullPointerException("fileName cannot be null/empty");
 		JarFile jar = null;
 		InputStream fileInput = null;
 		try {
@@ -167,10 +166,9 @@ public final class utilsDirFile {
 
 	// build path+file
 	public static String buildFilePath(final String filePath, String fileName, String ext) {
-		if(fileName == null)   throw new NullPointerException("fileName cannot be null!");
-		if(fileName.isEmpty()) throw new NullPointerException("fileName cannot be empty!");
+		if(utilsString.isEmpty(fileName)) throw new NullPointerException("fileName cannot be null/empty");
 		// file extension
-		if(ext == null || ext.isEmpty())
+		if(utilsString.isEmpty(ext))
 			ext = ".yml";
 		if(!ext.startsWith("."))
 			ext = "." + ext;
@@ -191,7 +189,7 @@ public final class utilsDirFile {
 	public static String mergePaths(final String...strings) {
 		final StringBuilder merged = new StringBuilder();
 		for(String path : strings) {
-			if(path == null || path.isEmpty()) continue;
+			if(utilsString.isEmpty(path)) continue;
 			if(path.startsWith("/") || path.startsWith("\\"))
 				path = path.substring(1);
 			if(path.endsWith("/") || path.endsWith("\\"))

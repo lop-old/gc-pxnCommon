@@ -116,7 +116,7 @@ public final class utilsCrypt {
 
 	// base64 encode
 	public static String base64_encode(final String data) {
-		if(data == null || data.isEmpty()) return null;
+		if(utilsString.isEmpty(data)) return null;
 		return base64_encode(data.getBytes());
 	}
 	public static String base64_encode(final byte[] data) {
@@ -126,7 +126,7 @@ public final class utilsCrypt {
 	}
 	// base64 decode
 	public static String base64_decode(final String data) {
-		if(data == null || data.isEmpty()) return null;
+		if(utilsString.isEmpty(data)) return null;
 		try {
 			final BASE64Decoder decoder = new BASE64Decoder();
 			return new String( decoder.decodeBuffer(data) );

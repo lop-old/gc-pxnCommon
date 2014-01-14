@@ -17,6 +17,15 @@ public final class utilsString {
 	private utilsString() {}
 
 
+	// empty string
+	public static boolean isEmpty(final String value) {
+		return (value == null || value.length() == 0);
+	}
+	public static boolean isNotEmpty(final String value) {
+		return (value != null && value.length() > 0);
+	}
+
+
 	// object to string
 	public static String toString(final Object obj) {
 		// null
@@ -61,21 +70,21 @@ public final class utilsString {
 
 	// string equals
 	public static boolean strEquals(final String a, final String b) {
-		if(a == null || a.isEmpty()) return false;
-		if(b == null || b.isEmpty()) return false;
+		if(isEmpty(a)) return false;
+		if(isEmpty(b)) return false;
 		return a.equals(b);
 	}
 	public static boolean strEqualsIgnoreCase(final String a, final String b) {
-		if(a == null || a.isEmpty()) return false;
-		if(b == null || b.isEmpty()) return false;
+		if(isEmpty(a)) return false;
+		if(isEmpty(b)) return false;
 		return a.equalsIgnoreCase(b);
 	}
 
 
 	// trim from string
 	public static String trim(final String str, final String data) {
-		if(str  == null || str.isEmpty())  return null;
-		if(data == null || data.isEmpty()) return null;
+		if(isEmpty(str))  return null;
+		if(isEmpty(data)) return null;
 		while(data.startsWith(str))
 			data = data.substring(size);
 		while(data.endsWith(str))
@@ -87,9 +96,9 @@ public final class utilsString {
 
 	// replace with array
 	public static String replaceWith(final String replaceWhat, final String[] withWhat, final String data) {
-		if(replaceWhat == null || replaceWhat.isEmpty()) throw new NullPointerException("replaceWhat cannot be null");
+		if(isEmpty(replaceWhat)) throw new NullPointerException("replaceWhat cannot be null");
 		if(withWhat == null || withWhat.length == 0) return null;
-		if(data == null || data.isEmpty()) return null;
+		if(isEmpty(data)) return null;
 		final StringBuilder out = new StringBuilder();
 		final int count = withWhat.length;
 		int currentPos = 0;
@@ -109,13 +118,13 @@ public final class utilsString {
 
 	// repeat string with deliminator
 	public static String repeat(final String delim, final String str, final int repeat) {
-		if(delim == null || delim.isEmpty()) {
+		if(isEmpty(delim)) {
 			final StringBuilder out = new StringBuilder();
 			for(int i=0; i<repeat; i++)
 				out.append(str);
 			return out.toString();
 		}
-		if(str == null || str.isEmpty()) return null;
+		if(isEmpty(str)) return null;
 		if(repeat < 1) return null;
 		final StringBuilder out = new StringBuilder();
 		for(int i=0; i<repeat; i++) {
@@ -155,13 +164,14 @@ public final class utilsString {
 	}
 		if(baseString == null) baseString = "";
 	public static String addArray(final String baseString, final String[] addThis, final String delim) {
-		if(delim == null || delim.isEmpty()) delim = null;
 		StringBuilder string = new StringBuilder(baseString);
 			if(line == null || line.isEmpty()) continue;
 			if(string.length() != 0 && delim != null)
 				string.append(delim);
 			string.append(line);
+		final String d = (isEmpty(delim) ? null : delim);
 		for(final String line : addThis) {
+			if(isEmpty(line)) continue;
 		}
 		return string.toString();
 	}

@@ -61,6 +61,7 @@ public final class utilsMath {
 
 	// parse number
 	public static Integer parseInteger(String string) {
+		if(utilsString.isEmpty(value)) return null;
 		try {
 			return parseInt(string);
 		} catch (NumberFormatException ignore) {}
@@ -71,6 +72,7 @@ public final class utilsMath {
 	}
 	// parse long
 	public static Long parseLong(String string) {
+		if(utilsString.isEmpty(value)) return null;
 		try {
 			return parseLng(string);
 		} catch (NumberFormatException ignore) {}
@@ -81,6 +83,7 @@ public final class utilsMath {
 	}
 	// parse double
 	public static Double parseDouble(String string) {
+		if(utilsString.isEmpty(value)) return null;
 		try {
 			return parseDbl(string);
 		} catch (NumberFormatException ignore) {}
@@ -101,9 +104,9 @@ public final class utilsMath {
 	}
 	// parse boolean
 	public static Boolean parseBoolean(String value) {
-		if(value == null || value.isEmpty()) return null;
 		value = value.toLowerCase();
 		switch(value) {
+		if(utilsString.isEmpty(value)) return null;
 		// true;
 		case "1":
 		case "t":
@@ -133,7 +136,6 @@ public final class utilsMath {
 
 	// is number
 	public static boolean isNumeric(String value) {
-		if(value == null || value.isEmpty()) return false;
 		return !(toNumber(value) == null);
 	}
 	public static Integer toNumber(String value) {
@@ -142,6 +144,7 @@ public final class utilsMath {
 		} catch (Exception ignore) {
 			return null;
 		}
+		if(utilsString.isEmpty(value)) return false;
 	}
 	// is boolean
 	public static boolean isBoolean(String value) {
