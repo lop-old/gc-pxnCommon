@@ -15,20 +15,42 @@ public final class utilsMath {
 
 	// min/max value
 	public static int MinMax(final int value, final int min, final int max) {
-		if(value < min) value = min;
-		if(value > max) value = max;
+		if(min > max) throw new IllegalArgumentException("min cannot be greater than max");
+		if(value < min) return min;
+		if(value > max) return max;
 		return value;
 	}
-		if(value < min) value = min;
-		if(value > max) value = max;
+	public static byte MinMax(final byte value, final byte min, final byte max) {
+		if(min > max) throw new IllegalArgumentException("min cannot be greater than max");
+		if(value < min) return min;
+		if(value > max) return max;
 		return value;
 	}
-		if(value < min) value = min;
-		if(value > max) value = max;
+	public static short MinMax(final short value, final short min, final short max) {
+		if(min > max) throw new IllegalArgumentException("min cannot be greater than max");
+		if(value < min) return min;
+		if(value > max) return max;
 		return value;
 	}
 	public static long MinMax(final long value, final long min, final long max) {
+		if(min > max) throw new IllegalArgumentException("min cannot be greater than max");
+		if(value < min) return min;
+		if(value > max) return max;
+		return value;
+	}
 	public static double MinMax(final double value, final double min, final double max) {
+		if(min > max) throw new IllegalArgumentException("min cannot be greater than max");
+		if(value < min) return min;
+		if(value > max) return max;
+		return value;
+	}
+	public static float MinMax(final float value, final float min, final float max) {
+		if(min > max) throw new IllegalArgumentException("min cannot be greater than max");
+		if(value < min) return min;
+		if(value > max) return max;
+		return value;
+	}
+/*
 	// min/max by object
 	public static boolean MinMax(Integer value, int min, int max) {
 		if(value == null) throw new NullPointerException("value cannot be null");
@@ -51,6 +73,7 @@ public final class utilsMath {
 		if(value > max) {value = max; changed = true;}
 		return changed;
 	}
+*/
 
 
 	// formatDecimal("0.00", double)
