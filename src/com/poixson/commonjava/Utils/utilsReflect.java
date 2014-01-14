@@ -16,20 +16,19 @@ public final class utilsReflect {
 
 
 	// utilsReflect.invoke(new TestClass(), "func", "arg");
-	public static Object invoke(Object clss, String methodName, Object... params) {
-		Object object = null;
-		Method method;
+	public static Object invoke(final Object clss, final String methodName, final Object... params) {
 		try {
-			method = clss.getClass().getMethod(methodName, getParemeterClasses(params));
-			object = method.invoke(clss, params);
+			final Method method = clss.getClass().getMethod(methodName, getParemeterClasses(params));
+			if(method == null) return null;
+			return method.invoke(clss, params);
 		} catch (NoSuchMethodException | SecurityException
 				| InvocationTargetException | IllegalAccessException e) {
 			log().trace(e);
 		}
-		return object;
+		return null;
 	}
 	@SuppressWarnings("rawtypes")
-	private static Class[] getParemeterClasses(Object... params) {
+	private static Class[] getParemeterClasses(final Object...params) {
 		Class[] classes = new Class[params.length];
 		for(int i = 0; i < classes.length; i++)
 			classes[i] = params[i].getClass();

@@ -65,15 +65,15 @@ public final class utilsDirFile {
 
 
 	// add lib to paths
-	public static void addLibraryPath(String libDir) {
+	public static void addLibraryPath(final String libDir) {
 		if(libDir == null) throw new NullPointerException("libDir cannot be null");
 		// get lib path
-		File file = new File(libDir);
+		final File file = new File(libDir);
 		if(file==null || !file.exists() || !file.isDirectory()) return;
-		String libPath = file.getAbsolutePath();
 		if(libPath == null || libPath.isEmpty()) return;
+		final String libPath = file.getAbsolutePath();
 		// get current paths
-		String currentPaths = System.getProperty("java.library.path");
+		final String currentPaths = System.getProperty("java.library.path");
 		if(currentPaths == null) return;
 //		pxnLog.get().debug("Adding lib path: "+libDir);
 		// set library paths
@@ -85,8 +85,7 @@ public final class utilsDirFile {
 		}
 		// force library paths to refresh
 		try {
-			Field fieldSysPath;
-			fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
+			final Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
 			fieldSysPath.setAccessible(true);
 			fieldSysPath.set(null, null);
 		} catch (SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
@@ -97,11 +96,11 @@ public final class utilsDirFile {
 
 
 	// open file
-	public static InputStream OpenFile(String fileStr) {
+	public static InputStream OpenFile(final String fileStr) {
 		if(fileStr == null | fileStr.isEmpty()) return null;
 		return OpenFile(new File(fileStr));
 	}
-	public static InputStream OpenFile(File file) {
+	public static InputStream OpenFile(final File file) {
 		if(file == null) return null;
 		try {
 			if(!file.exists()) throw new FileNotFoundException("File not found! "+file.getAbsoluteFile());
@@ -112,7 +111,7 @@ public final class utilsDirFile {
 		return null;
 	}
 	// load resource
-	public static InputStream OpenResource(String fileStr) {
+	public static InputStream OpenResource(final String fileStr) {
 		if(fileStr == null || fileStr.isEmpty()) return null;
 		try {
 			return utilsDirFile.class.getResourceAsStream(fileStr);
@@ -122,7 +121,7 @@ public final class utilsDirFile {
 		return null;
 	}
 	// load yml from jar
-	public static InputJar OpenJarResource(File jarFile, String fileName) {
+	public static InputJar OpenJarResource(final File jarFile, final String fileName) {
 		if(jarFile  == null)   throw new NullPointerException("jarFile cannot be null!");
 		if(fileName == null)   throw new NullPointerException("fileName cannot be null!");
 		if(fileName.isEmpty()) throw new NullPointerException("fileName cannot be empty!");
@@ -167,7 +166,7 @@ public final class utilsDirFile {
 
 
 	// build path+file
-	public static String buildFilePath(String filePath, String fileName, String ext) {
+	public static String buildFilePath(final String filePath, String fileName, String ext) {
 		if(fileName == null)   throw new NullPointerException("fileName cannot be null!");
 		if(fileName.isEmpty()) throw new NullPointerException("fileName cannot be empty!");
 		// file extension
@@ -179,8 +178,8 @@ public final class utilsDirFile {
 			fileName += ext;
 		if(filePath == null || filePath.isEmpty())
 			return fileName;
-		boolean a = (filePath.endsWith("/") || filePath.endsWith("\\"));
-		boolean b = (fileName.startsWith("/") || fileName.startsWith("\\"));
+		final boolean a = (filePath.endsWith("/")   || filePath.endsWith("\\"));
+		final boolean b = (fileName.startsWith("/") || fileName.startsWith("\\"));
 		if(a && b)
 			return filePath + fileName.substring(1);
 		if(a || b)
@@ -189,8 +188,8 @@ public final class utilsDirFile {
 	}
 
 
-	public static String mergePaths(String... strings) {
-		StringBuilder merged = new StringBuilder();
+	public static String mergePaths(final String...strings) {
+		final StringBuilder merged = new StringBuilder();
 		for(String path : strings) {
 			if(path == null || path.isEmpty()) continue;
 			if(path.startsWith("/") || path.startsWith("\\"))
@@ -205,7 +204,7 @@ public final class utilsDirFile {
 	}
 
 
-	public static String san(String text) {
+	public static String san(final String text) {
 		return utilsSan.FileName(text);
 	}
 

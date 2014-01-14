@@ -11,17 +11,17 @@ public class CoolDown {
 	public static CoolDown get() {
 		return new CoolDown();
 	}
-	public static CoolDown get(long ms) {
+	public static CoolDown get(final long ms) {
 		CoolDown cool = CoolDown.get();
 		cool.setDuration(ms);
 		return cool;
 	}
-	public static CoolDown get(String time) {
+	public static CoolDown get(final String time) {
 		CoolDown cool = CoolDown.get();
 		cool.setDuration(time);
 		return cool;
 	}
-	public static CoolDown get(xTime time) {
+	public static CoolDown get(final xTime time) {
 		CoolDown cool = CoolDown.get();
 		cool.setDuration(time);
 		return cool;
@@ -58,13 +58,13 @@ public class CoolDown {
 
 
 	// set duration
-	public void setDuration(long ms) {
+	public void setDuration(final long ms) {
 		this.coolDuration.set(ms, xTimeU.MS);
 	}
-	public void setDuration(String time) {
+	public void setDuration(final String time) {
 		this.coolDuration.set(time);
 	}
-	public void setDuration(xTime time) {
+	public void setDuration(final xTime time) {
 		this.coolDuration.set(time);
 	}
 	// get duration

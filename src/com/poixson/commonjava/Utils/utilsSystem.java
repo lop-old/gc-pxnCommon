@@ -20,16 +20,16 @@ public final class utilsSystem {
 
 
 	// cast a collection to list
-	public static <T> List<T> castList(Class<? extends T> clss, Collection<?> c) {
+	public static <T> List<T> castList(final Class<? extends T> clss, final Collection<?> c) {
 		if(clss == null) throw new NullPointerException("clss cannot be null!");
 		if(c    == null) throw new NullPointerException("c cannot be null!");
-	    List<T> result = new ArrayList<T>(c.size());
-	    for(Object o : c)
-	    	result.add(clss.cast(o));
-	    return result;
+		final List<T> result = new ArrayList<T>(c.size());
+		for(final Object o : c)
+			result.add(clss.cast(o));
+		return result;
 	}
 	@SuppressWarnings("unchecked")
-	public static <T> List<T> castList(Class<? extends T> clss, Object object) {
+	public static <T> List<T> castList(final Class<? extends T> clss, final Object object) {
 		if(clss   == null) throw new NullPointerException("clss cannot be null!");
 		if(object == null) throw new NullPointerException("object cannot be null!");
 		try {

@@ -14,21 +14,21 @@ public final class utilsMath {
 
 
 	// min/max value
-	public static int MinMax(int value, int min, int max) {
+	public static int MinMax(final int value, final int min, final int max) {
 		if(value < min) value = min;
 		if(value > max) value = max;
 		return value;
 	}
-	public static long MinMax(long value, long min, long max) {
 		if(value < min) value = min;
 		if(value > max) value = max;
 		return value;
 	}
-	public static double MinMax(double value, double min, double max) {
 		if(value < min) value = min;
 		if(value > max) value = max;
 		return value;
 	}
+	public static long MinMax(final long value, final long min, final long max) {
+	public static double MinMax(final double value, final double min, final double max) {
 	// min/max by object
 	public static boolean MinMax(Integer value, int min, int max) {
 		if(value == null) throw new NullPointerException("value cannot be null");
@@ -54,7 +54,7 @@ public final class utilsMath {
 
 
 	// formatDecimal("0.00", double)
-	public static String FormatDecimal(String format, double value) {
+	public static String FormatDecimal(final String format, final double value) {
 		return (new DecimalFormat(format).format(value));
 	}
 
@@ -153,7 +153,7 @@ public final class utilsMath {
 
 
 	// compare version numbers
-	public static String compareVersions(String oldVersion, String newVersion) {
+	public static String compareVersions(final String oldVersion, final String newVersion) {
 		if(oldVersion == null || newVersion == null) return null;
 		oldVersion = normalisedVersion(oldVersion);
 		newVersion = normalisedVersion(newVersion);
@@ -163,9 +163,9 @@ public final class utilsMath {
 		return "=";
 		//return cmp<0 ? "<" : cmp>0 ? ">" : "=";
 	}
-	public static String normalisedVersion(String version) {
-		String delim = ".";
-		int maxWidth = 5;
+	public static String normalisedVersion(final String version) {
+		final String delim = ".";
+		final int maxWidth = 5;
 		String[] split = Pattern.compile(delim, Pattern.LITERAL).split(version);
 		String output = "";
 		for(String s : split)
@@ -175,12 +175,12 @@ public final class utilsMath {
 
 
 	// random number
-	public static int getRandom(int minNumber, int maxNumber) {
-		Random randomGen = new Random(utilsSystem.getSystemMillis());
+	public static int getRandom(final int minNumber, final int maxNumber) {
+		final Random randomGen = new Random(utilsSystem.getSystemMillis());
 		return randomGen.nextInt(maxNumber - minNumber) + minNumber;
 	}
 	// random number (not last)
-	public static int getNewRandom(int minNumber, int maxNumber, int oldNumber) {
+	public static int getNewRandom(final int minNumber, final int maxNumber, final int oldNumber) {
 		if(minNumber == maxNumber) return minNumber;
 		if((maxNumber - minNumber) == 1)
 			if(oldNumber == minNumber)

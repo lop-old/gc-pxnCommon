@@ -34,37 +34,37 @@ public final class utilsCrypt {
 
 
 	// md5
-	public static String MD5(String data) {
+	public static String MD5(final String data) {
 		return crypt(CRYPT_MD5, data);
 	}
 	// sha1
-	public static String SHA1(String data) {
+	public static String SHA1(final String data) {
 		return crypt(CRYPT_SHA1, data);
 	}
 	// sha256
-	public static String SHA256(String data) {
+	public static String SHA256(final String data) {
 		return crypt(CRYPT_SHA256, data);
 	}
 	// sha512
-	public static String SHA512(String data) {
+	public static String SHA512(final String data) {
 		return crypt(CRYPT_SHA512, data);
 	}
 
 
 	// perform crypt
-	public static String crypt(String cryptMethod, String data) {
-		MessageDigest md = null;
+	public static String crypt(final String cryptMethod, final String data) {
 		try {
-			md = MessageDigest.getInstance(cryptMethod);
+			final MessageDigest md = MessageDigest.getInstance(cryptMethod);
+			if(md == null) return null;
+			md.update(data.getBytes());
+			return toHex(md.digest());
 		} catch (NoSuchAlgorithmException e) {
 			log().trace(e);
 		}
-		if(md == null) return null;
-		md.update(data.getBytes());
-		return toHex(md.digest());
+		return null;
 	}
 	// crypt with key
-	public static String crypt(String cryptMethod, String key, String data) {
+	public static String crypt(final String cryptMethod, final String key, final String data) {
 		Mac mac = null;
 		try {
 			SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(), cryptMethod);
@@ -85,16 +85,16 @@ public final class utilsCrypt {
 
 
 	// encrypted data checksum
-	public static String hmacMD5(String key, String data) {
+	public static String hmacMD5(final String key, final String data) {
 		return hmac(key, data, Hmac_MD5);
 	}
-	public static String hmacSHA1(String key, String data) {
+	public static String hmacSHA1(final String key, final String data) {
 		return hmac(key, data, Hmac_SHA1);
 	}
-	public static String hmacSHA256(String key, String data) {
+	public static String hmacSHA256(final String key, final String data) {
 		return hmac(key, data, Hmac_SHA256);
 	}
-	public static String hmac(String key, String data, String cryptMethod) {
+	public static String hmac(final String key, final String data, final String cryptMethod) {
 		SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(), cryptMethod);
 		Mac mac = null;
 		try {
@@ -115,20 +115,20 @@ public final class utilsCrypt {
 
 
 	// base64 encode
-	public static String base64_encode(String data) {
+	public static String base64_encode(final String data) {
 		if(data == null || data.isEmpty()) return null;
 		return base64_encode(data.getBytes());
 	}
-	public static String base64_encode(byte[] data) {
+	public static String base64_encode(final byte[] data) {
 		if(data == null || data.length == 0) return null;
-		BASE64Encoder encoder = new BASE64Encoder();
+		final BASE64Encoder encoder = new BASE64Encoder();
 		return encoder.encodeBuffer(data);
 	}
 	// base64 decode
-	public static String base64_decode(String data) {
+	public static String base64_decode(final String data) {
 		if(data == null || data.isEmpty()) return null;
-		BASE64Decoder decoder = new BASE64Decoder();
 		try {
+			final BASE64Decoder decoder = new BASE64Decoder();
 			return new String( decoder.decodeBuffer(data) );
 		} catch (IOException ignore) {}
 		return null;
@@ -136,14 +136,14 @@ public final class utilsCrypt {
 
 
 	// hex encode
-	public static String toHex(String data) {
+	public static String toHex(final String data) {
 		return toHex(data.getBytes());
 	}
-	public static String toHex(byte[] data) {
+	public static String toHex(final byte[] data) {
 		if(data == null || data.length == 0) return null;
-		StringBuilder str = new StringBuilder(data.length * 2);
-		Formatter formatter = new Formatter(str);
-		for(byte b : data)
+		final StringBuilder str = new StringBuilder(data.length * 2);
+		final Formatter formatter = new Formatter(str);
+		for(final byte b : data)
 			formatter.format("%02x", b);
 		if(formatter != null) {
 			try {
@@ -163,16 +163,16 @@ public final class utilsCrypt {
 //		return hexString.toString();
 	}
 	// hex decode
-	public static byte[] fromHex(String hex) {
+	public static byte[] fromHex(final String hex) {
 		return fromHex(hex.toCharArray());
 	}
-	public static byte[] fromHex(char[] hex) {
+	public static byte[] fromHex(final char[] hex) {
 		if(hex == null || hex.length == 0) return null;
-		int length = hex.length / 2;
+		final int length = hex.length / 2;
 		byte[] out = new byte[length];
 		for(int i=0; i<length; i++) {
-			int high = Character.digit(hex[i * 2], 16);
-			int low = Character.digit(hex[(i * 2) + 1], 16);
+			final int high = Character.digit(hex[i * 2], 16);
+			final int low = Character.digit(hex[(i * 2) + 1], 16);
 			int value = (high << 4) | low;
 			if(value > 127)
 				value -= 256;

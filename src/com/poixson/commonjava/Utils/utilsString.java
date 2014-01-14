@@ -18,7 +18,7 @@ public final class utilsString {
 
 
 	// object to string
-	public static String toString(Object obj) {
+	public static String toString(final Object obj) {
 		// null
 		if(obj == null)
 			return null;
@@ -51,21 +51,21 @@ public final class utilsString {
 		return obj.toString();
 	}
 	// exception to string
-	public static String ExceptionToString(Throwable e) {
+	public static String ExceptionToString(final Throwable e) {
 		if(e == null) return null;
-		StringWriter writer = new StringWriter(256);
+		final StringWriter writer = new StringWriter(256);
 		e.printStackTrace(new PrintWriter(writer));
 		return writer.toString().trim();
 	}
 
 
 	// string equals
-	public static boolean strEquals(String a, String b) {
+	public static boolean strEquals(final String a, final String b) {
 		if(a == null || a.isEmpty()) return false;
 		if(b == null || b.isEmpty()) return false;
 		return a.equals(b);
 	}
-	public static boolean strEqualsIgnoreCase(String a, String b) {
+	public static boolean strEqualsIgnoreCase(final String a, final String b) {
 		if(a == null || a.isEmpty()) return false;
 		if(b == null || b.isEmpty()) return false;
 		return a.equalsIgnoreCase(b);
@@ -73,28 +73,28 @@ public final class utilsString {
 
 
 	// trim from string
-	public static String trim(String str, String data) {
+	public static String trim(final String str, final String data) {
 		if(str  == null || str.isEmpty())  return null;
 		if(data == null || data.isEmpty()) return null;
-		int size = str.length();
 		while(data.startsWith(str))
 			data = data.substring(size);
 		while(data.endsWith(str))
 			data = data.substring(0, 0-size);
 		return data;
+		final int size = str.length();
 	}
 
 
 	// replace with array
-	public static String replaceWith(String replaceWhat, String[] withWhat, String data) {
+	public static String replaceWith(final String replaceWhat, final String[] withWhat, final String data) {
 		if(replaceWhat == null || replaceWhat.isEmpty()) throw new NullPointerException("replaceWhat cannot be null");
 		if(withWhat == null || withWhat.length == 0) return null;
 		if(data == null || data.isEmpty()) return null;
-		StringBuilder out = new StringBuilder();
-		int count = withWhat.length;
+		final StringBuilder out = new StringBuilder();
+		final int count = withWhat.length;
 		int currentPos = 0;
 		for(int i=0; i<count; i++) {
-			int thisPos = data.indexOf("?", currentPos);
+			final int thisPos = data.indexOf("?", currentPos);
 			if(thisPos > 0) {
 				out.append(data.substring(currentPos, thisPos))
 					.append(withWhat[i]);
@@ -108,16 +108,16 @@ public final class utilsString {
 
 
 	// repeat string with deliminator
-	public static String repeat(String delim, String str, int repeat) {
+	public static String repeat(final String delim, final String str, final int repeat) {
 		if(delim == null || delim.isEmpty()) {
-			StringBuilder out = new StringBuilder();
+			final StringBuilder out = new StringBuilder();
 			for(int i=0; i<repeat; i++)
 				out.append(str);
 			return out.toString();
 		}
 		if(str == null || str.isEmpty()) return null;
 		if(repeat < 1) return null;
-		StringBuilder out = new StringBuilder();
+		final StringBuilder out = new StringBuilder();
 		for(int i=0; i<repeat; i++) {
 			if(out.length() > 0)
 				out.append(delim);
@@ -128,7 +128,7 @@ public final class utilsString {
 
 
 	// generate a random string
-	public static String RandomString(int length) {
+	public static String RandomString(final int length) {
 		if(length == 0) return "";
 		if(length <  0) return null;
 		String str = "";
@@ -142,26 +142,26 @@ public final class utilsString {
 
 
 	// add strings with delimiter
-//	public static String add(String baseString, String addThis, String delim) {
+//	public static String add(final String baseString, final String addThis, final String delim) {
 //		if(addThis.isEmpty())    return baseString;
 //		if(baseString.isEmpty()) return addThis;
 //		return baseString + delim + addThis;
 //	}
-	public static String add(String delim, String...addThis) {
+	public static String add(final String delim, final String...addThis) {
 		return addArray(null, addThis, delim);
 	}
-	public static String addList(String baseString, List<String> addThis, String delim) {
+	public static String addList(final String baseString, final List<String> addThis, final String delim) {
 		return addArray(baseString, (String[]) addThis.toArray(new String[0]), delim);
 	}
-	public static String addArray(String baseString, String[] addThis, String delim) {
 		if(baseString == null) baseString = "";
+	public static String addArray(final String baseString, final String[] addThis, final String delim) {
 		if(delim == null || delim.isEmpty()) delim = null;
 		StringBuilder string = new StringBuilder(baseString);
-		for(String line : addThis) {
 			if(line == null || line.isEmpty()) continue;
 			if(string.length() != 0 && delim != null)
 				string.append(delim);
 			string.append(line);
+		for(final String line : addThis) {
 		}
 		return string.toString();
 	}

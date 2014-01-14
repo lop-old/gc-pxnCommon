@@ -13,10 +13,10 @@ public class HistoryRND {
 	private int historySize;
 
 
-	public HistoryRND(int min, int max) {
+	public HistoryRND(final int min, final int max) {
 		this(min, max, (max - min) / 2);
 	}
-	public HistoryRND(int min, int max, int historySize) {
+	public HistoryRND(final int min, final int max, final int historySize) {
 		if(min > max) throw new IllegalArgumentException("min must be lower than max!");
 		this.min = min;
 		this.max = max;

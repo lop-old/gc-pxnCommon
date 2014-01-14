@@ -42,12 +42,12 @@ public final class utilsThread {
 
 
 	// sleep thread
-	public static void Sleep(long ms) {
+	public static void Sleep(final long ms) {
 		try {
 			Thread.sleep(ms);
 		} catch (InterruptedException ignore) {}
 	}
-	public static void Sleep(xTime time) {
+	public static void Sleep(final xTime time) {
 		if(time == null) return;
 		Sleep(time.getMS());
 	}

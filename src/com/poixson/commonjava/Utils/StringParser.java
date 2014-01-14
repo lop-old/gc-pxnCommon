@@ -9,7 +9,7 @@ public class StringParser {
 
 	private final String original;
 	private volatile String buffer;
-	private volatile String delim;
+	private final String delim;
 	private volatile String first = null;
 	private volatile String part = null;
 
@@ -17,7 +17,7 @@ public class StringParser {
 	public StringParser(String data) {
 		this(" ", data);
 	}
-	public StringParser(String delim, String data) {
+	public StringParser(final String delim, final String data) {
 		if(delim == null || delim.isEmpty()) throw new NullPointerException("delim is required");
 		if(data  == null || data.isEmpty()) data = "";
 		this.delim = delim;

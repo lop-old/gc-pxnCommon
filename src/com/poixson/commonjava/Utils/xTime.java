@@ -52,20 +52,20 @@ public class xTime {
 	public static xTime get() {
 		return new xTime(0);
 	}
-	public static xTime get(Long ms, TimeUnit unit) {
+	public static xTime get(final Long ms, final TimeUnit unit) {
 		if(ms == null) return null;
 		return get().set(ms.longValue(), unit);
 	}
-	public static xTime get(String string) {
+	public static xTime get(final String value) {
 		if(string == null) return null;
 		return get().set(string);
 	}
-	public static xTime get(xTime time) {
+	public static xTime get(final xTime time) {
 		if(time == null) return null;
 		return get().set(time);
 	}
 	// new object
-	protected xTime(long ms) {
+	protected xTime(final long ms) {
 		this.value = ms;
 	}
 	// clone object
@@ -86,7 +86,7 @@ public class xTime {
 
 
 	// get value
-	public long get(TimeUnit unit) {
+	public long get(final TimeUnit unit) {
 		if(unit == null)
 			return 0;
 		return unit.convert(this.value, xTimeU.MS);
@@ -101,19 +101,19 @@ public class xTime {
 		return (int) (value / TICK);
 	}
 	// set value
-	public xTime set(long value, TimeUnit unit) {
+	public xTime set(final long value, final TimeUnit unit) {
 		if(isFinal) return null;
 		if(unit == null) unit = (TimeUnit) xTimeU.MS;
 		this.value = xTimeU.MS.convert(value, unit);
 		return this;
 	}
-	public xTime set(String string) {
+	public xTime set(final String value) {
 		if(isFinal) return null;
 		if(string != null && !string.isEmpty())
 			this.value = parseLong(string);
 		return this;
 	}
-	public xTime set(xTime time) {
+	public xTime set(final xTime time) {
 		if(isFinal) return null;
 		if(time != null)
 			this.value = time.getMS();
@@ -122,13 +122,13 @@ public class xTime {
 
 
 	// parse time from string
-	public static xTime parse(String string) {
+	public static xTime parse(final String value) {
 		Long l = parseLong(string);
 		if(l == null)
 			return null;
 		return xTime.get(l, xTimeU.MS);
 	}
-	public static Long parseLong(String string) {
+	public static Long parseLong(final String value) {
 		if(string == null || string.isEmpty())
 			return null;
 		long time = 0;
@@ -157,20 +157,20 @@ public class xTime {
 	public String toString() {
 		return toString(this);
 	}
-	public static String toString(xTime time) {
+	public static String toString(final xTime time) {
 		return toString(time.getMS());
 	}
-	public static String toString(long ms) {
+	public static String toString(final long ms) {
 		return buildString(ms, false);
 	}
 	// full format
 	public String toFullString() {
 		return toString(this, true);
 	}
-	public static String toString(xTime time, boolean fullFormat) {
+	public static String toString(final xTime time, final boolean fullFormat) {
 		return buildString(time.getMS(), fullFormat);
 	}
-	public static String buildString(long ms, boolean fullFormat) {
+	public static String buildString(final long ms, final boolean fullFormat) {
 		if(ms <= 0)
 			return null;
 		StringBuilder string = new StringBuilder();
