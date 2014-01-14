@@ -80,56 +80,84 @@ public final class utilsMath {
 	public static String FormatDecimal(final String format, final double value) {
 		return (new DecimalFormat(format).format(value));
 	}
+	// formatDecimal("0.00", float)
+	public static String FormatDecimal(final String format, final float value) {
+		return (new DecimalFormat(format).format(value));
+	}
 
 
 	// parse number
-	public static Integer parseInteger(String string) {
+	public static Integer toInt(final String value) {
 		if(utilsString.isEmpty(value)) return null;
 		try {
-			return parseInt(string);
+			return Integer.parseInt(value);
 		} catch (NumberFormatException ignore) {}
 		return null;
 	}
-	public static int parseInt(String string) throws NumberFormatException {
-		return Integer.parseInt(string);
+	public static int toInt(final String value, final int defaultValue) {
+		Integer num = toInt(value);
+		if(num == null) return defaultValue;
+		return num.intValue();
+	}
+	// parse byte
+	public static Byte toByte(final String value) {
+		if(utilsString.isEmpty(value)) return null;
+		try {
+			return Byte.parseByte(value);
+		} catch (NumberFormatException ignore) {}
+		return null;
+	}
+	// parse short
+	public static Short toShort(final String value) {
+		if(utilsString.isEmpty(value)) return null;
+		try {
+			return Short.parseShort(value);
+		} catch (NumberFormatException ignore) {}
+		return null;
 	}
 	// parse long
-	public static Long parseLong(String string) {
+	public static Long toLong(final String value) {
 		if(utilsString.isEmpty(value)) return null;
 		try {
-			return parseLng(string);
+			return Long.parseLong(value);
 		} catch (NumberFormatException ignore) {}
 		return null;
 	}
-	public static long parseLng(String string) throws NumberFormatException {
-		return Long.parseLong(string);
+	public static long toLong(final String value, final long defaultValue) {
+		Long num = toLong(value);
+		if(num == null) return defaultValue;
+		return num.longValue();
 	}
 	// parse double
-	public static Double parseDouble(String string) {
+	public static Double toDouble(final String value) {
 		if(utilsString.isEmpty(value)) return null;
 		try {
-			return parseDbl(string);
+			return Double.parseDouble(value);
 		} catch (NumberFormatException ignore) {}
 		return null;
 	}
-	public static Double parseDbl(String string) throws NumberFormatException {
-		return Double.parseDouble(string);
+	public static double toDouble(final String value, final double defaultValue) {
+		Double num = toDouble(value);
+		if(num == null) return defaultValue;
+		return num.doubleValue();
 	}
 	// parse float
-	public static Float parseFloat(String string) {
+	public static Float toFloat(final String value) {
+		if(utilsString.isEmpty(value)) return null;
 		try {
-			return parseFlt(string);
+			return Float.parseFloat(value);
 		} catch (NumberFormatException ignore) {}
 		return null;
 	}
-	public static float parseFlt(String string) throws NumberFormatException {
-		return Float.parseFloat(string);
+	public static float toFloat(final String value, final float defaultValue) {
+		Float num = toFloat(value);
+		if(num == null) return defaultValue;
+		return num.floatValue();
 	}
 	// parse boolean
-	public static Boolean parseBoolean(String value) {
-		value = value.toLowerCase();
-		switch(value) {
+	public static Boolean toBoolean(final String value) {
 		if(utilsString.isEmpty(value)) return null;
+		switch(value.toLowerCase()) {
 		// true;
 		case "1":
 		case "t":
@@ -144,15 +172,12 @@ public final class utilsMath {
 		case "off":
 		case "disabled":
 			return false;
-		default:
-			break;
 		}
 		return null;
 	}
-	public static boolean parseBool(String value, boolean defaultValue) {
-		Boolean bool = parseBoolean(value);
-		if(bool == null)
-			bool = defaultValue;
+	public static boolean toBoolean(final String value, final boolean defaultValue) {
+		Boolean bool = toBoolean(value);
+		if(bool == null) return defaultValue;
 		return bool.booleanValue();
 	}
 
