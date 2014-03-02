@@ -17,15 +17,6 @@ public final class utilsString {
 	private utilsString() {}
 
 
-	// empty string
-	public static boolean isEmpty(final String value) {
-		return (value == null || value.length() == 0);
-	}
-	public static boolean isNotEmpty(final String value) {
-		return (value != null && value.length() > 0);
-	}
-
-
 	// object to string
 	public static String toString(final Object obj) {
 		// null

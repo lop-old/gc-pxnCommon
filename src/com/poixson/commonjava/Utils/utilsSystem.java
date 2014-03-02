@@ -13,12 +13,6 @@ public final class utilsSystem {
 	private utilsSystem() {}
 
 
-	// current system time ms
-	public static long getSystemMillis() {
-		return System.currentTimeMillis();
-	}
-
-
 	// cast a collection to list
 	public static <T> List<T> castList(final Class<? extends T> clss, final Collection<?> c) {
 		if(clss == null) throw new NullPointerException("clss cannot be null");
