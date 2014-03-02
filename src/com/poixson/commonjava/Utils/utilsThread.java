@@ -34,7 +34,7 @@ public final class utilsThread {
 		final Set<String> list = new HashSet<String>();
 		for(final Thread thread : threadSet) {
 			final String name = thread.getName();
-			if(utilsString.isEmpty(name)) continue;
+			if(utils.isEmpty(name)) continue;
 			// check ignore list
 			for(final String str : ignoreThreadNames)
 				if(name.equals(str))

@@ -9,11 +9,11 @@ import java.util.Formatter;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import com.poixson.commonjava.xVars;
-import com.poixson.commonjava.xLogger.xLog;
-
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
+
+import com.poixson.commonjava.xVars;
+import com.poixson.commonjava.xLogger.xLog;
 
 
 public final class utilsCrypt {
@@ -114,7 +114,7 @@ public final class utilsCrypt {
 
 	// base64 encode
 	public static String base64_encode(final String data) {
-		if(utilsString.isEmpty(data)) return null;
+		if(utils.isEmpty(data)) return null;
 		return base64_encode(data.getBytes());
 	}
 	public static String base64_encode(final byte[] data) {
@@ -124,7 +124,7 @@ public final class utilsCrypt {
 	}
 	// base64 decode
 	public static String base64_decode(final String data) {
-		if(utilsString.isEmpty(data)) return null;
+		if(utils.isEmpty(data)) return null;
 		try {
 			final BASE64Decoder decoder = new BASE64Decoder();
 			return new String( decoder.decodeBuffer(data) );

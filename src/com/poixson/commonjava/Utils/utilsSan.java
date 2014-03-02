@@ -34,7 +34,7 @@ public final class utilsSan {
 
 
 	public static String ValidateStringEnum(final String value, final String...valids) {
-		if(utilsString.isEmpty(value)) return null;
+		if(utils.isEmpty(value)) return null;
 		if(valids.length == 0) return null;
 		for(final String v : valids) {
 			if(v == null || v.isEmpty()) continue;

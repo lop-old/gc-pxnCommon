@@ -61,21 +61,21 @@ public final class utilsString {
 
 	// string equals
 	public static boolean strEquals(final String a, final String b) {
-		if(isEmpty(a)) return false;
-		if(isEmpty(b)) return false;
+		if(utils.isEmpty(a)) return false;
+		if(utils.isEmpty(b)) return false;
 		return a.equals(b);
 	}
 	public static boolean strEqualsIgnoreCase(final String a, final String b) {
-		if(isEmpty(a)) return false;
-		if(isEmpty(b)) return false;
+		if(utils.isEmpty(a)) return false;
+		if(utils.isEmpty(b)) return false;
 		return a.equalsIgnoreCase(b);
 	}
 
 
 	// trim from string
 	public static String trim(final String str, final String data) {
-		if(isEmpty(str))  return null;
-		if(isEmpty(data)) return null;
+		if(utils.isEmpty(str))  return null;
+		if(utils.isEmpty(data)) return null;
 		final int size = str.length();
 		String out = data;
 		while(out.startsWith(str))
@@ -88,9 +88,9 @@ public final class utilsString {
 
 	// replace with array
 	public static String replaceWith(final String replaceWhat, final String[] withWhat, final String data) {
-		if(isEmpty(replaceWhat)) throw new NullPointerException("replaceWhat cannot be null");
+		if(utils.isEmpty(replaceWhat)) throw new NullPointerException("replaceWhat cannot be null");
 		if(withWhat == null || withWhat.length == 0) return null;
-		if(isEmpty(data)) return null;
+		if(utils.isEmpty(data)) return null;
 		final StringBuilder out = new StringBuilder();
 		final int count = withWhat.length;
 		int currentPos = 0;
@@ -110,13 +110,13 @@ public final class utilsString {
 
 	// repeat string with deliminator
 	public static String repeat(final String delim, final String str, final int repeat) {
-		if(isEmpty(delim)) {
+		if(utils.isEmpty(delim)) {
 			final StringBuilder out = new StringBuilder();
 			for(int i=0; i<repeat; i++)
 				out.append(str);
 			return out.toString();
 		}
-		if(isEmpty(str)) return null;
+		if(utils.isEmpty(str)) return null;
 		if(repeat < 1) return null;
 		final StringBuilder out = new StringBuilder();
 		for(int i=0; i<repeat; i++) {

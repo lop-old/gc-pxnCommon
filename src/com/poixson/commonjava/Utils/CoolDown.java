@@ -32,7 +32,7 @@ public class CoolDown {
 
 	public boolean runAgain() {
 		synchronized(lock) {
-			long current = utilsSystem.getSystemMillis();
+			long current = utils.getSystemMillis();
 			// first run
 			if(last == -1L) {
 				last = current;

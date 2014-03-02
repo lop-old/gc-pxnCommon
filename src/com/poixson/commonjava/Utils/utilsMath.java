@@ -108,7 +108,7 @@ public final class utilsMath {
 
 	// parse number
 	public static Integer toInt(final String value) {
-		if(utilsString.isEmpty(value)) return null;
+		if(utils.isEmpty(value)) return null;
 		try {
 			return Integer.parseInt(value);
 		} catch (NumberFormatException ignore) {}
@@ -121,7 +121,7 @@ public final class utilsMath {
 	}
 	// parse byte
 	public static Byte toByte(final String value) {
-		if(utilsString.isEmpty(value)) return null;
+		if(utils.isEmpty(value)) return null;
 		try {
 			return Byte.parseByte(value);
 		} catch (NumberFormatException ignore) {}
@@ -129,7 +129,7 @@ public final class utilsMath {
 	}
 	// parse short
 	public static Short toShort(final String value) {
-		if(utilsString.isEmpty(value)) return null;
+		if(utils.isEmpty(value)) return null;
 		try {
 			return Short.parseShort(value);
 		} catch (NumberFormatException ignore) {}
@@ -137,7 +137,7 @@ public final class utilsMath {
 	}
 	// parse long
 	public static Long toLong(final String value) {
-		if(utilsString.isEmpty(value)) return null;
+		if(utils.isEmpty(value)) return null;
 		try {
 			return Long.parseLong(value);
 		} catch (NumberFormatException ignore) {}
@@ -150,7 +150,7 @@ public final class utilsMath {
 	}
 	// parse double
 	public static Double toDouble(final String value) {
-		if(utilsString.isEmpty(value)) return null;
+		if(utils.isEmpty(value)) return null;
 		try {
 			return Double.parseDouble(value);
 		} catch (NumberFormatException ignore) {}
@@ -163,7 +163,7 @@ public final class utilsMath {
 	}
 	// parse float
 	public static Float toFloat(final String value) {
-		if(utilsString.isEmpty(value)) return null;
+		if(utils.isEmpty(value)) return null;
 		try {
 			return Float.parseFloat(value);
 		} catch (NumberFormatException ignore) {}
@@ -176,7 +176,7 @@ public final class utilsMath {
 	}
 	// parse boolean
 	public static Boolean toBoolean(final String value) {
-		if(utilsString.isEmpty(value)) return null;
+		if(utils.isEmpty(value)) return null;
 		final String val = value.trim().toLowerCase();
 		for(final String v : truesy)
 			if(val.equals(v))
@@ -195,7 +195,7 @@ public final class utilsMath {
 
 	// is number
 	public static boolean isNumeric(final String value) {
-		if(utilsString.isEmpty(value)) return false;
+		if(utils.isEmpty(value)) return false;
 		return (toLong(value) != null);
 	}
 	// is boolean
@@ -206,8 +206,8 @@ public final class utilsMath {
 
 	// compare version numbers
 	public static String compareVersions(final String oldVersion, final String newVersion) {
-		if(utilsString.isEmpty(oldVersion)) return null;
-		if(utilsString.isEmpty(newVersion)) return null;
+		if(utils.isEmpty(oldVersion)) return null;
+		if(utils.isEmpty(newVersion)) return null;
 		final int cmp = normalisedVersion(oldVersion).compareTo(normalisedVersion(newVersion));
 		if(cmp < 0) return "<";
 		if(cmp > 0) return ">";
@@ -227,7 +227,7 @@ public final class utilsMath {
 
 	// random number
 	public static int getRandom(final int minNumber, final int maxNumber) {
-		final Random randomGen = new Random(utilsSystem.getSystemMillis());
+		final Random randomGen = new Random(utils.getSystemMillis());
 		return randomGen.nextInt(maxNumber - minNumber) + minNumber;
 	}
 	// random number (not last)

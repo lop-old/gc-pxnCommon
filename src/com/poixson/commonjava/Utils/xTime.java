@@ -57,7 +57,7 @@ public class xTime {
 		return get().set(ms.longValue(), unit);
 	}
 	public static xTime get(final String value) {
-		if(utilsString.isEmpty(value)) return null;
+		if(utils.isEmpty(value)) return null;
 		return get().set(value);
 	}
 	public static xTime get(final xTime time) {
@@ -108,7 +108,7 @@ public class xTime {
 	}
 	public xTime set(final String value) {
 		if(isFinal) return null;
-		if(utilsString.isNotEmpty(value))
+		if(utils.notEmpty(value))
 			this.value = parseLong(value);
 		return this;
 	}
@@ -122,14 +122,14 @@ public class xTime {
 
 	// parse time from string
 	public static xTime parse(final String value) {
-		if(utilsString.isEmpty(value)) return null;
+		if(utils.isEmpty(value)) return null;
 		final Long lng = parseLong(value);
 		if(lng == null)
 			return null;
 		return xTime.get(lng, xTimeU.MS);
 	}
 	public static Long parseLong(final String value) {
-		if(utilsString.isEmpty(value)) return null;
+		if(utils.isEmpty(value)) return null;
 		long time = 0;
 		StringBuilder tmp = new StringBuilder();
 		for(char chr : value.toCharArray()) {
