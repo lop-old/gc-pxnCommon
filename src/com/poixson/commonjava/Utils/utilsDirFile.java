@@ -71,6 +71,15 @@ public final class utilsDirFile {
 	}
 
 
+	// get current working directory
+	public static String cwd() {
+		try {
+			return (new File(".")).getCanonicalPath().toString();
+		} catch (IOException ignore) {}
+		return null;
+	}
+
+
 	// add lib to paths
 	public static void addLibraryPath(final String libDir) {
 		if(utils.isEmpty(libDir)) throw new NullPointerException("libDir cannot be null/empty");
@@ -98,11 +107,12 @@ System.out.println("Library path not found: "+libDir);
 			final Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
 			fieldSysPath.setAccessible(true);
 			fieldSysPath.set(null, null);
-		} catch (SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-//			pxnLog.get().exception(e);
+		} catch (SecurityException ignore) {
+		} catch (NoSuchFieldException ignore) {
+		} catch (IllegalArgumentException ignore) {
+		} catch (IllegalAccessException ignore) {
 		}
 	}
-
 
 
 	// open file
@@ -137,9 +147,15 @@ System.out.println("Library path not found: "+libDir);
 		try {
 			final JarFile jar = new JarFile(jarFile);
 			final JarEntry entry = jar.getJarEntry(fileName);
-			if(entry == null) return null;
+			if(entry == null) {
+				utils.safeClose(jar);
+				return null;
+			}
 			final InputStream fileInput = jar.getInputStream(entry);
-			if(fileInput == null) return null;
+			if(fileInput == null) {
+				utils.safeClose(jar);
+				return null;
+			}
 			return new InputJar(jar, fileInput);
 		} catch (IOException ignore) {}
 		return null;
@@ -172,6 +188,8 @@ System.out.println("Library path not found: "+libDir);
 	}
 
 
+	// these functions can have inconsistent results. a better class will be needed
+
 	// build path+file
 	public static String buildFilePath(final String filePath, String fileName, String ext) {
 		if(utils.isEmpty(fileName)) throw new NullPointerException("fileName cannot be null/empty");
@@ -196,6 +214,9 @@ System.out.println("Library path not found: "+libDir);
 		final StringBuilder merged = new StringBuilder();
 		for(String path : strings) {
 			if(utils.isEmpty(path)) continue;
+			if(path.equals("."))
+				path = cwd();
+			else
 			if(path.startsWith("/") || path.startsWith("\\"))
 				path = path.substring(1);
 			if(path.endsWith("/") || path.endsWith("\\"))
