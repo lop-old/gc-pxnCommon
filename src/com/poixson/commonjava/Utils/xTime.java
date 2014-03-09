@@ -85,6 +85,13 @@ public class xTime {
 	}
 
 
+	// reset value to 0
+	public void reset() {
+		if(isFinal) return;
+		value = 0;
+	}
+
+
 	// get value
 	public long get(final TimeUnit unit) {
 		if(unit == null) throw new NullPointerException("unit cannot be null");
@@ -117,6 +124,24 @@ public class xTime {
 		if(time != null)
 			this.value = time.getMS();
 		return this;
+	}
+
+
+	// add time
+	public void add(final long value, final TimeUnit unit) {
+		if(unit == null) throw new NullPointerException("unit cannot be null");
+		if(isFinal) return;
+		this.value += xTimeU.MS.convert(value, unit);
+	}
+	public void add(final String value) {
+		if(isFinal) return;
+		if(utils.notEmpty(value))
+			this.value += parseLong(value);
+	}
+	public void add(final xTime time) {
+		if(time == null) throw new NullPointerException("time cannot be null");
+		if(isFinal) return;
+		this.value += time.value;
 	}
 
 
