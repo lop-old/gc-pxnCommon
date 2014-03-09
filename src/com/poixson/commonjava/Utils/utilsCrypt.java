@@ -1,6 +1,5 @@
 package com.poixson.commonjava.Utils;
 
-import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -8,9 +7,6 @@ import java.util.Formatter;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.xLogger.xLog;
@@ -119,17 +115,19 @@ public final class utilsCrypt {
 	}
 	public static String base64_encode(final byte[] data) {
 		if(data == null || data.length == 0) return null;
-		final BASE64Encoder encoder = new BASE64Encoder();
-		return encoder.encodeBuffer(data);
+		return Base64.encode(data);
+//		final BASE64Encoder encoder = new BASE64Encoder();
+//		return encoder.encodeBuffer(data);
 	}
 	// base64 decode
 	public static String base64_decode(final String data) {
 		if(utils.isEmpty(data)) return null;
-		try {
-			final BASE64Decoder decoder = new BASE64Decoder();
-			return new String( decoder.decodeBuffer(data) );
-		} catch (IOException ignore) {}
-		return null;
+		return new String(Base64.decode(data));
+//		try {
+//			final BASE64Decoder decoder = new BASE64Decoder();
+//			return new String( decoder.decodeBuffer(data) );
+//		} catch (IOException ignore) {}
+//		return null;
 	}
 
 
