@@ -336,7 +336,7 @@ public class dbQuery {
 			String value = getStr(label);
 			if(value == null)
 				return null;
-			return utilsMath.parseInteger(value);
+			return utilsMath.toInt(value);
 		} catch (SQLException e) {
 			log().trace(e);
 		}
@@ -353,7 +353,7 @@ public class dbQuery {
 			String value = getStr(label);
 			if(value == null)
 				return null;
-			return utilsMath.parseLong(value);
+			return utilsMath.toLong(value);
 		} catch (SQLException e) {
 			log().trace(e);
 		}
@@ -377,7 +377,7 @@ public class dbQuery {
 			String value = getStr(label);
 			if(value == null)
 				return null;
-			return utilsMath.parseDouble(value);
+			return utilsMath.toDouble(value);
 		} catch (SQLException e) {
 			log().trace(e);
 		}
@@ -394,7 +394,7 @@ public class dbQuery {
 			String value = getStr(label);
 			if(value == null)
 				return null;
-			return utilsMath.parseFloat(value);
+			return utilsMath.toFloat(value);
 		} catch (SQLException e) {
 			log().trace(e);
 		}
@@ -411,7 +411,7 @@ public class dbQuery {
 			String value = getStr(label);
 			if(value == null)
 				return null;
-			return utilsMath.parseBoolean(value);
+			return utilsMath.toBoolean(value);
 		} catch (SQLException e) {
 			log().trace(e);
 		}

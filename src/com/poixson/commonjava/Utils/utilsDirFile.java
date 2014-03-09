@@ -73,7 +73,7 @@ public final class utilsDirFile {
 
 	// add lib to paths
 	public static void addLibraryPath(final String libDir) {
-		if(utilsString.isEmpty(libDir)) throw new NullPointerException("libDir cannot be null/empty");
+		if(utils.isEmpty(libDir)) throw new NullPointerException("libDir cannot be null/empty");
 		// get lib path
 		final File file = new File(libDir);
 		if(!file.exists() || !file.isDirectory()) {
@@ -81,7 +81,7 @@ System.out.println("Library path not found: "+libDir);
 			return;
 		}
 		final String libPath = file.getAbsolutePath();
-		if(utilsString.isEmpty(libPath)) return;
+		if(utils.isEmpty(libPath)) return;
 		// get current paths
 		final String currentPaths = System.getProperty("java.library.path");
 		if(currentPaths == null) return;
@@ -107,7 +107,7 @@ System.out.println("Library path not found: "+libDir);
 
 	// open file
 	public static InputStream OpenFile(final String fileStr) {
-		if(utilsString.isEmpty(fileStr)) return null;
+		if(utils.isEmpty(fileStr)) return null;
 		return OpenFile(new File(fileStr));
 	}
 	public static InputStream OpenFile(final File file) {
@@ -122,7 +122,7 @@ System.out.println("Library path not found: "+libDir);
 	}
 	// load resource
 	public static InputStream OpenResource(final String fileStr) {
-		if(utilsString.isEmpty(fileStr)) return null;
+		if(utils.isEmpty(fileStr)) return null;
 		try {
 			return utilsDirFile.class.getResourceAsStream(fileStr);
 		} catch(Exception ignore) {
@@ -133,7 +133,7 @@ System.out.println("Library path not found: "+libDir);
 	// load yml from jar
 	public static InputJar OpenJarResource(final File jarFile, final String fileName) {
 		if(jarFile == null) throw new NullPointerException("jarFile cannot be null");
-		if(utilsString.isEmpty(fileName)) throw new NullPointerException("fileName cannot be null/empty");
+		if(utils.isEmpty(fileName)) throw new NullPointerException("fileName cannot be null/empty");
 		try {
 			final JarFile jar = new JarFile(jarFile);
 			final JarEntry entry = jar.getJarEntry(fileName);
@@ -174,9 +174,9 @@ System.out.println("Library path not found: "+libDir);
 
 	// build path+file
 	public static String buildFilePath(final String filePath, String fileName, String ext) {
-		if(utilsString.isEmpty(fileName)) throw new NullPointerException("fileName cannot be null/empty");
+		if(utils.isEmpty(fileName)) throw new NullPointerException("fileName cannot be null/empty");
 		// file extension
-		if(utilsString.isEmpty(ext))
+		if(utils.isEmpty(ext))
 			ext = ".yml";
 		if(!ext.startsWith("."))
 			ext = "." + ext;
@@ -195,7 +195,7 @@ System.out.println("Library path not found: "+libDir);
 	public static String mergePaths(final String...strings) {
 		final StringBuilder merged = new StringBuilder();
 		for(String path : strings) {
-			if(utilsString.isEmpty(path)) continue;
+			if(utils.isEmpty(path)) continue;
 			if(path.startsWith("/") || path.startsWith("\\"))
 				path = path.substring(1);
 			if(path.endsWith("/") || path.endsWith("\\"))

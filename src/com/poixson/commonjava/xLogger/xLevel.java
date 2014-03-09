@@ -46,7 +46,7 @@ public class xLevel implements Serializable {
 	public static xLevel FindLevel(String name) {
 		if(name == null || name.isEmpty()) return null;
 		if(utilsMath.isNumeric(name))
-			return FindLevel(utilsMath.parseInteger(name));
+			return FindLevel(utilsMath.toInt(name));
 		name = name.toUpperCase();
 		for(xLevel level : knownLevels)
 			if(name.equals(level.name))

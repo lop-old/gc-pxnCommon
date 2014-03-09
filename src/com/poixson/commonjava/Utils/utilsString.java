@@ -159,11 +159,11 @@ public final class utilsString {
 			baseString == null ? null : baseString
 		);
 		if(addThis == null || addThis.length == 0) return str.toString();
-		final String d = (isEmpty(delim) ? null : delim);
+		final String d = (utils.isEmpty(delim) ? null : delim);
 		for(final String line : addThis) {
-			if(isEmpty(line)) continue;
-			if(str.length() > 0 && delim != null)
-				str.append(delim);
+			if(utils.isEmpty(line)) continue;
+			if(str.length() > 0 && d != null)
+				str.append(d);
 			str.append(line);
 		}
 		return str.toString();
