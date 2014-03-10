@@ -18,7 +18,7 @@ public class xThreadPool implements Runnable {
 	private volatile int size = 1;
 	private volatile Integer nextThreadId = 1;
 	private static final xTime threadSleepTime = xTime.get("200n");
-	private static final xTime threadInactiveTimeout = xTime.get("5m");
+	private static final xTime threadInactiveTimeout = xTime.get("30s");
 
 	protected final String queueName;
 	protected final ThreadGroup group;
@@ -98,7 +98,37 @@ public class xThreadPool implements Runnable {
 			);
 			// use an existing waiting thread
 			if(free > 0) return;
-			// restart an existing thread
+			// global max threads
+			if(globalFree <= 0) {
+				if(coolMaxReached.runAgain())
+					System.out.println("Global max threads limit [ "+Integer.toString(globalCount)+" ] reached!");
+					//getLogger().warning("Global max threads limit [ "+Integer.toString(globalCount)+" ] reached!");
+				else
+					System.out.println("Global max threads limit [ "+Integer.toString(globalCount)+" ] reached!");
+					//getLogger().finest("Global max threads limit [ "+Integer.toString(globalCount)+" ] reached!");
+				utilsThread.Sleep(10L);
+				return;
+			}
+			// max threads (this pool)
+			if(count >= size) {
+				if(size > 1) {
+					if(coolMaxReached.runAgain())
+						System.out.println("Max threads limit [ "+Integer.toString(count)+" ] reached!");
+						//getLogger().warning("Max threads limit [ "+Integer.toString(count)+" ] reached!");
+					else
+						System.out.println("Max threads limit [ "+Integer.toString(count)+" ] reached!");
+						//getLogger().finest("Max threads limit [ "+Integer.toString(count)+" ] reached!");
+				}
+				utilsThread.Sleep(10L);
+				return;
+			}
+			// start new thread
+			synchronized(threads) {
+				final Thread thread = new Thread(group, this);
+				threads.add(thread);
+				thread.start();
+				thread.setPriority(priority);
+			}
 		}
 	}
 	// set thread priority
@@ -177,9 +207,9 @@ System.out.println("Inactive thread.. ("+queueName+":"+Integer.toString(threadId
 		}
 		try {
 			if(queue.offer(task, 5, xTimeU.S))
-				System.out.println("Thread task queued.. "+queueName+"["+task.getTaskName()+"]");
+				System.out.println("Task queued.. ("+queueName+") "+task.getTaskName());
 			else
-				System.out.println("Thread queue jammed! "+queueName+"["+task.getTaskName()+"]");
+				System.out.println("Thread queue jammed! ("+queueName+") "+task.getTaskName());
 		} catch (InterruptedException ignore) {
 			return;
 		}
