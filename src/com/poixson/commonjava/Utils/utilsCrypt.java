@@ -8,6 +8,8 @@ import java.util.Formatter;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.codec.binary.Base64;
+
 import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.xLogger.xLog;
 
@@ -115,19 +117,12 @@ public final class utilsCrypt {
 	}
 	public static String base64_encode(final byte[] data) {
 		if(data == null || data.length == 0) return null;
-		return Base64.encode(data);
-//		final BASE64Encoder encoder = new BASE64Encoder();
-//		return encoder.encodeBuffer(data);
+		return Base64.encodeBase64String(data);
 	}
 	// base64 decode
 	public static String base64_decode(final String data) {
 		if(utils.isEmpty(data)) return null;
-		return new String(Base64.decode(data));
-//		try {
-//			final BASE64Decoder decoder = new BASE64Decoder();
-//			return new String( decoder.decodeBuffer(data) );
-//		} catch (IOException ignore) {}
-//		return null;
+		return new String(Base64.decodeBase64(data));
 	}
 
 
