@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsMath;
 
 
@@ -30,7 +31,7 @@ public class xLevel implements Serializable {
 
 
 	private xLevel(final String name, final int value) {
-		if(name == null || name.isEmpty()) throw new NullPointerException("name cannot be null");
+		if(utils.isEmpty(name)) throw new NullPointerException("name cannot be null");
 		this.name = name.toUpperCase();
 		this.value = value;
 		if(value != Integer.MIN_VALUE && value < minValue) minValue = value;
@@ -44,11 +45,11 @@ public class xLevel implements Serializable {
 
 
 	public static xLevel FindLevel(String name) {
-		if(name == null || name.isEmpty()) return null;
+		if(utils.isEmpty(name)) return null;
 		if(utilsMath.isNumeric(name))
 			return FindLevel(utilsMath.toInt(name));
 		name = name.toUpperCase();
-		for(xLevel level : knownLevels)
+		for(final xLevel level : knownLevels)
 			if(name.equals(level.name))
 				return level;
 		return null;
@@ -90,7 +91,7 @@ public class xLevel implements Serializable {
 
 	public boolean equals(final xLevel level) {
 		if(level == null) return false;
-		return level.value == this.value;
+		return (level.value == this.value);
 	}
 
 

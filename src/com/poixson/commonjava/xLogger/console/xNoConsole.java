@@ -1,6 +1,7 @@
 package com.poixson.commonjava.xLogger.console;
 
 import com.poixson.commonjava.xLogger.xConsole;
+import com.poixson.commonjava.xLogger.xLog;
 
 
 public class xNoConsole implements xConsole {
@@ -19,6 +20,7 @@ public class xNoConsole implements xConsole {
 
 	@Override
 	public void start() {
+		log().finest("Start xNoConsole");
 	}
 	@Override
 	public void stop() {
@@ -57,6 +59,12 @@ public class xNoConsole implements xConsole {
 	@Override
 	public String getPrompt() {
 		return null;
+	}
+
+
+	// logger
+	public static xLog log() {
+		return xLog.getRoot();
 	}
 
 

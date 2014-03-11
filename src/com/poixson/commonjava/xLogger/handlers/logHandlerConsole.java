@@ -8,25 +8,23 @@ import com.poixson.commonjava.xLogger.xLogRecord;
 
 public class logHandlerConsole extends xLogHandler {
 
-	private static volatile xConsole console = null;
-
 
 	public logHandlerConsole() {
-		if(console == null)
-			console = xLog.getConsole();
 	}
 
 
 	@Override
 	public void publish(final xLogRecord record) {
-		if(console == null)
-			System.out.println(
-				msgFormat(record)
-			);
-		else
-			console.print(
-				msgFormat(record)
-			);
+		publish(msgFormat(record));
+	}
+	@Override
+	public void publish(final String msg) {
+		final xConsole console = xLog.getConsole();
+		if(console == null) {
+			System.out.println(msg);
+		} else {
+			console.print(msg);
+		}
 	}
 
 

@@ -19,6 +19,7 @@ public abstract class xLogPrinting {
 
 	// publish message
 	public abstract void publish(final xLogRecord record);
+	public abstract void publish(final String msg);
 	public void publish(final xLevel level, final String msg) {
 		publish(
 			new xLogRecord(
@@ -30,6 +31,11 @@ public abstract class xLogPrinting {
 	}
 
 
+	// title
+	public void title(String msg) {
+		if(msg == null) msg = "<null>";
+		publish(" [[ "+msg+" ]]");
+	}
 	// exception
 	public void trace(final Exception e) {
 		publish(

@@ -11,6 +11,7 @@ public abstract class xLogHandler {
 
 
 	public abstract void publish(final xLogRecord record);
+	public abstract void publish(final String msg);
 	protected String msgFormat(final xLogRecord record) {
 		return getFormatter().formatMsg(record);
 	}
@@ -23,11 +24,11 @@ public abstract class xLogHandler {
 		}
 	}
 	protected xLogFormatter getFormatter() {
-		if(formatter != null)
-			return formatter;
-		synchronized(formatLock) {
-			if(formatter == null)
-				formatter = new defaultLogFormatter();
+		if(formatter == null) {
+			synchronized(formatLock) {
+				if(formatter == null)
+					formatter = new defaultLogFormatter();
+			}
 		}
 		return formatter;
 	}

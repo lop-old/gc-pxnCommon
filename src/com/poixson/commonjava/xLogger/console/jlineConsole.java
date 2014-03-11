@@ -8,7 +8,6 @@ import jline.console.history.FileHistory;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
-import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.xLogger.xConsole;
 import com.poixson.commonjava.xLogger.xLog;
@@ -70,6 +69,7 @@ public class jlineConsole implements xConsole {
 
 
 	public void start() {
+		log().finest("Start jlineConsole");
 		if(running || stopping) return;
 		synchronized(lock) {
 			if(thread == null)
@@ -115,8 +115,7 @@ public class jlineConsole implements xConsole {
 	@Override
 	public void run() {
 		synchronized(lock) {
-			if(running)
-				return;
+			if(running) return;
 			running = true;
 		}
 		while(!stopping) {
@@ -200,7 +199,7 @@ System.out.println("***>"+line+"<***");
 
 	// logger
 	public static xLog log() {
-		return xVars.log();
+		return xLog.getRoot();
 	}
 
 

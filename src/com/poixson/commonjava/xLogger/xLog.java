@@ -6,7 +6,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.poixson.commonjava.xVars;
+import com.poixson.commonjava.Utils.utils;
+import com.poixson.commonjava.app.xApp;
 import com.poixson.commonjava.xLogger.console.xNoConsole;
 import com.poixson.commonjava.xLogger.formatters.defaultLogFormatter;
 import com.poixson.commonjava.xLogger.handlers.logHandlerConsole;
@@ -19,7 +20,7 @@ public class xLog extends xLogPrinting {
 /*
 	// logger
 	public static xLog log() {
-		return xVars.log();
+		return xLog.log();
 	}
 */
 
@@ -32,7 +33,7 @@ public class xLog extends xLogPrinting {
 		if(_log == null) {
 			synchronized(logLock) {
 				if(_log == null)
-					_log = xVars.log();
+					_log = xLog.log();
 			}
 		}
 		return _log;
@@ -53,7 +54,7 @@ public class xLog extends xLogPrinting {
 		if(_log == null) {
 			synchronized(logLock) {
 				if(_log == null)
-					_log = xVars.log();
+					_log = xLog.log();
 			}
 		}
 		return _log;
@@ -85,21 +86,21 @@ public class xLog extends xLogPrinting {
 
 	// default logger initializer
 	public static void init() {
-		if(root != null) return;
-		synchronized(lock) {
-			if(root != null) return;
-			root = new xLog(null, null);
-			initDefaultHandlers();
+		if(root == null) {
+			synchronized(lock) {
+				if(root == null) {
+					root = new xLog(null, null);
+					initDefaultHandlers();
+				}
+			}
 		}
 	}
 	// default log handlers
 	protected static void initDefaultHandlers() {
-		// console
-		xLogHandler console = new logHandlerConsole();
-		console.setFormatter(
-			new defaultLogFormatter()
-		);
-		root.addHandler(console);
+		// console handler
+		xLogHandler handler = new logHandlerConsole();
+		handler.setFormatter(new defaultLogFormatter());
+		root.addHandler(handler);
 	}
 
 
@@ -116,40 +117,45 @@ public class xLog extends xLogPrinting {
 	// get sub-logger
 	@Override
 	public xLog get(final String name) {
-		if(name == null || name.isEmpty())
+		if(utils.isEmpty(name))
 			return this;
-		if(loggers.containsKey(name))
-			return loggers.get(name);
+		{
+			final xLog log = loggers.get(name);
+			if(log != null)
+				return log;
+		}
 		// new logger
 		synchronized(loggers) {
 			if(loggers.containsKey(name))
 				return loggers.get(name);
-			xLog log = this.newInstance(name);
+			final xLog log =new xLog(name, this);
 			loggers.put(name, log);
 			return log;
 		}
 	}
+	// new anonymous instance
 	@Override
-		if(name == null || name.isEmpty())
-			return this;
 	public xLog getAnon(final String name) {
+		if(utils.isEmpty(name))
+			return new xLog(name, parent);
 		return new xLog(name, this);
 	}
+	@Override
+	public xLog getAnon() {
+		return getAnon(null);
+	}
+	@Override
+	public xLog clone() {
+		return getAnon();
+	}
+
+
 	// new logger instance
 	protected xLog(final String name, final xLog parent) {
-		if( (name == null || name.isEmpty()) && parent != null)
+		if(utils.isEmpty(name) && parent != null)
 			throw new NullPointerException("name cannot be null");
 		this.name = name;
 		this.parent = parent;
-	}
-	@Override
-	protected xLog newInstance(String name) {
-		return new xLog(name, this);
-	}
-	// no clone
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		throw new CloneNotSupportedException();
 	}
 
 
@@ -230,31 +236,40 @@ public class xLog extends xLogPrinting {
 			}
 		}
 	}
+	@Override
+	public void publish(final String msg) {
+		if(parent != null)
+			parent.publish(msg);
+		if(!handlers.isEmpty()) {
+			for(final xLogHandler handler : this.handlers)
+				handler.publish(msg);
+		}
+	}
 
 
 	// ### console handler
 
 
-	private static volatile xConsole _console = null;
+	private static volatile xConsole consoleHandler = null;
 	private static final Object consoleLock = new Object();
 
 
 	public static void setConsole(final xConsole console) {
 		synchronized(consoleLock) {
-			xLog._console = console;
+			xLog.consoleHandler = console;
 		}
 	}
 	public static xConsole getConsole() {
-		if(_console == null) {
+		if(consoleHandler == null) {
 			synchronized(consoleLock) {
-				if(_console == null)
-					_console = new xNoConsole();
+				if(consoleHandler == null)
+					consoleHandler = new xNoConsole();
 			}
 		}
-		return _console;
+		return consoleHandler;
 	}
 	public static xConsole peekConsole() {
-		return _console;
+		return consoleHandler;
 	}
 	public static void shutdown() {
 		if(peekConsole() != null)
