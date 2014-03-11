@@ -18,7 +18,7 @@ public class logHandlerConsole extends xLogHandler {
 
 
 	@Override
-	public void publish(xLogRecord record) {
+	public void publish(final xLogRecord record) {
 		if(console == null)
 			System.out.println(
 				msgFormat(record)

@@ -142,7 +142,7 @@ public class jlineConsole implements xConsole {
 	}
 
 
-	public void doCommand(String line) {
+	public void doCommand(final String line) {
 //TODO: send line to main thread
 System.out.println("***>"+line+"<***");
 	}
@@ -182,13 +182,13 @@ System.out.println("***>"+line+"<***");
 		} catch (IOException ignore) {}
 	}
 	// render jAnsi
-	public static String renderAnsi(String msg) {
+	public static String renderAnsi(final String msg) {
 		return Ansi.ansi().render(msg).toString();
 	}
 
 
 	// prompt string
-	public void setPrompt(String prompt) {
+	public void setPrompt(final String prompt) {
 		this.prompt = prompt;
 	}
 	public String getPrompt() {

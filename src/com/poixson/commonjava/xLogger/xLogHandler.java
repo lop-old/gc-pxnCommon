@@ -10,14 +10,14 @@ public abstract class xLogHandler {
 	private final Object formatLock = new Object();
 
 
-	public abstract void publish(xLogRecord record);
-	protected String msgFormat(xLogRecord record) {
+	public abstract void publish(final xLogRecord record);
+	protected String msgFormat(final xLogRecord record) {
 		return getFormatter().formatMsg(record);
 	}
 
 
 	// formatter
-	public void setFormatter(xLogFormatter formatter) {
+	public void setFormatter(final xLogFormatter formatter) {
 		synchronized(formatLock) {
 			this.formatter = formatter;
 		}
@@ -34,14 +34,14 @@ public abstract class xLogHandler {
 
 
 	// log level
-	public void setLevel(xLevel lvl) {
+	public void setLevel(final xLevel lvl) {
 		this.level = lvl;
 	}
 	public xLevel getLevel() {
 		return level;
 	}
 	// is level loggable
-	public boolean isLoggable(xLevel lvl) {
+	public boolean isLoggable(final xLevel lvl) {
 		return (level != null && level.isLoggable(lvl));
 	}
 

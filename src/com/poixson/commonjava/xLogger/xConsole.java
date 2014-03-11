@@ -9,14 +9,14 @@ public interface xConsole extends Runnable {
 
 	@Override
 	public void run();
-	public void doCommand(String line);
+	public void doCommand(final String line);
 
 	public void clear();
 	public void flush();
-	public void print(String msg);
+	public void print(final String msg);
 	public void redraw();
 
-	public void setPrompt(String prompt);
+	public void setPrompt(final String prompt);
 	public String getPrompt();
 
 }

@@ -11,7 +11,7 @@ public class xLogRecord {
 
 
 	// new record instance
-	public xLogRecord(xLog log, xLevel level, String msg) {
+	public xLogRecord(final xLog log, final xLevel level, final String msg) {
 		this.log   = log;
 		this.level = level;
 		this.msg   = msg;

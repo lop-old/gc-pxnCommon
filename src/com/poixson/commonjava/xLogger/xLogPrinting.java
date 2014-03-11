@@ -8,18 +8,18 @@ import com.poixson.commonjava.Utils.utilsString;
 public abstract class xLogPrinting {
 
 
-	public abstract xLog get(String name);
-	public abstract xLog getAnon(String name);
-	protected abstract xLog newInstance(String name);
+	public abstract xLog get(final String name);
+	public abstract xLog getAnon();
+	public abstract xLog getAnon(final String name);
 
 	public abstract boolean isRoot();
 	public abstract List<String> getNameTree();
-	public abstract void addHandler(xLogHandler handler);
+	public abstract void addHandler(final xLogHandler handler);
 
 
 	// publish message
-	public abstract void publish(xLogRecord record);
-	public void publish(xLevel level, String msg) {
+	public abstract void publish(final xLogRecord record);
+	public void publish(final xLevel level, final String msg) {
 		publish(
 			new xLogRecord(
 				(xLog) this,
@@ -31,7 +31,7 @@ public abstract class xLogPrinting {
 
 
 	// exception
-	public void trace(Exception e) {
+	public void trace(final Exception e) {
 		publish(
 			xLevel.SEVERE,
 			utilsString.ExceptionToString(e)
@@ -40,35 +40,35 @@ public abstract class xLogPrinting {
 
 
 	// finest
-	public void finest(String msg) {
+	public void finest(final String msg) {
 		publish(xLevel.FINEST, msg);
 	}
 	// finer
-	public void finer(String msg) {
+	public void finer(final String msg) {
 		publish(xLevel.FINER, msg);
 	}
 	// fine
-	public void fine(String msg) {
+	public void fine(final String msg) {
 		publish(xLevel.FINE, msg);
 	}
 	// stats
-	public void stats(String msg) {
+	public void stats(final String msg) {
 		publish(xLevel.STATS, msg);
 	}
 	// info
-	public void info(String msg) {
+	public void info(final String msg) {
 		publish(xLevel.INFO, msg);
 	}
 	// warning
-	public void warning(String msg) {
+	public void warning(final String msg) {
 		publish(xLevel.WARNING, msg);
 	}
 	// severe
-	public void severe(String msg) {
+	public void severe(final String msg) {
 		publish(xLevel.SEVERE, msg);
 	}
 	// fatal
-	public void fatal(String msg) {
+	public void fatal(final String msg) {
 		publish(xLevel.FATAL, msg);
 	}
 

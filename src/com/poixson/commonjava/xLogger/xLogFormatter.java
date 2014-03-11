@@ -3,6 +3,6 @@ package com.poixson.commonjava.xLogger;
 
 public interface xLogFormatter {
 
-	public String formatMsg(xLogRecord record);
+	public String formatMsg(final xLogRecord record);
 
 }

@@ -110,12 +110,12 @@ public class xLog extends xLogPrinting {
 		return root;
 	}
 	// get named logger
-	public static xLog getLog(String name) {
+	public static xLog getRoot(final String name) {
 		return getRoot().get(name);
 	}
 	// get sub-logger
 	@Override
-	public xLog get(String name) {
+	public xLog get(final String name) {
 		if(name == null || name.isEmpty())
 			return this;
 		if(loggers.containsKey(name))
@@ -130,13 +130,13 @@ public class xLog extends xLogPrinting {
 		}
 	}
 	@Override
-	public xLog getAnon(String name) {
 		if(name == null || name.isEmpty())
 			return this;
+	public xLog getAnon(final String name) {
 		return new xLog(name, this);
 	}
 	// new logger instance
-	protected xLog(String name, xLog parent) {
+	protected xLog(final String name, final xLog parent) {
 		if( (name == null || name.isEmpty()) && parent != null)
 			throw new NullPointerException("name cannot be null");
 		this.name = name;
@@ -161,14 +161,14 @@ public class xLog extends xLogPrinting {
 
 
 	// log level
-	public void setLevel(xLevel lvl) {
+	public void setLevel(final xLevel lvl) {
 		this.level = lvl;
 		// handlers
-		for(xLogHandler handler : handlers)
+		for(final xLogHandler handler : handlers)
 			handler.setLevel(lvl);
 	}
 	// is level loggable
-	public boolean isLoggable(xLevel lvl) {
+	public boolean isLoggable(final xLevel lvl) {
 		// forced debug mode
 		if(xVars.debug())
 			return true;
@@ -193,7 +193,7 @@ public class xLog extends xLogPrinting {
 
 	// [logger] [crumbs]
 	// recursive name tree
-	private void buildNameTree(List<String> list) {
+	private void buildNameTree(final List<String> list) {
 		if(parent != null) {
 			parent.buildNameTree(list);
 			list.add(name);
@@ -203,8 +203,8 @@ public class xLog extends xLogPrinting {
 	public List<String> getNameTree() {
 		return getNameTree(this);
 	}
-	public static List<String> getNameTree(xLog log) {
-		List<String> list = new ArrayList<String>();
+	public static List<String> getNameTree(final xLog log) {
+		final List<String> list = new ArrayList<String>();
 		log.buildNameTree(list);
 		return list;
 	}
@@ -212,19 +212,19 @@ public class xLog extends xLogPrinting {
 
 	// log handlers
 	@Override
-	public void addHandler(xLogHandler handler) {
+	public void addHandler(final xLogHandler handler) {
 		this.handlers.add(handler);
 	}
 	// publish record
 	@Override
-	public void publish(xLogRecord record) {
-		xLevel lvl = record.getLevel();
+	public void publish(final xLogRecord record) {
+		final xLevel lvl = record.getLevel();
 		if(!isLoggable(lvl))
 			return;
 		if(parent != null)
 			parent.publish(record);
 		if(!handlers.isEmpty()) {
-			for(xLogHandler handler : this.handlers) {
+			for(final xLogHandler handler : this.handlers) {
 				if(handler.isLoggable(lvl))
 					handler.publish(record);
 			}
@@ -239,7 +239,7 @@ public class xLog extends xLogPrinting {
 	private static final Object consoleLock = new Object();
 
 
-	public static void setConsole(xConsole console) {
+	public static void setConsole(final xConsole console) {
 		synchronized(consoleLock) {
 			xLog._console = console;
 		}

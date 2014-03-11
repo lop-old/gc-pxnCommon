@@ -29,7 +29,7 @@ public class xLevel implements Serializable {
 	public final int value;
 
 
-	private xLevel(String name, int value) {
+	private xLevel(final String name, final int value) {
 		if(name == null || name.isEmpty()) throw new NullPointerException("name cannot be null");
 		this.name = name.toUpperCase();
 		this.value = value;
@@ -53,13 +53,13 @@ public class xLevel implements Serializable {
 				return level;
 		return null;
 	}
-	public static xLevel FindLevel(Integer value) {
+	public static xLevel FindLevel(final Integer value) {
 		if(value == null) return null;
 		if(value == xLevel.ALL.value) return xLevel.ALL;
 		if(value == xLevel.OFF.value) return xLevel.OFF;
 		xLevel level = xLevel.OFF;
 		int offset = xLevel.OFF.value;
-		for(xLevel lvl : knownLevels) {
+		for(final xLevel lvl : knownLevels) {
 			if(level.equals(xLevel.OFF) || level.equals(xLevel.ALL)) continue;
 			if(value < lvl.value) continue;
 			if(value - lvl.value < offset) {
@@ -71,12 +71,12 @@ public class xLevel implements Serializable {
 			return xLevel.OFF;
 		return level;
 	}
-	public static xLevel parse(String value) {
+	public static xLevel parse(final String value) {
 		return FindLevel(value);
 	}
 
 
-	public boolean isLoggable(xLevel level) {
+	public boolean isLoggable(final xLevel level) {
 		if(level == null) return false;
 		// off (disabled)
 		if(this.value == xLevel.OFF.value) return false;
@@ -88,7 +88,7 @@ public class xLevel implements Serializable {
 	}
 
 
-	public boolean equals(xLevel level) {
+	public boolean equals(final xLevel level) {
 		if(level == null) return false;
 		return level.value == this.value;
 	}

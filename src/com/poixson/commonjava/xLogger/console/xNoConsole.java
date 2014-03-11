@@ -32,7 +32,7 @@ public class xNoConsole implements xConsole {
 	public void run() {
 	}
 	@Override
-	public void doCommand(String line) {
+	public void doCommand(final String line) {
 	}
 
 
@@ -43,7 +43,7 @@ public class xNoConsole implements xConsole {
 	public void flush() {
 	}
 	@Override
-	public void print(String msg) {
+	public void print(final String msg) {
 		System.out.println(msg);
 	}
 	@Override
@@ -52,7 +52,7 @@ public class xNoConsole implements xConsole {
 
 
 	@Override
-	public void setPrompt(String prompt) {
+	public void setPrompt(final String prompt) {
 	}
 	@Override
 	public String getPrompt() {
