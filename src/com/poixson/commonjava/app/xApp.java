@@ -10,6 +10,8 @@ import com.poixson.commonjava.Utils.utilsDirFile;
 import com.poixson.commonjava.Utils.xClock;
 import com.poixson.commonjava.Utils.xRunnable;
 import com.poixson.commonjava.Utils.xThreadPool;
+import com.poixson.commonjava.xLogger.xLevel;
+import com.poixson.commonjava.xLogger.xLog;
 
 
 /**
@@ -27,8 +29,10 @@ public abstract class xApp implements Runnable {
 
 	private static volatile xApp appInstance = null;
 	private static final Object appLock = new Object();
-
 	private volatile xThreadPool threadPool = null;
+
+	// logger
+	protected volatile xLog log = null;
 
 	@SuppressWarnings("unused")
 	private volatile long startTime = -1;
@@ -73,7 +77,8 @@ public abstract class xApp implements Runnable {
 			initLevel = 1;
 		}
 		// init logger
-//		xLog.get();
+		log = xLog.getRoot();
+		log.setLevel(xLevel.INFO);
 		// load config
 		initConfig();
 		// load clock
