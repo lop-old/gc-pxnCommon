@@ -6,13 +6,13 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.Utils.CoolDown;
 import com.poixson.commonjava.Utils.utilsCrypt;
 import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xTime;
 import com.poixson.commonjava.Utils.xTimeU;
+import com.poixson.commonjava.app.xApp;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -28,7 +28,7 @@ public class dbConfig {
 	private static boolean get_HASH_KEY() {
 		synchronized(lock_HASH_KEY) {
 			if(HASH_KEY == null)
-				HASH_KEY = !xVars.debug();
+				HASH_KEY = !xApp.debug();
 			return HASH_KEY;
 		}
 	}

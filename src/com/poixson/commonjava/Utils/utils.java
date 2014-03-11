@@ -3,7 +3,6 @@ package com.poixson.commonjava.Utils;
 import java.io.Closeable;
 import java.io.IOException;
 
-import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -50,7 +49,7 @@ public class utils {
 
 	// logger
 	public static xLog log() {
-		return xVars.log();
+		return xLog.getRoot();
 	}
 
 

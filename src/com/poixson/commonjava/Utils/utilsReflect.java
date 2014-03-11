@@ -3,7 +3,6 @@ package com.poixson.commonjava.Utils;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -43,7 +42,7 @@ public final class utilsReflect {
 
 	// logger
 	public static xLog log() {
-		return xVars.log();
+		return xLog.getRoot();
 	}
 
 

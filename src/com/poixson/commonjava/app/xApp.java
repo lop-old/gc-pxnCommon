@@ -10,8 +10,11 @@ import com.poixson.commonjava.Utils.utilsDirFile;
 import com.poixson.commonjava.Utils.xClock;
 import com.poixson.commonjava.Utils.xRunnable;
 import com.poixson.commonjava.Utils.xThreadPool;
+import com.poixson.commonjava.xLogger.xConsole;
 import com.poixson.commonjava.xLogger.xLevel;
 import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.commonjava.xLogger.console.jlineConsole;
+import com.poixson.commonjava.xLogger.console.xNoConsole;
 
 
 /**
@@ -74,8 +77,7 @@ public abstract class xApp implements Runnable {
 			initLevel = 1;
 		}
 		// init logger
-		log = xLog.getRoot();
-		log.setLevel(xLevel.INFO);
+		log().setLevel(xLevel.ALL);
 		// load config
 		initConfig();
 		// load clock
@@ -97,9 +99,10 @@ public abstract class xApp implements Runnable {
 		// start main thread queue
 		run();
 		// main thread ended
-		AnsiConsole.out.println(Ansi.ansi().fg(Ansi.Color.RED).a("Main process ended! (this shouldn't happen)"));
-		System.out.println();
-		System.out.println();
+		AnsiConsole.out.println();
+		AnsiConsole.out.println(Ansi.ansi().fg(Ansi.Color.RED).a("Main process ended! (this shouldn't happen)").reset());
+		AnsiConsole.out.println();
+		AnsiConsole.out.println();
 		System.exit(0);
 	}
 	public void shutdown() {
@@ -131,12 +134,11 @@ public abstract class xApp implements Runnable {
 			case 1:
 				// lock file
 				utilsDirFile.lockInstance(getAppName()+".lock");
-				System.out.println("Starting "+getAppName()+"..");
+				log().title("Starting "+getAppName()+"..");
 				break;
 			// last step in startup
 			case 8:
-				System.out.println(getAppName()+" ready and running!");
-				//log.Major(getAppName()+" ready and running!");
+				log().title(getAppName()+" Ready and Running!");
 				synchronized(initLevel) {
 					initLevel = 9;
 				}
@@ -147,7 +149,7 @@ public abstract class xApp implements Runnable {
 					if(startup(step))
 						break;
 				} catch (Exception e) {
-					e.printStackTrace();
+					log().trace(e);
 				}
 				return;
 			}
@@ -179,12 +181,11 @@ public abstract class xApp implements Runnable {
 			switch(step) {
 			// first step in startup
 			case 8:
-				System.out.println("Stopping "+getAppName()+"..");
+				log().title("Stopping "+getAppName()+"..");
 				break;
 			// last step in startup
 			case 1:
-				System.out.println(getAppName()+" stopped.");
-				//log.Major(getAppName()+" stopped.");
+				log().title(getAppName()+" Stopped.");
 				//TODO: display total time running
 				synchronized(initLevel) {
 					initLevel = 0;
@@ -195,7 +196,7 @@ public abstract class xApp implements Runnable {
 				try {
 					shutdown(step);
 				} catch (Exception e) {
-					e.printStackTrace();
+					log().trace(e);
 				}
 				break;
 			}
@@ -234,6 +235,17 @@ public abstract class xApp implements Runnable {
 	}
 
 
+	// start console prompt
+	protected void initConsole() {
+		xConsole console = xLog.peekConsole();
+		if(console == null || console instanceof xNoConsole) {
+			console = new jlineConsole();
+			xLog.setConsole(console);
+		}
+		console.start();
+	}
+
+
 	// logger
 	private static volatile xLog log = null;
 	private static final Object logLock = new Object();
@@ -251,9 +263,9 @@ public abstract class xApp implements Runnable {
 	// fail app startup
 	public static void fail(String msg, Exception e) {
 		if(utils.notEmpty(msg))
-			System.out.println(msg);
+			log().publish(msg);
 		if(e != null)
-			e.printStackTrace();
+			log().trace(e);
 		System.exit(1);
 	}
 	public static void fail(String msg) {

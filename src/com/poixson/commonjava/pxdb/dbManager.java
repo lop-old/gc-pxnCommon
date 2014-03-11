@@ -3,7 +3,6 @@ package com.poixson.commonjava.pxdb;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -38,7 +37,7 @@ public final class dbManager {
 			if(config != null)
 				if(pools.containsKey(config))
 					return pools.get(config);
-			System.out.println("db config not found for key: "+dbKey);
+			log().warning("db config not found for key: "+dbKey);
 			return null;
 		}
 	}
@@ -56,9 +55,9 @@ public final class dbManager {
 	protected static String register(dbConfig config) {
 		synchronized(pools) {
 			if(pools.containsKey(config)) {
-				System.out.println("Using an existing db pool :-)");
+				log().finest("Using an existing db pool :-)");
 			} else {
-				System.out.println("Starting new db pool..");
+				log().finest("Starting new db pool..");
 				dbPool pool = new dbPool(config);
 				pools.put(config, pool);
 			}
@@ -70,7 +69,7 @@ public final class dbManager {
 
 	// logger
 	public static xLog log() {
-		return xVars.log("db");
+		return xLog.getRoot("db");
 	}
 
 

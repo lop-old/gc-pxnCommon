@@ -5,7 +5,6 @@ import java.io.StringWriter;
 import java.util.List;
 import java.util.UUID;
 
-import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -172,7 +171,7 @@ public final class utilsString {
 
 	// logger
 	public static xLog log() {
-		return xVars.log();
+		return xLog.getRoot();
 	}
 
 

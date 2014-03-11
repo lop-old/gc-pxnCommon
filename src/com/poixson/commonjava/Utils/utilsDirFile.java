@@ -11,6 +11,8 @@ import java.nio.channels.FileLock;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import com.poixson.commonjava.xLogger.xLog;
+
 
 public final class utilsDirFile {
 	@Override
@@ -44,6 +46,7 @@ public final class utilsDirFile {
 						randomAccessFile.close();
 						file.delete();
 					} catch (Exception e) {
+						log().trace(e);
 //						pxnLog.get().severe("Unable to remove lock file: "+lockFile);
 //						pxnLog.get().exception(e);
 					}
@@ -51,6 +54,7 @@ public final class utilsDirFile {
 			}.init(fileLock));
 			return true;
 		} catch (Exception e) {
+			log().trace(e);
 //			pxnLog.get().severe("Unable to create and/or lock file: "+lockFile);
 //			pxnLog.get().exception(e);
 		}
@@ -63,9 +67,9 @@ public final class utilsDirFile {
 				(new File("/proc/self")).getCanonicalFile().getName()
 			);
 		} catch (NumberFormatException e) {
-//			pxnLog.get().exception(e);
+			log().trace(e);
 		} catch (IOException e) {
-//			pxnLog.get().exception(e);
+			log().trace(e);
 		}
 		return -1;
 	}
@@ -86,7 +90,7 @@ public final class utilsDirFile {
 		// get lib path
 		final File file = new File(libDir);
 		if(!file.exists() || !file.isDirectory()) {
-System.out.println("Library path not found: "+libDir);
+			log().warning("Library path not found: "+libDir);
 			return;
 		}
 		final String libPath = file.getAbsolutePath();
@@ -126,6 +130,7 @@ System.out.println("Library path not found: "+libDir);
 			if(!file.exists()) throw new FileNotFoundException("File not found: "+file.getAbsoluteFile());
 			return new FileInputStream(file);
 		} catch (FileNotFoundException e) {
+			log().trace(e);
 //			pxnLog.get().warning("Failed to load file: "+file.getAbsoluteFile());
 		}
 		return null;
@@ -231,6 +236,12 @@ System.out.println("Library path not found: "+libDir);
 
 	public static String san(final String text) {
 		return utilsSan.FileName(text);
+	}
+
+
+	// logger
+	public static xLog log() {
+		return xLog.getRoot();
 	}
 
 

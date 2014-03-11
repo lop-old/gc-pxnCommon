@@ -10,6 +10,8 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.poixson.commonjava.xLogger.xLog;
+
 
 public class xClock {
 
@@ -101,21 +103,21 @@ public class xClock {
 			localOffset = ((msg.receiveTimestamp - msg.originateTimestamp) + (msg.transmitTimestamp - fromUnixTimestamp(time))) / 2.0;
 			// less than 100ms
 			if(localOffset < 0.1 && localOffset > -0.1) {
-				System.out.println("System time only off by "+utilsMath.FormatDecimal("0.000", localOffset)+", ignoring adjustment.");
+				log().info("System time only off by "+utilsMath.FormatDecimal("0.000", localOffset)+", ignoring adjustment.");
 				localOffset = 0.0;
 			} else {
-				System.out.println("Internal time adjusted by "+(localOffset>0 ? "+" : "-")+utilsMath.FormatDecimal("0.000", localOffset)+" seconds");
-				System.out.println("System time:   "+timestampToString(time / 1000.0));
-				System.out.println("Internal time: "+getString());
+				log().info("Internal time adjusted by "+(localOffset>0 ? "+" : "-")+utilsMath.FormatDecimal("0.000", localOffset)+" seconds");
+				log().info("System time:   "+timestampToString(time / 1000.0));
+				log().info("Internal time: "+getString());
 			}
 		} catch (SocketException e) {
-			e.printStackTrace();
+			log().trace(e);
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			log().trace(e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log().trace(e);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log().trace(e);
 		} finally {
 			if(socket != null)
 				socket.close();
@@ -189,6 +191,12 @@ public class xClock {
 	}
 	public String getString() {
 		return timestampToString(seconds());
+	}
+
+
+	// logger
+	public static xLog log() {
+		return xLog.getRoot();
 	}
 
 

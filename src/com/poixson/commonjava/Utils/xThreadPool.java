@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+import com.poixson.commonjava.xLogger.xLog;
+
 
 public class xThreadPool implements Runnable {
 
@@ -64,7 +66,7 @@ public class xThreadPool implements Runnable {
 		runLater(new xRunnable("Thread-Startup") {
 			@Override
 			public void run() {
-				System.out.println("Started thread queue ("+queueName+")");
+				log().fine("Started thread queue ("+queueName+")");
 			}
 		});
 	}
@@ -89,7 +91,7 @@ public class xThreadPool implements Runnable {
 			final int globalCount = getGlobalThreadCount();
 			final int globalFree  = GLOBAL_LIMIT - globalCount;
 			final int free = utilsMath.MinMax(count - active, 0, globalFree);
-			System.out.println(
+			log().finer(
 				"Pool Size: "+Integer.toString(count)+" ["+Integer.toString(size)+"]  "+
 				"Active/Free: "+
 					Integer.toString(active)+"/"+
@@ -101,11 +103,9 @@ public class xThreadPool implements Runnable {
 			// global max threads
 			if(globalFree <= 0) {
 				if(coolMaxReached.runAgain())
-					System.out.println("Global max threads limit [ "+Integer.toString(globalCount)+" ] reached!");
-					//getLogger().warning("Global max threads limit [ "+Integer.toString(globalCount)+" ] reached!");
+					log().warning("Global max threads limit [ "+Integer.toString(globalCount)+" ] reached!");
 				else
-					System.out.println("Global max threads limit [ "+Integer.toString(globalCount)+" ] reached!");
-					//getLogger().finest("Global max threads limit [ "+Integer.toString(globalCount)+" ] reached!");
+					log().warning("Global max threads limit [ "+Integer.toString(globalCount)+" ] reached!");
 				utilsThread.Sleep(10L);
 				return;
 			}
@@ -113,11 +113,9 @@ public class xThreadPool implements Runnable {
 			if(count >= size) {
 				if(size > 1) {
 					if(coolMaxReached.runAgain())
-						System.out.println("Max threads limit [ "+Integer.toString(count)+" ] reached!");
-						//getLogger().warning("Max threads limit [ "+Integer.toString(count)+" ] reached!");
+						log().warning("Max threads limit [ "+Integer.toString(count)+" ] reached!");
 					else
-						System.out.println("Max threads limit [ "+Integer.toString(count)+" ] reached!");
-						//getLogger().finest("Max threads limit [ "+Integer.toString(count)+" ] reached!");
+						log().warning("Max threads limit [ "+Integer.toString(count)+" ] reached!");
 				}
 				utilsThread.Sleep(10L);
 				return;
@@ -148,7 +146,7 @@ public class xThreadPool implements Runnable {
 		final xTime sleeping = xTime.get();
 		while(true) {
 			if(stopping && !isMainThread()) {
-				System.out.println("Stopping thread ("+queueName+":"+Integer.toString(threadId)+")");
+				log().finer("Stopping thread ("+queueName+":"+Integer.toString(threadId)+")");
 				break;
 			}
 			xRunnable task = null;
@@ -162,7 +160,7 @@ public class xThreadPool implements Runnable {
 				if(task == null) {
 					// stop inactive thread after 5 minutes
 					if(sleeping.value >= threadInactiveTimeout.value) {
-System.out.println("Inactive thread.. ("+queueName+":"+Integer.toString(threadId)+")");
+						log().finer("Inactive thread.. ("+queueName+":"+Integer.toString(threadId)+")");
 						break;
 					}
 					sleeping.add(threadSleepTime);
@@ -182,7 +180,7 @@ System.out.println("Inactive thread.. ("+queueName+":"+Integer.toString(threadId
 					if(priority <= (Thread.NORM_PRIORITY - Thread.MIN_PRIORITY) / 2)
 						utilsThread.Sleep(10L); // sleep 10ms
 				} catch (Exception e) {
-					e.printStackTrace();
+					log().trace(e);
 				}
 				// task finished
 				active--;
@@ -190,7 +188,7 @@ System.out.println("Inactive thread.. ("+queueName+":"+Integer.toString(threadId
 				Thread.currentThread().setName(queueName);
 			}
 		}
-		System.out.println("Thread stopped ("+queueName+":"+Integer.toString(threadId)+")");
+		log().finer("Thread stopped ("+queueName+":"+Integer.toString(threadId)+")");
 		synchronized(threads) {
 			threads.remove(Thread.currentThread());
 		}
@@ -207,9 +205,9 @@ System.out.println("Inactive thread.. ("+queueName+":"+Integer.toString(threadId
 		}
 		try {
 			if(queue.offer(task, 5, xTimeU.S))
-				System.out.println("Task queued.. ("+queueName+") "+task.getTaskName());
+				log().finer("Task queued.. ("+queueName+") "+task.getTaskName());
 			else
-				System.out.println("Thread queue jammed! ("+queueName+") "+task.getTaskName());
+				log().warning("Thread queue jammed! ("+queueName+") "+task.getTaskName());
 		} catch (InterruptedException ignore) {
 			return;
 		}
@@ -249,7 +247,7 @@ System.out.println("Inactive thread.. ("+queueName+":"+Integer.toString(threadId
 				try {
 					pool.wait();
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					log().trace(e);
 				}
 				it.remove();
 			}
@@ -327,6 +325,12 @@ System.out.println("Inactive thread.. ("+queueName+":"+Integer.toString(threadId
 			1 :
 			utilsMath.MinMax(size, 1, HARD_LIMIT)
 		);
+	}
+
+
+	// logger
+	public static xLog log() {
+		return xLog.getRoot();
 	}
 
 

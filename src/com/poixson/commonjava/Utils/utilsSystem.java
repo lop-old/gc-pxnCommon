@@ -13,7 +13,12 @@ public final class utilsSystem {
 	private utilsSystem() {}
 
 
-	// cast a collection to list
+	/**
+	 * Cast a collection to list.
+	 * @param clss
+	 * @param c
+	 * @return
+	 */
 	public static <T> List<T> castList(final Class<? extends T> clss, final Collection<?> c) {
 		if(clss == null) throw new NullPointerException("clss cannot be null");
 		if(c    == null) throw new NullPointerException("c cannot be null");

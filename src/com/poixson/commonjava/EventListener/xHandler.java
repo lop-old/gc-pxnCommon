@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.poixson.commonjava.EventListener.xEvent.Priority;
+import com.poixson.commonjava.xLogger.xLog;
 
 
 public class xHandler {
@@ -104,19 +105,21 @@ listener.toString()+" "+method.getName());
 				if(!onlyPriority.equals(holder.priority)) continue;
 				try {
 					holder.method.invoke(holder.listener, event);
-					//m.invoke(event);
 				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log().trace(e);
 				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log().trace(e);
 				} catch (InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log().trace(e);
 				}
 			}
 		}
+	}
+
+
+	// logger
+	public static xLog log() {
+		return xLog.getRoot();
 	}
 
 

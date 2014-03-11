@@ -10,7 +10,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
 
-import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -102,9 +101,9 @@ public final class utilsCrypt {
 				)
 			);
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			log().trace(e);
 		} catch (InvalidKeyException e) {
-			e.printStackTrace();
+			log().trace(e);
 		}
 		return null;
 	}
@@ -175,7 +174,7 @@ public final class utilsCrypt {
 
 	// logger
 	public static xLog log() {
-		return xVars.log();
+		return xLog.getRoot();
 	}
 
 
