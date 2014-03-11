@@ -170,7 +170,7 @@ public class xLog extends xLogPrinting {
 	// is level loggable
 	public boolean isLoggable(final xLevel lvl) {
 		// forced debug mode
-		if(xVars.debug())
+		if(xApp.debug())
 			return true;
 		// local logger level
 		if(level != null && !level.isLoggable(lvl))

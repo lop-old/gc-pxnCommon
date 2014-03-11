@@ -31,9 +31,6 @@ public abstract class xApp implements Runnable {
 	private static final Object appLock = new Object();
 	private volatile xThreadPool threadPool = null;
 
-	// logger
-	protected volatile xLog log = null;
-
 	@SuppressWarnings("unused")
 	private volatile long startTime = -1;
 	private volatile Integer initLevel = 0;
@@ -237,6 +234,20 @@ public abstract class xApp implements Runnable {
 	}
 
 
+	// logger
+	private static volatile xLog log = null;
+	private static final Object logLock = new Object();
+	public static xLog log() {
+		if(log == null) {
+			synchronized(logLock) {
+				if(log == null)
+					log = xLog.getRoot();
+			}
+		}
+		return log;
+	}
+
+
 	// fail app startup
 	public static void fail(String msg, Exception e) {
 		if(utils.notEmpty(msg))
@@ -253,6 +264,18 @@ public abstract class xApp implements Runnable {
 	}
 	public static void fail() {
 		fail(null, null);
+	}
+
+
+	// debug mode
+	private static volatile Boolean globalDebug = null;
+	public static void debug(boolean debug) {
+		globalDebug = debug;
+	}
+	public static boolean debug() {
+		if(globalDebug == null)
+			return false;
+		return globalDebug.booleanValue();
 	}
 
 
