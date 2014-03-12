@@ -108,20 +108,24 @@ public final class utilsString {
 
 
 	// repeat string with deliminator
-	public static String repeat(final String delim, final String str, final int repeat) {
-		if(utils.isEmpty(delim)) {
-			final StringBuilder out = new StringBuilder();
-			for(int i=0; i<repeat; i++)
-				out.append(str);
-			return out.toString();
-		}
-		if(utils.isEmpty(str)) return null;
-		if(repeat < 1) return null;
+	public static String repeat(final int count, final String str) {
+		return repeat(count, str, null);
+	}
+	public static String repeat(final int count, final String str, final String delim) {
+		if(str == null) return null;
+		if(count < 1) return "";
 		final StringBuilder out = new StringBuilder();
-		for(int i=0; i<repeat; i++) {
-			if(out.length() > 0)
-				out.append(delim);
-			out.append(str);
+		// repeat string
+		if(utils.isEmpty(delim)) {
+			for(int i=0; i<count; i++)
+				out.append(str);
+		} else {
+			// repeat string with delim
+			for(int i=0; i<count; i++) {
+				if(out.length() > 0)
+					out.append(delim);
+				out.append(str);
+			}
 		}
 		return out.toString();
 	}
@@ -166,6 +170,29 @@ public final class utilsString {
 			str.append(line);
 		}
 		return str.toString();
+	}
+
+
+	public static String pad(final int length, final String text, final String padding) {
+		if(length < 1) return null;
+		if(utils.isEmpty(padding)) return null;
+		final int count = length - text.length();
+		if(count < 1) return text;
+		return (new StringBuilder())
+			.append(text)
+			.append(repeat(count, " "))
+			.toString();
+	}
+	public static String padCenter(final int length, final String text, final String padding) {
+		if(length < 1) return null;
+		if(utils.isEmpty(padding)) return null;
+		final double count = (length - text.length()) / 2.0;
+		if(Math.ceil(count) < 1.0) return text;
+		return (new StringBuilder())
+			.append(repeat((int) Math.floor(count), " "))
+			.append(text)
+			.append(repeat((int) Math.ceil(count), " "))
+			.toString();
 	}
 
 
