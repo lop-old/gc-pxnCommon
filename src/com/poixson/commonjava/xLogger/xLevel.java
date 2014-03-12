@@ -44,6 +44,9 @@ public class xLevel implements Serializable {
 	}
 
 
+	public static xLevel[] getKnownLevels() {
+		return knownLevels.toArray(new xLevel[0]);
+	}
 	public static xLevel FindLevel(String name) {
 		if(utils.isEmpty(name)) return null;
 		if(utilsMath.isNumeric(name))

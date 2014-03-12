@@ -197,6 +197,16 @@ public class xLog extends xLogPrinting {
 	}
 
 
+	// formatter
+	public void setFormatter(final xLogFormatter formatter, final Class<?> type) {
+		if(formatter == null) throw new NullPointerException("formatter cannot be null");
+		if(type      == null) throw new NullPointerException("handler type cannot be null");
+		for(final xLogHandler handler : handlers)
+			if(handler.getClass().equals(type))
+				handler.setFormatter(formatter);
+	}
+
+
 	// [logger] [crumbs]
 	// recursive name tree
 	private void buildNameTree(final List<String> list) {

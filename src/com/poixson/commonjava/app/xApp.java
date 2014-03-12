@@ -15,6 +15,8 @@ import com.poixson.commonjava.xLogger.xLevel;
 import com.poixson.commonjava.xLogger.xLog;
 import com.poixson.commonjava.xLogger.console.jlineConsole;
 import com.poixson.commonjava.xLogger.console.xNoConsole;
+import com.poixson.commonjava.xLogger.formatters.defaultLogFormatter_Color;
+import com.poixson.commonjava.xLogger.handlers.logHandlerConsole;
 
 
 /**
@@ -243,6 +245,11 @@ public abstract class xApp implements Runnable {
 			xLog.setConsole(console);
 		}
 		console.start();
+		// enable console color
+		log().setFormatter(
+			new defaultLogFormatter_Color(),
+			logHandlerConsole.class
+		);
 	}
 
 
