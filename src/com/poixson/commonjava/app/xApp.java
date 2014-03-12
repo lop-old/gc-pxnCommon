@@ -214,8 +214,9 @@ public abstract class xApp implements Runnable {
 	protected abstract boolean startup(final int step);
 	protected abstract boolean shutdown(final int step);
 
-	protected abstract void processArgs(final String[] args);
 	protected abstract void initConfig();
+	protected abstract void processArgs(final String[] args);
+	public abstract void processCommand(final String commandStr);
 
 	public abstract String getAppName();
 	public abstract String getVersion();

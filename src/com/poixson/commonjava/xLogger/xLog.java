@@ -234,7 +234,7 @@ public class xLog extends xLogPrinting {
 	// publish record
 	@Override
 	public void publish(final xLogRecord record) {
-		final xLevel lvl = record.getLevel();
+		final xLevel lvl = record.level();
 		if(!isLoggable(lvl))
 			return;
 		if(parent != null)

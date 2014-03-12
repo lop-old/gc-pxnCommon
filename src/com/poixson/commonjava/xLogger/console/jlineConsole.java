@@ -8,7 +8,9 @@ import jline.console.history.FileHistory;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
+import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsThread;
+import com.poixson.commonjava.app.xApp;
 import com.poixson.commonjava.xLogger.xConsole;
 import com.poixson.commonjava.xLogger.xLog;
 
@@ -18,6 +20,8 @@ public class jlineConsole implements xConsole {
 	public Object clone() throws CloneNotSupportedException {
 		throw new CloneNotSupportedException();
 	}
+
+	public static final String DEFAULT_PROMPT = " >";
 
 	private static final Object lock = new Object();
 	private static volatile ConsoleReader reader = null;
@@ -124,6 +128,7 @@ public class jlineConsole implements xConsole {
 			try {
 				System.out.print('\r');
 				line = reader.readLine(getPrompt());
+				flush();
 			} catch (IOException e) {
 				e.printStackTrace();
 				utilsThread.Sleep(200);
@@ -132,18 +137,13 @@ public class jlineConsole implements xConsole {
 				log().trace(e);
 				break;
 			}
-			if(line == null) continue;
-			doCommand(line);
+			if(!utils.isEmpty(line))
+				xApp.get().processCommand(line);
 		}
 		running = false;
 		System.out.println();
 		System.out.println();
-	}
-
-
-	public void doCommand(final String line) {
-//TODO: send line to main thread
-System.out.println("***>"+line+"<***");
+		flush();
 	}
 
 
@@ -154,11 +154,13 @@ System.out.println("***>"+line+"<***");
 				.eraseScreen()
 				.cursor(0, 0)
 		);
+		flush();
 	}
 	// flush buffer
 	public void flush() {
 		try {
-			reader.flush();
+			System.out.flush();
+//			reader.flush();
 		} catch (Exception ignore) {}
 	}
 	// print then restore prompt
@@ -171,10 +173,11 @@ System.out.println("***>"+line+"<***");
 		// print
 		System.out.print("\r"+msg+"\r\n");
 		// redraw prompt
-		redraw();
+//		drawPrompt();
+		flush();
 	}
 	// redraw prompt
-	public void redraw() {
+	public void drawPrompt() {
 		if(reader == null) return;
 		try {
 			reader.drawLine();
@@ -192,7 +195,7 @@ System.out.println("***>"+line+"<***");
 	}
 	public String getPrompt() {
 		if(prompt == null || prompt.isEmpty())
-			return ">";
+			return DEFAULT_PROMPT;
 		return prompt;
 	}
 

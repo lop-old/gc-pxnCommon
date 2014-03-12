@@ -45,7 +45,7 @@ public class defaultLogFormatter implements xLogFormatter {
 	}
 	// raw message
 	protected String partMessage(final xLogRecord record) {
-		return record.getMsg();
+		return record.msg();
 	}
 
 

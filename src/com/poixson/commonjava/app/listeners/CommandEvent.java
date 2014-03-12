@@ -11,7 +11,7 @@ public class CommandEvent extends xEventMeta {
 
 	public CommandEvent(final String commandStr) {
 		if(utils.isEmpty(commandStr)) throw new NullPointerException("commandStr cannot be null");
-		this.commandStr = commandStr;
+		this.commandStr = commandStr.trim();
 	}
 
 

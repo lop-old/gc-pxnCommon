@@ -33,9 +33,6 @@ public class xNoConsole implements xConsole {
 	@Override
 	public void run() {
 	}
-	@Override
-	public void doCommand(final String line) {
-	}
 
 
 	@Override
@@ -47,9 +44,10 @@ public class xNoConsole implements xConsole {
 	@Override
 	public void print(final String msg) {
 		System.out.println(msg);
+		System.out.flush();
 	}
 	@Override
-	public void redraw() {
+	public void drawPrompt() {
 	}
 
 
