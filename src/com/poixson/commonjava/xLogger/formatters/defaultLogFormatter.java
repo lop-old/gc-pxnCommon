@@ -1,5 +1,7 @@
 package com.poixson.commonjava.xLogger.formatters;
 
+import java.text.SimpleDateFormat;
+
 import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.xLogger.xLogFormatter;
 import com.poixson.commonjava.xLogger.xLogRecord;
@@ -25,11 +27,20 @@ public class defaultLogFormatter implements xLogFormatter {
 
 	// timestamp
 	protected String partTimestamp(final xLogRecord record) {
-		return "xx:xx:xx";
+		SimpleDateFormat dateFormat = new SimpleDateFormat("D yyyy-MM-dd HH:mm:ss");
+		return dateFormat.format(record.timestamp());
 	}
 	// level
 	protected String partLevel(final xLogRecord record) {
-		return record.getLevel().toString();
+		return (new StringBuilder())
+			.append("[")
+			.append(utilsString.padCenter(
+				7,
+				record.level().toString(),
+				" "
+			))
+			.append("]")
+			.toString();
 	}
 	// [logger] [crumbs]
 	protected String partCrumbs(final xLogRecord record) {
