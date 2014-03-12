@@ -9,6 +9,7 @@ import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
 import com.poixson.commonjava.Utils.utils;
+import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.app.xApp;
 import com.poixson.commonjava.xLogger.xConsole;
@@ -21,7 +22,7 @@ public class jlineConsole implements xConsole {
 		throw new CloneNotSupportedException();
 	}
 
-	public static final String DEFAULT_PROMPT = " >";
+	public static final String DEFAULT_PROMPT = " #>";
 
 	private static final Object lock = new Object();
 	private static volatile ConsoleReader reader = null;
@@ -72,6 +73,7 @@ public class jlineConsole implements xConsole {
 	}
 
 
+	@Override
 	public void start() {
 		log().finest("Start jlineConsole");
 		if(running || stopping) return;
@@ -82,6 +84,7 @@ public class jlineConsole implements xConsole {
 				thread.start();
 		}
 	}
+	@Override
 	public void stop() {
 		stopping = true;
 		if(running && thread != null)
@@ -90,6 +93,7 @@ public class jlineConsole implements xConsole {
 			System.in.close();
 		} catch (Exception ignore) {}
 	}
+	@Override
 	public void shutdown() {
 		synchronized(lock) {
 			// stop console input
@@ -148,6 +152,7 @@ public class jlineConsole implements xConsole {
 
 
 	// clear screen
+	@Override
 	public void clear() {
 		AnsiConsole.out.println(
 			Ansi.ansi()
@@ -157,30 +162,36 @@ public class jlineConsole implements xConsole {
 		flush();
 	}
 	// flush buffer
+	@Override
 	public void flush() {
 		try {
 			System.out.flush();
-//			reader.flush();
 		} catch (Exception ignore) {}
 	}
 	// print then restore prompt
+	@Override
 	public void print(String msg) {
 		// render jAnsi
 		msg = renderAnsi(msg);
 		// be sure to overwrite prompt
-		if(msg.length() < getPrompt().length() + 2)
-			msg += "    ";
+		{
+			final int minLength = getPrompt().length() + 2;
+			if(msg.length() < minLength)
+				msg += utilsString.repeat(minLength - msg.length(), " ");
+		}
 		// print
 		System.out.print("\r"+msg+"\r\n");
-		// redraw prompt
-//		drawPrompt();
+		// draw prompt
+		drawPrompt();
 		flush();
 	}
-	// redraw prompt
+	// draw prompt
+	@Override
 	public void drawPrompt() {
 		if(reader == null) return;
 		try {
 			reader.drawLine();
+			reader.flush();
 		} catch (IOException ignore) {}
 	}
 	// render jAnsi
@@ -190,9 +201,11 @@ public class jlineConsole implements xConsole {
 
 
 	// prompt string
+	@Override
 	public void setPrompt(final String prompt) {
 		this.prompt = prompt;
 	}
+	@Override
 	public String getPrompt() {
 		if(prompt == null || prompt.isEmpty())
 			return DEFAULT_PROMPT;
