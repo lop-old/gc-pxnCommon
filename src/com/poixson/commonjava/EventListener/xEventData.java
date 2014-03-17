@@ -1,7 +1,7 @@
 package com.poixson.commonjava.EventListener;
 
 
-public class xEventMeta {
+public class xEventData {
 
 
 	// event handled
@@ -13,7 +13,7 @@ public class xEventMeta {
 		this.handled = handled;
 	}
 	public boolean isHandled() {
-		return handled;
+		return this.handled;
 	}
 
 
@@ -26,7 +26,7 @@ public class xEventMeta {
 		this.cancelled = cancelled;
 	}
 	public boolean isCancelled() {
-		return cancelled;
+		return this.cancelled;
 	}
 
 

@@ -283,7 +283,7 @@ public class xLog extends xLogPrinting {
 	}
 	public static void shutdown() {
 		if(peekConsole() != null)
-			peekConsole().shutdown();
+			peekConsole().stop();
 	}
 
 

@@ -25,9 +25,6 @@ public class xNoConsole implements xConsole {
 	@Override
 	public void stop() {
 	}
-	@Override
-	public void shutdown() {
-	}
 
 
 	@Override

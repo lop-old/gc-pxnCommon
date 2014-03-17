@@ -39,28 +39,28 @@ public class jlineConsole implements xConsole {
 	// new instance
 	public jlineConsole() {
 		// console reader
-		if(reader == null) {
-			jlineEnabled = null;
+		if(jlineConsole.reader == null) {
+			jlineConsole.jlineEnabled = null;
 			// no console
 			if(System.console() == null) {
-				jlineEnabled = false;
+				jlineConsole.jlineEnabled = new Boolean(false);
 				System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
 			}
 			try {
-				reader = new ConsoleReader(System.in, System.out);
+				jlineConsole.reader = new ConsoleReader(System.in, System.out);
 			} catch (IOException ignore) {
 				// try again with jline disabled
 				try {
-					jlineEnabled = false;
+					jlineConsole.jlineEnabled = new Boolean(false);
 					System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
 					System.setProperty("user.language", "en");
-					reader = new ConsoleReader(System.in, System.out);
+					jlineConsole.reader = new ConsoleReader(System.in, System.out);
 				} catch (IOException e) {
 					log().trace(e);
 				}
 			}
-			if(jlineEnabled == null)
-				jlineEnabled = true;
+			if(jlineConsole.jlineEnabled == null)
+				jlineConsole.jlineEnabled = new Boolean(true);
 			try {
 				reader.setBellEnabled(false);
 //				FileHistory history = new FileHistory(new File("history.txt"));
@@ -76,42 +76,43 @@ public class jlineConsole implements xConsole {
 	@Override
 	public void start() {
 		log().finest("Start jlineConsole");
-		if(running || stopping) return;
+		if(this.running || this.stopping) return;
 		synchronized(lock) {
-			if(thread == null)
-				thread = new Thread(this);
-			if(!running)
-				thread.start();
+			if(this.thread == null) {
+				this.thread = new Thread(this);
+				this.thread.setDaemon(true);
+			}
+			if(!this.running)
+				this.thread.start();
 		}
 	}
 	@Override
 	public void stop() {
-		stopping = true;
-		if(running && thread != null)
-			thread.notify();
-		try {
-			System.in.close();
-		} catch (Exception ignore) {}
-	}
-	@Override
-	public void shutdown() {
+		this.stopping = true;
 		synchronized(lock) {
-			// stop console input
-			this.stop();
-			if(reader != null) {
-				// save command history
+			// stop console input thread
+			if(this.running && this.thread != null) {
 				try {
-					((FileHistory) reader.getHistory()).flush();
-				} catch (Exception ignore) {}
-				// close reader
-				try {
-					reader.flush();
+					this.thread.interrupt();
 				} catch (Exception ignore) {}
 				try {
-					reader.shutdown();
+					this.thread.notifyAll();
 				} catch (Exception ignore) {}
-				reader = null;
 			}
+			// save command history
+			if(jlineConsole.reader != null) {
+				try {
+					final History history = jlineConsole.reader.getHistory();
+					if(history != null && history instanceof FileHistory)
+						((FileHistory) history).flush();
+				} catch (Exception e) {
+					log().trace(e);
+				}
+			}
+			// close input
+			try {
+				System.in.close();
+			} catch (IOException ignore) {}
 			try {
 				AnsiConsole.systemUninstall();
 			} catch (Exception ignore) {}
@@ -123,31 +124,36 @@ public class jlineConsole implements xConsole {
 	@Override
 	public void run() {
 		synchronized(lock) {
-			if(running) return;
-			running = true;
+			if(this.running) return;
+			this.running = true;
 		}
-		while(!stopping) {
-			if(thread != null && thread.isInterrupted()) break;
+		while(!this.stopping) {
+			if(this.thread != null && this.thread.isInterrupted()) break;
 			String line = null;
 			try {
 				System.out.print('\r');
-				line = reader.readLine(getPrompt());
+				line = jlineConsole.reader.readLine(getPrompt());
 				flush();
 			} catch (IOException e) {
-				e.printStackTrace();
+				if("Stream closed".equals(e.getMessage()))
+					break;
+				log().trace(e);
 				utilsThread.Sleep(200);
 				continue;
 			} catch (Exception e) {
 				log().trace(e);
 				break;
 			}
-			if(!utils.isEmpty(line))
+			if(this.stopping) break;
+			if(utils.notEmpty(line))
 				xApp.get().processCommand(line);
 		}
-		running = false;
+		this.running = false;
 		System.out.println();
 		System.out.println();
 		flush();
+		jlineConsole.reader.shutdown();
+		jlineConsole.reader = null;
 	}
 
 
@@ -170,28 +176,28 @@ public class jlineConsole implements xConsole {
 	}
 	// print then restore prompt
 	@Override
-	public void print(String msg) {
+	public void print(final String msg) {
 		// render jAnsi
-		msg = renderAnsi(msg);
+		String str = renderAnsi(msg);
 		// be sure to overwrite prompt
 		{
 			final int minLength = getPrompt().length() + 2;
-			if(msg.length() < minLength)
-				msg += utilsString.repeat(minLength - msg.length(), " ");
+			if(str.length() < minLength)
+				str += utilsString.repeat(minLength - str.length(), " ");
 		}
 		// print
-		System.out.print("\r"+msg+"\r\n");
-		// draw prompt
+		System.out.print("\r"+str+"\r\n");
+		// draw command prompt
 		drawPrompt();
 		flush();
 	}
-	// draw prompt
+	// draw command prompt
 	@Override
 	public void drawPrompt() {
-		if(reader == null) return;
+		if(jlineConsole.reader == null) return;
 		try {
-			reader.drawLine();
-			reader.flush();
+			jlineConsole.reader.drawLine();
+			jlineConsole.reader.flush();
 		} catch (IOException ignore) {}
 	}
 	// render jAnsi
@@ -207,9 +213,9 @@ public class jlineConsole implements xConsole {
 	}
 	@Override
 	public String getPrompt() {
-		if(prompt == null || prompt.isEmpty())
+		if(this.prompt == null || this.prompt.isEmpty())
 			return DEFAULT_PROMPT;
-		return prompt;
+		return this.prompt;
 	}
 
 

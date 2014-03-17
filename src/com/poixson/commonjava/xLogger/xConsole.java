@@ -5,7 +5,6 @@ public interface xConsole extends Runnable {
 
 	public void start();
 	public void stop();
-	public void shutdown();
 
 	@Override
 	public void run();

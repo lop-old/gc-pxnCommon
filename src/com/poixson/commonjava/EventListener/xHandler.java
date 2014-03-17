@@ -24,7 +24,7 @@ public class xHandler {
 		public final boolean threaded;
 		public final boolean ignoreHandled;
 		public final boolean ignoreCancelled;
-		private ListenerHolder(final xListener listener, final Method method,
+		protected ListenerHolder(final xListener listener, final Method method,
 				final Priority priority, final boolean threaded,
 				final boolean ignoreHandled, final boolean ignoreCancelled) {
 			if(listener == null) throw new NullPointerException("listener cannot be null");
@@ -46,7 +46,7 @@ public class xHandler {
 	 */
 	public void register(final xListener listener) {
 		if(listener == null) throw new NullPointerException("listener cannot be null");
-		synchronized(listeners) {
+		synchronized(this.listeners) {
 			// find annotated listener methods
 			for(final Method method : listener.getClass().getMethods()) {
 				if(method == null) continue;
@@ -62,8 +62,8 @@ public class xHandler {
 					annotate.ignoreHandled(),
 					annotate.ignoreCancelled()
 				);
-				listeners.add(holder);
-System.out.println("Registered listener ["+Integer.toString(listeners.size())+"] "+
+				this.listeners.add(holder);
+System.out.println("Registered listener ["+Integer.toString(this.listeners.size())+"] "+
 listener.toString()+" "+method.getName());
 			}
 		}
@@ -75,33 +75,33 @@ listener.toString()+" "+method.getName());
 	 * @param listener
 	 */
 	public void unregister(final xListener listener) {
-		if(listeners.isEmpty()) return;
-		synchronized(listeners) {
-			if(listeners.contains(listener))
-				listeners.remove(listener);
+		if(this.listeners.isEmpty()) return;
+		synchronized(this.listeners) {
+			if(this.listeners.contains(listener))
+				this.listeners.remove(listener);
 		}
 	}
 	/**
 	 * Unregister all listeners.
 	 */
 	public void unregisterAll() {
-		if(listeners.isEmpty()) return;
-		synchronized(listeners) {
-			listeners.clear();
+		if(this.listeners.isEmpty()) return;
+		synchronized(this.listeners) {
+			this.listeners.clear();
 		}
 	}
 
 
-	public void trigger(final xEventMeta event) {
+	public void trigger(final xEventData event) {
 //TODO: this may need to be reversed
 		for(Priority priority : Priority.values())
 			trigger(event, priority);
 	}
-	public void trigger(final xEventMeta event, final Priority onlyPriority) {
+	public void trigger(final xEventData event, final Priority onlyPriority) {
 		if(event        == null) throw new NullPointerException("event cannot be null");
 		if(onlyPriority == null) throw new NullPointerException("priority cannot be null");
-		synchronized(listeners) {
-			for(ListenerHolder holder : listeners) {
+		synchronized(this.listeners) {
+			for(ListenerHolder holder : this.listeners) {
 				if(!onlyPriority.equals(holder.priority)) continue;
 				try {
 					holder.method.invoke(holder.listener, event);

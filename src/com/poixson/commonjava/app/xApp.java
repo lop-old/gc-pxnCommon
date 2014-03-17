@@ -33,12 +33,12 @@ import com.poixson.commonjava.xLogger.handlers.logHandlerConsole;
 public abstract class xApp implements Runnable {
 
 	private static volatile xApp appInstance = null;
-	private static final Object appLock = new Object();
+	protected static final Object appLock = new Object();
 	private volatile xThreadPool threadPool = null;
 
 	@SuppressWarnings("unused")
 	private volatile long startTime = -1;
-	private volatile Integer initLevel = 0;
+	protected volatile int initLevel = 0;
 
 
 	/**
@@ -53,13 +53,13 @@ public abstract class xApp implements Runnable {
 		// single instance
 		if(appInstance != null)
 			_AlreadyStarted();
-		synchronized(appLock) {
-			if(appInstance != null)
+		synchronized(xApp.appLock) {
+			if(xApp.appInstance != null)
 				_AlreadyStarted();
-			appInstance = app;
+			xApp.appInstance = app;
 		}
-		appInstance.processArgs(args);
-		appInstance.init();
+		xApp.appInstance.processArgs(args);
+		xApp.appInstance.init();
 	}
 	private static void _AlreadyStarted() {
 		fail("Program already started?",
@@ -74,16 +74,16 @@ public abstract class xApp implements Runnable {
 	 * Application startup.
 	 */
 	public void init() {
-		synchronized(initLevel) {
-			if(initLevel != 0) _AlreadyStarted();
-			initLevel = 1;
+		synchronized(xApp.appLock) {
+			if(this.initLevel != 0) _AlreadyStarted();
+			this.initLevel = 1;
 		}
 		// init logger
 		log().setLevel(xLevel.ALL);
 		// load config
 		initConfig();
 		// load clock
-		startTime = xClock.get(true).millis();
+		this.startTime = xClock.get(true).millis();
 		// load libraries
 		final String libPath = utilsDirFile.mergePaths(".", "lib");
 		if((new File(libPath)).isDirectory())
@@ -93,11 +93,17 @@ public abstract class xApp implements Runnable {
 			System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
 		}
 		// main thread queue
-		threadPool = xThreadPool.get();
+		if(this.threadPool == null)
+			this.threadPool = xThreadPool.get();
 		// run startup sequence (1-9)
-		if(initLevel != 1) _AlreadyStarted();
+		if(this.initLevel != 1) _AlreadyStarted();
 		// startup sequence
-		threadPool.runLater(new StartupRunnable(1));
+		getThreadPool().runLater(
+			new _StartupRunnable(
+				this,
+				1
+			)
+		);
 		// start main thread queue
 		run();
 		// main thread ended
@@ -109,7 +115,12 @@ public abstract class xApp implements Runnable {
 	}
 	public void shutdown() {
 		// shutdown sequence
-		threadPool.runLater(new ShutdownRunnable(8));
+		getThreadPool().runLater(
+			new _ShutdownRunnable(
+				this,
+				8
+			)
+		);
 	}
 
 
@@ -121,17 +132,19 @@ public abstract class xApp implements Runnable {
 	 *   8. Last step in startup
 	 *   9. Running
 	 */
-	private class StartupRunnable extends xRunnable {
+	private class _StartupRunnable extends xRunnable {
+		private final xApp app;
 		private final int step;
-		public StartupRunnable(final int step) {
+		public _StartupRunnable(final xApp app, final int step) {
 			super(getAppName()+"-Startup-"+Integer.toString(step));
-			if(initLevel < 1 || initLevel >= 9) throw new UnsupportedOperationException();
-			if(step      < 1 || step      >= 9) throw new UnsupportedOperationException();
+			if(app == null) throw new NullPointerException();
+			if(step < 1 || step >= 9) throw new UnsupportedOperationException();
+			this.app = app;
 			this.step = step;
 		}
 		@Override
 		public void run() {
-			switch(step) {
+			switch(this.step) {
 			// first step in startup
 			case 1:
 				// lock file
@@ -141,14 +154,14 @@ public abstract class xApp implements Runnable {
 			// last step in startup
 			case 8:
 				log().title(getAppName()+" Ready and Running!");
-				synchronized(initLevel) {
-					initLevel = 9;
+				synchronized(xApp.appLock) {
+					this.app.initLevel = 9;
 				}
 				return;
 			// app steps 2-7
 			default:
 				try {
-					if(startup(step))
+					if(startup(this.step))
 						break;
 				} catch (Exception e) {
 					log().trace(e);
@@ -156,9 +169,14 @@ public abstract class xApp implements Runnable {
 				return;
 			}
 			// queue next step
-			synchronized(initLevel) {
-				initLevel = step + 1;
-				threadPool.runLater(new StartupRunnable(initLevel));
+			synchronized(xApp.appLock) {
+				this.app.initLevel = this.step + 1;
+				getThreadPool().runLater(
+					new _StartupRunnable(
+						this.app,
+						this.app.initLevel
+					)
+				);
 			}
 		}
 	}
@@ -170,17 +188,19 @@ public abstract class xApp implements Runnable {
 	 *   1. Last step in shutdown
 	 *   0. Stopped
 	 */
-	private class ShutdownRunnable extends xRunnable {
+	private class _ShutdownRunnable extends xRunnable {
+		private final xApp app;
 		private final int step;
-		public ShutdownRunnable(final int step) {
+		public _ShutdownRunnable(final xApp app, final int step) {
 			super(getAppName()+"-Shutdown-"+Integer.toString(step));
-			if(initLevel < 1 || initLevel >= 9) throw new UnsupportedOperationException();
-			if(step      < 1 || step      >= 9) throw new UnsupportedOperationException();
+			if(app == null) throw new NullPointerException();
+			if(step < 1 || step >= 9) throw new UnsupportedOperationException();
+			this.app = app;
 			this.step = step;
 		}
 		@Override
 		public void run() {
-			switch(step) {
+			switch(this.step) {
 			// first step in startup
 			case 8:
 				log().title("Stopping "+getAppName()+"..");
@@ -189,23 +209,28 @@ public abstract class xApp implements Runnable {
 			case 1:
 				log().title(getAppName()+" Stopped.");
 				//TODO: display total time running
-				synchronized(initLevel) {
-					initLevel = 0;
+				synchronized(xApp.appLock) {
+					this.app.initLevel = 0;
 				}
 				return;
 			// app steps 7-2
 			default:
 				try {
-					shutdown(step);
+					shutdown(this.step);
 				} catch (Exception e) {
 					log().trace(e);
 				}
 				break;
 			}
 			// queue next step
-			synchronized(initLevel) {
-				initLevel = step - 1;
-				threadPool.runLater(new ShutdownRunnable(initLevel));
+			synchronized(xApp.appLock) {
+				this.app.initLevel = this.step - 1;
+				getThreadPool().runLater(
+					new _ShutdownRunnable(
+						this.app,
+						this.app.initLevel
+					)
+				);
 			}
 		}
 	}
@@ -234,7 +259,7 @@ public abstract class xApp implements Runnable {
 	 * @return
 	 */
 	public xThreadPool getThreadPool() {
-		return threadPool;
+		return this.threadPool;
 	}
 
 
@@ -289,8 +314,8 @@ public abstract class xApp implements Runnable {
 
 	// debug mode
 	private static volatile Boolean globalDebug = null;
-	public static void debug(boolean debug) {
-		globalDebug = debug;
+	public static void debug(final boolean debug) {
+		globalDebug = new Boolean(debug);
 	}
 	public static boolean debug() {
 		if(globalDebug == null)
