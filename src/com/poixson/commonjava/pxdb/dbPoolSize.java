@@ -32,9 +32,9 @@ public class dbPoolSize extends Thread {
 
 	// pool size warnings
 	public void StartWarningThread() {
-		synchronized(lock) {
-			if(running) return;
-			running = true;
+		synchronized(this.lock) {
+			if(this.running) return;
+			this.running = true;
 //			this.setName(pool.getKey()+" Warning Thread");
 			if(!this.isAlive())
 				this.start();
@@ -47,20 +47,20 @@ public class dbPoolSize extends Thread {
 	@Override
 	public void run() {
 		log().finer("Started warning thread.. "+this.getName());
-		running = true;
+		this.running = true;
 //		synchronized(thread) {
 //			if(running) return;
 //			running = true;
 //		}
-		coolSoftLimit.reset();
-		coolHardLimit.reset();
+		this.coolSoftLimit.reset();
+		this.coolHardLimit.reset();
 		int count = getWorkerCount();
-		while(count > SOFT) {
+		while(count > this.SOFT) {
 			// try to close unused
-			dbWorker worker = pool.getExisting();
+			dbWorker worker = this.pool.getExisting();
 			// check again after dropping closed workers
 			count = getWorkerCount();
-			if(count <= SOFT) {
+			if(count <= this.SOFT) {
 				if(worker != null)
 					worker.release();
 				break;
@@ -69,16 +69,16 @@ public class dbPoolSize extends Thread {
 			if(worker != null)
 				worker.close();
 			// warning message
-			if(count >= HARD)
+			if(count >= this.HARD)
 				HardLimitWarningMessage();
 			else
-			if(count > SOFT)
+			if(count > this.SOFT)
 				SoftLimitWarningMessage();
 			// sleep thread
 			utilsThread.Sleep(250L);
 		}
 		log().finer("Stopped warning thread. "+this.getName());
-		running = false;
+		this.running = false;
 	}
 
 
@@ -86,18 +86,18 @@ public class dbPoolSize extends Thread {
 	private final CoolDown coolSoftLimit = CoolDown.get("10s");
 	protected void SoftLimitWarningMessage() {
 		int count = getWorkerCount();
-		if(count <= SOFT) return;
+		if(count <= this.SOFT) return;
 		// don't spam/flood console
-		if(coolSoftLimit.runAgain())
-			log().warning("DB connection pool nearing limit! [ "+Integer.toString(count)+" max: "+Integer.toString(HARD)+" ] "+pool.getKey());
+		if(this.coolSoftLimit.runAgain())
+			log().warning("DB connection pool nearing limit! [ "+Integer.toString(count)+" max: "+Integer.toString(this.HARD)+" ] "+this.pool.getKey());
 	}
 	private final CoolDown coolHardLimit = CoolDown.get("2s");
 	protected void HardLimitWarningMessage() {
 		int count = getWorkerCount();
-		if(count < HARD) return;
+		if(count < this.HARD) return;
 		// don't spam/flood console
-		if(coolHardLimit.runAgain())
-			log().severe("DB connection pool HARD LIMIT REACHED!! [ "+Integer.toString(count)+" max: "+Integer.toString(HARD)+" ] "+pool.getKey());
+		if(this.coolHardLimit.runAgain())
+			log().severe("DB connection pool HARD LIMIT REACHED!! [ "+Integer.toString(count)+" max: "+Integer.toString(this.HARD)+" ] "+this.pool.getKey());
 	}
 
 
@@ -110,16 +110,16 @@ public class dbPoolSize extends Thread {
 	}
 	//get hard/soft limits
 	public int getSoft() {
-		return SOFT;
+		return this.SOFT;
 	}
 	public int getHard() {
-		return HARD;
+		return this.HARD;
 	}
 
 
 	// db connections count
 	public int getWorkerCount() {
-		return pool.getWorkerCount();
+		return this.pool.getWorkerCount();
 	}
 
 

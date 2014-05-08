@@ -31,17 +31,17 @@ public class CoolDown {
 
 
 	public boolean runAgain() {
-		synchronized(lock) {
-			long current = utils.getSystemMillis();
+		synchronized(this.lock) {
+			final long current = utils.getSystemMillis();
 			// first run
-			if(last == -1L) {
-				last = current;
+			if(this.last == -1L) {
+				this.last = current;
 				return true;
 			}
-			long since = current - last;
+			final long since = current - this.last;
 			// run again
-			if(since >= coolDuration.getMS()) {
-				last = current;
+			if(since >= this.coolDuration.getMS()) {
+				this.last = current;
 				return true;
 			}
 		}
@@ -51,8 +51,8 @@ public class CoolDown {
 
 
 	public void reset() {
-		synchronized(lock) {
-			last = -1L;
+		synchronized(this.lock) {
+			this.last = -1L;
 		}
 	}
 
@@ -69,7 +69,7 @@ public class CoolDown {
 	}
 	// get duration
 	public xTime getDuration() {
-		return coolDuration.clone();
+		return this.coolDuration.clone();
 	}
 
 

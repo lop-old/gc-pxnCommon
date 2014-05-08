@@ -19,18 +19,18 @@ public abstract class xLogHandler {
 
 	// formatter
 	public void setFormatter(final xLogFormatter formatter) {
-		synchronized(formatLock) {
+		synchronized(this.formatLock) {
 			this.formatter = formatter;
 		}
 	}
 	protected xLogFormatter getFormatter() {
-		if(formatter == null) {
-			synchronized(formatLock) {
-				if(formatter == null)
-					formatter = new defaultLogFormatter();
+		if(this.formatter == null) {
+			synchronized(this.formatLock) {
+				if(this.formatter == null)
+					this.formatter = new defaultLogFormatter();
 			}
 		}
-		return formatter;
+		return this.formatter;
 	}
 
 
@@ -39,11 +39,13 @@ public abstract class xLogHandler {
 		this.level = lvl;
 	}
 	public xLevel getLevel() {
-		return level;
+		return this.level;
 	}
 	// is level loggable
 	public boolean isLoggable(final xLevel lvl) {
-		return (level != null && level.isLoggable(lvl));
+		if(this.level == null)
+			return false;
+		return this.level.isLoggable(lvl);
 	}
 
 

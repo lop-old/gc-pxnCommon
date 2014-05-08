@@ -25,7 +25,8 @@ public class xClock {
 	// update thread
 	private volatile Thread thread = null;
 	private volatile boolean blocking = true;
-	private volatile Boolean running = false;
+	private volatile boolean running = false;
+	private final Object runLock = new Object();
 
 	// clock instance
 	private static volatile xClock instance = null;
@@ -58,40 +59,41 @@ public class xClock {
 
 
 	public void update() {
-		if(!enableNTP) return;
-		if(running) return;
-		synchronized(running) {
-			if(running) return;
-			running = true;
+		if(!this.enableNTP) return;
+		if(this.running) return;
+		synchronized(this.runLock) {
+			if(this.running) return;
+			this.running = true;
 			// wait for update
-			if(blocking) {
+			if(this.blocking) {
 				doUpdate();
 			// update threaded
 			} else {
-				if(thread == null)
-					thread = new Thread() {
+				if(this.thread == null) {
+					this.thread = new Thread() {
 						@Override
 						public void run() {
 							doUpdate();
 						}
 					};
-				thread.start();
+				}
+				this.thread.start();
 			}
 		}
 	}
 
 
 	protected void doUpdate() {
-		if(!enableNTP) return;
-		if(!running) return;
+		if(!this.enableNTP) return;
+		if(!this.running) return;
 		double time = getSystemTime();
 		// checked in last 60 seconds
-		if(lastChecked != 0.0 && ((time - lastChecked) < 60.0)) return;
+		if(this.lastChecked != 0.0 && ((time - this.lastChecked) < 60.0)) return;
 		DatagramSocket socket = null;
 		try {
 			socket = new DatagramSocket();
 			socket.setSoTimeout(500);
-			final InetAddress address = InetAddress.getByName(timeserver);
+			final InetAddress address = InetAddress.getByName(this.timeserver);
 			byte[] buf = new ntpMessage().toByteArray();
 			final DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 123);
 			ntpMessage.encodeTimestamp(packet.getData(), 40, fromUnixTimestamp());
@@ -100,13 +102,13 @@ public class xClock {
 			final ntpMessage msg = new ntpMessage(packet.getData());
 			// calculate local offset for correction
 			time = getSystemTime();
-			localOffset = ((msg.receiveTimestamp - msg.originateTimestamp) + (msg.transmitTimestamp - fromUnixTimestamp(time))) / 2.0;
+			this.localOffset = ((msg.receiveTimestamp - msg.originateTimestamp) + (msg.transmitTimestamp - fromUnixTimestamp(time))) / 2.0;
 			// less than 100ms
-			if(localOffset < 0.1 && localOffset > -0.1) {
-				log().info("System time only off by "+utilsMath.FormatDecimal("0.000", localOffset)+", ignoring adjustment.");
-				localOffset = 0.0;
+			if(this.localOffset < 0.1 && this.localOffset > -0.1) {
+				log().info("System time only off by "+utilsMath.FormatDecimal("0.000", this.localOffset)+", ignoring adjustment.");
+				this.localOffset = 0.0;
 			} else {
-				log().info("Internal time adjusted by "+(localOffset>0 ? "+" : "-")+utilsMath.FormatDecimal("0.000", localOffset)+" seconds");
+				log().info("Internal time adjusted by "+(this.localOffset>0 ? "+" : "-")+utilsMath.FormatDecimal("0.000", this.localOffset)+" seconds");
 				log().info("System time:   "+timestampToString(time / 1000.0));
 				log().info("Internal time: "+getString());
 			}
@@ -123,30 +125,30 @@ public class xClock {
 				socket.close();
 			socket = null;
 		}
-		lastChecked = time;
-		running = false;
+		this.lastChecked = time;
+		this.running = false;
 	}
 
 
 	public boolean isRunning() {
-		return running;
+		return this.running;
 	}
 
 
 	public String getTimeServer() {
-		if(utils.isEmpty(timeserver))
+		if(utils.isEmpty(this.timeserver))
 			return DEFAULT_TIMESERVER;
-		return timeserver;
+		return this.timeserver;
 	}
 	public void setTimeServer(final String host) {
-		timeserver = host;
+		this.timeserver = host;
 	}
 	public void setEnabled(final boolean enabled) {
-		synchronized(running) {
+		synchronized(this.runLock) {
 			this.enableNTP = enabled;
 			if(!enabled) {
-				localOffset = 0.0;
-				lastChecked = 0.0;
+				this.localOffset = 0.0;
+				this.lastChecked = 0.0;
 			}
 		}
 	}
@@ -164,7 +166,7 @@ public class xClock {
 	 * @return
 	 */
 	public double getCurrentTime() {
-		return getSystemTime() - localOffset;
+		return getSystemTime() - this.localOffset;
 	}
 
 

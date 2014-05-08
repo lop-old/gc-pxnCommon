@@ -27,14 +27,15 @@ public class HistoryRND {
 
 	// random number (unique history)
 	public synchronized int RND() {
-		if(min == max) return min;
-		if((max - min) == 1) {
-			if(last == min) {
-				last = max;
-				return max;
+		if(this.min == this.max)
+			return this.min;
+		if((this.max - this.min) == 1) {
+			if(this.last == this.min) {
+				this.last = this.max;
+				return this.max;
 			} else {
-				last = min;
-				return min;
+				this.last = this.min;
+				return this.min;
 			}
 		}
 		int number = 0;
@@ -42,19 +43,19 @@ public class HistoryRND {
 		// find unique random number
 		while(true) {
 			// find a new random number
-			number = utilsMath.getRandom(min, max);
-			if(!history.contains(number)) break;
+			number = utilsMath.getRandom(this.min, this.max);
+			if(!this.history.contains(new Integer(number))) break;
 			// give up trying
 			i--;
 			if(i < 0) {
-				if(number != last) break;
+				if(number != this.last) break;
 				if(i < 0-i) break;
 			}
 		}
-		last = number;
-		history.add(number);
-		while (history.size() > historySize)
-			history.remove();
+		this.last = number;
+		this.history.add(new Integer(number));
+		while (this.history.size() > this.historySize)
+			this.history.remove();
 		return number;
 	}
 

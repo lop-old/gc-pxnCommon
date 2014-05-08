@@ -28,23 +28,23 @@ public class xTime {
 		private static final long serialVersionUID = 1L;
 	{
 		// years
-		put('y', YEAR);
+		put(new Character('y'), new Long(YEAR));
 		// months
-		put('o', MONTH);
+		put(new Character('o'), new Long(MONTH));
 		// weeks
-		put('w', WEEK);
+		put(new Character('w'), new Long(WEEK));
 		// days
-		put('d', DAY);
+		put(new Character('d'), new Long(DAY));
 		// hours
-		put('h', HOUR);
+		put(new Character('h'), new Long(HOUR));
 		// minutes
-		put('m', xTime.MIN);
+		put(new Character('m'), new Long(MIN));
 		// seconds
-		put('s', SEC);
+		put(new Character('s'), new Long(SEC));
 		// ticks in ms
-		put('t', TICK);
+		put(new Character('t'), new Long(TICK));
 		// ms
-		put('n', MS);
+		put(new Character('n'), new Long(MS));
 	}};
 
 
@@ -87,8 +87,8 @@ public class xTime {
 
 	// reset value to 0
 	public void reset() {
-		if(isFinal) return;
-		value = 0;
+		if(this.isFinal) return;
+		this.value = 0;
 	}
 
 
@@ -101,26 +101,26 @@ public class xTime {
 		return toString(this);
 	}
 	public long getMS() {
-		return value;
+		return this.value;
 	}
 	public int getTicks() {
-		return (int) (value / TICK);
+		return (int) (this.value / TICK);
 	}
 	// set value
 	public xTime set(final long value, final TimeUnit unit) {
 		if(unit == null) throw new NullPointerException("unit cannot be null");
-		if(isFinal) return null;
+		if(this.isFinal) return null;
 		this.value = xTimeU.MS.convert(value, unit);
 		return this;
 	}
-	public xTime set(final String value) {
-		if(isFinal) return null;
-		if(utils.notEmpty(value))
-			this.value = parseLong(value);
+	public xTime set(final String val) {
+		if(this.isFinal) return null;
+		if(utils.notEmpty(val))
+			this.value = parseLong(val).longValue();
 		return this;
 	}
 	public xTime set(final xTime time) {
-		if(isFinal) return null;
+		if(this.isFinal) return null;
 		if(time != null)
 			this.value = time.getMS();
 		return this;
@@ -128,19 +128,19 @@ public class xTime {
 
 
 	// add time
-	public void add(final long value, final TimeUnit unit) {
+	public void add(final long val, final TimeUnit unit) {
 		if(unit == null) throw new NullPointerException("unit cannot be null");
-		if(isFinal) return;
-		this.value += xTimeU.MS.convert(value, unit);
+		if(this.isFinal) return;
+		this.value += xTimeU.MS.convert(val, unit);
 	}
-	public void add(final String value) {
-		if(isFinal) return;
-		if(utils.notEmpty(value))
-			this.value += parseLong(value);
+	public void add(final String val) {
+		if(this.isFinal) return;
+		if(utils.notEmpty(val))
+			this.value += parseLong(val).longValue();
 	}
 	public void add(final xTime time) {
 		if(time == null) throw new NullPointerException("time cannot be null");
-		if(isFinal) return;
+		if(this.isFinal) return;
 		this.value += time.value;
 	}
 
@@ -157,23 +157,25 @@ public class xTime {
 		if(utils.isEmpty(value)) return null;
 		long time = 0;
 		StringBuilder tmp = new StringBuilder();
-		for(char chr : value.toCharArray()) {
-			if(chr == ' ') continue;
-			if(Character.isDigit(chr) || chr == '.' || chr == ',') {
-				tmp.append(chr);
+		for(char c : value.toCharArray()) {
+			if(c == ' ') continue;
+			if(Character.isDigit(c) || c == '.' || c == ',') {
+				tmp.append(c);
 				continue;
 			}
-			if(Character.isLetter(chr)) {
-				chr = Character.toLowerCase(chr);
+			if(Character.isLetter(c)) {
+				final Character chr = new Character(
+					Character.toLowerCase(c)
+				);
 				if(timeValues.containsKey(chr)) {
-					final double u = (double) timeValues.get(chr);
-					time += (utilsMath.toDouble(tmp.toString()) * u);
+					final double u = timeValues.get(chr).doubleValue();
+					time += (utilsMath.toDouble(tmp.toString()).doubleValue() * u);
 				}
 				tmp = new StringBuilder();
 				continue;
 			}
 		}
-		return time;
+		return new Long(time);
 	}
 
 
@@ -201,8 +203,8 @@ public class xTime {
 		long tmp = ms;
 		final StringBuilder out = new StringBuilder();
 		for(final Entry<Character, Long> entry : timeValues.entrySet()) {
-			final char c = entry.getKey();
-			final long u = entry.getValue();
+			final char c = entry.getKey().charValue();
+			final long u = entry.getValue().longValue();
 			// 0 for this unit
 			if(tmp < u) continue;
 			final long val = (long) Math.floor(

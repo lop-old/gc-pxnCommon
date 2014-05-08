@@ -30,30 +30,30 @@ public class StringParser {
 	}
 	@Override
 	public StringParser clone() {
-		return new StringParser(delim, original);
+		return new StringParser(this.delim, this.original);
 	}
 
 
 	// get next part
 	public boolean next() {
-		if(buffer == null) return false;
-		buffer = utilsString.trim(delim, buffer);
-		synchronized(buffer) {
+		if(this.buffer == null) return false;
+		this.buffer = utilsString.trim(this.delim, this.buffer);
+		synchronized(this.buffer) {
 			if(!hasNext()) return false;
-			int pos = buffer.indexOf(delim);
+			int pos = this.buffer.indexOf(this.delim);
 			// last part
 			if(pos == -1) {
-				part = buffer;
-				buffer = "";
+				this.part = this.buffer;
+				this.buffer = "";
 			// get part from buffer
 			} else {
-				part = buffer.substring(0, pos);
-				buffer = buffer.substring(pos + delim.length());
+				this.part = this.buffer.substring(0, pos);
+				this.buffer = this.buffer.substring(pos + this.delim.length());
 			}
 		}
 		// set first part
-		if(first == null)
-			first = part;
+		if(this.first == null)
+			this.first = this.part;
 		return true;
 	}
 	public String getNext() {
@@ -61,19 +61,19 @@ public class StringParser {
 		return get();
 	}
 	public boolean hasNext() {
-		return utils.notEmpty(buffer);
+		return utils.notEmpty(this.buffer);
 	}
 	// get current part
 	public String get() {
-		return part;
+		return this.part;
 	}
 	// get first part
 	public String getFirst() {
-		return first;
+		return this.first;
 	}
 	// get rest of buffer
 	public String getBuffer() {
-		return buffer;
+		return this.buffer;
 	}
 
 
@@ -89,10 +89,10 @@ public class StringParser {
 
 	// reset parser
 	public void reset() {
-		synchronized(buffer) {
-			buffer = original;
-			first = null;
-			part = null;
+		synchronized(this.buffer) {
+			this.buffer = this.original;
+			this.first = null;
+			this.part = null;
 		}
 	}
 

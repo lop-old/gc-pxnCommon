@@ -25,13 +25,13 @@ public class TableDAO {
 
 	// set id field
 	public TableDAO idField(String fieldName) {
-		idField = fieldName;
+		this.idField = fieldName;
 		return this;
 	}
 	public String getIdField() {
-		if(idField == null)   return null;
-		if(idField.isEmpty()) return "id";
-		return idField;
+		if(this.idField == null)   return null;
+		if(this.idField.isEmpty()) return "id";
+		return this.idField;
 	}
 
 

@@ -1,9 +1,11 @@
 package com.poixson.commonjava.xLogger.console;
 
+import java.io.File;
 import java.io.IOException;
 
 import jline.console.ConsoleReader;
 import jline.console.history.FileHistory;
+import jline.console.history.History;
 
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
@@ -62,13 +64,15 @@ public class jlineConsole implements xConsole {
 			if(jlineConsole.jlineEnabled == null)
 				jlineConsole.jlineEnabled = new Boolean(true);
 			try {
-				reader.setBellEnabled(false);
-//				FileHistory history = new FileHistory(new File("history.txt"));
-//				history.setMaxSize(200);
-//				reader.setHistory(history);
-//				reader.setHistoryEnabled(true);
-				reader.setExpandEvents(false);
-			} catch (Exception ignore) {}
+				jlineConsole.reader.setBellEnabled(false);
+				FileHistory history = new FileHistory(new File("./history.txt"));
+				history.setMaxSize(200);
+				jlineConsole.reader.setHistory(history);
+				jlineConsole.reader.setHistoryEnabled(true);
+				jlineConsole.reader.setExpandEvents(true);
+			} catch (Exception e) {
+				log().trace(e);
+			}
 		}
 	}
 

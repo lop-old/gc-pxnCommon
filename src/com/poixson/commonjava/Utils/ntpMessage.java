@@ -215,34 +215,34 @@ public class ntpMessage {
 	 */
 	public ntpMessage(final byte[] array) {
 		// See the packet format diagram in RFC 2030 for details
-		leapIndicator = (byte) ((array[0] >> 6) & 0x3);
-		version = (byte) ((array[0] >> 3) & 0x7);
-		mode = (byte) (array[0] & 0x7);
-		stratum = unsignedByteToShort(array[1]);
-		pollInterval = array[2];
-		precision = array[3];
+		this.leapIndicator = (byte) ((array[0] >> 6) & 0x3);
+		this.version = (byte) ((array[0] >> 3) & 0x7);
+		this.mode = (byte) (array[0] & 0x7);
+		this.stratum = unsignedByteToShort(array[1]);
+		this.pollInterval = array[2];
+		this.precision = array[3];
 
-		rootDelay =
+		this.rootDelay =
 			(array[4] * 256.0) +
 			unsignedByteToShort(array[5]) +
 			(unsignedByteToShort(array[6]) / 256.0) +
 			(unsignedByteToShort(array[7]) / 65536.0);
 
-		rootDispersion =
+		this.rootDispersion =
 			(unsignedByteToShort(array[8]) * 256.0) +
 			unsignedByteToShort(array[9]) +
 			(unsignedByteToShort(array[10]) / 256.0) +
 			(unsignedByteToShort(array[11]) / 65536.0);
 
-		referenceIdentifier[0] = array[12];
-		referenceIdentifier[1] = array[13];
-		referenceIdentifier[2] = array[14];
-		referenceIdentifier[3] = array[15];
+		this.referenceIdentifier[0] = array[12];
+		this.referenceIdentifier[1] = array[13];
+		this.referenceIdentifier[2] = array[14];
+		this.referenceIdentifier[3] = array[15];
 
-		referenceTimestamp = decodeTimestamp(array, 16);
-		originateTimestamp = decodeTimestamp(array, 24);
-		receiveTimestamp = decodeTimestamp(array, 32);
-		transmitTimestamp = decodeTimestamp(array, 40);
+		this.referenceTimestamp = decodeTimestamp(array, 16);
+		this.originateTimestamp = decodeTimestamp(array, 24);
+		this.receiveTimestamp = decodeTimestamp(array, 32);
+		this.transmitTimestamp = decodeTimestamp(array, 40);
 	}
 
 
@@ -265,13 +265,13 @@ public class ntpMessage {
 		// All bytes are automatically set to 0
 		byte[] p = new byte[48];
 
-		p[0] = (byte) (leapIndicator << 6 | version << 3 | mode);
-		p[1] = (byte) stratum;
-		p[2] = (byte) pollInterval;
-		p[3] = (byte) precision;
+		p[0] = (byte) (this.leapIndicator << 6 | this.version << 3 | this.mode);
+		p[1] = (byte) this.stratum;
+		p[2] = (byte) this.pollInterval;
+		p[3] = (byte) this.precision;
 
 		// root delay is a signed 16.16-bit FP, in Java an int is 32-bits
-		int l = (int) (rootDelay * 65536.0);
+		int l = (int) (this.rootDelay * 65536.0);
 		p[4] = (byte) ((l >> 24) & 0xFF);
 		p[5] = (byte) ((l >> 16) & 0xFF);
 		p[6] = (byte) ((l >> 8) & 0xFF);
@@ -279,21 +279,21 @@ public class ntpMessage {
 
 		// root dispersion is an unsigned 16.16-bit FP, in Java there are no
 		// unsigned primitive types, so we use a long which is 64-bits
-		long ul = (long) (rootDispersion * 65536.0);
+		long ul = (long) (this.rootDispersion * 65536.0);
 		p[8]  = (byte) ((ul >> 24) & 0xFF);
 		p[9]  = (byte) ((ul >> 16) & 0xFF);
 		p[10] = (byte) ((ul >> 8) & 0xFF);
 		p[11] = (byte) (ul & 0xFF);
 
-		p[12] = referenceIdentifier[0];
-		p[13] = referenceIdentifier[1];
-		p[14] = referenceIdentifier[2];
-		p[15] = referenceIdentifier[3];
+		p[12] = this.referenceIdentifier[0];
+		p[13] = this.referenceIdentifier[1];
+		p[14] = this.referenceIdentifier[2];
+		p[15] = this.referenceIdentifier[3];
 
-		encodeTimestamp(p, 16, referenceTimestamp);
-		encodeTimestamp(p, 24, originateTimestamp);
-		encodeTimestamp(p, 32, receiveTimestamp);
-		encodeTimestamp(p, 40, transmitTimestamp);
+		encodeTimestamp(p, 16, this.referenceTimestamp);
+		encodeTimestamp(p, 24, this.originateTimestamp);
+		encodeTimestamp(p, 32, this.receiveTimestamp);
+		encodeTimestamp(p, 40, this.transmitTimestamp);
 
 		return p;
 	}
@@ -302,22 +302,23 @@ public class ntpMessage {
 	/**
 	 * Returns a string representation of a NtpMessage
 	 */
+	@Override
 	public String toString() {
-		final String precisionStr = new DecimalFormat("0.#E0").format(Math.pow(2, precision));
+		final String precisionStr = new DecimalFormat("0.#E0").format(Math.pow(2, this.precision));
 		final StringBuilder str = new StringBuilder();
-		str.append("Leap indicator: ").append(leapIndicator).append("\n");
-		str.append("Version: ").append(version).append("\n");
-		str.append("Mode: ").append(mode).append("\n");
-		str.append("Stratum: ").append(stratum).append("\n");
-		str.append("Poll: ").append(pollInterval).append("\n");
-		str.append("Precision: ").append(precision).append(" (").append(precisionStr).append(" seconds)\n");
-		str.append("Root delay: ").append(new DecimalFormat("0.00").format(rootDelay * 1000)).append(" ms\n");
-		str.append("Root dispersion: ").append(new DecimalFormat("0.00").format(rootDispersion*1000)).append(" ms\n");
-		str.append("Reference identifier: ").append(referenceIdentifierToString(referenceIdentifier, stratum, version)).append("\n");
-		str.append("Reference timestamp: ").append(timestampToString(referenceTimestamp)).append("\n");
-		str.append("Originate timestamp: ").append(timestampToString(originateTimestamp)).append("\n");
-		str.append("Receive timestamp:   ").append(timestampToString(receiveTimestamp)).append("\n");
-		str.append("Transmit timestamp:  ").append(timestampToString(transmitTimestamp));
+		str.append("Leap indicator: ").append(this.leapIndicator).append("\n");
+		str.append("Version: ").append(this.version).append("\n");
+		str.append("Mode: ").append(this.mode).append("\n");
+		str.append("Stratum: ").append(this.stratum).append("\n");
+		str.append("Poll: ").append(this.pollInterval).append("\n");
+		str.append("Precision: ").append(this.precision).append(" (").append(precisionStr).append(" seconds)\n");
+		str.append("Root delay: ").append(new DecimalFormat("0.00").format(this.rootDelay * 1000)).append(" ms\n");
+		str.append("Root dispersion: ").append(new DecimalFormat("0.00").format(this.rootDispersion*1000)).append(" ms\n");
+		str.append("Reference identifier: ").append(referenceIdentifierToString(this.referenceIdentifier, this.stratum, this.version)).append("\n");
+		str.append("Reference timestamp: ").append(timestampToString(this.referenceTimestamp)).append("\n");
+		str.append("Originate timestamp: ").append(timestampToString(this.originateTimestamp)).append("\n");
+		str.append("Receive timestamp:   ").append(timestampToString(this.receiveTimestamp)).append("\n");
+		str.append("Transmit timestamp:  ").append(timestampToString(this.transmitTimestamp));
 		return str.toString();
 	}
 
@@ -350,15 +351,16 @@ public class ntpMessage {
 	/**
 	 * Encodes a timestamp in the specified position in the message
 	 */
-	public static void encodeTimestamp(byte[] array, final int pointer, double timestamp) {
+	public static void encodeTimestamp(final byte[] array, final int pointer, final double timestamp) {
+		double stamp = timestamp;
 		// Converts a double into a 64-bit fixed point
 		for(int i=0; i<8; i++) {
 			// 2^24, 2^16, 2^8, .. 2^-32
 			final double base = Math.pow(2, (3 - i) * 8);
 			// Capture byte value
-			array[pointer + i] = (byte) (timestamp / base);
+			array[pointer + i] = (byte) (stamp / base);
 			// Subtract captured value from remaining total
-			timestamp = timestamp - (double) (unsignedByteToShort(array[pointer + i]) * base);
+			stamp = stamp - (double) (unsignedByteToShort(array[pointer + i]) * base);
 		}
 		// From RFC 2030: It is advisable to fill the non-significant
 		// low order bits of the timestamp with a random, unbiased

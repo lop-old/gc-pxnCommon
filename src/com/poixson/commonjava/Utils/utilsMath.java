@@ -110,7 +110,7 @@ public final class utilsMath {
 	public static Integer toInt(final String value) {
 		if(utils.isEmpty(value)) return null;
 		try {
-			return Integer.parseInt(value);
+			return new Integer(Integer.parseInt(value));
 		} catch (NumberFormatException ignore) {}
 		return null;
 	}
@@ -123,7 +123,7 @@ public final class utilsMath {
 	public static Byte toByte(final String value) {
 		if(utils.isEmpty(value)) return null;
 		try {
-			return Byte.parseByte(value);
+			return new Byte(Byte.parseByte(value));
 		} catch (NumberFormatException ignore) {}
 		return null;
 	}
@@ -131,7 +131,7 @@ public final class utilsMath {
 	public static Short toShort(final String value) {
 		if(utils.isEmpty(value)) return null;
 		try {
-			return Short.parseShort(value);
+			return new Short(Short.parseShort(value));
 		} catch (NumberFormatException ignore) {}
 		return null;
 	}
@@ -139,7 +139,7 @@ public final class utilsMath {
 	public static Long toLong(final String value) {
 		if(utils.isEmpty(value)) return null;
 		try {
-			return Long.parseLong(value);
+			return new Long(Long.parseLong(value));
 		} catch (NumberFormatException ignore) {}
 		return null;
 	}
@@ -152,7 +152,7 @@ public final class utilsMath {
 	public static Double toDouble(final String value) {
 		if(utils.isEmpty(value)) return null;
 		try {
-			return Double.parseDouble(value);
+			return new Double(Double.parseDouble(value));
 		} catch (NumberFormatException ignore) {}
 		return null;
 	}
@@ -165,7 +165,7 @@ public final class utilsMath {
 	public static Float toFloat(final String value) {
 		if(utils.isEmpty(value)) return null;
 		try {
-			return Float.parseFloat(value);
+			return new Float(Float.parseFloat(value));
 		} catch (NumberFormatException ignore) {}
 		return null;
 	}
@@ -180,10 +180,10 @@ public final class utilsMath {
 		final String val = value.trim().toLowerCase();
 		for(final String v : truesy)
 			if(val.equals(v))
-				return true;
+				return Boolean.TRUE;
 		for(final String v : falsy)
 			if(val.equals(v))
-				return false;
+				return Boolean.FALSE;
 		return null;
 	}
 	public static boolean toBoolean(final String value, final boolean defaultValue) {

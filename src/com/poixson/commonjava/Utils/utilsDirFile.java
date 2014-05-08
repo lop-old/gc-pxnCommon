@@ -23,35 +23,43 @@ public final class utilsDirFile {
 
 
 	// single instance lock
-	public static boolean lockInstance(final String lockFile) {
+	@SuppressWarnings("resource")
+	public static boolean lockInstance(final String fileStr) {
 		try {
-			final File file = new File(lockFile);
-			final RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
+			final File lockFile = new File(fileStr);
+			final RandomAccessFile randomAccessFile = new RandomAccessFile(lockFile, "rw");
 			final FileLock fileLock = randomAccessFile.getChannel().tryLock();
 			final int pid = getPid();
 			if(pid > 0)
 				randomAccessFile.write(Integer.toString(pid).getBytes());
-			if(fileLock == null)
+			if(fileLock == null) {
+				utils.safeClose(randomAccessFile);
 				return false;
+			}
 			// register shutdown hook
 			Runtime.getRuntime().addShutdownHook(new Thread() {
-				private volatile FileLock lock;
-				public Thread init(final FileLock lock) {
-					this.lock = lock;
+				private volatile File fle = null;
+				private volatile RandomAccessFile acc = null;
+				private volatile FileLock lck = null;
+				public Thread init(final File file, final RandomAccessFile access, final FileLock lock) {
+					this.fle = file;
+					this.acc = access;
+					this.lck = lock;
 					return this;
 				}
+				@Override
 				public void run() {
 					try {
-						lock.release();
-						randomAccessFile.close();
-						file.delete();
+						this.lck.release();
+						utils.safeClose(this.acc);
+						this.fle.delete();
 					} catch (Exception e) {
 						log().trace(e);
 //						pxnLog.get().severe("Unable to remove lock file: "+lockFile);
 //						pxnLog.get().exception(e);
 					}
 				}
-			}.init(fileLock));
+			}.init(lockFile, randomAccessFile, fileLock));
 			return true;
 		} catch (Exception e) {
 			log().trace(e);
@@ -146,6 +154,7 @@ public final class utilsDirFile {
 		return null;
 	}
 	// load yml from jar
+	@SuppressWarnings("resource")
 	public static InputJar OpenJarResource(final File jarFile, final String fileName) {
 		if(jarFile == null) throw new NullPointerException("jarFile cannot be null");
 		if(utils.isEmpty(fileName)) throw new NullPointerException("fileName cannot be null/empty");
@@ -177,18 +186,8 @@ public final class utilsDirFile {
 			Close();
 		}
 		public void Close() {
-			if(jar != null) {
-				try {
-					jar.close();
-				} catch (IOException ignore) {}
-//				jar = null;
-			}
-			if(fileInput != null) {
-				try {
-					fileInput.close();
-				} catch (IOException ignore) {}
-//				fileInput = null;
-			}
+			utils.safeClose(this.jar);
+			utils.safeClose(this.fileInput);
 		}
 	}
 
@@ -196,22 +195,28 @@ public final class utilsDirFile {
 	// these functions can have inconsistent results. a better class will be needed
 
 	// build path+file
-	public static String buildFilePath(final String filePath, String fileName, String ext) {
+	public static String buildFilePath(final String filePath, final String fileName, final String extension) {
 		if(utils.isEmpty(fileName)) throw new NullPointerException("fileName cannot be null/empty");
 		// file extension
-		if(utils.isEmpty(ext))
+		final String ext;
+		if(utils.isEmpty(extension))
 			ext = ".yml";
-		if(!ext.startsWith("."))
-			ext = "." + ext;
-		if(!fileName.endsWith(ext))
-			fileName += ext;
+		else if(!extension.startsWith("."))
+			ext = "."+extension;
+		else
+			ext = extension;
+		final String fileStr;
+		if(ext != null && !ext.isEmpty() && !fileName.endsWith(ext))
+			fileStr = fileName+ext;
+		else
+			fileStr = fileName;
 		if(filePath == null || filePath.isEmpty())
-			return fileName;
-		final boolean a = (filePath.endsWith("/")   || filePath.endsWith("\\"));
-		final boolean b = (fileName.startsWith("/") || fileName.startsWith("\\"));
-		if(a && b) return filePath + fileName.substring(1);
-		if(a || b) return filePath + fileName;
-		return filePath + File.separator + fileName;
+			return fileStr;
+		final boolean a = (filePath.endsWith("/")  || filePath.endsWith("\\"));
+		final boolean b = (fileStr.startsWith("/") || fileStr.startsWith("\\"));
+		if(a && b) return filePath + fileStr.substring(1);
+		if(a || b) return filePath + fileStr;
+		return filePath + File.separator + fileStr;
 	}
 
 

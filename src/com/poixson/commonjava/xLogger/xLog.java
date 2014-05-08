@@ -116,29 +116,29 @@ public class xLog extends xLogPrinting {
 	}
 	// get sub-logger
 	@Override
-	public xLog get(final String name) {
-		if(utils.isEmpty(name))
+	public xLog get(final String logName) {
+		if(utils.isEmpty(logName))
 			return this;
 		{
-			final xLog log = loggers.get(name);
+			final xLog log = this.loggers.get(logName);
 			if(log != null)
 				return log;
 		}
 		// new logger
-		synchronized(loggers) {
-			if(loggers.containsKey(name))
-				return loggers.get(name);
-			final xLog log =new xLog(name, this);
-			loggers.put(name, log);
+		synchronized(this.loggers) {
+			if(this.loggers.containsKey(logName))
+				return this.loggers.get(logName);
+			final xLog log =new xLog(logName, this);
+			this.loggers.put(logName, log);
 			return log;
 		}
 	}
 	// new anonymous instance
 	@Override
-	public xLog getAnon(final String name) {
-		if(utils.isEmpty(name))
-			return new xLog(name, parent);
-		return new xLog(name, this);
+	public xLog getAnon(final String logName) {
+		if(utils.isEmpty(logName))
+			return new xLog(logName, this.parent);
+		return new xLog(logName, this);
 	}
 	@Override
 	public xLog getAnon() {
@@ -151,18 +151,18 @@ public class xLog extends xLogPrinting {
 
 
 	// new logger instance
-	protected xLog(final String name, final xLog parent) {
-		if(utils.isEmpty(name) && parent != null)
+	protected xLog(final String logName, final xLog parentLogger) {
+		if(utils.isEmpty(logName) && parentLogger != null)
 			throw new NullPointerException("name cannot be null");
-		this.name = name;
-		this.parent = parent;
+		this.name = logName;
+		this.parent = parentLogger;
 	}
 
 
 	// is root logger
 	@Override
 	public boolean isRoot() {
-		return (parent == null);
+		return (this.parent == null);
 	}
 
 
@@ -170,7 +170,7 @@ public class xLog extends xLogPrinting {
 	public void setLevel(final xLevel lvl) {
 		this.level = lvl;
 		// handlers
-		for(final xLogHandler handler : handlers)
+		for(final xLogHandler handler : this.handlers)
 			handler.setLevel(lvl);
 	}
 	// is level loggable
@@ -179,7 +179,7 @@ public class xLog extends xLogPrinting {
 		if(xApp.debug())
 			return true;
 		// local logger level
-		if(level != null && !level.isLoggable(lvl))
+		if(this.level != null && !this.level.isLoggable(lvl))
 			return false;
 //		// handlers
 //		for(xLogHandler handler : handlers)
@@ -201,7 +201,7 @@ public class xLog extends xLogPrinting {
 	public void setFormatter(final xLogFormatter formatter, final Class<?> type) {
 		if(formatter == null) throw new NullPointerException("formatter cannot be null");
 		if(type      == null) throw new NullPointerException("handler type cannot be null");
-		for(final xLogHandler handler : handlers)
+		for(final xLogHandler handler : this.handlers)
 			if(handler.getClass().equals(type))
 				handler.setFormatter(formatter);
 	}
@@ -210,9 +210,9 @@ public class xLog extends xLogPrinting {
 	// [logger] [crumbs]
 	// recursive name tree
 	private void buildNameTree(final List<String> list) {
-		if(parent != null) {
-			parent.buildNameTree(list);
-			list.add(name);
+		if(this.parent != null) {
+			this.parent.buildNameTree(list);
+			list.add(this.name);
 		}
 	}
 	@Override
@@ -237,9 +237,9 @@ public class xLog extends xLogPrinting {
 		final xLevel lvl = record.level();
 		if(!isLoggable(lvl))
 			return;
-		if(parent != null)
-			parent.publish(record);
-		if(!handlers.isEmpty()) {
+		if(this.parent != null)
+			this.parent.publish(record);
+		if(!this.handlers.isEmpty()) {
 			for(final xLogHandler handler : this.handlers) {
 				if(handler.isLoggable(lvl))
 					handler.publish(record);
@@ -248,9 +248,9 @@ public class xLog extends xLogPrinting {
 	}
 	@Override
 	public void publish(final String msg) {
-		if(parent != null)
-			parent.publish(msg);
-		if(!handlers.isEmpty()) {
+		if(this.parent != null)
+			this.parent.publish(msg);
+		if(!this.handlers.isEmpty()) {
 			for(final xLogHandler handler : this.handlers)
 				handler.publish(msg);
 		}

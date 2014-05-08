@@ -24,31 +24,31 @@ public class xLogRecord {
 
 	// get level
 	public xLevel level() {
-		return level;
+		return this.level;
 	}
 	// java util level type
 	public java.util.logging.Level javaLevel() {
-		if(level == null)
+		if(this.level == null)
 			return null;
-		return level.getJavaLevel();
+		return this.level.getJavaLevel();
 	}
 
 
 	// get timestamp
 	public long timestamp() {
-		return timestamp;
+		return this.timestamp;
 	}
 
 
 	// get message
 	public String msg() {
-		return msg;
+		return this.msg;
 	}
 
 
 	// [logger] [crumbs]
 	public List<String> getNameTree() {
-		return log.getNameTree();
+		return this.log.getNameTree();
 	}
 
 

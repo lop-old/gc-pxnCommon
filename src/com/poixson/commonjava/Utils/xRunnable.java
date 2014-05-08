@@ -8,7 +8,7 @@ public class xRunnable implements Runnable {
 
 
 	public xRunnable() {
-		run = null;
+		this.run = null;
 	}
 	public xRunnable(final String taskName) {
 		this(taskName, null);

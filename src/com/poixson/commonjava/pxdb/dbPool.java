@@ -26,10 +26,10 @@ public class dbPool {
 	private final dbPoolSize poolSize;
 
 
-	protected dbPool(dbConfig config) {
+	protected dbPool(final dbConfig config) {
 		if(config == null) throw new NullPointerException("config object cannot be null");
 		this.config = config;
-		poolSize = new dbPoolSize(this);
+		this.poolSize = new dbPoolSize(this);
 		// force first connect
 		getWorkerLock()
 			.release();
@@ -38,7 +38,7 @@ public class dbPool {
 
 	// pool size
 	public int getWorkerCount() {
-		return workers.size();
+		return this.workers.size();
 	}
 
 
@@ -46,15 +46,15 @@ public class dbPool {
 	public String getKey() {
 		//if(config == null)
 		//	return null;
-		if(config == null) throw new NullPointerException("config object cannot be null");
-		return config.getKey();
+		if(this.config == null) throw new NullPointerException("config object cannot be null");
+		return this.config.getKey();
 	}
 
 
 	// pool is connected
 	public boolean isConnected() {
 		// TODO: this get a lock and releases. can probably be improved using isLocked()
-		dbWorker worker = getExisting();
+		final dbWorker worker = getExisting();
 		if(worker == null)
 			return false;
 		worker.release();
@@ -62,7 +62,7 @@ public class dbPool {
 	}
 	// ping the db server
 	public boolean isConnectionValid() {
-		dbWorker worker = getExisting();
+		final dbWorker worker = getExisting();
 		if(worker == null)
 			return false;
 		try {
@@ -78,8 +78,8 @@ public class dbPool {
 	// get unused worker
 	public dbWorker getWorkerLock() {
 		dbWorker worker = null;
-		synchronized(workers) {
-			CoolDown maxHardBlocking = CoolDown.get("5s");
+		synchronized(this.workers) {
+			final CoolDown maxHardBlocking = CoolDown.get("5s");
 			maxHardBlocking.runAgain();
 			int count = 0;
 			while(true) {
@@ -92,11 +92,11 @@ public class dbPool {
 					count = getWorkerCount();
 				}
 				// soft max
-				if(count >= poolSize.getSoft())
-					poolSize.StartWarningThread();
+				if(count >= this.poolSize.getSoft())
+					this.poolSize.StartWarningThread();
 				// hard max
-				if(count >= poolSize.getHard()) {
-					poolSize.HardLimitWarningMessage();
+				if(count >= this.poolSize.getHard()) {
+					this.poolSize.HardLimitWarningMessage();
 					// stop waiting
 					if(maxHardBlocking.runAgain()) {
 						log().severe("Failed to get a db connection! Blocked for "+maxHardBlocking.getDuration().toFullString()+".. Giving up.");
@@ -115,13 +115,13 @@ public class dbPool {
 		return worker;
 	}
 	public dbWorker getExisting() {
-		synchronized(workers) {
-			if(workers.isEmpty())
+		synchronized(this.workers) {
+			if(this.workers.isEmpty())
 				return null;
 			// workers in pool
-			Iterator<dbWorker> it = workers.iterator();
+			final Iterator<dbWorker> it = this.workers.iterator();
 			while(it.hasNext()) {
-				dbWorker worker = it.next();
+				final dbWorker worker = it.next();
 				// errored or disconnected
 				if(worker == null || worker.hasClosed()) {
 					if(worker != null) {
@@ -146,23 +146,24 @@ public class dbPool {
 	}
 	// new worker/connection
 	private final CoolDown coolFail = CoolDown.get("2s");
+	@SuppressWarnings("resource")
 	private dbWorker newWorker() {
 		// hard limit reached
-		if(getWorkerCount() >= poolSize.getHard())
+		if(getWorkerCount() >= this.poolSize.getHard())
 			return null;
 		// connect to db
-		Connection conn = config.getConnection();
+		final Connection conn = this.config.getConnection();
 		// failed to connect
 		if(conn == null) {
-			if(coolFail.runAgain())
-				log().severe("Failed to connect to database! "+config.getKey());
+			if(this.coolFail.runAgain())
+				log().severe("Failed to connect to database! "+this.config.getKey());
 			return null;
 		}
 		// successful connection
-		dbWorker worker = new dbWorker(config.getKey(), conn);
-		synchronized(workers) {
-			workers.add(worker);
-			if(worker.getLock())
+		final dbWorker worker = new dbWorker(this.config.getKey(), conn);
+		synchronized(this.workers) {
+			this.workers.add(worker);
+			if(!worker.getLock())
 				return worker;
 		}
 		return null;

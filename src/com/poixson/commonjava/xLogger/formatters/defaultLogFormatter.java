@@ -28,7 +28,7 @@ public class defaultLogFormatter implements xLogFormatter {
 	// timestamp
 	protected String partTimestamp(final xLogRecord record) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("D yyyy-MM-dd HH:mm:ss");
-		return dateFormat.format(record.timestamp());
+		return dateFormat.format(new Long(record.timestamp()));
 	}
 	// level
 	protected String partLevel(final xLogRecord record) {

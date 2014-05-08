@@ -129,17 +129,14 @@ public final class utilsCrypt {
 	public static String toHex(final String data) {
 		return toHex(data.getBytes());
 	}
+	@SuppressWarnings("resource")
 	public static String toHex(final byte[] data) {
 		if(data == null || data.length == 0) return null;
 		final StringBuilder str = new StringBuilder(data.length * 2);
 		final Formatter formatter = new Formatter(str);
 		for(final byte b : data)
-			formatter.format("%02x", b);
-		if(formatter != null) {
-			try {
-				formatter.close();
-			} catch (Exception ignore) {}
-		}
+			formatter.format("%02x", new Byte(b));
+		utils.safeClose(formatter);
 		return str.toString();
 //		byte[] byteData = md.digest();
 //		StringBuffer hexString = new StringBuffer();

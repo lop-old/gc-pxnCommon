@@ -36,36 +36,36 @@ public class FieldDAO {
 	// `name` type(size) NULL DEFAULT NULL
 	public String sqlField() {
 		StringBuilder sql = new StringBuilder();
-		sql.append("`").append(fieldName).append("` ");
-		switch(type.toLowerCase()) {
+		sql.append("`").append(this.fieldName).append("` ");
+		switch(this.type.toLowerCase()) {
 		case "s":
 		case "str":
 		case "string":
-			sql.append("VARCHAR").append("(").append(size).append(")");
+			sql.append("VARCHAR").append("(").append(this.size).append(")");
 			break;
 		case "i":
 		case "int":
 		case "integer":
-			sql.append("INT").append("(").append(size).append(")");
+			sql.append("INT").append("(").append(this.size).append(")");
 			break;
 		case "dec":
 		case "decimal":
-			sql.append("DECIMAL").append("(").append(size).append(")");
+			sql.append("DECIMAL").append("(").append(this.size).append(")");
 			break;
 		case "d":
 		case "dbl":
 		case "double":
-			sql.append("DOUBLE").append("(").append(size).append(")");
+			sql.append("DOUBLE").append("(").append(this.size).append(")");
 			break;
 		case "f":
 		case "flt":
 		case "float":
-			sql.append("FLOAT").append("(").append(size).append(")");
+			sql.append("FLOAT").append("(").append(this.size).append(")");
 			break;
 		case "l":
 		case "lng":
 		case "long":
-			sql.append("LONG").append("(").append(size).append(")");
+			sql.append("LONG").append("(").append(this.size).append(")");
 			break;
 		case "b":
 		case "bool":

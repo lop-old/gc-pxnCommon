@@ -15,7 +15,8 @@ public class dbWorker {
 	private final String dbKey;
 	private final int id;
 	private volatile Connection conn = null;
-	private volatile Boolean inUse = false;
+	private volatile boolean inUse = false;
+	private final Object useLock = new Object();
 
 
 	protected dbWorker(String dbKey, Connection conn) {
@@ -27,58 +28,60 @@ public class dbWorker {
 
 	// get db connection
 	protected Connection getConnection() {
-		return conn;
+		return this.conn;
 	}
 	// get db key
 	public String dbKey() {
-		return dbKey;
+		return this.dbKey;
 	}
 
 
 	// close connection
 	public void close() {
-		if(conn != null) {
+		if(this.conn != null) {
 			try {
-				conn.close();
+				this.conn.close();
 			} catch (SQLException ignore) {}
 		}
-		conn = null;
+		this.conn = null;
 	}
 	// has errored / disconnected
 	public boolean hasClosed() {
-		return (conn == null);
+		return (this.conn == null);
 	}
 
 
 	// in-use lock
 	public boolean inUse() {
-		return (inUse == true);
+		return this.inUse;
 	}
 	public boolean getLock() {
-		if(inUse == true) return false;
-		synchronized(inUse) {
-			if(inUse == true) return false;
-			inUse = true;
+		if(this.inUse == true) return false;
+		synchronized(this.useLock) {
+			if(this.inUse == true)
+				return false;
+			this.inUse = true;
 		}
-		log().finest("LOCKED "+id);
+		log().finest("LOCKED "+this.id);
 		return true;
 	}
 	public void release() {
-		inUse = false;
-		log().finest("RELEASED "+id);
+		this.inUse = false;
+		log().finest("RELEASED "+this.id);
 	}
 
 
 	// connection id
-	private static volatile Integer nextId = 0;
+	private static volatile int nextId = 0;
+	private static final Object nextLock = new Object();
 	private static int getNextId() {
-		synchronized(nextId) {
+		synchronized(nextLock) {
 			nextId++;
 			return nextId;
 		}
 	}
 	public int getId() {
-		return id;
+		return this.id;
 	}
 
 

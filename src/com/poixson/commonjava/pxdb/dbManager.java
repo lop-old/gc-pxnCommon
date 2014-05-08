@@ -31,9 +31,9 @@ public final class dbManager {
 	private dbManager() {
 	}
 	// get pool
-	public static dbPool getPool(String dbKey) {
+	public static dbPool getPool(final String dbKey) {
 		synchronized(pools) {
-			dbConfig config = dbConfig.get(dbKey);
+			final dbConfig config = dbConfig.get(dbKey);
 			if(config != null)
 				if(pools.containsKey(config))
 					return pools.get(config);
@@ -42,8 +42,8 @@ public final class dbManager {
 		}
 	}
 	// get worker
-	public static dbWorker getWorkerLock(String dbKey) {
-		dbPool pool = getPool(dbKey);
+	public static dbWorker getWorkerLock(final String dbKey) {
+		final dbPool pool = getPool(dbKey);
 		if(pool == null)
 			return null;
 		return pool.getWorkerLock();
@@ -52,7 +52,7 @@ public final class dbManager {
 
 	// new db connection pool
 	// returns dbKey, used to reference connection later
-	protected static String register(dbConfig config) {
+	protected static String register(final dbConfig config) {
 		synchronized(pools) {
 			if(pools.containsKey(config)) {
 				log().finest("Using an existing db pool :-)");

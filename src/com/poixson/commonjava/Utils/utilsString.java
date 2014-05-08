@@ -17,6 +17,7 @@ public final class utilsString {
 
 
 	// object to string
+	@SuppressWarnings("boxing")
 	public static String toString(final Object obj) {
 		// null
 		if(obj == null)

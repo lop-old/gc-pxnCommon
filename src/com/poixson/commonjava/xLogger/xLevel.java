@@ -47,27 +47,28 @@ public class xLevel implements Serializable {
 	public static xLevel[] getKnownLevels() {
 		return knownLevels.toArray(new xLevel[0]);
 	}
-	public static xLevel FindLevel(String name) {
+	public static xLevel FindLevel(final String name) {
 		if(utils.isEmpty(name)) return null;
 		if(utilsMath.isNumeric(name))
 			return FindLevel(utilsMath.toInt(name));
-		name = name.toUpperCase();
+		final String nameStr = name.toUpperCase();
 		for(final xLevel level : knownLevels)
-			if(name.equals(level.name))
+			if(nameStr.equals(level.name))
 				return level;
 		return null;
 	}
 	public static xLevel FindLevel(final Integer value) {
 		if(value == null) return null;
-		if(value == xLevel.ALL.value) return xLevel.ALL;
-		if(value == xLevel.OFF.value) return xLevel.OFF;
+		final int val = value.intValue();
+		if(val == xLevel.ALL.value) return xLevel.ALL;
+		if(val == xLevel.OFF.value) return xLevel.OFF;
 		xLevel level = xLevel.OFF;
 		int offset = xLevel.OFF.value;
 		for(final xLevel lvl : knownLevels) {
 			if(level.equals(xLevel.OFF) || level.equals(xLevel.ALL)) continue;
-			if(value < lvl.value) continue;
-			if(value - lvl.value < offset) {
-				offset = value - lvl.value;
+			if(val < lvl.value) continue;
+			if(val - lvl.value < offset) {
+				offset = val - lvl.value;
 				level = lvl;
 			}
 		}
@@ -108,7 +109,7 @@ public class xLevel implements Serializable {
 
 	@Override
 	public String toString() {
-		return name;
+		return this.name;
 	}
 
 

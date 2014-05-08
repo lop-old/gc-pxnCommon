@@ -32,9 +32,11 @@ public abstract class xLogPrinting {
 
 
 	// title
-	public void title(String msg) {
-		if(msg == null) msg = "<null>";
-		publish(" [[ "+msg+" ]]");
+	public void title(final String msg) {
+		if(msg == null)
+			publish(" [[ <null> ]]");
+		else
+			publish(" [[ "+msg+" ]]");
 	}
 	// exception
 	public void trace(final Exception e) {
