@@ -6,11 +6,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class HistoryRND {
 
-	private int min;
-	private int max;
-	private int last;
-	private BlockingQueue<Integer> history = new LinkedBlockingQueue<Integer>();
-	private int historySize;
+	private final int min;
+	private final int max;
+	private volatile int last;
+	private final BlockingQueue<Integer> history = new LinkedBlockingQueue<Integer>();
+	private final int historySize;
 
 
 	public HistoryRND(final int min, final int max) {
