@@ -28,7 +28,7 @@ public class xRunnable implements Runnable {
 	public static xRunnable cast(final Runnable run) {
 		if(run instanceof xRunnable)
 			return (xRunnable) run;
-		return new xRunnable(run);
+		return new xRunnable("<Runnable>", run);
 	}
 
 

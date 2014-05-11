@@ -23,10 +23,17 @@ public class xThreadPool implements Runnable {
 	private static final xTime threadSleepTime = xTime.get("200n");
 	private static final xTime threadInactiveTimeout = xTime.get("30s");
 
+	// run later queue
 	protected final String queueName;
 	protected final ThreadGroup group;
 	protected final Set<Thread> threads = new HashSet<Thread>();
-	protected final BlockingQueue<xRunnable> queue = new ArrayBlockingQueue<xRunnable>(10);
+	protected final BlockingQueue<xRunnable> queue = new ArrayBlockingQueue<xRunnable>(10, true);
+	protected static volatile Thread mainThread = null;
+
+	// run now queue
+	protected final Object nowLock = new Object();
+	protected volatile xRunnable runThisNow = null;
+	protected volatile boolean nowHasRun = false;
 
 	protected volatile int priority = Thread.NORM_PRIORITY;
 	protected volatile boolean stopping = false;
@@ -39,12 +46,23 @@ public class xThreadPool implements Runnable {
 	protected static final Map<String, xThreadPool> instances = new HashMap<String, xThreadPool>();
 
 
+	/**
+	 * Get main thread queue
+	 */
 	public static xThreadPool get() {
 		return get(null, null);
 	}
+	/**
+	 * Get thread queue by name
+	 */
 	public static xThreadPool get(final String name) {
 		return get(name, null);
 	}
+	/**
+	 * Get thread queue by name or create with x threads
+	 * @param name Thread queue name to get or create.
+	 * @param size Number of threads which can be created for this queue.
+	 */
 	public static xThreadPool get(final String name, final Integer size) {
 		final String nameStr = utils.isEmpty(name) ? "main" : name;
 		final String key = nameStr.toLowerCase();
@@ -60,7 +78,7 @@ public class xThreadPool implements Runnable {
 		this.queueName = name;
 		this.group = new ThreadGroup(this.queueName);
 		if(name.toLowerCase().equals("main"))
-			this.size = 1;
+			this.size = 0;
 		else if(size != null)
 			this.size = size.intValue();
 		runLater(new xRunnable("Thread-Startup") {
@@ -89,8 +107,7 @@ public class xThreadPool implements Runnable {
 	 * Create a new thread if needed, skip if queue is empty.
 	 */
 	protected void newThread() {
-		if(this.stopping || this.size <= 0) return;
-		if(isMainThread()) return;
+		if(this.stopping || this.size <= 0 || isMainPool()) return;
 		synchronized(this.threads) {
 			final int count = this.threads.size();
 			final int globalCount = getGlobalThreadCount();
@@ -149,18 +166,33 @@ public class xThreadPool implements Runnable {
 		final int threadId = getNextThreadId();
 		Thread.currentThread().setName(this.queueName);
 		final xTime sleeping = xTime.get();
+		if(isMainPool())
+			xThreadPool.mainThread = Thread.currentThread();
 		while(true) {
-			if(this.stopping && !isMainThread()) {
+			if(this.stopping && !isMainPool()) {
 				log().finer("Stopping thread ("+this.queueName+":"+Integer.toString(threadId)+")");
 				break;
 			}
+			// run task now
+			if(this.runThisNow != null) {
+				synchronized(this.nowLock) {
+					this.nowHasRun = false;
+					final xRunnable tmpTask = this.runThisNow;
+					this.runThisNow = null;
+					tmpTask.run();
+					this.nowHasRun = true;
+					this.nowLock.notifyAll();
+				}
+				continue;
+			}
+			// pull from queue
 			xRunnable task = null;
 			try {
 				task = this.queue.poll(1, xTimeU.S);
 			} catch (InterruptedException ignore) {
-				break;
+				continue;
 			}
-			if(!isMainThread()) {
+			if(!isMainPool()) {
 				// sleeping thread
 				if(task == null) {
 					// stop inactive thread after 5 minutes
@@ -200,11 +232,46 @@ public class xThreadPool implements Runnable {
 	}
 
 
+	// run a task as soon as possible (generally 0.9ms)
+	public void runNow(final Runnable run) {
+		if(run == null) throw new NullPointerException("run cannot be null");
+		synchronized(this.nowLock) {
+			this.nowHasRun = false;
+			this.runThisNow = xRunnable.cast(run);
+			// make sure there's a thread
+			synchronized(this.threads) {
+				if(this.threads.size() == 0)
+					newThread();
+				// awaken thread if needed
+				if(getActiveCount() <= 0) {
+					if(isMainPool()) {
+						try {
+							xThreadPool.mainThread.interrupt();
+						} catch (Exception ignore) {}
+					} else {
+						try {
+							final Iterator<Thread> it = this.threads.iterator();
+							it.hasNext();
+							it.next().interrupt();
+						} catch (Exception ignore) {}
+					}
+				}
+			}
+			// wait for task to complete
+			while(this.runThisNow != null || !this.nowHasRun) {
+				try {
+					this.nowLock.wait();
+				} catch (InterruptedException ignore) {}
+			}
+			this.nowHasRun = false;
+		}
+	}
+	// queue a task to be run soon (generally 1.5ms)
 	public void runLater(final Runnable run) {
 		if(run == null) throw new NullPointerException("run cannot be null");
 		final xRunnable task = xRunnable.cast(run);
 		// add to main thread queue
-		if(this.size <= 0 && !isMainThread()) {
+		if(this.size <= 0 && !isMainPool()) {
 			get().runLater(run);
 			return;
 		}
@@ -229,8 +296,8 @@ public class xThreadPool implements Runnable {
 	}
 
 
-	private boolean isMainThread() {
-		return this.queueName.toLowerCase().equals("main");
+	private boolean isMainPool() {
+		return this.queueName.equalsIgnoreCase("main");
 	}
 
 
