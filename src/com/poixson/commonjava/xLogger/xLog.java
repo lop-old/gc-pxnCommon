@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.Utils.utils;
-import com.poixson.commonjava.app.xApp;
 import com.poixson.commonjava.xLogger.console.xNoConsole;
 import com.poixson.commonjava.xLogger.formatters.defaultLogFormatter;
 import com.poixson.commonjava.xLogger.handlers.logHandlerConsole;
@@ -176,7 +176,7 @@ public class xLog extends xLogPrinting {
 	// is level loggable
 	public boolean isLoggable(final xLevel lvl) {
 		// forced debug mode
-		if(xApp.debug())
+		if(xVars.get().debug())
 			return true;
 		// local logger level
 		if(this.level != null && !this.level.isLoggable(lvl))
