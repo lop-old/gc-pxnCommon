@@ -36,4 +36,14 @@ public class xEventData {
 	public void reset() {}
 
 
+	@Override
+	public String toString() {
+		final String str = super.toString();
+		final int i = str.lastIndexOf(".");
+		if(i != -1)
+			return str.substring(i+1);
+		return str;
+	}
+
+
 }
