@@ -4,11 +4,11 @@ package com.poixson.commonjava.Utils;
 public class xRunnable implements Runnable {
 
 	protected volatile String taskName = null;
-	protected final Runnable run;
+	protected final Runnable task;
 
 
 	public xRunnable() {
-		this.run = null;
+		this.task = null;
 	}
 	public xRunnable(final String taskName) {
 		this(taskName, null);
@@ -21,7 +21,7 @@ public class xRunnable implements Runnable {
 			this.taskName = taskName;
 		else if(run instanceof xRunnable)
 			this.taskName = ((xRunnable) run).getTaskName();
-		this.run = run;
+		this.task = run;
 	}
 
 
@@ -34,8 +34,8 @@ public class xRunnable implements Runnable {
 
 	@Override
 	public void run() {
-		if(this.run == null) throw new NullPointerException();
-		this.run.run();
+		if(this.task == null) throw new NullPointerException();
+		this.task.run();
 	}
 
 
