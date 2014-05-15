@@ -13,9 +13,9 @@ import org.fusesource.jansi.AnsiConsole;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.utilsThread;
-import com.poixson.commonjava.app.xApp;
 import com.poixson.commonjava.xLogger.xConsole;
 import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.commonjava.xLogger.handlers.CommandHandler;
 
 
 public class jlineConsole implements xConsole {
@@ -31,6 +31,7 @@ public class jlineConsole implements xConsole {
 	private static volatile Boolean jlineEnabled = null;
 
 	private volatile String prompt = null;
+	private volatile CommandHandler handler = null;
 
 	// console input thread
 	private volatile Thread thread = null;
@@ -149,8 +150,13 @@ public class jlineConsole implements xConsole {
 				break;
 			}
 			if(this.stopping) break;
-			if(utils.notEmpty(line))
-				xApp.get().processCommand(line);
+			if(utils.notEmpty(line)) {
+				// pass to command handler
+				if(this.handler == null)
+					System.out.println("Command handler not set!");
+				else
+					this.handler.processCommand(line);
+			}
 		}
 		this.running = false;
 		System.out.println();
@@ -220,6 +226,11 @@ public class jlineConsole implements xConsole {
 		if(this.prompt == null || this.prompt.isEmpty())
 			return DEFAULT_PROMPT;
 		return this.prompt;
+	}
+
+
+	public void setCommandHandler(final CommandHandler handler) {
+		this.handler = handler;
 	}
 
 

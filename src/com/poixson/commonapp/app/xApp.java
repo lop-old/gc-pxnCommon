@@ -1,4 +1,4 @@
-package com.poixson.commonjava.app;
+package com.poixson.commonapp.app;
 
 import java.io.File;
 
@@ -241,7 +241,6 @@ public abstract class xApp implements Runnable {
 
 	protected abstract void initConfig();
 	protected abstract void processArgs(final String[] args);
-	public abstract void processCommand(final String commandStr);
 
 	public abstract String getAppName();
 	public abstract String getVersion();
