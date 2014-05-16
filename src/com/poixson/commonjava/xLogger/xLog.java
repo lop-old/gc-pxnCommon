@@ -32,17 +32,17 @@ public class xLog extends xLogPrinting {
 	private volatile xLog _log = null;
 	private final Object logLock = new Object();
 	public xLog log() {
-		if(_log == null) {
-			synchronized(logLock) {
-				if(_log == null)
-					_log = xLog.log();
+		if(this._log == null) {
+			synchronized(this.logLock) {
+				if(this._log == null)
+					this._log = xLog.log();
 			}
 		}
-		return _log;
+		return this._log;
 	}
-	public void setLog(xLog log) {
-		synchronized(logLock) {
-			_log = log;
+	public void setLog(final xLog log) {
+		synchronized(this.logLock) {
+			this._log = log;
 		}
 	}
 */
@@ -53,20 +53,20 @@ public class xLog extends xLogPrinting {
 	private volatile xLog _log = null;
 	private final Object logLock = new Object();
 	public xLog log() {
-		if(_log == null) {
-			synchronized(logLock) {
-				if(_log == null)
-					_log = xLog.log();
+		if(this._log == null) {
+			synchronized(this.logLock) {
+				if(this._log == null)
+					this._log = xLog.log();
 			}
 		}
-		return _log;
+		return this._log;
 	}
-	public xLog log(String name) {
+	public xLog log(final String name) {
 		return log().get(name);
 	}
-	public void setLog(xLog log) {
-		synchronized(logLock) {
-			_log = log;
+	public void setLog(final xLog log) {
+		synchronized(this.logLock) {
+			this._log = log;
 		}
 	}
 */
