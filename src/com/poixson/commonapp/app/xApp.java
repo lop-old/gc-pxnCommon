@@ -311,16 +311,4 @@ public abstract class xApp implements Runnable {
 	}
 
 
-	// debug mode
-	private static volatile Boolean globalDebug = null;
-	public static void debug(final boolean debug) {
-		globalDebug = new Boolean(debug);
-	}
-	public static boolean debug() {
-		if(globalDebug == null)
-			return false;
-		return globalDebug.booleanValue();
-	}
-
-
 }
