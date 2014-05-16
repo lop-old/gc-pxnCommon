@@ -1,6 +1,7 @@
 package com.poixson.commonjava.Utils;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -89,6 +90,36 @@ public final class utilsDirFile {
 			return (new File(".")).getCanonicalPath().toString();
 		} catch (IOException ignore) {}
 		return null;
+	}
+
+
+	/**
+	 * List contents of a directory.
+	 * @param dir The directory path to query.
+	 * @param extensions File extensions to include, filtering out all others.
+	 * To list all contents, set this to null.
+	 * @return
+	 */
+	public static File[] listContents(final File dir, final String[] extensions) {
+		if(dir == null) throw new NullPointerException();
+		if(!dir.isDirectory()) return null;
+		return dir.listFiles(new FileFilter() {
+			private String[] exts;
+			public FileFilter init(final String[] extens) {
+				this.exts = extens;
+				return this;
+			}
+			@Override
+			public boolean accept(File path) {
+				if(this.exts == null) return true;
+				final String pathStr = path.toString();
+				for(final String ext : this.exts) {
+					if(pathStr.endsWith(ext))
+						return true;
+				}
+				return false;
+			}
+		}.init(extensions));
 	}
 
 
