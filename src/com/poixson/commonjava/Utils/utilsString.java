@@ -132,6 +132,22 @@ public final class utilsString {
 	}
 
 
+	@SuppressWarnings("boxing")
+	public static String center(final String text, final int width) {
+		if(width < 1) return null;
+		if(text == null || text.isEmpty())
+			return repeat(width, " ");
+		if(width < text.length())
+			return text.substring(width);
+		final Double space = ((double) (width - text.length())) / 2;
+		return (new StringBuilder())
+			.append(repeat((int) Math.floor(space), " "))
+			.append(text)
+			.append(repeat((int) Math.ceil(space), " "))
+			.toString();
+	}
+
+
 	// generate a random string
 	public static String RandomString(final int length) {
 		if(length == 0) return "";
