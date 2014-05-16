@@ -43,6 +43,9 @@ System.out.println("CLONING xVars");
 			return DEFAULT_DEBUG;
 		return this.debug.booleanValue();
 	}
+	public void debug(final boolean value) {
+		this.debug = new Boolean(value);
+	}
 
 
 }
