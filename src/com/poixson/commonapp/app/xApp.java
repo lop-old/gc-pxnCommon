@@ -212,6 +212,8 @@ public abstract class xApp implements Runnable {
 				synchronized(xApp.appLock) {
 					this.app.initLevel = 0;
 				}
+				termConsole();
+				System.out.println();
 				System.exit(0);
 				return;
 			// app steps 7-2
@@ -279,11 +281,11 @@ public abstract class xApp implements Runnable {
 	}
 
 
-//	protected void termConsole() {
-//		final xConsole console = xLog.peekConsole();
-//		if(console != null)
-//			console.stop();
-//	}
+	protected void termConsole() {
+		final xConsole console = xLog.peekConsole();
+		if(console != null)
+			console.stop();
+	}
 
 
 	// logger

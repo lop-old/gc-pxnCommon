@@ -121,6 +121,8 @@ public class jlineConsole implements xConsole {
 			try {
 				AnsiConsole.systemUninstall();
 			} catch (Exception ignore) {}
+			System.out.print("\r  "+utilsString.repeat(DEFAULT_PROMPT.length(), " "));
+			System.out.println();
 		}
 	}
 
