@@ -1,5 +1,6 @@
 package com.poixson.commonjava.Utils;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -205,7 +206,7 @@ public final class utilsDirFile {
 		} catch (IOException ignore) {}
 		return null;
 	}
-	public static class InputJar {
+	public static class InputJar implements Closeable {
 		public final JarFile jar;
 		public final InputStream fileInput;
 		public InputJar(final JarFile jar, final InputStream fileInput) {
@@ -214,9 +215,10 @@ public final class utilsDirFile {
 		}
 		@Override
 		public void finalize() {
-			Close();
+			close();
 		}
-		public void Close() {
+		@Override
+		public void close() {
 			utils.safeClose(this.jar);
 			utils.safeClose(this.fileInput);
 		}
