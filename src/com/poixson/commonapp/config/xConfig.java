@@ -21,6 +21,10 @@ public class xConfig {
 //	}
 
 
+	// path exists
+	public boolean exists(final String path) {
+		return this.data.containsKey(path);
+	}
 	// get object
 	public Object get(final String path) {
 		if(path == null || path.isEmpty())
@@ -38,6 +42,8 @@ public class xConfig {
 		} catch (Exception ignore) {}
 		return null;
 	}
+
+
 	// get string
 	public String getString(final String path) {
 		try {
