@@ -1,36 +1,45 @@
 package com.poixson.commonapp.plugin;
 
-import java.io.File;
+import java.util.Map;
 
-import com.poixson.commonapp.xConfigYML;
-
-
-public class xPluginYML {
-
-	protected final xConfigYML config;
+import com.poixson.commonapp.config.xConfig;
 
 
-	public static xPluginYML get(final File jarFile) {
-		final String fileName = "plugin.yml";
-		return new xPluginYML(xConfigYML.load(jarFile, fileName));
+public class xPluginYML extends xConfig {
+
+	// key names
+	public static final String PLUGIN_NAME    = "Plugin Name";
+	public static final String PLUGIN_VERSION = "Plugin Version";
+	public static final String PLUGIN_AUTHOR  = "Author";
+	public static final String PLUGIN_WEBSITE = "Website";
+
+
+	public xPluginYML(Map<String, Object> data) {
+		super(data);
 	}
-	public xPluginYML(final xConfigYML config) {
-		if(config == null) throw new NullPointerException();
-		this.config = config;
-	}
 
 
+	// plugin name
 	public String getPluginName() {
-		return this.config.getString("Plugin Name");
+		return getString(PLUGIN_NAME);
 	}
+
+
+	// plugin version
 	public String getPluginVersion() {
-		return this.config.getString("Plugin Version");
+		return getString(PLUGIN_VERSION);
 	}
+
+
+	// plugin author
 	public String getPluginAuthor() {
-		return this.config.getString("Author");
+		return getString(PLUGIN_AUTHOR);
 	}
+
+
+	// plugin website
 	public String getPluginWebsite() {
-		return this.config.getString("Website");
+		return getString(PLUGIN_WEBSITE);
 	}
 
 
