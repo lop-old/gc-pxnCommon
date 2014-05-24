@@ -76,8 +76,8 @@ public class xClock {
 							doUpdate();
 						}
 					};
+					this.thread.start();
 				}
-				this.thread.start();
 			}
 		}
 	}
@@ -89,6 +89,7 @@ public class xClock {
 		double time = getSystemTime();
 		// checked in last 60 seconds
 		if(this.lastChecked != 0.0 && ((time - this.lastChecked) < 60.0)) return;
+		@SuppressWarnings("resource")
 		DatagramSocket socket = null;
 		try {
 			socket = new DatagramSocket();
@@ -121,12 +122,11 @@ public class xClock {
 		} catch (Exception e) {
 			log().trace(e);
 		} finally {
-			if(socket != null)
-				socket.close();
-			socket = null;
+			utils.safeClose(socket);
+			this.thread = null;
+			this.lastChecked = time;
+			this.running = false;
 		}
-		this.lastChecked = time;
-		this.running = false;
 	}
 
 
