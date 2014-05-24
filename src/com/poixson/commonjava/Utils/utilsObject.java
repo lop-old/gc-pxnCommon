@@ -5,12 +5,12 @@ import java.util.Collection;
 import java.util.List;
 
 
-public final class utilsSystem {
+public final class utilsObject {
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		throw new CloneNotSupportedException();
 	}
-	private utilsSystem() {}
+	private utilsObject() {}
 
 
 	/**
