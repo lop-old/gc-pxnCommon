@@ -10,6 +10,7 @@ public abstract class xJavaPlugin {
 
 	private volatile boolean enabled = false;
 	private volatile boolean hasInited = false;
+	private volatile boolean hasUnloaded = false;
 	private final Object initLock = new Object();
 
 
@@ -22,32 +23,55 @@ public abstract class xJavaPlugin {
 
 
 	protected void doInit() {
-		if(this.hasInited) throw new RuntimeException("Plugin already inited!");
+		if(this.hasUnloaded) throw new RuntimeException("Plugin already unloaded!");
+		if(this.hasInited)   throw new RuntimeException("Plugin already inited!");
 		synchronized(this.initLock) {
-			if(this.hasInited) throw new RuntimeException("Plugin already inited!");
+			if(this.hasUnloaded) throw new RuntimeException("Plugin already unloaded!");
+			if(this.hasInited)   throw new RuntimeException("Plugin already inited!");
 			onInit();
 			this.hasInited = true;
 		}
 	}
-	protected void doEnable() {
-		if(this.enabled)throw new RuntimeException("Plugin already enabled!");
+	protected void doUnload() {
+		if(this.hasUnloaded) throw new RuntimeException("Plugin already unloaded!");
 		synchronized(this.initLock) {
-			if(this.enabled)throw new RuntimeException("Plugin already enabled!");
+			if(!this.hasInited) return;
+			if(this.hasUnloaded) throw new RuntimeException("Plugin already unloaded!");
+			if(isEnabled()) doDisable();
+			this.hasUnloaded = true;
+		}
+	}
+	protected void doEnable() {
+		if(this.hasUnloaded) throw new RuntimeException("Plugin already unloaded!");
+		if(this.enabled)     throw new RuntimeException("Plugin already enabled!");
+		synchronized(this.initLock) {
+			if(this.hasUnloaded) throw new RuntimeException("Plugin already unloaded!");
+			if(this.enabled)     throw new RuntimeException("Plugin already enabled!");
 			onEnable();
 			this.enabled = true;
 		}
 	}
 	protected void doDisable() {
-		if(!this.enabled) throw new RuntimeException("Plugin already disabled!");
+		if(this.hasUnloaded) throw new RuntimeException("Plugin already unloaded!");
+		if(!this.enabled)    throw new RuntimeException("Plugin already disabled!");
 		synchronized(this.initLock){
-			if(!this.enabled) throw new RuntimeException("Plugin already disabled!");
+			if(this.hasUnloaded) throw new RuntimeException("Plugin already unloaded!");
+			if(!this.enabled)    throw new RuntimeException("Plugin already disabled!");
 			this.enabled = false;
 			onDisable();
 		} 
 	}
 
 
+	public boolean isEnabled() {
+		if(!this.hasInited || this.hasUnloaded)
+			return false;
+		return this.enabled;
+	}
+
+
 	protected void onInit() {}
+	protected void onUnload() {}
 	protected abstract void onEnable();
 	protected abstract void onDisable();
 
