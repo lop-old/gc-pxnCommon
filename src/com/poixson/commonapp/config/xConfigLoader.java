@@ -50,11 +50,11 @@ public final class xConfigLoader {
 
 
 	// load from jar
-	public static xConfig Load(final File jarFile, final String ymlFile) {
-		return Load(jarFile, ymlFile, xConfig.class);
+	public static xConfig LoadJar(final File jarFile, final String ymlFile) {
+		return LoadJar(jarFile, ymlFile, xConfig.class);
 	}
 	@SuppressWarnings("resource")
-	public static xConfig Load(final File jarFile, final String ymlFile, final Class<? extends xConfig> clss) {
+	public static xConfig LoadJar(final File jarFile, final String ymlFile, final Class<? extends xConfig> clss) {
 		if(jarFile == null) throw new NullPointerException();
 		final utilsDirFile.InputJar in = utilsDirFile.OpenJarResource(jarFile, ymlFile);
 		if(in == null) return null;
@@ -66,7 +66,7 @@ public final class xConfigLoader {
 	}
 
 
-	public static xConfig Load(final InputStream in, final Class<? extends xConfig> clss) {
+	public static <T> xConfig Load(final InputStream in, final Class<? extends xConfig> clss) {
 		if(in == null) throw new NullPointerException();
 		try {
 			final Yaml yml = new Yaml();
