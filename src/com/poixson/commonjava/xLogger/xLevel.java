@@ -53,7 +53,7 @@ public class xLevel implements Serializable {
 			return FindLevel(utilsMath.toInt(name));
 		final String nameStr = name.toUpperCase();
 		for(final xLevel level : knownLevels)
-			if(nameStr.equals(level.name))
+			if(nameStr.equalsIgnoreCase(level.name))
 				return level;
 		return null;
 	}
