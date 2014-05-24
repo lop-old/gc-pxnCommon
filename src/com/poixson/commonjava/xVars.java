@@ -26,7 +26,6 @@ public class xVars {
 	protected xVars() {
 		// clone vars
 		if(instance != null) {
-System.out.println("CLONING xVars");
 			this.debug = instance.debug;
 		// new instance
 		} else {

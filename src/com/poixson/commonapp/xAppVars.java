@@ -28,7 +28,6 @@ public class xAppVars extends xVars {
 		super();
 		// clone vars
 		if(instance != null) {
-System.out.println("CLONING appVars");
 
 		// new instance
 		} else {
