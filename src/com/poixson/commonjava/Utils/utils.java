@@ -28,6 +28,24 @@ public class utils {
 
 
 	/**
+	 * Is array empty
+	 * @param array
+	 * @return True if array is null or empty.
+	 */
+	public static boolean isEmpty(final Object[] array) {
+		return (array == null || array.length == 0);
+	}
+	/**
+	 * Is array populated.
+	 * @param array
+	 * @return True if array is not null and contains data.
+	 */
+	public static boolean notEmpty(final Object[] array) {
+		return (array != null && array.length > 0);
+	}
+
+
+	/**
 	 * Close safely, ignoring errors.
 	 */
 	public static void safeClose(Closeable obj) {
