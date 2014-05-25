@@ -2,7 +2,6 @@ package com.poixson.commonjava.Utils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.List;
 import java.util.UUID;
 
 import com.poixson.commonjava.xLogger.xLog;
@@ -190,28 +189,21 @@ public final class utilsString {
 
 
 	// add strings with delimiter
-//	public static String add(final String baseString, final String addThis, final String delim) {
-//		if(addThis.isEmpty())    return baseString;
-//		if(baseString.isEmpty()) return addThis;
-//		return baseString + delim + addThis;
-//	}
-	public static String add(final String delim, final String...addThis) {
-		return addArray(null, addThis, delim);
+	public static String addStrings(final String delim, final String...addThis) {
+		return addArray(delim, addThis);
 	}
-	public static String addList(final String baseString, final List<String> addThis, final String delim) {
-		return addArray(baseString, (String[]) addThis.toArray(new String[0]), delim);
-	}
-	public static String addArray(final String baseString, final String[] addThis, final String delim) {
-		final StringBuilder str = new StringBuilder(
-			baseString == null ? null : baseString
-		);
-		if(addThis == null || addThis.length == 0) return str.toString();
-		final String d = (utils.isEmpty(delim) ? null : delim);
+	public static String addArray(final String delim, final String[] addThis) {
+		if(utils.isEmpty(addThis)) return null;
+		final String dlm = (utils.isEmpty(delim) ? null : delim);
+		final StringBuilder str = new StringBuilder();
+		boolean b = false;
 		for(final String line : addThis) {
 			if(utils.isEmpty(line)) continue;
-			if(str.length() > 0 && d != null)
-				str.append(d);
+			if(b && dlm != null)
+				str.append(dlm);
 			str.append(line);
+			if(!b && str.length() > 0)
+				b = true;
 		}
 		return str.toString();
 	}
@@ -237,6 +229,43 @@ public final class utilsString {
 			.append(text)
 			.append(repeat((int) Math.ceil(count), " "))
 			.toString();
+	}
+
+
+	public static String wildcardToRegex(String wildcard) {
+		final StringBuffer str = new StringBuffer(wildcard.length());
+		str.append('^');
+		final int len = wildcard.length();
+		for(int i = 0; i < len; i++) {
+			char c = wildcard.charAt(i);
+			switch(c) {
+			case '*':
+				str.append(".*");
+				break;
+			case '?':
+				str.append(".");
+				break;
+			case '(':
+			case ')':
+			case '[':
+			case ']':
+			case '$':
+			case '^':
+			case '.':
+			case '{':
+			case '}':
+			case '|':
+			case '\\':
+				str.append("\\");
+				str.append(c);
+				break;
+			default:
+				str.append(c);
+				break;
+			}
+		}
+		str.append('$');
+		return str.toString();
 	}
 
 
