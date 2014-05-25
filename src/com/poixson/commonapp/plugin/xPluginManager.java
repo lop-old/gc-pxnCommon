@@ -158,8 +158,8 @@ public class xPluginManager {
 			return null;
 		}
 		// java class loader
-		final JarClassLoader cl = new JarClassLoader();
-		cl.add(url);
+		final JarClassLoader jcl = new JarClassLoader();
+		jcl.add(url);
 		final String clssName =
 			className.endsWith(".class")
 			? className.substring(0, className.length() - 6)
@@ -167,7 +167,7 @@ public class xPluginManager {
 		// load class
 		final Class<?> clss;
 		try {
-			clss = cl.loadClass(clssName);
+			clss = jcl.loadClass(clssName);
 		} catch (ClassNotFoundException e) {
 			log.trace(e);
 			return null;
