@@ -7,6 +7,7 @@ import org.fusesource.jansi.AnsiConsole;
 
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsDirFile;
+import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xClock;
 import com.poixson.commonjava.Utils.xRunnable;
 import com.poixson.commonjava.Utils.xThreadPool;
@@ -168,6 +169,8 @@ public abstract class xApp implements Runnable {
 				}
 				return;
 			}
+			// sleep for a moment
+			utilsThread.Sleep(5);
 			// queue next step
 			synchronized(xApp.appLock) {
 				this.app.initLevel = this.step + 1;
@@ -225,6 +228,8 @@ public abstract class xApp implements Runnable {
 				}
 				break;
 			}
+			// sleep for a moment
+			utilsThread.Sleep(50);
 			// queue next step
 			synchronized(xApp.appLock) {
 				this.app.initLevel = this.step - 1;
