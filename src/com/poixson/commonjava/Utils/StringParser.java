@@ -37,7 +37,7 @@ public class StringParser {
 	// get next part
 	public boolean next() {
 		if(this.buffer == null) return false;
-		this.buffer = utilsString.trim(this.delim, this.buffer);
+		this.buffer = utilsString.trims(this.buffer, this.delim);
 		synchronized(this.buffer) {
 			if(!hasNext()) return false;
 			int pos = this.buffer.indexOf(this.delim);

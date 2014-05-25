@@ -73,16 +73,43 @@ public final class utilsString {
 
 
 	// trim from string
-	public static String trim(final String str, final String data) {
+	public static String trims(final String str, final String...strip) {
 		if(utils.isEmpty(str))  return null;
-		if(utils.isEmpty(data)) return null;
-		final int size = str.length();
-		String out = data;
-		while(out.startsWith(str))
-			out = out.substring(size);
-		while(out.endsWith(str))
-			out = out.substring(0, 0-size);
+		if(utils.isEmpty(strip)) return null;
+		final int stripCount = strip.length;
+		final int[] stripLen = new int[stripCount];
+		for(int i = 0; i < stripCount; i++)
+			stripLen[i] = strip[i].length();
+		String out = str;
+		boolean changed = true;
+		outerloop:
+		while(changed) {
+			changed = false;
+			innerloop:
+			for(int index = 0; index < stripCount; index++) {
+				if(stripLen[index] == 0) continue innerloop;
+				while(out.startsWith(strip[index])) {
+					out = out.substring(stripLen[index]);
+					changed = true;
+				}
+				while(out.endsWith(strip[index])) {
+					out = out.substring(0, out.length() - stripLen[index]);
+					changed = true;
+				}
+			}
+			if(out.length() == 0)
+				break outerloop;
+		}
 		return out;
+//		if(utils.isEmpty(str))  return null;
+//		if(utils.isEmpty(data)) return null;
+//		final int size = str.length();
+//		String out = data;
+//		while(out.startsWith(str))
+//			out = out.substring(size);
+//		while(out.endsWith(str))
+//			out = out.substring(0, 0-size);
+//		return out;
 	}
 
 
