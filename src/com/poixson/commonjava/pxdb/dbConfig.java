@@ -159,7 +159,7 @@ public class dbConfig {
 	// user@host:port/db
 	private static String buildKey(final String host, final int port, final String db, final String user) {
 		final String userStr = utils.isEmpty(user) ? null : user+"@";
-		final String key = utilsString.add(null, "mysql://", userStr, host, ":", Integer.toString(port), "/", db);
+		final String key = utilsString.addStrings(null, "mysql://", userStr, host, ":", Integer.toString(port), "/", db);
 		if(get_HASH_KEY() && user != null)
 			return utilsCrypt.MD5(key);
 		return key;

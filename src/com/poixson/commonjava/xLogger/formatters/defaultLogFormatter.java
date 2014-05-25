@@ -21,7 +21,7 @@ public class defaultLogFormatter implements xLogFormatter {
 		parts[2] = partCrumbs(record);
 		// message
 		parts[3] = partMessage(record);
-		return utilsString.addArray("", parts, " ");
+		return utilsString.addArray(" ", parts);
 	}
 
 

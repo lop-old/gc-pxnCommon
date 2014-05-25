@@ -115,17 +115,17 @@ public final class utilsString {
 	// replace with array
 	public static String replaceWith(final String replaceWhat, final String[] withWhat, final String data) {
 		if(utils.isEmpty(replaceWhat)) throw new NullPointerException("replaceWhat cannot be null");
-		if(withWhat == null || withWhat.length == 0) return null;
+		if(utils.isEmpty(withWhat))    throw new NullPointerException("withWhat cannot be null");
 		if(utils.isEmpty(data)) return null;
 		final StringBuilder out = new StringBuilder();
 		final int count = withWhat.length;
 		int currentPos = 0;
-		for(int i=0; i<count; i++) {
+		for(int i = 0; i < count; i++) {
 			final int thisPos = data.indexOf("?", currentPos);
 			if(thisPos > 0) {
 				out.append(data.substring(currentPos, thisPos))
 					.append(withWhat[i]);
-				currentPos = thisPos+1;
+				currentPos = thisPos + 1;
 			}
 		}
 		if(data.length() > currentPos)
@@ -139,18 +139,19 @@ public final class utilsString {
 		return repeat(count, str, null);
 	}
 	public static String repeat(final int count, final String str, final String delim) {
-		if(str == null) return null;
+		if(utils.isEmpty(str)) throw new NullPointerException("str cannot be null");
 		if(count < 1) return "";
 		final StringBuilder out = new StringBuilder();
 		// repeat string
 		if(utils.isEmpty(delim)) {
-			for(int i=0; i<count; i++)
+			for(int i = 0; i < count; i++)
 				out.append(str);
 		} else {
 			// repeat string with delim
-			for(int i=0; i<count; i++) {
-				if(out.length() > 0)
-					out.append(delim);
+			boolean b = false;
+			for(int i = 0; i < count; i++) {
+				if(b) out.append(delim);
+				b = true;
 				out.append(str);
 			}
 		}
@@ -176,9 +177,10 @@ public final class utilsString {
 
 	// generate a random string
 	public static String RandomString(final int length) {
-		if(length == 0) return "";
-		if(length <  0) return null;
-		final StringBuilder buf = new StringBuilder();
+		//if(length == 0) return "";
+		//if(length <  0) return null;
+		if(length < 1) return null;
+		final StringBuilder buf = new StringBuilder(length);
 		while(buf.length() < length) {
 			final String str = UUID.randomUUID().toString();
 			if(str == null) throw new NullPointerException();
@@ -209,22 +211,22 @@ public final class utilsString {
 	}
 
 
-	public static String pad(final int length, final String text, final String padding) {
-		if(length < 1) return null;
+	public static String pad(final int width, final String text, final String padding) {
+		if(width < 1) return null;
 		if(utils.isEmpty(padding)) return null;
-		final int count = length - text.length();
+		final int count = width - text.length();
 		if(count < 1) return text;
-		return (new StringBuilder())
+		return (new StringBuilder(width))
 			.append(text)
 			.append(repeat(count, " "))
 			.toString();
 	}
-	public static String padCenter(final int length, final String text, final String padding) {
-		if(length < 1) return null;
+	public static String padCenter(final int width, final String text, final String padding) {
+		if(width < 1) return null;
 		if(utils.isEmpty(padding)) return null;
-		final double count = (length - text.length()) / 2.0;
+		final double count = (width - text.length()) / 2.0;
 		if(Math.ceil(count) < 1.0) return text;
-		return (new StringBuilder())
+		return (new StringBuilder(width))
 			.append(repeat((int) Math.floor(count), " "))
 			.append(text)
 			.append(repeat((int) Math.ceil(count), " "))
