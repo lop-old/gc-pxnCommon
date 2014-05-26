@@ -179,7 +179,11 @@ public class xThreadPool implements Runnable {
 					this.nowHasRun = false;
 					final xRunnable tmpTask = this.runThisNow;
 					this.runThisNow = null;
-					tmpTask.run();
+					try {
+						tmpTask.run();
+					} catch (Exception e) {
+						log().trace(e);
+					}
 					this.nowHasRun = true;
 					this.nowLock.notifyAll();
 				}
