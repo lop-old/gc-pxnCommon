@@ -10,8 +10,9 @@ public class xNoConsole implements xConsole {
 		throw new CloneNotSupportedException();
 	}
 
-	protected static final Object lock = new Object();
-	protected static volatile xConsole console = null;
+//	private static final Object lock = new Object();
+	private static final Object printLock = new Object();
+//	private static volatile xConsole console = null;
 
 
 	public xNoConsole() {
@@ -40,8 +41,10 @@ public class xNoConsole implements xConsole {
 	}
 	@Override
 	public void print(final String msg) {
-		System.out.println(msg);
-		System.out.flush();
+		synchronized(printLock) {
+			System.out.println(msg);
+			System.out.flush();
+		}
 	}
 	@Override
 	public void drawPrompt() {

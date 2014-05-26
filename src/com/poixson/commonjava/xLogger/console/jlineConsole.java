@@ -27,6 +27,7 @@ public class jlineConsole implements xConsole {
 	public static final String DEFAULT_PROMPT = " #>";
 
 	private static final Object lock = new Object();
+	private static final Object printLock = new Object();
 	private static volatile ConsoleReader reader = null;
 	private static volatile Boolean jlineEnabled = null;
 
@@ -183,7 +184,10 @@ public class jlineConsole implements xConsole {
 	@Override
 	public void flush() {
 		try {
-			System.out.flush();
+			synchronized(printLock) {
+				jlineConsole.reader.flush();
+				//System.out.flush();
+			}
 		} catch (Exception ignore) {}
 	}
 	// print then restore prompt
@@ -197,19 +201,23 @@ public class jlineConsole implements xConsole {
 			if(str.length() < minLength)
 				str += utilsString.repeat(minLength - str.length(), " ");
 		}
-		// print
-		System.out.print("\r"+str+"\r\n");
-		// draw command prompt
-		drawPrompt();
-		flush();
+		synchronized(printLock) {
+			// print
+			System.out.print("\r"+str+"\r\n");
+			// draw command prompt
+			drawPrompt();
+			flush();
+		}
 	}
 	// draw command prompt
 	@Override
 	public void drawPrompt() {
 		if(jlineConsole.reader == null) return;
 		try {
-			jlineConsole.reader.drawLine();
-			jlineConsole.reader.flush();
+			synchronized(printLock) {
+				jlineConsole.reader.drawLine();
+				jlineConsole.reader.flush();
+			}
 		} catch (IOException ignore) {}
 	}
 	// render jAnsi
