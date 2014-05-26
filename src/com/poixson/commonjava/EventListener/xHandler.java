@@ -95,21 +95,33 @@ listener.toString()+" "+method.getName());
 
 
 	// trigger all priorities
-	public void trigger(final xEventData event) {
-		// main thread pool
-		final xThreadPool pool = xThreadPool.get();
-		trigger(pool, event, null);
+	public void triggerNow(final xEventData event) {
+		triggerNow(null, event, null);
 	}
 	// trigger only one priority
-	public void trigger(final xEventData event, final Priority onlyPriority) {
-		// main thread pool
-		final xThreadPool pool = xThreadPool.get();
-		trigger(pool, event, onlyPriority);
+	public void triggerNow(final xEventData event, final Priority onlyPriority) {
+		triggerNow(null, event, onlyPriority);
 	}
-	public void trigger(final xThreadPool pool, final xEventData event, final Priority onlyPriority) {
-		if(pool  == null) throw new NullPointerException();
+	public void triggerNow(final xThreadPool pool, final xEventData event, final Priority onlyPriority) {
 		if(event == null) throw new NullPointerException();
-		pool.runLater(
+		final xThreadPool p = (pool == null ? xThreadPool.get() : pool);
+		p.runNow(
+			new xRunnableEvent(event, onlyPriority)
+		);
+	}
+
+	// trigger all priorities
+	public void triggerLater(final xEventData event) {
+		triggerLater(null, event, null);
+	}
+	// trigger only one priority
+	public void triggerLater(final xEventData event, final Priority onlyPriority) {
+		triggerLater(null, event, onlyPriority);
+	}
+	public void triggerLater(final xThreadPool pool, final xEventData event, final Priority onlyPriority) {
+		if(event == null) throw new NullPointerException();
+		final xThreadPool p = (pool == null ? xThreadPool.get() : pool);
+		p.runLater(
 			new xRunnableEvent(event, onlyPriority)
 		);
 	}
