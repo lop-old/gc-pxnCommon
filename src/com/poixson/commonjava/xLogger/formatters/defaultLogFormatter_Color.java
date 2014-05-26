@@ -16,10 +16,12 @@ public class defaultLogFormatter_Color extends defaultLogFormatter {
 		final String color;
 		// all, finest, finer, fine
 		if(level.isLoggable(xLevel.FINE))
-			color = "FG_WHITE,BOLD";
+			color = "FG_BLACK,BOLD";
+//			color = "FG_WHITE,BOLD";
 		// info
 		else if(level.isLoggable(xLevel.INFO))
-			color = "FG_CYAN,BOLD";
+			color = "FG_CYAN";
+//			color = "FG_CYAN,BOLD";
 		// warning
 		else if(level.isLoggable(xLevel.WARNING))
 			color = "FG_RED";
