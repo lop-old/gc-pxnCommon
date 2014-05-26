@@ -22,7 +22,12 @@ public class xLog extends xLogPrinting {
 /*
 	// logger
 	public static xLog log() {
-		return xLog.log();
+		return xLog.getRoot();
+	}
+== or ==
+	// logger
+	public static xLog log() {
+		return xApp.log();
 	}
 */
 
@@ -35,7 +40,7 @@ public class xLog extends xLogPrinting {
 		if(this._log == null) {
 			synchronized(this.logLock) {
 				if(this._log == null)
-					this._log = xLog.log();
+					this._log = xLog.getRoot();
 			}
 		}
 		return this._log;
@@ -56,7 +61,7 @@ public class xLog extends xLogPrinting {
 		if(this._log == null) {
 			synchronized(this.logLock) {
 				if(this._log == null)
-					this._log = xLog.log();
+					this._log = xLog.getRoot();
 			}
 		}
 		return this._log;
@@ -175,6 +180,9 @@ public class xLog extends xLogPrinting {
 		for(final xLogHandler handler : this.handlers)
 			handler.setLevel(lvl);
 	}
+	public xLevel getLevel() {
+		return this.level;
+	}
 	// is level loggable
 	public boolean isLoggable(final xLevel lvl) {
 		// forced debug mode
@@ -233,7 +241,7 @@ public class xLog extends xLogPrinting {
 	public void addHandler(final xLogHandler handler) {
 		this.handlers.add(handler);
 	}
-	// publish record
+	// publish record to handlers
 	@Override
 	public void publish(final xLogRecord record) {
 		final xLevel lvl = record.level();
@@ -248,8 +256,10 @@ public class xLog extends xLogPrinting {
 			}
 		}
 	}
+	// publish string to handlers
 	@Override
 	public void publish(final String msg) {
+		if(msg == null) publish("");
 		if(this.parent != null)
 			this.parent.publish(msg);
 		if(!this.handlers.isEmpty()) {

@@ -42,6 +42,8 @@ public class xLogRecord {
 
 	// get message
 	public String msg() {
+		if(this.msg == null)
+			return "";
 		return this.msg;
 	}
 

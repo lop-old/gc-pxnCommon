@@ -29,6 +29,9 @@ public abstract class xLogPrinting {
 			)
 		);
 	}
+	public void publish() {
+		publish("");
+	}
 
 
 	// title
