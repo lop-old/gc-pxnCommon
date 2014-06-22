@@ -112,6 +112,30 @@ public final class utilsString {
 	}
 
 
+	// ensure starts with
+	public static String ensureStarts(final String start, final String data) {
+		if(data == null)
+			return null;
+		if(data.startsWith(start))
+			return data;
+		return (new StringBuilder())
+			.append(start)
+			.append(data)
+			.toString();
+	}
+	// ensure ends with
+	public static String ensureEnds(final String end, final String data) {
+		if(data == null)
+			return null;
+		if(data.endsWith(end))
+			return data;
+		return (new StringBuilder())
+			.append(data)
+			.append(end)
+			.toString();
+	}
+
+
 	// replace with array
 	public static String replaceWith(final String replaceWhat, final String[] withWhat, final String data) {
 		if(utils.isEmpty(replaceWhat)) throw new NullPointerException("replaceWhat cannot be null");
