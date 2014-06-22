@@ -7,6 +7,7 @@ import org.fusesource.jansi.AnsiConsole;
 
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsDirFile;
+import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xClock;
 import com.poixson.commonjava.Utils.xRunnable;
@@ -98,7 +99,8 @@ public abstract class xApp implements Runnable {
 			this.threadPool = xThreadPool.get();
 		// run startup sequence (1-9)
 		if(this.initLevel != 1) _AlreadyStarted();
-		// startup sequence
+		// trigger startup sequence
+		log().fine("Startup sequence..");
 		getThreadPool().runLater(
 			new _StartupRunnable(
 				this,
@@ -115,7 +117,8 @@ public abstract class xApp implements Runnable {
 		System.exit(0);
 	}
 	public void shutdown() {
-		// shutdown sequence
+		// trigger shutdown sequence
+		log().fine("Shutdown sequence..");
 		getThreadPool().runLater(
 			new _ShutdownRunnable(
 				this,
@@ -159,16 +162,19 @@ public abstract class xApp implements Runnable {
 					this.app.initLevel = 9;
 				}
 				return;
-			// app steps 2-7
-			default:
-				try {
-					if(startup(this.step))
-						break;
-				} catch (Exception e) {
-					log().trace(e);
+			}
+			// app steps 1-7
+			try {
+				if(!startup(this.step)) {
+					log().fatal("Startup failed at step: "+Integer.toString(this.step));
+					return;
 				}
+			} catch (Exception e) {
+				log().trace(e);
+				System.exit(1);
 				return;
 			}
+
 			// sleep for a moment
 			utilsThread.Sleep(5);
 			// queue next step
@@ -309,8 +315,13 @@ public abstract class xApp implements Runnable {
 
 	// fail app startup
 	public static void fail(String msg, Exception e) {
-		if(utils.notEmpty(msg))
-			log().publish(msg);
+		if(utils.notEmpty(msg)) {
+			log().publish();
+			log().publish("    "+utilsString.repeat(msg.length(), "=")+"    ");
+			log().publish(" << "+msg+" >> ");
+			log().publish("    "+utilsString.repeat(msg.length(), "=")+"    ");
+			log().publish();
+		}
 		if(e != null)
 			log().trace(e);
 		System.exit(1);
