@@ -264,7 +264,8 @@ public class xThreadPool implements Runnable {
 			// wait for task to complete
 			while(this.runThisNow != null || !this.nowHasRun) {
 				try {
-					this.nowLock.wait();
+					this.nowLock.wait(2000L);
+					break;
 				} catch (InterruptedException ignore) {}
 			}
 			this.nowHasRun = false;
@@ -281,7 +282,7 @@ public class xThreadPool implements Runnable {
 		}
 		try {
 			if(this.queue.offer(task, 5, xTimeU.S))
-				log().finer("Task queued.. ("+this.queueName+") "+task.getTaskName());
+				log().finest("Task queued.. ("+this.queueName+") "+task.getTaskName());
 			else
 				log().warning("Thread queue jammed! ("+this.queueName+") "+task.getTaskName());
 		} catch (InterruptedException ignore) {
