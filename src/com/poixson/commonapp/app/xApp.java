@@ -100,7 +100,7 @@ public abstract class xApp implements Runnable {
 		// run startup sequence (1-9)
 		if(this.initLevel != 1) _AlreadyStarted();
 		// trigger startup sequence
-		log().fine("Startup sequence..");
+		log().fine("Startup sequence.. 1..2..");
 		getThreadPool().runLater(
 			new _StartupRunnable(
 				this,
@@ -118,7 +118,7 @@ public abstract class xApp implements Runnable {
 	}
 	public void shutdown() {
 		// trigger shutdown sequence
-		log().fine("Shutdown sequence..");
+		log().fine("Shutdown sequence.. 8..7..");
 		getThreadPool().runLater(
 			new _ShutdownRunnable(
 				this,
@@ -142,12 +142,13 @@ public abstract class xApp implements Runnable {
 		public _StartupRunnable(final xApp app, final int step) {
 			super(getAppName()+"-Startup-"+Integer.toString(step));
 			if(app == null) throw new NullPointerException();
-			if(step < 1 || step >= 9) throw new UnsupportedOperationException();
+			if(step < 1 || step > 8) throw new UnsupportedOperationException("Unsupported startup step "+Integer.toString(step));
 			this.app = app;
 			this.step = step;
 		}
 		@Override
 		public void run() {
+
 			switch(this.step) {
 			// first step in startup
 			case 1:
@@ -163,20 +164,20 @@ public abstract class xApp implements Runnable {
 				}
 				return;
 			}
+
 			// app steps 1-7
 			try {
-				if(!startup(this.step)) {
-					log().fatal("Startup failed at step: "+Integer.toString(this.step));
-					return;
-				}
+				if(!startup(this.step))
+					throw new RuntimeException();
 			} catch (Exception e) {
+				log().fatal("Startup failed at step: "+Integer.toString(this.step));
 				log().trace(e);
 				System.exit(1);
-				return;
 			}
 
 			// sleep for a moment
 			utilsThread.Sleep(5);
+
 			// queue next step
 			synchronized(xApp.appLock) {
 				this.app.initLevel = this.step + 1;
@@ -187,6 +188,7 @@ public abstract class xApp implements Runnable {
 					)
 				);
 			}
+
 		}
 	}
 	/**
@@ -203,18 +205,19 @@ public abstract class xApp implements Runnable {
 		public _ShutdownRunnable(final xApp app, final int step) {
 			super(getAppName()+"-Shutdown-"+Integer.toString(step));
 			if(app == null) throw new NullPointerException();
-			if(step < 1 || step >= 9) throw new UnsupportedOperationException();
+			if(step < 1 || step > 8) throw new UnsupportedOperationException("Unsupported shutdown step "+Integer.toString(step));
 			this.app = app;
 			this.step = step;
 		}
 		@Override
 		public void run() {
+
 			switch(this.step) {
-			// first step in startup
+			// first step in shutdown
 			case 8:
 				log().title("Stopping "+getAppName()+"..");
 				break;
-			// last step in startup
+			// last step in shutdown
 			case 1:
 				log().title(getAppName()+" Stopped.");
 				//TODO: display total time running
@@ -224,18 +227,20 @@ public abstract class xApp implements Runnable {
 				termConsole();
 				System.out.println();
 				System.exit(0);
-				return;
-			// app steps 7-2
-			default:
-				try {
-					shutdown(this.step);
-				} catch (Exception e) {
-					log().trace(e);
-				}
-				break;
 			}
+
+			// app steps 8-2
+			try {
+				if(!shutdown(this.step))
+					throw new RuntimeException();
+			} catch (Exception e) {
+				log().severe("Shutdown failed at step: "+Integer.toString(this.step));
+				log().trace(e);
+			}
+
 			// sleep for a moment
 			utilsThread.Sleep(50);
+
 			// queue next step
 			synchronized(xApp.appLock) {
 				this.app.initLevel = this.step - 1;
@@ -246,6 +251,7 @@ public abstract class xApp implements Runnable {
 					)
 				);
 			}
+
 		}
 	}
 
