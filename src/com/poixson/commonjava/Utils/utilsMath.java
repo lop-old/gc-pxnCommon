@@ -232,12 +232,12 @@ public final class utilsMath {
 	}
 	// random number (not last)
 	public static int getNewRandom(final int minNumber, final int maxNumber, final int oldNumber) {
-		if(minNumber == maxNumber) return minNumber;
+		if(minNumber == maxNumber)
+			return minNumber;
 		if((maxNumber - minNumber) == 1) {
 			if(oldNumber == minNumber)
 				return maxNumber;
-			else
-				return minNumber;
+			return minNumber;
 		}
 		int newNumber;
 		while(true) {
