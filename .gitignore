@@ -1,17 +1,23 @@
-resources
-bin
-build
+resources/
+bin/
+target/
+out/
+build/
 
-.git
-.settings
+.git/
+.settings/
 
 *.class
+*.iml
+*.idea
 *.jar
 *.war
 *.ear
 *.zip
 *.exe
 *.lock
-*.swp
 *.out
+*.swp
+.*.swp
+*~
 
