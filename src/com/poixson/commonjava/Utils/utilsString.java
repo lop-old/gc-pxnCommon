@@ -28,8 +28,7 @@ public final class utilsString {
 		if(obj instanceof Boolean) {
 			if( ((boolean) obj) == true)
 				return "TRUE";
-			else
-				return "false";
+			return "false";
 		}
 		// int
 		if(obj instanceof Integer)

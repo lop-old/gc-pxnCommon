@@ -63,7 +63,7 @@ public final class utilsCrypt {
 	// crypt with key
 	public static String crypt(final String cryptMethod, final String key, final String data) {
 		try {
-			final Mac mac = Mac.getInstance(cryptMethod);;
+			final Mac mac = Mac.getInstance(cryptMethod);
 			if(mac == null) return null;
 			mac.init(new SecretKeySpec(key.getBytes(), cryptMethod));
 			return toHex(

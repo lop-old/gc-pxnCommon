@@ -239,8 +239,8 @@ public final class utilsDirFile {
 		else
 			ext = extension;
 		final String fileStr;
-		if(ext != null && !ext.isEmpty() && !fileName.endsWith(ext))
-			fileStr = fileName+ext;
+		if(!fileName.endsWith(ext))
+			fileStr = fileName + ext;
 		else
 			fileStr = fileName;
 		if(filePath == null || filePath.isEmpty())

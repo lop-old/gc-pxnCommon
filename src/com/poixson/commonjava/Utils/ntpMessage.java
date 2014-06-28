@@ -267,8 +267,8 @@ public class ntpMessage {
 
 		p[0] = (byte) (this.leapIndicator << 6 | this.version << 3 | this.mode);
 		p[1] = (byte) this.stratum;
-		p[2] = (byte) this.pollInterval;
-		p[3] = (byte) this.precision;
+		p[2] = this.pollInterval;
+		p[3] = this.precision;
 
 		// root delay is a signed 16.16-bit FP, in Java an int is 32-bits
 		int l = (int) (this.rootDelay * 65536.0);
@@ -330,8 +330,10 @@ public class ntpMessage {
 	public static short unsignedByteToShort(final byte b) {
 		if((b & 0x80) == 0x80)
 			return (short) (128 + (b & 0x7f));
-		else
-			return (short) b;
+		return b;
+	}
+	public static double unsignedByteToDouble(final byte b) {
+		return unsignedByteToShort(b);
 	}
 
 
@@ -360,7 +362,7 @@ public class ntpMessage {
 			// Capture byte value
 			array[pointer + i] = (byte) (stamp / base);
 			// Subtract captured value from remaining total
-			stamp = stamp - (double) (unsignedByteToShort(array[pointer + i]) * base);
+			stamp = stamp - (unsignedByteToDouble(array[pointer + i]) * base);
 		}
 		// From RFC 2030: It is advisable to fill the non-significant
 		// low order bits of the timestamp with a random, unbiased

@@ -33,10 +33,9 @@ public class HistoryRND {
 			if(this.last == this.min) {
 				this.last = this.max;
 				return this.max;
-			} else {
-				this.last = this.min;
-				return this.min;
 			}
+			this.last = this.min;
+			return this.min;
 		}
 		int number = 0;
 		int i = 10;
