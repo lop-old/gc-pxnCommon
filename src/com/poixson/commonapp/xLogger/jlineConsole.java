@@ -1,4 +1,4 @@
-package com.poixson.commonjava.xLogger.console;
+package com.poixson.commonapp.xLogger;
 
 import java.io.File;
 import java.io.IOException;

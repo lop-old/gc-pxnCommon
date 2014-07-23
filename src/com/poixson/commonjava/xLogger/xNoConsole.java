@@ -1,7 +1,4 @@
-package com.poixson.commonjava.xLogger.console;
-
-import com.poixson.commonjava.xLogger.xConsole;
-import com.poixson.commonjava.xLogger.xLog;
+package com.poixson.commonjava.xLogger;
 
 
 public class xNoConsole implements xConsole {
