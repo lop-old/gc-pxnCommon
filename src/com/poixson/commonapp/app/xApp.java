@@ -38,6 +38,9 @@ public abstract class xApp implements Runnable {
 	protected static final Object appLock = new Object();
 	private volatile xThreadPool threadPool = null;
 
+	// just to prevent gc
+	private static xVars xvars = null;
+
 	@SuppressWarnings("unused")
 	private volatile long startTime = -1;
 	protected volatile int initLevel = 0;
@@ -69,6 +72,9 @@ public abstract class xApp implements Runnable {
 		);
 	}
 	protected xApp() {
+		// just to prevent gc
+		if(xvars == null)
+			xvars = xVars.get();
 	}
 
 
