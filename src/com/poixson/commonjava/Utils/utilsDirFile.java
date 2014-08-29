@@ -17,16 +17,11 @@ import com.poixson.commonjava.xLogger.xLog;
 
 
 public final class utilsDirFile {
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		throw new CloneNotSupportedException();
-	}
 	private utilsDirFile() {}
 
 
 
 	// single instance lock
-	@SuppressWarnings("resource")
 	public static boolean lockInstance(final String fileStr) {
 		try {
 			final File lockFile = new File(fileStr);
@@ -191,7 +186,6 @@ public final class utilsDirFile {
 		return null;
 	}
 	// load yml from jar
-	@SuppressWarnings("resource")
 	public static InputJar OpenJarResource(final File jarFile, final String fileName) {
 		if(jarFile == null) throw new NullPointerException("jarFile cannot be null");
 		if(utils.isEmpty(fileName)) throw new NullPointerException("fileName cannot be null/empty");

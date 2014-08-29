@@ -7,10 +7,6 @@ import com.poixson.commonjava.xLogger.xLog;
 
 
 public final class utilsReflect {
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		throw new CloneNotSupportedException();
-	}
 	private utilsReflect() {}
 
 

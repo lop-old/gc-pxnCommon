@@ -5,10 +5,6 @@ import java.util.Set;
 
 
 public final class utilsThread {
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		throw new CloneNotSupportedException();
-	}
 	private utilsThread() {}
 
 

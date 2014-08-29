@@ -4,10 +4,6 @@ import java.util.concurrent.TimeUnit;
 
 
 public final class xTimeU {
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		throw new CloneNotSupportedException();
-	}
 	private xTimeU() {}
 
 

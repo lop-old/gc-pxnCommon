@@ -2,10 +2,6 @@ package com.poixson.commonjava.Utils;
 
 
 public final class utilsSan {
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		throw new CloneNotSupportedException();
-	}
 	private utilsSan() {}
 
 

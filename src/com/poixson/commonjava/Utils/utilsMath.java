@@ -6,10 +6,6 @@ import java.util.regex.Pattern;
 
 
 public final class utilsMath {
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		throw new CloneNotSupportedException();
-	}
 	private utilsMath() {}
 
 

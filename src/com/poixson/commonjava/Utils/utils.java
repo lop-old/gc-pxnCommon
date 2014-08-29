@@ -6,7 +6,9 @@ import java.io.IOException;
 import com.poixson.commonjava.xLogger.xLog;
 
 
-public class utils {
+public final class utils {
+	private utils() {}
+
 
 
 	/**

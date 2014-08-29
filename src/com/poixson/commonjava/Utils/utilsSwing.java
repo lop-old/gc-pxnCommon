@@ -10,10 +10,6 @@ import com.poixson.commonjava.xLogger.xLog;
 
 
 public final class utilsSwing {
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		throw new CloneNotSupportedException();
-	}
 	private utilsSwing() {}
 
 

@@ -6,10 +6,6 @@ import java.util.List;
 
 
 public final class utilsObject {
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		throw new CloneNotSupportedException();
-	}
 	private utilsObject() {}
 
 

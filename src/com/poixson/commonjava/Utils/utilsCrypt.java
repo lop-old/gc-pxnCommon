@@ -12,10 +12,6 @@ import com.poixson.commonjava.xLogger.xLog;
 
 
 public final class utilsCrypt {
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		throw new CloneNotSupportedException();
-	}
 	private utilsCrypt() {}
 
 	public static final String CRYPT_MD5    = "MD5";
@@ -115,7 +111,6 @@ public final class utilsCrypt {
 	public static String toHex(final String data) {
 		return toHex(data.getBytes());
 	}
-	@SuppressWarnings("resource")
 	public static String toHex(final byte[] data) {
 		if(data == null || data.length == 0) return null;
 		final StringBuilder str = new StringBuilder(data.length * 2);
