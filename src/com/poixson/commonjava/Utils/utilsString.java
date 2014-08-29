@@ -102,6 +102,16 @@ public final class utilsString {
 
 
 
+	public static String remove(final String str, final String...strip) {
+		if(utils.isEmpty(strip)) return str;
+		String dat = str;
+		for(final String s : strip)
+			dat = dat.replace(s, "");
+		return dat;
+	}
+
+
+
 	// ensure starts with
 	public static String ensureStarts(final String start, final String data) {
 		if(data == null)
@@ -173,9 +183,6 @@ public final class utilsString {
 		}
 		return out.toString();
 	}
-
-
-
 	public static String repeat(final int count, final char chr) {
 		if(count < 1) return "";
 		final StringBuilder out = new StringBuilder();
@@ -183,23 +190,6 @@ public final class utilsString {
 		for(int i = 0; i < count; i++)
 			out.append(chr);
 		return out.toString();
-	}
-
-
-
-	@SuppressWarnings("boxing")
-	public static String center(final String text, final int width, final char padding) {
-		if(width < 1) return null;
-		if(text == null || text.isEmpty())
-			return repeat(width, padding);
-		if(width < text.length())
-			return text.substring(width);
-		final double space = ((double) (width - text.length())) / 2;
-		return (new StringBuilder())
-			.append(repeat((int) Math.floor(space), padding))
-			.append(text)
-			.append(repeat((int) Math.ceil(space), padding))
-			.toString();
 	}
 
 
@@ -262,7 +252,9 @@ public final class utilsString {
 	}
 	public static String padCenter(final int width, final String text, final char padding) {
 		if(width < 1) return null;
-		final double count = (width - text.length()) / 2.0;
+		if(utils.isEmpty(text))
+			return repeat(width, padding);
+		final double count = ((double) (width - text.length())) / 2.0;
 		if(Math.ceil(count) < 1.0) return text;
 		return (new StringBuilder(width))
 			.append(repeat((int) Math.floor(count), padding))
