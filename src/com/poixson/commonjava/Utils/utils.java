@@ -2,6 +2,8 @@ package com.poixson.commonjava.Utils;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Map;
 
 import com.poixson.commonjava.xLogger.xLog;
 
@@ -13,7 +15,7 @@ public final class utils {
 
 	/**
 	 * Is string empty.
-	 * @param value
+	 * @param String
 	 * @return True if string is null or empty.
 	 */
 	public static boolean isEmpty(final String value) {
@@ -21,8 +23,8 @@ public final class utils {
 	}
 	/**
 	 * Is string populated.
-	 * @param value
-	 * @return True if string is not null and contains data.
+	 * @param String
+	 * @return True if string is not null or contains data.
 	 */
 	public static boolean notEmpty(final String value) {
 		return (value != null && value.length() > 0);
@@ -31,8 +33,8 @@ public final class utils {
 
 
 	/**
-	 * Is array empty
-	 * @param array
+	 * Is array empty.
+	 * @param Object[]
 	 * @return True if array is null or empty.
 	 */
 	public static boolean isEmpty(final Object[] array) {
@@ -40,11 +42,49 @@ public final class utils {
 	}
 	/**
 	 * Is array populated.
-	 * @param array
-	 * @return True if array is not null and contains data.
+	 * @param Object[]
+	 * @return True if array is not null or contains data.
 	 */
 	public static boolean notEmpty(final Object[] array) {
 		return (array != null && array.length > 0);
+	}
+
+
+
+	/**
+	 * Is collection/set/list empty.
+	 * @param Collection or Set or List
+	 * @return True if collection is null or empty.
+	 */
+	public static boolean isEmpty(final Collection<?> collect) {
+		return (collect == null || collect.isEmpty());
+	}
+	/**
+	 * Is collection/set/list populated.
+	 * @param Collection or Set or List
+	 * @return True if collection is not null or contains data.
+	 */
+	public static boolean notEmpty(final Collection<?> collect) {
+		return (collect != null && !collect.isEmpty());
+	}
+
+
+
+	/**
+	 * Is map empty.
+	 * @param Map
+	 * @return True if map is null or empty.
+	 */
+	public static boolean isEmpty(final Map<?, ?> map) {
+		return (map == null || map.isEmpty());
+	}
+	/**
+	 * Is map populated.
+	 * @param Map
+	 * @return True if map is not null or contains data.
+	 */
+	public static boolean notEmpty(final Map<?, ?> map) {
+		return (map != null && !map.isEmpty());
 	}
 
 
