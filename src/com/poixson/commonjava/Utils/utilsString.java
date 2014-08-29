@@ -29,16 +29,16 @@ public final class utilsString {
 		}
 		// int
 		if(obj instanceof Integer)
-			return Integer.toString((Integer) obj);
+			return ((Integer) obj).toString();
 		// long
 		if(obj instanceof Long)
-			return Long.toString((Long) obj);
+			return ((Long) obj).toString();
 		// double
 		if(obj instanceof Double)
-			return Double.toString((Double) obj);
+			return ((Double) obj).toString();
 		// float
 		if(obj instanceof Float)
-			return Float.toString((Float) obj);
+			return ((Float) obj).toString();
 		// exception
 		if(obj instanceof Exception)
 			return ExceptionToString((Exception) obj);
@@ -98,15 +98,6 @@ public final class utilsString {
 				break outerloop;
 		}
 		return out;
-//		if(utils.isEmpty(str))  return null;
-//		if(utils.isEmpty(data)) return null;
-//		final int size = str.length();
-//		String out = data;
-//		while(out.startsWith(str))
-//			out = out.substring(size);
-//		while(out.endsWith(str))
-//			out = out.substring(0, 0-size);
-//		return out;
 	}
 
 
@@ -184,18 +175,30 @@ public final class utilsString {
 	}
 
 
+
+	public static String repeat(final int count, final char chr) {
+		if(count < 1) return "";
+		final StringBuilder out = new StringBuilder();
+		// repeat string
+		for(int i = 0; i < count; i++)
+			out.append(chr);
+		return out.toString();
+	}
+
+
+
 	@SuppressWarnings("boxing")
-	public static String center(final String text, final int width) {
+	public static String center(final String text, final int width, final char padding) {
 		if(width < 1) return null;
 		if(text == null || text.isEmpty())
-			return repeat(width, " ");
+			return repeat(width, padding);
 		if(width < text.length())
 			return text.substring(width);
-		final Double space = ((double) (width - text.length())) / 2;
+		final double space = ((double) (width - text.length())) / 2;
 		return (new StringBuilder())
-			.append(repeat((int) Math.floor(space), " "))
+			.append(repeat((int) Math.floor(space), padding))
 			.append(text)
-			.append(repeat((int) Math.ceil(space), " "))
+			.append(repeat((int) Math.ceil(space), padding))
 			.toString();
 	}
 
@@ -238,25 +241,33 @@ public final class utilsString {
 	}
 
 
-	public static String pad(final int width, final String text, final String padding) {
+
+	public static String pad(final int width, final String text, final char padding) {
 		if(width < 1) return null;
-		if(utils.isEmpty(padding)) return null;
 		final int count = width - text.length();
 		if(count < 1) return text;
 		return (new StringBuilder(width))
 			.append(text)
-			.append(repeat(count, " "))
+			.append(repeat(count, padding))
 			.toString();
 	}
-	public static String padCenter(final int width, final String text, final String padding) {
+	public static String padFront(final int width, final String text, final char padding) {
 		if(width < 1) return null;
-		if(utils.isEmpty(padding)) return null;
+		final int count = width - text.length();
+		if(count < 1) return text;
+		return (new StringBuilder(width))
+			.append(repeat(count, padding))
+			.append(text)
+			.toString();
+	}
+	public static String padCenter(final int width, final String text, final char padding) {
+		if(width < 1) return null;
 		final double count = (width - text.length()) / 2.0;
 		if(Math.ceil(count) < 1.0) return text;
 		return (new StringBuilder(width))
-			.append(repeat((int) Math.floor(count), " "))
+			.append(repeat((int) Math.floor(count), padding))
 			.append(text)
-			.append(repeat((int) Math.ceil(count), " "))
+			.append(repeat((int) Math.ceil(count), padding))
 			.toString();
 	}
 
