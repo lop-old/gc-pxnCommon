@@ -15,6 +15,7 @@ public final class utilsString {
 	private utilsString() {}
 
 
+
 	// object to string
 	@SuppressWarnings("boxing")
 	public static String toString(final Object obj) {
@@ -57,6 +58,7 @@ public final class utilsString {
 	}
 
 
+
 	// string equals
 	public static boolean strEquals(final String a, final String b) {
 		if(utils.isEmpty(a)) return false;
@@ -68,6 +70,7 @@ public final class utilsString {
 		if(utils.isEmpty(b)) return false;
 		return a.equalsIgnoreCase(b);
 	}
+
 
 
 	// trim from string
@@ -111,6 +114,7 @@ public final class utilsString {
 	}
 
 
+
 	// ensure starts with
 	public static String ensureStarts(final String start, final String data) {
 		if(data == null)
@@ -135,6 +139,7 @@ public final class utilsString {
 	}
 
 
+
 	// replace with array
 	public static String replaceWith(final String replaceWhat, final String[] withWhat, final String data) {
 		if(utils.isEmpty(replaceWhat)) throw new NullPointerException("replaceWhat cannot be null");
@@ -155,6 +160,7 @@ public final class utilsString {
 			out.append(data.substring(currentPos));
 		return out.toString();
 	}
+
 
 
 	// repeat string with deliminator
@@ -198,6 +204,7 @@ public final class utilsString {
 	}
 
 
+
 	// generate a random string
 	public static String RandomString(final int length) {
 		//if(length == 0) return "";
@@ -211,6 +218,7 @@ public final class utilsString {
 		}
 		return buf.toString().substring( 0, utilsMath.MinMax(length, 0, buf.length()) );
 	}
+
 
 
 	// add strings with delimiter
@@ -257,6 +265,7 @@ public final class utilsString {
 	}
 
 
+
 	public static String wildcardToRegex(String wildcard) {
 		final StringBuffer str = new StringBuffer(wildcard.length());
 		str.append('^');
@@ -294,10 +303,12 @@ public final class utilsString {
 	}
 
 
+
 	// logger
 	public static xLog log() {
 		return xLog.getRoot();
 	}
+
 
 
 }

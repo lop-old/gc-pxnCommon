@@ -27,6 +27,7 @@ public class utils {
 	}
 
 
+
 	/**
 	 * Is array empty
 	 * @param array
@@ -45,6 +46,7 @@ public class utils {
 	}
 
 
+
 	/**
 	 * Close safely, ignoring errors.
 	 */
@@ -56,6 +58,7 @@ public class utils {
 	}
 
 
+
 	/**
 	 * Current system time ms.
 	 * @return
@@ -63,6 +66,7 @@ public class utils {
 	public static long getSystemMillis() {
 		return System.currentTimeMillis();
 	}
+
 
 
 	public static void MemoryStats() {
@@ -76,10 +80,12 @@ public class utils {
 	}
 
 
+
 	// logger
 	public static xLog log() {
 		return xLog.getRoot();
 	}
+
 
 
 }

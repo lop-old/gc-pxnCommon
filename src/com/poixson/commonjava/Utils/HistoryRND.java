@@ -13,6 +13,7 @@ public class HistoryRND {
 	private final int historySize;
 
 
+
 	public HistoryRND(final int min, final int max) {
 		this(min, max, (max - min) / 2);
 	}
@@ -23,6 +24,7 @@ public class HistoryRND {
 		this.historySize = utilsMath.MinMax(historySize, 2, (max-min)-1);
 		this.last = min - 1;
 	}
+
 
 
 	// random number (unique history)
@@ -57,6 +59,7 @@ public class HistoryRND {
 			this.history.remove();
 		return number;
 	}
+
 
 
 }

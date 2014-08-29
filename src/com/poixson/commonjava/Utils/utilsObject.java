@@ -13,6 +13,7 @@ public final class utilsObject {
 	private utilsObject() {}
 
 
+
 	/**
 	 * Cast a collection to list.
 	 * @param clss
@@ -36,6 +37,7 @@ public final class utilsObject {
 		} catch(Exception ignore) {}
 		return null;
 	}
+
 
 
 }

@@ -17,6 +17,7 @@ public final class utilsSwing {
 	private utilsSwing() {}
 
 
+
 	// change font size
 	public static void changeFontSize(final JComponent component, final int size) {
 		if(component == null) throw new NullPointerException();
@@ -27,6 +28,7 @@ public final class utilsSwing {
 			font.getSize() + size
 		));
 	}
+
 
 
 	// load image file/resource
@@ -50,10 +52,12 @@ public final class utilsSwing {
 	}
 
 
+
 	// logger
 	public static xLog log() {
 		return xLog.getRoot();
 	}
+
 
 
 }

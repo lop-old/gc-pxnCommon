@@ -28,6 +28,7 @@ public final class utilsCrypt {
 	public static final String Hmac_SHA256  = "Hmac"+CRYPT_SHA256;
 
 
+
 	// md5
 	public static String MD5(final String data) {
 		return crypt(CRYPT_MD5, data);
@@ -44,6 +45,7 @@ public final class utilsCrypt {
 	public static String SHA512(final String data) {
 		return crypt(CRYPT_SHA512, data);
 	}
+
 
 
 	// perform crypt
@@ -78,6 +80,7 @@ public final class utilsCrypt {
 	}
 
 
+
 	// encrypted data checksum
 	public static String hmacMD5(final String key, final String data) {
 		return hmac(key, data, Hmac_MD5);
@@ -105,6 +108,7 @@ public final class utilsCrypt {
 		}
 		return null;
 	}
+
 
 
 	// hex encode
@@ -151,10 +155,12 @@ public final class utilsCrypt {
 	}
 
 
+
 	// logger
 	public static xLog log() {
 		return xLog.getRoot();
 	}
+
 
 
 }

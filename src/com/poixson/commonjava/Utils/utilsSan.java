@@ -9,6 +9,7 @@ public final class utilsSan {
 	private utilsSan() {}
 
 
+
 	public static String AlphaNumOnly(final String text) {
 		if(text == null) return null;
 		if(text.isEmpty()) return "";
@@ -21,6 +22,7 @@ public final class utilsSan {
 	}
 
 
+
 //	public static String AlphaNumPunc(final String text) {
 //		if(text == null) return null;
 //		if(text.isEmpty()) return "";
@@ -28,9 +30,11 @@ public final class utilsSan {
 //	}
 
 
+
 	public static String FileName(final String text) {
 		return text.replaceAll("[^a-zA-Z0-9\\._]+", "_");
 	}
+
 
 
 	public static String ValidateStringEnum(final String value, final String...valids) {
@@ -43,6 +47,7 @@ public final class utilsSan {
 		}
 		return null;
 	}
+
 
 
 }

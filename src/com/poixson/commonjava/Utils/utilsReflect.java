@@ -14,6 +14,7 @@ public final class utilsReflect {
 	private utilsReflect() {}
 
 
+
 	// utilsReflect.invoke(new TestClass(), "func", "arg");
 	public static Object invoke(final Object clss, final String methodName, final Object... params) {
 		try {
@@ -40,10 +41,12 @@ public final class utilsReflect {
 	}
 
 
+
 	// logger
 	public static xLog log() {
 		return xLog.getRoot();
 	}
+
 
 
 }

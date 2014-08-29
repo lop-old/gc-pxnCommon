@@ -7,6 +7,7 @@ public class xRunnable implements Runnable {
 	protected final Runnable task;
 
 
+
 	public xRunnable() {
 		this.task = null;
 	}
@@ -25,11 +26,13 @@ public class xRunnable implements Runnable {
 	}
 
 
+
 	public static xRunnable cast(final Runnable run) {
 		if(run instanceof xRunnable)
 			return (xRunnable) run;
 		return new xRunnable("<Runnable>", run);
 	}
+
 
 
 	@Override
@@ -39,9 +42,11 @@ public class xRunnable implements Runnable {
 	}
 
 
+
 	public String getTaskName() {
 		return this.taskName;
 	}
+
 
 
 }

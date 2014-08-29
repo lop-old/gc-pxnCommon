@@ -48,6 +48,7 @@ public class xTime {
 	}};
 
 
+
 	// get object
 	public static xTime get() {
 		return new xTime(0);
@@ -75,6 +76,7 @@ public class xTime {
 	}
 
 
+
 	// final value
 	public xTime setFinal() {
 		this.isFinal = true;
@@ -85,11 +87,13 @@ public class xTime {
 	}
 
 
+
 	// reset value to 0
 	public void reset() {
 		if(this.isFinal) return;
 		this.value = 0;
 	}
+
 
 
 	// get value
@@ -127,6 +131,7 @@ public class xTime {
 	}
 
 
+
 	// add time
 	public void add(final long val, final TimeUnit unit) {
 		if(unit == null) throw new NullPointerException("unit cannot be null");
@@ -143,6 +148,7 @@ public class xTime {
 		if(this.isFinal) return;
 		this.value += time.value;
 	}
+
 
 
 	// parse time from string
@@ -177,6 +183,7 @@ public class xTime {
 		}
 		return new Long(time);
 	}
+
 
 
 	// to string
@@ -254,6 +261,7 @@ public class xTime {
 		}
 		return out.toString();
 	}
+
 
 
 }

@@ -46,6 +46,7 @@ public class xThreadPool implements Runnable {
 	protected static final Map<String, xThreadPool> instances = new HashMap<String, xThreadPool>();
 
 
+
 	/**
 	 * Get main thread queue
 	 */
@@ -95,12 +96,14 @@ public class xThreadPool implements Runnable {
 	}
 
 
+
 	public void start() {
 		newThread();
 	}
 	public void stop() {
 		this.stopping = true;
 	}
+
 
 
 	/**
@@ -159,6 +162,7 @@ public class xThreadPool implements Runnable {
 				thread.setPriority(priority);
 		}
 	}
+
 
 
 	@Override
@@ -236,6 +240,7 @@ public class xThreadPool implements Runnable {
 	}
 
 
+
 	// run a task as soon as possible (generally 0.9ms)
 	public void runNow(final Runnable run) {
 		if(run == null) throw new NullPointerException("run cannot be null");
@@ -292,6 +297,7 @@ public class xThreadPool implements Runnable {
 	}
 
 
+
 	protected int getNextThreadId() {
 		synchronized(this.nextLock) {
 			final int next = this.nextThreadId;
@@ -301,9 +307,11 @@ public class xThreadPool implements Runnable {
 	}
 
 
+
 	private boolean isMainPool() {
 		return this.queueName.equalsIgnoreCase("main");
 	}
+
 
 
 	/**
@@ -332,6 +340,7 @@ public class xThreadPool implements Runnable {
 	}
 
 
+
 	public static void Exit() {
 		get().runLater(new xRunnable("Exit") {
 			@Override
@@ -346,6 +355,7 @@ public class xThreadPool implements Runnable {
 	}
 
 
+
 	// display threads still running
 	protected static void displayStillRunning() {
 		String[] names = utilsThread.getThreadNames();
@@ -356,6 +366,7 @@ public class xThreadPool implements Runnable {
 		System.out.println(msg);
 		//pxnLog.get().Publish(msg);
 	}
+
 
 
 	/**
@@ -404,10 +415,12 @@ public class xThreadPool implements Runnable {
 	}
 
 
+
 	// logger
 	public static xLog log() {
 		return xLog.getRoot();
 	}
+
 
 
 }

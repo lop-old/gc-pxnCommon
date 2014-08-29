@@ -24,6 +24,7 @@ public final class utilsDirFile {
 	private utilsDirFile() {}
 
 
+
 	// single instance lock
 	@SuppressWarnings("resource")
 	public static boolean lockInstance(final String fileStr) {
@@ -85,6 +86,7 @@ public final class utilsDirFile {
 	}
 
 
+
 	// get current working directory
 	public static String cwd() {
 		try {
@@ -92,6 +94,7 @@ public final class utilsDirFile {
 		} catch (IOException ignore) {}
 		return null;
 	}
+
 
 
 	/**
@@ -122,6 +125,7 @@ public final class utilsDirFile {
 			}
 		}.init(extensions));
 	}
+
 
 
 	// add lib to paths
@@ -157,6 +161,7 @@ public final class utilsDirFile {
 		} catch (IllegalAccessException ignore) {
 		}
 	}
+
 
 
 	// open file
@@ -225,6 +230,7 @@ public final class utilsDirFile {
 	}
 
 
+
 	// these functions can have inconsistent results. a better class will be needed
 
 	// build path+file
@@ -253,6 +259,7 @@ public final class utilsDirFile {
 	}
 
 
+
 	public static String mergePaths(final String...strings) {
 		final StringBuilder merged = new StringBuilder();
 		for(String path : strings) {
@@ -272,15 +279,18 @@ public final class utilsDirFile {
 	}
 
 
+
 	public static String san(final String text) {
 		return utilsSan.FileName(text);
 	}
+
 
 
 	// logger
 	public static xLog log() {
 		return xLog.getRoot();
 	}
+
 
 
 }

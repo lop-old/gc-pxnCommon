@@ -13,6 +13,7 @@ public final class utilsMath {
 	private utilsMath() {}
 
 
+
 	// true;
 	public static final String[] truesy = new String[] {
 		"1",
@@ -31,6 +32,7 @@ public final class utilsMath {
 		"no",
 		"disabled"
 	};
+
 
 
 	// min/max value
@@ -96,6 +98,7 @@ public final class utilsMath {
 */
 
 
+
 	// formatDecimal("0.00", double)
 	public static String FormatDecimal(final String format, final double value) {
 		return (new DecimalFormat(format).format(value));
@@ -104,6 +107,7 @@ public final class utilsMath {
 	public static String FormatDecimal(final String format, final float value) {
 		return (new DecimalFormat(format).format(value));
 	}
+
 
 
 	// parse number
@@ -193,6 +197,7 @@ public final class utilsMath {
 	}
 
 
+
 	// is number
 	public static boolean isNumeric(final String value) {
 		if(utils.isEmpty(value)) return false;
@@ -202,6 +207,7 @@ public final class utilsMath {
 	public static boolean isBoolean(final String value) {
 		return (toBoolean(value) != null);
 	}
+
 
 
 	// compare version numbers
@@ -225,6 +231,7 @@ public final class utilsMath {
 	}
 
 
+
 	// random number
 	public static int getRandom(final int minNumber, final int maxNumber) {
 		final Random randomGen = new Random(utils.getSystemMillis());
@@ -245,6 +252,7 @@ public final class utilsMath {
 			if(newNumber != oldNumber) return newNumber;
 		}
 	}
+
 
 
 }

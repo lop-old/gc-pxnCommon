@@ -8,6 +8,7 @@ public class CoolDown {
 	protected final Object lock = new Object();
 
 
+
 	public static CoolDown get() {
 		return new CoolDown();
 	}
@@ -30,6 +31,7 @@ public class CoolDown {
 	}
 
 
+
 	public boolean runAgain() {
 		synchronized(this.lock) {
 			final long current = utils.getSystemMillis();
@@ -50,11 +52,13 @@ public class CoolDown {
 	}
 
 
+
 	public void reset() {
 		synchronized(this.lock) {
 			this.last = -1L;
 		}
 	}
+
 
 
 	// set duration
@@ -71,6 +75,7 @@ public class CoolDown {
 	public xTime getDuration() {
 		return this.coolDuration.clone();
 	}
+
 
 
 }

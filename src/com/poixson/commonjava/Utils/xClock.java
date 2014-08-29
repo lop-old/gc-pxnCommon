@@ -33,6 +33,7 @@ public class xClock {
 	private static final Object lock = new Object();
 
 
+
 	public static xClock get(final boolean blocking) {
 		if(instance == null) {
 			synchronized(lock) {
@@ -48,6 +49,7 @@ public class xClock {
 	}
 
 
+
 	// new instance
 	private xClock(final boolean blocking) {
 		this.blocking = blocking;
@@ -56,6 +58,7 @@ public class xClock {
 	public Object clone() throws CloneNotSupportedException {
 		throw new ClassCastException();
 	}
+
 
 
 	public void update() {
@@ -81,6 +84,7 @@ public class xClock {
 			}
 		}
 	}
+
 
 
 	protected void doUpdate() {
@@ -130,9 +134,11 @@ public class xClock {
 	}
 
 
+
 	public boolean isRunning() {
 		return this.running;
 	}
+
 
 
 	public String getTimeServer() {
@@ -154,6 +160,7 @@ public class xClock {
 	}
 
 
+
 	/**
 	 * Get current time from system.
 	 * @return
@@ -170,6 +177,7 @@ public class xClock {
 	}
 
 
+
 	public long millis() {
 		return (long) getCurrentTime();
 	}
@@ -178,12 +186,14 @@ public class xClock {
 	}
 
 
+
 	protected static double fromUnixTimestamp(final double timestamp) {
 		return (timestamp / 1000.0) + 2208988800.0;
 	}
 	protected static double fromUnixTimestamp() {
 		return fromUnixTimestamp(getSystemTime());
 	}
+
 
 
 	public static String timestampToString(final double timestamp) {
@@ -196,10 +206,12 @@ public class xClock {
 	}
 
 
+
 	// logger
 	public static xLog log() {
 		return xLog.getRoot();
 	}
+
 
 
 }
