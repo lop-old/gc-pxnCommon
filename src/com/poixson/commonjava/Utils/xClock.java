@@ -17,7 +17,7 @@ public class xClock {
 
 	public static final String DEFAULT_TIMESERVER = "pool.ntp.org";
 	private volatile String timeserver = null;
-	private volatile boolean enableNTP = true;
+	private volatile boolean enableNTP = false;
 
 	private volatile double localOffset = 0.0;
 	private volatile double lastChecked = 0.0;
