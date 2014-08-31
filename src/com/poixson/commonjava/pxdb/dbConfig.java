@@ -9,7 +9,6 @@ import java.util.Map;
 import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.Utils.CoolDown;
 import com.poixson.commonjava.Utils.utils;
-import com.poixson.commonjava.Utils.utilsCrypt;
 import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xTime;
@@ -23,16 +22,6 @@ public class dbConfig {
 		throw new CloneNotSupportedException();
 	}
 
-	// never change this while running
-	private static volatile Boolean HASH_KEY = null;
-	private static final Object lock_HASH_KEY = new Object();
-	private static boolean get_HASH_KEY() {
-		synchronized(lock_HASH_KEY) {
-			if(HASH_KEY == null)
-				HASH_KEY = new Boolean(!xVars.get().debug());
-			return HASH_KEY.booleanValue();
-		}
-	}
 
 	private final String host;
 	private final int    port;
@@ -160,8 +149,6 @@ public class dbConfig {
 	private static String buildKey(final String host, final int port, final String db, final String user) {
 		final String userStr = utils.isEmpty(user) ? null : user+"@";
 		final String key = utilsString.addStrings(null, "mysql://", userStr, host, ":", Integer.toString(port), "/", db);
-		if(get_HASH_KEY() && user != null)
-			return utilsCrypt.MD5(key);
 		return key;
 	}
 
