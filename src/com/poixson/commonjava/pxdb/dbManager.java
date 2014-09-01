@@ -7,6 +7,9 @@ import com.poixson.commonjava.xLogger.xLog;
 
 
 public final class dbManager {
+
+	// db configs
+	private static final Map<String, dbConfig> configs = new HashMap<String, dbConfig>();
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		throw new CloneNotSupportedException();
@@ -30,10 +33,23 @@ public final class dbManager {
 	}
 	private dbManager() {
 	}
+
+
+
+	// get config object
+	public static dbConfig getConfig(final String dbKey) {
+		if(utils.isEmpty(dbKey))
+			return null;
+		synchronized(configs) {
+			if(configs.containsKey(dbKey))
+				return configs.get(dbKey);
+		}
+		return null;
+	}
 	// get pool
 	public static dbPool getPool(final String dbKey) {
 		synchronized(pools) {
-			final dbConfig config = dbConfig.get(dbKey);
+			final dbConfig config = getConfig(dbKey);
 			if(config != null)
 				if(pools.containsKey(config))
 					return pools.get(config);

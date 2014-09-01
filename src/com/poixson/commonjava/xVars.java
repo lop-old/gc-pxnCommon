@@ -1,5 +1,6 @@
 package com.poixson.commonjava;
 
+import com.poixson.commonjava.pxdb.dbManager;
 
 public class xVars {
 
@@ -7,6 +8,12 @@ public class xVars {
 	// singleton instance
 	private static volatile xVars instance = null;
 	protected static final Object instanceLock = new Object();
+	// just to prevent gc
+	@SuppressWarnings("unused")
+	private final dbManager dbman;
+
+
+
 	public static xVars get() {
 		if(instance == null) {
 			synchronized(instanceLock) {
@@ -31,6 +38,8 @@ public class xVars {
 		} else {
 
 		}
+		// just to prevent gc
+		this.dbman = dbManager.get();
 	}
 
 

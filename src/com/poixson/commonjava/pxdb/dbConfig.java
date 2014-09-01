@@ -29,23 +29,12 @@ public class dbConfig {
 	private final String user;
 	private final String pass;
 
-	private static final Map<String, dbConfig> configs = new HashMap<String, dbConfig>();
 	private final String key;
 
 	private volatile Connection connection = null;
 	private volatile boolean failed = false;
 
 
-	// get config object
-	public static dbConfig get(final String dbKey) {
-		if(dbKey == null || dbKey.isEmpty())
-			return null;
-		synchronized(configs) {
-			if(configs.containsKey(dbKey))
-				return configs.get(dbKey);
-		}
-		return null;
-	}
 	public static dbConfig load(final String host, final int port, final String db, final String user, final String pass) {
 		final String hostStr = utils.isEmpty(host) ? "127.0.0.1" : host;
 		final int portInt = (port < 1 || port > 65536) ? 3306 : port;
