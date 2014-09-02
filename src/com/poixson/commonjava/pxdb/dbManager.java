@@ -16,6 +16,7 @@ public final class dbManager {
 	private static final Map<dbConfig, dbPool> pools = new HashMap<dbConfig, dbPool>();
 
 
+
 	// db manager instance
 	private static volatile dbManager manager = null;
 	private static final Object lock = new Object();
@@ -67,6 +68,7 @@ public final class dbManager {
 	}
 
 
+
 	// new db connection pool
 	// returns dbKey, used to reference connection later
 	protected static String register(final dbConfig config) {
@@ -107,6 +109,7 @@ public final class dbManager {
 	public static xLog log() {
 		return xLog.getRoot("db");
 	}
+
 
 
 }

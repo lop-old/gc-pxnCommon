@@ -46,12 +46,14 @@ public abstract class xApp implements Runnable {
 	protected volatile int initLevel = 0;
 
 
+
 	/**
 	 * Get the app class instance.
 	 */
 	public static xApp get() {
 		return appInstance;
 	}
+
 
 
 	protected static void initMain(final String[] args, final xApp app) {
@@ -76,6 +78,7 @@ public abstract class xApp implements Runnable {
 		if(xvars == null)
 			xvars = xVars.get();
 	}
+
 
 
 	/**
@@ -132,6 +135,7 @@ public abstract class xApp implements Runnable {
 			)
 		);
 	}
+
 
 
 	/**
@@ -262,6 +266,7 @@ public abstract class xApp implements Runnable {
 	}
 
 
+
 	protected abstract boolean startup(final int step);
 	protected abstract boolean shutdown(final int step);
 
@@ -270,6 +275,7 @@ public abstract class xApp implements Runnable {
 
 	public abstract String getAppName();
 	public abstract String getVersion();
+
 
 
 	/**
@@ -288,6 +294,7 @@ public abstract class xApp implements Runnable {
 	}
 
 
+
 	// start console prompt
 	protected void initConsole() {
 		xConsole console = xLog.peekConsole();
@@ -304,11 +311,13 @@ public abstract class xApp implements Runnable {
 	}
 
 
+
 	protected void termConsole() {
 		final xConsole console = xLog.peekConsole();
 		if(console != null)
 			console.stop();
 	}
+
 
 
 	// logger
@@ -323,6 +332,7 @@ public abstract class xApp implements Runnable {
 		}
 		return log;
 	}
+
 
 
 	// fail app startup
@@ -347,6 +357,7 @@ public abstract class xApp implements Runnable {
 	public static void fail() {
 		fail(null, null);
 	}
+
 
 
 }

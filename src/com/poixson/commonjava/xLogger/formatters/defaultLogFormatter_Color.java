@@ -8,6 +8,7 @@ import com.poixson.commonjava.xLogger.xLogRecord;
 public class defaultLogFormatter_Color extends defaultLogFormatter {
 
 
+
 	// level
 	@Override
 	protected String partLevel(final xLogRecord record) {
@@ -44,6 +45,7 @@ public class defaultLogFormatter_Color extends defaultLogFormatter {
 			.append("|@@|FG_BLACK,BOLD ]|@")
 			.toString();
 	}
+
 
 
 }

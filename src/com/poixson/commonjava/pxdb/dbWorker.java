@@ -13,9 +13,11 @@ public class dbWorker implements xCloseable {
 	private final String dbKey;
 	private final int id;
 	private volatile String desc = null;
+
 	private volatile Connection conn = null;
 	private volatile boolean inUse = false;
 	private final Object useLock = new Object();
+
 
 
 	protected dbWorker(final String dbKey, final Connection conn) {
@@ -27,6 +29,7 @@ public class dbWorker implements xCloseable {
 	public Object clone() throws CloneNotSupportedException {
 		throw new CloneNotSupportedException();
 	}
+
 
 
 	// get db connection
@@ -61,6 +64,7 @@ public class dbWorker implements xCloseable {
 	public boolean isClosed() {
 		return (this.conn == null);
 	}
+
 
 
 	// in-use lock
@@ -110,6 +114,7 @@ public class dbWorker implements xCloseable {
 	}
 
 
+
 	// connection id
 	private static volatile int nextId = 0;
 	private static final Object nextLock = new Object();
@@ -123,10 +128,12 @@ public class dbWorker implements xCloseable {
 	}
 
 
+
 	// logger
 	public static xLog log() {
 		return dbManager.log();
 	}
+
 
 
 }

@@ -23,12 +23,6 @@ public class xVars {
 		}
 		return instance;
 	}
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		throw new CloneNotSupportedException();
-	}
-
-
 	// new instance of holder
 	protected xVars() {
 		// clone vars
@@ -36,11 +30,15 @@ public class xVars {
 			this.debug = instance.debug;
 		// new instance
 		} else {
-
 		}
 		// just to prevent gc
 		this.dbman = dbManager.get();
 	}
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		throw new CloneNotSupportedException();
+	}
+
 
 
 	// debug mode
@@ -54,6 +52,7 @@ public class xVars {
 	public void debug(final boolean value) {
 		this.debug = new Boolean(value);
 	}
+
 
 
 }

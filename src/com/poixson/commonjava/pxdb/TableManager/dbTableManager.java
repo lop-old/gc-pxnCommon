@@ -8,15 +8,18 @@ import com.poixson.commonjava.xLogger.xLog;
 public abstract class dbTableManager {
 
 
+
 	public abstract void InitTables();
 	protected abstract dbQuery getDB();
 	protected abstract String getTablePrefix();
+
 
 
 	// define new table
 	protected TableDAO defineTable(String tableName) {
 		return new TableDAO(tableName);
 	}
+
 
 
 	// check table exists
@@ -54,10 +57,12 @@ public abstract class dbTableManager {
 	}
 
 
+
 	// logger
 	public static xLog log() {
 		return dbManager.log();
 	}
+
 
 
 }

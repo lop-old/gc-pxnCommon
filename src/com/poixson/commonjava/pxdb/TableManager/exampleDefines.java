@@ -8,6 +8,7 @@ public class exampleDefines extends dbTableManager {
 	private static final String TABLE_PREFIX = "pxn_";
 
 
+
 	@Override
 	public void InitTables() {
 		// Example table
@@ -24,16 +25,19 @@ public class exampleDefines extends dbTableManager {
 	}
 
 
+
 	@Override
 	protected dbQuery getDB() {
 		return null;
 	}
 
 
+
 	@Override
 	protected String getTablePrefix() {
 		return TABLE_PREFIX;
 	}
+
 
 
 }

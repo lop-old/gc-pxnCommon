@@ -151,6 +151,7 @@ public class dbConfig {
 	}
 
 
+
 	@Override
 	public boolean equals(final Object obj) {
 		if(obj == null)
@@ -184,10 +185,12 @@ public class dbConfig {
 	}
 
 
+
 	// logger
 	public static xLog log() {
 		return dbManager.log();
 	}
+
 
 
 }

@@ -26,6 +26,7 @@ public class dbPool {
 	private final dbPoolSize poolSize;
 
 
+
 	protected dbPool(final dbConfig config) {
 		if(config == null) throw new NullPointerException("config object cannot be null");
 		this.config = config;
@@ -37,10 +38,12 @@ public class dbPool {
 	}
 
 
+
 	// pool size
 	public int getWorkerCount() {
 		return this.workers.size();
 	}
+
 
 
 	// get db key
@@ -48,6 +51,7 @@ public class dbPool {
 		if(this.config == null) throw new NullPointerException("config object cannot be null");
 		return this.config.dbKey();
 	}
+
 
 
 	// pool is connected
@@ -72,6 +76,7 @@ public class dbPool {
 		}
 		return false;
 	}
+
 
 
 	// get unused worker
@@ -171,10 +176,12 @@ public class dbPool {
 	}
 
 
+
 	// logger
 	public static xLog log() {
 		return dbManager.log();
 	}
+
 
 
 }

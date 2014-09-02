@@ -22,12 +22,14 @@ public class dbPoolSize extends Thread {
 	private final Object lock = new Object();
 
 
+
 	// hard/soft pool size limits
 	protected dbPoolSize(final dbPool pool) {
 		if(pool == null) throw new NullPointerException("pool cannot be null");
 		this.pool = pool;
 		this.setName(pool.dbKey()+" Warning Thread");
 	}
+
 
 
 	// pool size warnings
@@ -82,6 +84,7 @@ public class dbPoolSize extends Thread {
 	}
 
 
+
 	// warning messages (with cooldown)
 	private final CoolDown coolSoftLimit = CoolDown.get("10s");
 	protected void SoftLimitWarningMessage() {
@@ -101,6 +104,7 @@ public class dbPoolSize extends Thread {
 	}
 
 
+
 	// set hard/soft limits
 	public void setSoft(final int limit) {
 		this.SOFT = utilsMath.MinMax(limit, 1, 1000);
@@ -117,16 +121,19 @@ public class dbPoolSize extends Thread {
 	}
 
 
+
 	// db connections count
 	public int getWorkerCount() {
 		return this.pool.getWorkerCount();
 	}
 
 
+
 	// logger
 	public static xLog log() {
 		return dbManager.log();
 	}
+
 
 
 }

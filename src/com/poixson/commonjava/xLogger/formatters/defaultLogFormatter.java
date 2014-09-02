@@ -10,6 +10,7 @@ import com.poixson.commonjava.xLogger.xLogRecord;
 public class defaultLogFormatter implements xLogFormatter {
 
 
+
 	@Override
 	public String formatMsg(final xLogRecord record) {
 		if(record == null) throw new NullPointerException();
@@ -24,6 +25,7 @@ public class defaultLogFormatter implements xLogFormatter {
 		parts[3] = partMessage(record);
 		return utilsString.addArray(" ", parts);
 	}
+
 
 
 	// timestamp
@@ -62,6 +64,7 @@ public class defaultLogFormatter implements xLogFormatter {
 	protected String partMessage(final xLogRecord record) {
 		return record.msg();
 	}
+
 
 
 }

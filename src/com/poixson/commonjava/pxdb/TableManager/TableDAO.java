@@ -17,10 +17,12 @@ public class TableDAO {
 	public final List<String>   unique = new ArrayList<String>();
 
 
+
 	// table dao
 	public TableDAO(String tableName) {
 		this.tableName = utilsSan.AlphaNumSafe(tableName);
 	}
+
 
 
 	// set id field
@@ -35,6 +37,7 @@ public class TableDAO {
 	}
 
 
+
 	// add field to table
 	public TableDAO addField(String type, String name, String size, String def, boolean nullable) {
 		this.fields.add(
@@ -44,10 +47,12 @@ public class TableDAO {
 	}
 
 
+
 	public TableDAO unique(String fieldName) {
 		this.unique.add(fieldName);
 		return this;
 	}
+
 
 
 	// CREATE TABLE name ( fields ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1
@@ -87,6 +92,7 @@ public class TableDAO {
 		}
 		return sql.toString();
 	}
+
 
 
 }

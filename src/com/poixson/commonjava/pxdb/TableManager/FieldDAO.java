@@ -13,6 +13,7 @@ public class FieldDAO {
 	public final boolean nullable;
 
 
+
 	// field dao
 	public FieldDAO(String fieldType, String fieldName, String size, String def, boolean nullable) {
 		this.type = fieldType;
@@ -21,6 +22,7 @@ public class FieldDAO {
 		this.def  = def;
 		this.nullable = nullable;
 	}
+
 
 
 	// id field
@@ -81,6 +83,7 @@ public class FieldDAO {
 		}
 		return sql.toString();
 	}
+
 
 
 }

@@ -18,6 +18,7 @@ import com.poixson.commonjava.xLogger.handlers.logHandlerConsole;
 public class xLog extends xLogPrinting {
 
 
+
 // minimal
 /*
 	// logger
@@ -30,6 +31,8 @@ public class xLog extends xLogPrinting {
 		return xApp.log();
 	}
 */
+
+
 
 // local caching
 /*
@@ -51,6 +54,8 @@ public class xLog extends xLogPrinting {
 		}
 	}
 */
+
+
 
 // full with local caching
 /*
@@ -77,6 +82,7 @@ public class xLog extends xLogPrinting {
 */
 
 
+
 	// root logger
 	protected static volatile xLog root = null;
 	protected static final Object lock = new Object();
@@ -89,6 +95,7 @@ public class xLog extends xLogPrinting {
 	private final Map<String, xLog> loggers = new ConcurrentHashMap<String, xLog>();
 	// handlers
 	private final List<xLogHandler> handlers = new CopyOnWriteArrayList<xLogHandler>();
+
 
 
 	// default logger initializer
@@ -109,6 +116,7 @@ public class xLog extends xLogPrinting {
 		handler.setFormatter(new defaultLogFormatter());
 		root.addHandler(handler);
 	}
+
 
 
 	// get root logger
@@ -157,6 +165,7 @@ public class xLog extends xLogPrinting {
 	}
 
 
+
 	// new logger instance
 	protected xLog(final String logName, final xLog parentLogger) {
 		if(utils.isEmpty(logName) && parentLogger != null)
@@ -166,11 +175,13 @@ public class xLog extends xLogPrinting {
 	}
 
 
+
 	// is root logger
 	@Override
 	public boolean isRoot() {
 		return (this.parent == null);
 	}
+
 
 
 	// log level
@@ -207,6 +218,7 @@ public class xLog extends xLogPrinting {
 	}
 
 
+
 	// formatter
 	public void setFormatter(final xLogFormatter formatter, final Class<?> type) {
 		if(formatter == null) throw new NullPointerException("formatter cannot be null");
@@ -215,6 +227,7 @@ public class xLog extends xLogPrinting {
 			if(handler.getClass().equals(type))
 				handler.setFormatter(formatter);
 	}
+
 
 
 	// [logger] [crumbs]
@@ -234,6 +247,7 @@ public class xLog extends xLogPrinting {
 		log.buildNameTree(list);
 		return list;
 	}
+
 
 
 	// log handlers
@@ -269,7 +283,9 @@ public class xLog extends xLogPrinting {
 	}
 
 
+
 	// ### console handler
+
 
 
 	private static volatile xConsole consoleHandler = null;
@@ -308,6 +324,7 @@ public class xLog extends xLogPrinting {
 			((jlineConsole) consoleHandler).setCommandHandler(handler);
 		}
 	}
+
 
 
 }

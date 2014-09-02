@@ -32,6 +32,7 @@ public class dbQuery {
 	private static final String ARG_POST  = "]";
 
 
+
 	// new query
 	public static dbQuery get(final String dbKey) {
 		final dbWorker worker = dbManager.getWorkerLock(dbKey);
@@ -45,6 +46,7 @@ public class dbQuery {
 		this.worker = worker;
 		this.tablePrefix = worker.getTablePrefix();
 	}
+
 
 
 	// prepared query
@@ -183,6 +185,7 @@ public class dbQuery {
 	}
 
 
+
 	// get db key
 	public String dbKey() {
 		if(this.worker == null)
@@ -228,10 +231,12 @@ public class dbQuery {
 	}
 
 
+
 	// san string for sql
 	public static String san(final String text) {
 		return utilsSan.AlphaNumSafe(text);
 	}
+
 
 
 	// has next row
@@ -246,6 +251,7 @@ public class dbQuery {
 		}
 		return false;
 	}
+
 
 
 	public ResultSet getResultSet() {
@@ -264,6 +270,7 @@ public class dbQuery {
 	public int getInsertId() {
 		return getResultInt();
 	}
+
 
 
 	// query parameters
@@ -510,10 +517,12 @@ public class dbQuery {
 	}
 
 
+
 	// logger
 	public static xLog log() {
 		return dbManager.log();
 	}
+
 
 
 }
