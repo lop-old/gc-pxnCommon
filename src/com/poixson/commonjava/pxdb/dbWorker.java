@@ -34,6 +34,13 @@ public class dbWorker {
 	public String dbKey() {
 		return this.dbKey;
 	}
+	public String getTablePrefix() {
+		final dbConfig config = dbManager.getConfig(this.dbKey);
+		if(config == null)
+			return null;
+		return config.getTablePrefix();
+	}
+
 
 
 	// close connection

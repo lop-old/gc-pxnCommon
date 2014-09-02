@@ -43,11 +43,9 @@ public class dbPool {
 
 
 	// get db key
-	public String getKey() {
-		//if(config == null)
-		//	return null;
+	public String dbKey() {
 		if(this.config == null) throw new NullPointerException("config object cannot be null");
-		return this.config.getKey();
+		return this.config.dbKey();
 	}
 
 

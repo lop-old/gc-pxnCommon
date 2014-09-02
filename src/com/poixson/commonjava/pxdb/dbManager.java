@@ -79,7 +79,7 @@ public final class dbManager {
 			}
 		}
 		// unique key for this pool
-		return config.getKey();
+		return config.dbKey();
 	}
 
 

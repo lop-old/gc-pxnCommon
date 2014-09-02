@@ -15,6 +15,7 @@ import com.poixson.commonjava.xLogger.xLog;
 public class dbQuery {
 
 	protected final dbWorker worker;
+	protected final String tablePrefix;
 	protected volatile PreparedStatement st = null;
 	protected volatile ResultSet rs = null;
 	protected volatile String sql = null;
@@ -41,6 +42,7 @@ public class dbQuery {
 	public dbQuery(final dbWorker worker) {
 		if(worker == null) throw new NullPointerException("worker cannot be null");
 		this.worker = worker;
+		this.tablePrefix = worker.getTablePrefix();
 	}
 
 
@@ -55,7 +57,10 @@ public class dbQuery {
 				return null;
 			}
 			clean();
-			this.sql = sqlStr;
+			this.sql = sql.replace(
+				"_table_",
+				(this.tablePrefix == null ? "" : this.tablePrefix)
+			);
 			try {
 				this.st = this.worker.getConnection().prepareStatement(this.sql);
 				this.paramCount = this.st.getParameterMetaData().getParameterCount();
@@ -183,6 +188,11 @@ public class dbQuery {
 			return null;
 		return this.worker.dbKey();
 	}
+//	// table prefix
+//	public String getTablePrefix() {
+//		return this.tablePrefix;
+//	}
+
 
 
 	// clean vars

@@ -28,6 +28,7 @@ public class dbConfig {
 	private final String db;
 	private final String user;
 	private final String pass;
+	private final String prefix;
 
 	private final String key;
 
@@ -61,6 +62,7 @@ public class dbConfig {
 		this.db   = db;
 		this.user = user;
 		this.pass = pass;
+		this.prefix = prefix;
 		this.key = buildKey(host, port, db, user);
 	}
 
@@ -149,15 +151,27 @@ public class dbConfig {
 		if(this.key == null || this.key.isEmpty())
 			return false;
 		return this.key.equals(
-			((dbConfig) obj).getKey()
+			((dbConfig) obj).dbKey()
 		);
+	}
+
+
+
+	public String dbKey() {
+		return this.key;
 	}
 	@Override
 	public String toString() {
-		return getKey();
+		return dbKey();
 	}
-	public String getKey() {
-		return this.key;
+
+
+
+	// get table prefix
+	public String getTablePrefix() {
+		if(utils.isEmpty(this.prefix))
+			return "";
+		return this.prefix;
 	}
 
 

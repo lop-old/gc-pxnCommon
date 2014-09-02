@@ -26,7 +26,7 @@ public class dbPoolSize extends Thread {
 	protected dbPoolSize(dbPool pool) {
 		if(pool == null) throw new NullPointerException("pool cannot be null");
 		this.pool = pool;
-		this.setName(pool.getKey()+" Warning Thread");
+		this.setName(pool.dbKey()+" Warning Thread");
 	}
 
 
@@ -89,7 +89,7 @@ public class dbPoolSize extends Thread {
 		if(count <= this.SOFT) return;
 		// don't spam/flood console
 		if(this.coolSoftLimit.runAgain())
-			log().warning("DB connection pool nearing limit! [ "+Integer.toString(count)+" max: "+Integer.toString(this.HARD)+" ] "+this.pool.getKey());
+			log().warning("DB connection pool nearing limit! [ "+Integer.toString(count)+" max: "+Integer.toString(this.HARD)+" ] "+this.pool.dbKey());
 	}
 	private final CoolDown coolHardLimit = CoolDown.get("2s");
 	protected void HardLimitWarningMessage() {
@@ -97,7 +97,7 @@ public class dbPoolSize extends Thread {
 		if(count < this.HARD) return;
 		// don't spam/flood console
 		if(this.coolHardLimit.runAgain())
-			log().severe("DB connection pool HARD LIMIT REACHED!! [ "+Integer.toString(count)+" max: "+Integer.toString(this.HARD)+" ] "+this.pool.getKey());
+			log().severe("DB connection pool HARD LIMIT REACHED!! [ "+Integer.toString(count)+" max: "+Integer.toString(this.HARD)+" ] "+this.pool.dbKey());
 	}
 
 
