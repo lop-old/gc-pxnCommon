@@ -118,6 +118,7 @@ public class dbQuery {
 //				getLog().debug("query", this.sql+(args.isEmpty() ? "" : "  ["+args+" ]") );
 			try {
 				// log query
+				this.worker.logDesc();
 				if(log().isLoggable(xLevel.FINEST)) {
 					// replace ? with values
 					log().finest(
@@ -168,6 +169,12 @@ public class dbQuery {
 			this.clean();
 		}
 		return false;
+	}
+
+
+
+	public void desc(final String desc) {
+		this.worker.desc(desc);
 	}
 
 

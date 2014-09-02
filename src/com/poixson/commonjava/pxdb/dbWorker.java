@@ -15,6 +15,7 @@ public class dbWorker implements xCloseable {
 
 	private final String dbKey;
 	private final int id;
+	private volatile String desc = null;
 	private volatile Connection conn = null;
 	private volatile boolean inUse = false;
 	private final Object useLock = new Object();
@@ -78,6 +79,19 @@ public class dbWorker implements xCloseable {
 	public void free() {
 		log().finest("Released #"+Integer.toString(this.id));
 		this.inUse = false;
+	}
+
+
+
+	// query description
+	public void desc(final String desc) {
+		this.desc = desc;
+	}
+	public void logDesc() {
+		if(utils.isEmpty(this.desc))
+			return;
+		log().fine("Query: "+this.desc);
+		this.desc = null;
 	}
 
 
