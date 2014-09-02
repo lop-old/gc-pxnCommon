@@ -55,7 +55,7 @@ public class dbPool {
 		final dbWorker worker = getExisting();
 		if(worker == null)
 			return false;
-		worker.release();
+		worker.free();
 		return true;
 	}
 	// ping the db server
@@ -67,7 +67,7 @@ public class dbPool {
 			return worker.getConnection().isValid(1);
 		} catch (SQLException ignore) {
 		} finally {
-			worker.release();
+			worker.free();
 		}
 		return false;
 	}
@@ -121,7 +121,7 @@ public class dbPool {
 			while(it.hasNext()) {
 				final dbWorker worker = it.next();
 				// errored or disconnected
-				if(worker == null || worker.hasClosed()) {
+				if(worker == null || worker.isClosed()) {
 					if(worker != null) {
 						log().warning("Connection [ "+Integer.toString(worker.getId())+" ] dropped");
 						worker.close();

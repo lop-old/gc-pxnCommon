@@ -3,10 +3,11 @@ package com.poixson.commonjava.pxdb;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import com.poixson.commonjava.Utils.xCloseable;
 import com.poixson.commonjava.xLogger.xLog;
 
 
-public class dbWorker {
+public class dbWorker implements xCloseable {
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		throw new CloneNotSupportedException();
@@ -44,6 +45,7 @@ public class dbWorker {
 
 
 	// close connection
+	@Override
 	public void close() {
 		if(this.conn != null) {
 			try {
@@ -53,7 +55,8 @@ public class dbWorker {
 		this.conn = null;
 	}
 	// has errored / disconnected
-	public boolean hasClosed() {
+	@Override
+	public boolean isClosed() {
 		return (this.conn == null);
 	}
 
@@ -69,12 +72,12 @@ public class dbWorker {
 				return false;
 			this.inUse = true;
 		}
-		log().finest("LOCKED "+this.id);
+		log().finest("Locked #"+Integer.toString(this.id));
 		return true;
 	}
-	public void release() {
+	public void free() {
+		log().finest("Released #"+Integer.toString(this.id));
 		this.inUse = false;
-		log().finest("RELEASED "+this.id);
 	}
 
 

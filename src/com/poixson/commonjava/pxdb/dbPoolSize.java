@@ -62,7 +62,7 @@ public class dbPoolSize extends Thread {
 			count = getWorkerCount();
 			if(count <= this.SOFT) {
 				if(worker != null)
-					worker.release();
+					worker.free();
 				break;
 			}
 			// try closing a worker

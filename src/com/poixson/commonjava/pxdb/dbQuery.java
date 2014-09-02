@@ -217,9 +217,9 @@ public class dbQuery {
 			this.resultInt = -1;
 		}
 	}
-	public void release() {
+	public void free() {
 		clean();
-		this.worker.release();
+		this.worker.free();
 	}
 	public void close() {
 		clean();
@@ -234,7 +234,7 @@ public class dbQuery {
 
 
 	// has next row
-	public boolean next() {
+	public boolean hasNext() {
 		synchronized(this.lock) {
 			if(this.rs == null) return false;
 			try {
@@ -245,6 +245,12 @@ public class dbQuery {
 		}
 		return false;
 	}
+
+
+	public ResultSet getResultSet() {
+		return this.rs;
+	}
+
 
 
 	// result count
