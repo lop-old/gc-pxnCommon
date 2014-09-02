@@ -45,7 +45,7 @@ public class dbQuery {
 
 
 	// prepared query
-	public dbQuery prepare(final String sqlStr) {
+	public dbQuery Prepare(final String sql) throws SQLException {
 		if(sqlStr == null || sqlStr.isEmpty()) throw new IllegalArgumentException("sql cannot be empty!");
 		synchronized(this.lock) {
 			if(!this.worker.inUse()) {
@@ -73,15 +73,22 @@ public class dbQuery {
 		}
 		return this;
 	}
+	public boolean Prep(final String sql) {
+		if(utils.isEmpty(sql)) throw new IllegalArgumentException("sql cannot be empty");
+		try {
+			if(this.Prepare(sql) != null)
+				return true;
+		} catch (SQLException e) {
+			log().trace(e);
+		}
+		this.clean();
+		return false;
+	}
+
 
 
 	// execute query
-	public boolean exec(final String sqlStr) {
-		if(sqlStr != null && !sqlStr.isEmpty())
-			prepare(sqlStr);
-		return exec();
-	}
-	public boolean exec() {
+	public boolean Execute() throws SQLException {
 		synchronized(this.lock) {
 			if(!this.worker.inUse()) {
 				log().trace(
@@ -123,13 +130,41 @@ public class dbQuery {
 				close();
 				return false;
 			} catch (SQLException e) {
-				log().trace(e);
 				clean();
-				return false;
+				throw e;
 			}
 		}
 		return true;
 	}
+	public boolean Execute(final String sql) throws SQLException {
+		if(utils.isEmpty(sql))
+			return false;
+		if(Prepare(sql) == null)
+			return false;
+		return Execute();
+	}
+
+
+
+	public boolean Exec() {
+		try {
+			return this.Execute();
+		} catch (SQLException e) {
+			log().trace(e);
+			this.clean();
+		}
+		return false;
+	}
+	public boolean Exec(final String sql) {
+		try {
+			return this.Execute(sql);
+		} catch (SQLException e) {
+			log().trace(e);
+			this.clean();
+		}
+		return false;
+	}
+
 
 
 	// set quiet mode
