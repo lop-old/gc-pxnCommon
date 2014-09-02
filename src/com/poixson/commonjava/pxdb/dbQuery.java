@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLNonTransientConnectionException;
 
+import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsMath;
 import com.poixson.commonjava.Utils.utilsSan;
 import com.poixson.commonjava.Utils.utilsString;
@@ -25,7 +26,7 @@ public class dbQuery {
 
 	// args
 	protected volatile int paramCount = 0;
-	protected volatile String[] args;
+	protected volatile String[] args = null;
 	private static final String ARG_PRE   = "[";
 	private static final String ARG_DELIM = "|";
 	private static final String ARG_POST  = "]";
@@ -38,7 +39,7 @@ public class dbQuery {
 			return null;
 		return new dbQuery(worker);
 	}
-	// new query (must have lock already)
+	// new query (must already have lock)
 	public dbQuery(final dbWorker worker) {
 		if(worker == null) throw new NullPointerException("worker cannot be null");
 		this.worker = worker;
@@ -48,31 +49,26 @@ public class dbQuery {
 
 	// prepared query
 	public dbQuery Prepare(final String sql) throws SQLException {
-		if(sqlStr == null || sqlStr.isEmpty()) throw new IllegalArgumentException("sql cannot be empty!");
+		if(utils.isEmpty(sql)) throw new IllegalArgumentException("sql cannot be empty");
 		synchronized(this.lock) {
 			if(!this.worker.inUse()) {
-				log().trace(
-					new IllegalAccessException("dbWorker not locked!")
-				);
+				log().trace(new IllegalAccessException("dbWorker not locked!"));
 				return null;
 			}
-			clean();
+			this.clean();
 			this.sql = sql.replace(
 				"_table_",
 				(this.tablePrefix == null ? "" : this.tablePrefix)
 			);
 			try {
+				// prepared statement
 				this.st = this.worker.getConnection().prepareStatement(this.sql);
+				// parameters for debugging
 				this.paramCount = this.st.getParameterMetaData().getParameterCount();
-				if(this.paramCount > 0)
-					this.args = new String[this.paramCount];
-			} catch (SQLNonTransientConnectionException | NullPointerException e) {
+				this.args = new String[this.paramCount];
+			} catch (SQLNonTransientConnectionException | NullPointerException ignore) {
 				log().severe("db connection closed!");
-				close();
-				return null;
-			} catch (SQLException e) {
-				log().trace(e);
-				clean();
+				this.close();
 				return null;
 			}
 		}
@@ -96,23 +92,21 @@ public class dbQuery {
 	public boolean Execute() throws SQLException {
 		synchronized(this.lock) {
 			if(!this.worker.inUse()) {
-				log().trace(
-					new IllegalAccessException("dbWorker not locked!")
-				);
+				log().trace(new IllegalAccessException("dbWorker not locked!"));
 				return false;
 			}
 			if(this.st == null) return false;
-			if(this.sql == null || this.sql.isEmpty()) return false;
-			String sqlStr = this.sql;
-			while(sqlStr.startsWith(" "))
-				sqlStr = sqlStr.substring(1);
-			if(sqlStr.isEmpty()) return false;
+			if(utils.isEmpty(this.sql)) return false;
+			String str = this.sql;
+			while(str.startsWith(" "))
+				str = str.substring(1);
+			if(str.isEmpty()) return false;
 			final String queryType;
 			{
-				final int pos = sqlStr.indexOf(" ");
+				final int pos = str.indexOf(" ");
 				queryType = (pos == -1) ?
-						sqlStr.toUpperCase() :
-						sqlStr.substring(0, pos).toUpperCase();
+						str.toUpperCase() :
+						str.substring(0, pos).toUpperCase();
 			}
 //			if(!quiet)
 //				getLog().debug("query", this.sql+(args.isEmpty() ? "" : "  ["+args+" ]") );
@@ -123,7 +117,7 @@ public class dbQuery {
 					// replace ? with values
 					log().finest(
 						"("+Integer.toString(this.worker.getId())+") QUERY: "+
-						utilsString.replaceWith("?", this.args, sqlStr)
+						utilsString.replaceWith("?", this.args, str)
 					);
 				}
 				// execute query
@@ -133,10 +127,10 @@ public class dbQuery {
 					this.rs = this.st.executeQuery();
 			} catch (SQLNonTransientConnectionException e) {
 				log().severe("db connection closed!");
-				close();
+				this.close();
 				return false;
 			} catch (SQLException e) {
-				clean();
+				this.clean();
 				throw e;
 			}
 		}
@@ -181,7 +175,7 @@ public class dbQuery {
 
 	// set quiet mode
 	public boolean quiet() {
-		return quiet(true);
+		return this.quiet(true);
 	}
 	public boolean quiet(final boolean setQuiet) {
 		this.quiet = setQuiet;
@@ -225,11 +219,11 @@ public class dbQuery {
 		}
 	}
 	public void free() {
-		clean();
+		this.clean();
 		this.worker.free();
 	}
 	public void close() {
-		clean();
+		this.clean();
 		this.worker.close();
 	}
 
@@ -261,14 +255,14 @@ public class dbQuery {
 
 
 	// result count
+	public int getResultInt() {
+		return this.resultInt;
+	}
 	public int getAffectedRows() {
 		return getResultInt();
 	}
 	public int getInsertId() {
 		return getResultInt();
-	}
-	public int getResultInt() {
-		return this.resultInt;
 	}
 
 
@@ -282,7 +276,7 @@ public class dbQuery {
 					this.args[index-1] = ARG_PRE+"str"+ARG_DELIM+value+ARG_POST;
 			} catch (SQLException e) {
 				log().trace(e);
-				clean();
+				this.clean();
 				return null;
 			}
 		}
@@ -298,7 +292,7 @@ public class dbQuery {
 					this.args[index-1] = ARG_PRE+"int"+ARG_DELIM+Integer.toString(value)+ARG_POST;
 			} catch (SQLException e) {
 				log().trace(e);
-				clean();
+				this.clean();
 				return null;
 			}
 		}
@@ -314,7 +308,7 @@ public class dbQuery {
 					this.args[index-1] = ARG_PRE+"lng"+ARG_DELIM+Long.toString(value)+ARG_POST;
 			} catch (SQLException e) {
 				log().trace(e);
-				clean();
+				this.clean();
 				return null;
 			}
 		}
@@ -322,7 +316,7 @@ public class dbQuery {
 	}
 	// set decimal
 	public dbQuery setDecimal(final int index, final double value) {
-		if(setDouble(index, value) == null)
+		if(this.setDouble(index, value) == null)
 			return null;
 		if(this.paramCount > 0)
 			this.args[index-1] = ARG_PRE+"dec"+ARG_DELIM+Double.toString(value)+ARG_POST;
@@ -338,7 +332,7 @@ public class dbQuery {
 					this.args[index-1] = ARG_PRE+"dbl"+ARG_DELIM+Double.toString(value)+ARG_POST;
 			} catch (SQLException e) {
 				log().trace(e);
-				clean();
+				this.clean();
 				return null;
 			}
 		}
@@ -354,7 +348,7 @@ public class dbQuery {
 					this.args[index-1] = ARG_PRE+"flt"+ARG_DELIM+Float.toString(value)+ARG_POST;
 			} catch (SQLException e) {
 				log().trace(e);
-				clean();
+				this.clean();
 				return null;
 			}
 		}
@@ -370,7 +364,7 @@ public class dbQuery {
 					this.args[index-1] = ARG_PRE+"bool"+ARG_DELIM+(value ? "True" : "False")+ARG_POST;
 			} catch (SQLException e) {
 				log().trace(e);
-				clean();
+				this.clean();
 				return null;
 			}
 		}
@@ -479,6 +473,7 @@ public class dbQuery {
 		}
 		return null;
 	}
+
 	public boolean getBool(final String label) throws SQLException {
 		synchronized(this.lock) {
 			return this.rs.getBoolean(label);
@@ -486,26 +481,31 @@ public class dbQuery {
 	}
 
 
-	// lock table
-	public boolean lockTable(final String tableName) {
-		return lockTable(tableName, false);
-	}
+	// lock table (readable/unreadable)
 	public boolean lockTable(final String tableName, final boolean readable) {
-		if(tableName == null || tableName.isEmpty()) throw new NullPointerException("tableName cannot be null");
+		if(utils.isEmpty(tableName)) throw new NullPointerException("tableName cannot be null");
 		synchronized(this.lock) {
 			final StringBuilder str = (new StringBuilder())
 				.append("LOCK TABLES `").append(tableName).append("` ")
 				.append(readable ? "READ" : "WRITE")
 				.append(" /* lock table */");
-			prepare(str.toString());
-			return exec();
+			if(!Prep(str.toString()) || !Exec()) {
+				log().severe("Failed to lock table "+tableName);
+				return false;
+			}
 		}
+		return true;
+	}
+	// lock table (unreadable)
+	public boolean lockTable(final String tableName) {
+		return this.lockTable(tableName, false);
 	}
 	// unlock table
 	public void unlockTables() {
 		synchronized(this.lock) {
-			prepare("UNLOCK TABLES /* unlock table */");
-			exec();
+			final String sql = "UNLOCK TABLES /* unlock table */";
+			if(!Prep(sql) || !Exec())
+				log().severe("Failed to unlock tables");
 		}
 	}
 

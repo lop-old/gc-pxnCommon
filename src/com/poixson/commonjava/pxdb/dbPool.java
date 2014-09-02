@@ -30,9 +30,10 @@ public class dbPool {
 		if(config == null) throw new NullPointerException("config object cannot be null");
 		this.config = config;
 		this.poolSize = new dbPoolSize(this);
-		// force first connect
-		getWorkerLock()
-			.release();
+// handled in dbManager::register()
+//		// force first connect
+//		getWorkerLock()
+//			.free();
 	}
 
 
@@ -106,8 +107,9 @@ public class dbPool {
 				}
 				// new worker/connection
 				worker = newWorker();
-				if(worker != null)
-					return worker;
+				if(worker == null)
+					return null;
+				return worker;
 			}
 		}
 		return worker;
@@ -143,8 +145,7 @@ public class dbPool {
 		}
 	}
 	// new worker/connection
-	private final CoolDown coolFail = CoolDown.get("2s");
-	@SuppressWarnings("resource")
+//	private final CoolDown coolFail = CoolDown.get("2s");
 	private dbWorker newWorker() {
 		// hard limit reached
 		if(getWorkerCount() >= this.poolSize.getHard())
@@ -152,19 +153,21 @@ public class dbPool {
 		// connect to db
 		final Connection conn = this.config.getConnection();
 		// failed to connect
-		if(conn == null) {
-			if(this.coolFail.runAgain())
-				log().severe("Failed to connect to database! "+this.config.getKey());
+//		if(conn == null) {
+//			if(this.coolFail.runAgain())
+//				log().severe("Failed to connect to database! "+this.config.dbKey());
+//			return null;
+//		}
+		if(conn == null)
 			return null;
-		}
 		// successful connection
-		final dbWorker worker = new dbWorker(this.config.getKey(), conn);
+		final dbWorker worker = new dbWorker(this.config.dbKey(), conn);
 		synchronized(this.workers) {
 			this.workers.add(worker);
 			if(!worker.getLock())
-				return worker;
+				return null;
 		}
-		return null;
+		return worker;
 	}
 
 

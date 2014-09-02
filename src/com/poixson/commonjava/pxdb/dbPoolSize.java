@@ -23,7 +23,7 @@ public class dbPoolSize extends Thread {
 
 
 	// hard/soft pool size limits
-	protected dbPoolSize(dbPool pool) {
+	protected dbPoolSize(final dbPool pool) {
 		if(pool == null) throw new NullPointerException("pool cannot be null");
 		this.pool = pool;
 		this.setName(pool.dbKey()+" Warning Thread");
@@ -57,7 +57,7 @@ public class dbPoolSize extends Thread {
 		int count = getWorkerCount();
 		while(count > this.SOFT) {
 			// try to close unused
-			dbWorker worker = this.pool.getExisting();
+			final dbWorker worker = this.pool.getExisting();
 			// check again after dropping closed workers
 			count = getWorkerCount();
 			if(count <= this.SOFT) {
@@ -85,7 +85,7 @@ public class dbPoolSize extends Thread {
 	// warning messages (with cooldown)
 	private final CoolDown coolSoftLimit = CoolDown.get("10s");
 	protected void SoftLimitWarningMessage() {
-		int count = getWorkerCount();
+		final int count = getWorkerCount();
 		if(count <= this.SOFT) return;
 		// don't spam/flood console
 		if(this.coolSoftLimit.runAgain())
@@ -93,7 +93,7 @@ public class dbPoolSize extends Thread {
 	}
 	private final CoolDown coolHardLimit = CoolDown.get("2s");
 	protected void HardLimitWarningMessage() {
-		int count = getWorkerCount();
+		final int count = getWorkerCount();
 		if(count < this.HARD) return;
 		// don't spam/flood console
 		if(this.coolHardLimit.runAgain())
@@ -102,10 +102,10 @@ public class dbPoolSize extends Thread {
 
 
 	// set hard/soft limits
-	public void setSoft(int limit) {
+	public void setSoft(final int limit) {
 		this.SOFT = utilsMath.MinMax(limit, 1, 1000);
 	}
-	public void setHard(int limit) {
+	public void setHard(final int limit) {
 		this.HARD = utilsMath.MinMax(limit, 1, 1000);
 	}
 	//get hard/soft limits

@@ -3,15 +3,12 @@ package com.poixson.commonjava.pxdb;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.xCloseable;
 import com.poixson.commonjava.xLogger.xLog;
 
 
 public class dbWorker implements xCloseable {
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		throw new CloneNotSupportedException();
-	}
 
 	private final String dbKey;
 	private final int id;
@@ -21,10 +18,14 @@ public class dbWorker implements xCloseable {
 	private final Object useLock = new Object();
 
 
-	protected dbWorker(String dbKey, Connection conn) {
+	protected dbWorker(final String dbKey, final Connection conn) {
 		this.dbKey = dbKey;
 		this.conn = conn;
 		this.id = getNextId();
+	}
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		throw new CloneNotSupportedException();
 	}
 
 
@@ -67,9 +68,10 @@ public class dbWorker implements xCloseable {
 		return this.inUse;
 	}
 	public boolean getLock() {
-		if(this.inUse == true) return false;
+		if(this.inUse)
+			return false;
 		synchronized(this.useLock) {
-			if(this.inUse == true)
+			if(this.inUse)
 				return false;
 			this.inUse = true;
 		}
@@ -77,9 +79,22 @@ public class dbWorker implements xCloseable {
 		return true;
 	}
 	public void free() {
+		if(utils.notEmpty(this.desc))
+			this.logDesc();
 		log().finest("Released #"+Integer.toString(this.id));
 		this.inUse = false;
 	}
+//	/**
+//	 * Get the time connection has been locked for
+//	 * @return time in milliseconds
+//	 */
+//	@Override
+//	public long getLockTime() {
+//TODO: this isn't being used yet
+//		if(lockTime < 1)
+//			return -1;
+//		return pxnUtils.getCurrentMillis() - lockTime;
+//	}
 
 
 
@@ -100,8 +115,7 @@ public class dbWorker implements xCloseable {
 	private static final Object nextLock = new Object();
 	private static int getNextId() {
 		synchronized(nextLock) {
-			nextId++;
-			return nextId;
+			return ++nextId;
 		}
 	}
 	public int getId() {

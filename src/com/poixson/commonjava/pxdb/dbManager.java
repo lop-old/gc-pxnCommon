@@ -3,6 +3,7 @@ package com.poixson.commonjava.pxdb;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -10,10 +11,6 @@ public final class dbManager {
 
 	// db configs
 	private static final Map<String, dbConfig> configs = new HashMap<String, dbConfig>();
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		throw new CloneNotSupportedException();
-	}
 
 	// db connection pools
 	private static final Map<dbConfig, dbPool> pools = new HashMap<dbConfig, dbPool>();
@@ -23,15 +20,19 @@ public final class dbManager {
 	private static volatile dbManager manager = null;
 	private static final Object lock = new Object();
 	public static dbManager get() {
-		if(manager != null)
-			return manager;
-		synchronized(lock) {
-			if(manager == null)
-				manager = new dbManager();
+		if(manager == null) {
+			synchronized(lock) {
+				if(manager == null)
+					manager = new dbManager();
+			}
 		}
 		return manager;
 	}
 	private dbManager() {
+	}
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		throw new CloneNotSupportedException();
 	}
 
 
@@ -69,18 +70,37 @@ public final class dbManager {
 	// new db connection pool
 	// returns dbKey, used to reference connection later
 	protected static String register(final dbConfig config) {
+		if(config == null) throw new NullPointerException();
 		synchronized(pools) {
+			if(!configs.containsKey(config.dbKey()))
+				configs.put(config.dbKey(), config);
 			if(pools.containsKey(config)) {
-				log().finest("Using an existing db pool :-)");
+				log().finest("Sharing an existing db pool :-)");
 			} else {
+				// initial connection
 				log().finest("Starting new db pool..");
-				dbPool pool = new dbPool(config);
+				final dbPool pool = new dbPool(config);
+				final dbWorker worker = pool.getWorkerLock();
+				if(worker == null)
+					return null;
+				worker.desc("Initial connection successful");
+				worker.free();
 				pools.put(config, pool);
 			}
 		}
 		// unique key for this pool
 		return config.dbKey();
 	}
+
+
+
+//	public static Map<String, dbConfig> getConfigs() {
+//		return new HashMap<String, dbConfig> (configs);
+//	}
+//	public static Map<dbConfig, dbPool> getPools() {
+//		return new HashMap<dbConfig, dbPool> (pools);
+//	}
+
 
 
 	// logger
