@@ -289,6 +289,23 @@ public class dbQuery {
 		}
 		return this;
 	}
+	// get string
+	public String getString(final String label) throws SQLException {
+		synchronized(this.lock) {
+			return this.rs.getString(label);
+		}
+	}
+	public String getStr(final String label) {
+		try {
+			return this.getString(label);
+		} catch (SQLException e) {
+			log().trace(e);
+		}
+		return null;
+	}
+
+
+
 	// set int
 	public dbQuery setInt(final int index, final int value) {
 		synchronized(this.lock) {
@@ -305,6 +322,25 @@ public class dbQuery {
 		}
 		return this;
 	}
+	// get integer
+	public int getInteger(final String label) throws SQLException {
+		synchronized(this.lock) {
+			return this.rs.getInt(label);
+		}
+	}
+	public Integer getInt(final String label) {
+		try {
+			final String value = this.getString(label);
+			if(value != null)
+				return utilsMath.toInteger(value);
+		} catch (SQLException e) {
+			log().trace(e);
+		}
+		return null;
+	}
+
+
+
 	// set long
 	public dbQuery setLong(final int index, final long value) {
 		synchronized(this.lock) {
@@ -321,6 +357,25 @@ public class dbQuery {
 		}
 		return this;
 	}
+	// get long
+	public long getLong(final String label) throws SQLException {
+		synchronized(this.lock) {
+			return this.rs.getLong(label);
+		}
+	}
+	public Long getLng(final String label) {
+		try {
+			final String value = this.getString(label);
+			if(value != null)
+				return utilsMath.toLong(value);
+		} catch (SQLException e) {
+			log().trace(e);
+		}
+		return null;
+	}
+
+
+
 	// set decimal
 	public dbQuery setDecimal(final int index, final double value) {
 		if(this.setDouble(index, value) == null)
@@ -329,6 +384,16 @@ public class dbQuery {
 			this.args[index-1] = ARG_PRE+"dec"+ARG_DELIM+Double.toString(value)+ARG_POST;
 		return this;
 	}
+	// get decimal
+	public double getDecimal(final String label) throws SQLException {
+		return this.getDouble(label);
+	}
+	public Double getDec(final String label) {
+		return this.getDbl(label);
+	}
+
+
+
 	// set double
 	public dbQuery setDouble(final int index, final double value) {
 		synchronized(this.lock) {
@@ -345,6 +410,25 @@ public class dbQuery {
 		}
 		return this;
 	}
+	// get double
+	public double getDouble(final String label) throws SQLException {
+		synchronized(this.lock) {
+			return this.rs.getDouble(label);
+		}
+	}
+	public Double getDbl(final String label) {
+		try {
+			final String value = this.getString(label);
+			if(value != null)
+				return utilsMath.toDouble(value);
+		} catch (SQLException e) {
+			log().trace(e);
+		}
+		return null;
+	}
+
+
+
 	// set float
 	public dbQuery setFloat(final int index, final float value) {
 		synchronized(this.lock) {
@@ -361,6 +445,25 @@ public class dbQuery {
 		}
 		return this;
 	}
+	// get float
+	public float getFloat(final String label) throws SQLException {
+		synchronized(this.lock) {
+			return this.rs.getFloat(label);
+		}
+	}
+	public Float getFlt(final String label) {
+		try {
+			final String value = this.getString(label);
+			if(value != null)
+				return utilsMath.toFloat(value);
+		} catch (SQLException e) {
+			log().trace(e);
+		}
+		return null;
+	}
+
+
+
 	// set boolean
 	public dbQuery setBool(final int index, final boolean value) {
 		synchronized(this.lock) {
@@ -377,115 +480,23 @@ public class dbQuery {
 		}
 		return this;
 	}
-
-
-	// get string
-	public String getString(final String label) {
-		try {
-			return getStr(label);
-		} catch (SQLException e) {
-			log().trace(e);
-		}
-		return null;
-	}
-	public String getStr(final String label) throws SQLException {
-		synchronized(this.lock) {
-			return this.rs.getString(label);
-		}
-	}
-	// get integer
-	public Integer getInteger(final String label) {
-		try {
-			final String value = getStr(label);
-			if(value == null)
-				return null;
-			return utilsMath.toInt(value);
-		} catch (SQLException e) {
-			log().trace(e);
-		}
-		return null;
-	}
-	public int getInt(final String label) throws SQLException {
-		synchronized(this.lock) {
-			return this.rs.getInt(label);
-		}
-	}
-	// get long
-	public Long getLong(final String label) {
-		try {
-			final String value = getStr(label);
-			if(value == null)
-				return null;
-			return utilsMath.toLong(value);
-		} catch (SQLException e) {
-			log().trace(e);
-		}
-		return null;
-	}
-	public long getLng(final String label) throws SQLException {
-		synchronized(this.lock) {
-			return this.rs.getLong(label);
-		}
-	}
-	// get decimal
-	public Double getDecimal(final String label) {
-		return getDouble(label);
-	}
-	public double getDec(final String label) throws SQLException {
-		return getDbl(label);
-	}
-	// get double
-	public Double getDouble(final String label) {
-		try {
-			final String value = getStr(label);
-			if(value == null)
-				return null;
-			return utilsMath.toDouble(value);
-		} catch (SQLException e) {
-			log().trace(e);
-		}
-		return null;
-	}
-	public double getDbl(final String label) throws SQLException {
-		synchronized(this.lock) {
-			return this.rs.getDouble(label);
-		}
-	}
-	// get float
-	public Float getFloat(final String label) {
-		try {
-			final String value = getStr(label);
-			if(value == null)
-				return null;
-			return utilsMath.toFloat(value);
-		} catch (SQLException e) {
-			log().trace(e);
-		}
-		return null;
-	}
-	public float getFlt(final String label) throws SQLException {
-		synchronized(this.lock) {
-			return this.rs.getFloat(label);
-		}
-	}
 	// get boolean
-	public Boolean getBoolean(final String label) {
-		try {
-			final String value = getStr(label);
-			if(value == null)
-				return null;
-			return utilsMath.toBoolean(value);
-		} catch (SQLException e) {
-			log().trace(e);
-		}
-		return null;
-	}
-
-	public boolean getBool(final String label) throws SQLException {
+	public boolean getBoolean(final String label) throws SQLException {
 		synchronized(this.lock) {
 			return this.rs.getBoolean(label);
 		}
 	}
+	public Boolean getBool(final String label) {
+		try {
+			final String value = this.getString(label);
+			if(value != null)
+				return utilsMath.toBoolean(value);
+		} catch (SQLException e) {
+			log().trace(e);
+		}
+		return null;
+	}
+
 
 
 	// lock table (readable/unreadable)
