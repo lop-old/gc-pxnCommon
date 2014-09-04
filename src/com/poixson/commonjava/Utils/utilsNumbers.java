@@ -5,8 +5,8 @@ import java.util.Random;
 import java.util.regex.Pattern;
 
 
-public final class utilsMath {
-	private utilsMath() {}
+public final class utilsNumbers {
+	private utilsNumbers() {}
 
 
 
