@@ -31,6 +31,8 @@ public class dbPool {
 		if(config == null) throw new NullPointerException("config object cannot be null");
 		this.config = config;
 		this.poolSize = new dbPoolSize(this);
+		this.poolSize.setSoft(config.getPoolSizeWarn());
+		this.poolSize.setHard(config.getPoolSizeHard());
 // handled in dbManager::register()
 //		// force first connect
 //		getWorkerLock()

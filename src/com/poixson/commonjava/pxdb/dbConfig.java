@@ -23,6 +23,9 @@ public class dbConfig {
 	private final String pass;
 	private final String prefix;
 
+	private volatile int poolSizeWarn = 5;
+	private volatile int poolSizeHard = 10;
+
 	private volatile Connection connection = null;
 	private volatile boolean failed = false;
 
@@ -48,6 +51,16 @@ public class dbConfig {
 				return config;
 		return null;
 	}
+	public static dbConfig load(final String host, final int port,
+			final String user, final String pass, final String db, final String prefix,
+			final int poolSizeWarn, final int poolSizeHard) {
+		final dbConfig dbconfig = load(host, port, db, user, pass, prefix);
+		if(dbconfig == null)
+			return null;
+		dbconfig.poolSizeWarn = poolSizeWarn;
+		dbconfig.poolSizeHard = poolSizeHard;
+		return dbconfig;
+	}
 	// new config object
 	private dbConfig(final String key, final String host, final int port,
 			final String db, final String user, final String pass, final String prefix) {
@@ -68,7 +81,7 @@ public class dbConfig {
 
 	// connect to db
 	private final CoolDown coolFail = CoolDown.get("2s");
-	public synchronized Connection getConnection() {
+	public Connection getConnection() {
 		if(this.failed) {
 			if(this.coolFail.runAgain())
 				log().severe("Database connection previously failed. We're not gonna hammer the server, but rather give up.");
@@ -184,6 +197,15 @@ public class dbConfig {
 		if(utils.isEmpty(this.prefix))
 			return "";
 		return this.prefix;
+	}
+
+
+
+	public int getPoolSizeWarn() {
+		return this.poolSizeWarn;
+	}
+	public int getPoolSizeHard() {
+		return this.poolSizeHard;
 	}
 
 
