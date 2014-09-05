@@ -18,9 +18,9 @@ public class dbConfig {
 
 	private final String host;
 	private final int    port;
-	private final String db;
 	private final String user;
 	private final String pass;
+	private final String db;
 	private final String prefix;
 
 	private volatile int poolSizeWarn = 5;
@@ -31,10 +31,11 @@ public class dbConfig {
 
 
 
-	public static String load(final String host, final int port, final String db, final String user, final String pass, final String prefix) {
-		if(utils.isEmpty(db)  ) throw new IllegalArgumentException("Database name not set");
+	public static dbConfig load(final String host, final int port,
+			final String db, final String user, final String pass, final String prefix) {
 		if(utils.isEmpty(user)) throw new IllegalArgumentException("Database username not set");
 		if(utils.isEmpty(pass)) throw new IllegalArgumentException("Database password not set");
+		if(utils.isEmpty(db)  ) throw new IllegalArgumentException("Database name not set");
 		final String hostStr = utils.isEmpty(host) ? "127.0.0.1" : host;
 		final int portInt = ((port < 1 || port > 65536) ? 3306 : port);
 		final String key = BuildKey(hostStr, portInt, db, user, prefix);
@@ -42,13 +43,15 @@ public class dbConfig {
 		{
 			final dbConfig config = dbManager.getConfig(key);
 			if(config != null)
-				return config.dbKey();
+				return config;
 		}
 		// new config
-		final dbConfig config = new dbConfig(key, hostStr, portInt, db, user, pass, prefix);
-		// hook back to db manager (register config)
+		{
+			final dbConfig config = new dbConfig(key, hostStr, portInt, user, pass, db, prefix);
+			// hook back to db manager (register config)
 			if(dbManager.register(config))
 				return config;
+		}
 		return null;
 	}
 	public static dbConfig load(final String host, final int port,
@@ -63,7 +66,7 @@ public class dbConfig {
 	}
 	// new config object
 	private dbConfig(final String key, final String host, final int port,
-			final String db, final String user, final String pass, final String prefix) {
+			final String user, final String pass, final String db, final String prefix) {
 		this.key  = key;
 		this.host = host;
 		this.port = port;
@@ -87,7 +90,7 @@ public class dbConfig {
 				log().severe("Database connection previously failed. We're not gonna hammer the server, but rather give up.");
 			return null;
 		}
-		// try connecting 5 times max
+		// try connecting (5 times max)
 		for(long i = 0; i < 5L; i++) {
 			try {
 				// make new connection
@@ -95,24 +98,22 @@ public class dbConfig {
 				// successful connection
 				if(conn != null)
 					return conn;
-				final xTime sleepTime = xTime.get( new Long( (i * 2L) + 1L ), xTimeU.S);
+				final xTime sleepTime = xTime.get(Long.valueOf( (i * 2L) + 1L ), xTimeU.S);
 				log().warning("Failed to connect to database, waiting "+
 						sleepTime.toFullString()+" to try again.. "+this.key);
 				utilsThread.Sleep(sleepTime);
 			} catch (SQLException e) {
-				if(e.getMessage().startsWith("Communications link failure"))
-					log().severe("Failed to connect to database server! "+this.key);
+				log().severe("Failed to connect to db server: "+this.key);
+				final String msg = e.getMessage();
+				if(msg.startsWith("Communications link failure"))
+				else
+				if(msg.startsWith("Access denied for user"))
+				else
 				log().trace(e);
-				break;
-			} catch (InstantiationException e) {
+				return null;
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 				log().trace(e);
-				break;
-			} catch (IllegalAccessException e) {
-				log().trace(e);
-				break;
-			} catch (ClassNotFoundException e) {
-				log().trace(e);
-				break;
+				return null;
 			}
 		}
 		// failed to connect

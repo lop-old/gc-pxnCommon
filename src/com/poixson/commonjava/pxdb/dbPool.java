@@ -33,10 +33,6 @@ public class dbPool {
 		this.poolSize = new dbPoolSize(this);
 		this.poolSize.setSoft(config.getPoolSizeWarn());
 		this.poolSize.setHard(config.getPoolSizeHard());
-// handled in dbManager::register()
-//		// force first connect
-//		getWorkerLock()
-//			.free();
 	}
 
 
