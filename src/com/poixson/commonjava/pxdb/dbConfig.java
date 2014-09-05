@@ -44,7 +44,9 @@ public class dbConfig {
 		// new config
 		final dbConfig config = new dbConfig(key, hostStr, portInt, db, user, pass, prefix);
 		// hook back to db manager (register config)
-		return dbManager.register(config);
+			if(dbManager.register(config))
+				return config;
+		return null;
 	}
 	// new config object
 	private dbConfig(final String key, final String host, final int port,

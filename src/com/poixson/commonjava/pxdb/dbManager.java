@@ -69,10 +69,11 @@ public final class dbManager {
 
 
 
-	// new db connection pool
-	// returns dbKey, used to reference connection later
-	protected static String register(final dbConfig config) {
+	// new db connection pool and initial connection
+	protected static boolean register(final dbConfig config) {
 		if(config == null) throw new NullPointerException();
+		if(utils.isEmpty(config.dbKey()))
+			throw new IllegalArgumentException("dbKey returned from dbConfig is empty!");
 		synchronized(pools) {
 			if(!configs.containsKey(config.dbKey()))
 				configs.put(config.dbKey(), config);
@@ -83,15 +84,16 @@ public final class dbManager {
 				log().finest("Starting new db pool..");
 				final dbPool pool = new dbPool(config);
 				final dbWorker worker = pool.getWorkerLock();
-				if(worker == null)
-					return null;
+				if(worker == null) {
+					log().severe("Failed to start db conn pool");
+					return false;
+				}
 				worker.desc("Initial connection successful");
 				worker.free();
 				pools.put(config, pool);
 			}
 		}
-		// unique key for this pool
-		return config.dbKey();
+		return true;
 	}
 
 
