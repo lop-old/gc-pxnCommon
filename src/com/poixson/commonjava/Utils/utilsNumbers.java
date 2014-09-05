@@ -11,23 +11,165 @@ public final class utilsNumbers {
 
 
 	// true;
-	public static final String[] truesy = new String[] {
-		"1",
-		"t",
+	public static final String[] TRUE_VALUES = new String[] {
 		"true",
-		"on",
+		"enabled",
 		"yes",
-		"enabled"
+		"on",
+	};
+	public static final char[] T_VALUES = new char[] {
+		'1',
+		't',
+		'e',
+		'y'
 	};
 	// false
-	public static final String[] falsy = new String[] {
-		"0",
-		"f",
+	public static final String[] FALSE_VALUES = new String[] {
 		"false",
-		"off",
+		"disabled",
 		"no",
-		"disabled"
+		"off"
 	};
+	public static final char[] F_VALUES = new char[] {
+		'0',
+		'f',
+		'd',
+		'n'
+	};
+
+
+
+	// parse number
+	public static Integer toInteger(final String value) {
+		if(utils.isEmpty(value)) return null;
+		try {
+			return new Integer(Integer.parseInt(value));
+		} catch (NumberFormatException ignore) {}
+		return null;
+	}
+	public static int toInteger(final String value, final int def) {
+		final Integer num = toInteger(value);
+		if(num == null) return def;
+		return num.intValue();
+	}
+
+	// parse byte
+	public static Byte toByte(final String value) {
+		if(utils.isEmpty(value)) return null;
+		try {
+			return new Byte(Byte.parseByte(value));
+		} catch (NumberFormatException ignore) {}
+		return null;
+	}
+	public static byte toByte(final String value, final byte def) {
+		final Byte num = toByte(value);
+		if(num == null) return def;
+		return num.byteValue();
+	}
+
+	// parse short
+	public static Short toShort(final String value) {
+		if(utils.isEmpty(value)) return null;
+		try {
+			return new Short(Short.parseShort(value));
+		} catch (NumberFormatException ignore) {}
+		return null;
+	}
+	public static short toShort(final String value, final short def) {
+		final Short num = toShort(value);
+		if(num == null) return def;
+		return num.shortValue();
+	}
+
+	// parse long
+	public static Long toLong(final String value) {
+		if(utils.isEmpty(value)) return null;
+		try {
+			return new Long(Long.parseLong(value));
+		} catch (NumberFormatException ignore) {}
+		return null;
+	}
+	public static long toLong(final String value, final long def) {
+		final Long num = toLong(value);
+		if(num == null) return def;
+		return num.longValue();
+	}
+
+	// parse double
+	public static Double toDouble(final String value) {
+		if(utils.isEmpty(value)) return null;
+		try {
+			return new Double(Double.parseDouble(value));
+		} catch (NumberFormatException ignore) {}
+		return null;
+	}
+	public static double toDouble(final String value, final double def) {
+		final Double num = toDouble(value);
+		if(num == null) return def;
+		return num.doubleValue();
+	}
+
+	// parse float
+	public static Float toFloat(final String value) {
+		if(utils.isEmpty(value)) return null;
+		try {
+			return new Float(Float.parseFloat(value));
+		} catch (NumberFormatException ignore) {}
+		return null;
+	}
+	public static float toFloat(final String value, final float def) {
+		final Float num = toFloat(value);
+		if(num == null) return def;
+		return num.floatValue();
+	}
+
+	// parse boolean
+	public static Boolean toBoolean(final String value) {
+		if(utils.isEmpty(value)) return null;
+		final String val = value.trim().toLowerCase();
+		for(final String v : TRUE_VALUES)
+			if(val.equals(v))
+				return Boolean.TRUE;
+		for(final String v : FALSE_VALUES)
+			if(val.equals(v))
+				return Boolean.FALSE;
+		final char chr = val.charAt(0);
+		for(final char c : T_VALUES)
+			if(chr == c)
+				return Boolean.TRUE;
+		for(final char c : F_VALUES)
+			if(chr == c)
+				return Boolean.FALSE;
+		return null;
+	}
+	public static boolean toBoolean(final String value, final boolean def) {
+		final Boolean bool = toBoolean(value);
+		if(bool == null) return def;
+		return bool.booleanValue();
+	}
+
+
+
+	// is number
+	public static boolean isNumeric(final String value) {
+		if(utils.isEmpty(value)) return false;
+		return (toLong(value) != null);
+	}
+	// is boolean
+	public static boolean isBoolean(final String value) {
+		return (toBoolean(value) != null);
+	}
+
+
+
+	// formatDecimal("0.00", double)
+	public static String FormatDecimal(final String format, final double value) {
+		return (new DecimalFormat(format).format(value));
+	}
+	// formatDecimal("0.00", float)
+	public static String FormatDecimal(final String format, final float value) {
+		return (new DecimalFormat(format).format(value));
+	}
 
 
 
@@ -95,117 +237,6 @@ public final class utilsNumbers {
 
 
 
-	// formatDecimal("0.00", double)
-	public static String FormatDecimal(final String format, final double value) {
-		return (new DecimalFormat(format).format(value));
-	}
-	// formatDecimal("0.00", float)
-	public static String FormatDecimal(final String format, final float value) {
-		return (new DecimalFormat(format).format(value));
-	}
-
-
-
-	// parse number
-	public static Integer toInt(final String value) {
-		if(utils.isEmpty(value)) return null;
-		try {
-			return new Integer(Integer.parseInt(value));
-		} catch (NumberFormatException ignore) {}
-		return null;
-	}
-	public static int toInt(final String value, final int defaultValue) {
-		Integer num = toInt(value);
-		if(num == null) return defaultValue;
-		return num.intValue();
-	}
-	// parse byte
-	public static Byte toByte(final String value) {
-		if(utils.isEmpty(value)) return null;
-		try {
-			return new Byte(Byte.parseByte(value));
-		} catch (NumberFormatException ignore) {}
-		return null;
-	}
-	// parse short
-	public static Short toShort(final String value) {
-		if(utils.isEmpty(value)) return null;
-		try {
-			return new Short(Short.parseShort(value));
-		} catch (NumberFormatException ignore) {}
-		return null;
-	}
-	// parse long
-	public static Long toLong(final String value) {
-		if(utils.isEmpty(value)) return null;
-		try {
-			return new Long(Long.parseLong(value));
-		} catch (NumberFormatException ignore) {}
-		return null;
-	}
-	public static long toLong(final String value, final long defaultValue) {
-		Long num = toLong(value);
-		if(num == null) return defaultValue;
-		return num.longValue();
-	}
-	// parse double
-	public static Double toDouble(final String value) {
-		if(utils.isEmpty(value)) return null;
-		try {
-			return new Double(Double.parseDouble(value));
-		} catch (NumberFormatException ignore) {}
-		return null;
-	}
-	public static double toDouble(final String value, final double defaultValue) {
-		Double num = toDouble(value);
-		if(num == null) return defaultValue;
-		return num.doubleValue();
-	}
-	// parse float
-	public static Float toFloat(final String value) {
-		if(utils.isEmpty(value)) return null;
-		try {
-			return new Float(Float.parseFloat(value));
-		} catch (NumberFormatException ignore) {}
-		return null;
-	}
-	public static float toFloat(final String value, final float defaultValue) {
-		Float num = toFloat(value);
-		if(num == null) return defaultValue;
-		return num.floatValue();
-	}
-	// parse boolean
-	public static Boolean toBoolean(final String value) {
-		if(utils.isEmpty(value)) return null;
-		final String val = value.trim().toLowerCase();
-		for(final String v : truesy)
-			if(val.equals(v))
-				return Boolean.TRUE;
-		for(final String v : falsy)
-			if(val.equals(v))
-				return Boolean.FALSE;
-		return null;
-	}
-	public static boolean toBoolean(final String value, final boolean defaultValue) {
-		Boolean bool = toBoolean(value);
-		if(bool == null) return defaultValue;
-		return bool.booleanValue();
-	}
-
-
-
-	// is number
-	public static boolean isNumeric(final String value) {
-		if(utils.isEmpty(value)) return false;
-		return (toLong(value) != null);
-	}
-	// is boolean
-	public static boolean isBoolean(final String value) {
-		return (toBoolean(value) != null);
-	}
-
-
-
 	// compare version numbers
 	public static String compareVersions(final String oldVersion, final String newVersion) {
 		if(utils.isEmpty(oldVersion)) return null;
@@ -219,19 +250,19 @@ public final class utilsNumbers {
 	public static String normalisedVersion(final String version) {
 		final String delim = ".";
 		final int maxWidth = 5;
-		String[] split = Pattern.compile(delim, Pattern.LITERAL).split(version);
-		final StringBuilder out = new StringBuilder();
-		for(final String str : split)
-			out.append(String.format("%"+maxWidth+'s', str));
-		return out.toString();
+		final StringBuilder str = new StringBuilder();
+		final String[] split = Pattern.compile(delim, Pattern.LITERAL).split(version);
+		for(final String part : split)
+			str.append(String.format("%"+maxWidth+'s', part));
+		return str.toString();
 	}
 
 
 
 	// random number
 	public static int getRandom(final int minNumber, final int maxNumber) {
-		final Random randomGen = new Random(utils.getSystemMillis());
-		return randomGen.nextInt(maxNumber - minNumber) + minNumber;
+		final Random gen = new Random(utils.getSystemMillis());
+		return gen.nextInt(maxNumber - minNumber) + minNumber;
 	}
 	// random number (not last)
 	public static int getNewRandom(final int minNumber, final int maxNumber, final int oldNumber) {
@@ -243,10 +274,11 @@ public final class utilsNumbers {
 			return minNumber;
 		}
 		int newNumber;
-		while(true) {
+		for(int i=0; i<100; i++) {
 			newNumber = getRandom(minNumber, maxNumber);
 			if(newNumber != oldNumber) return newNumber;
 		}
+		throw new IllegalAccessError("Failed to generate a random number");
 	}
 
 
