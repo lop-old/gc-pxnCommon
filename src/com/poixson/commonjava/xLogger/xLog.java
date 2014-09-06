@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.poixson.commonjava.xVars;
+import com.poixson.commonjava.Utils.Keeper;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.xLogger.console.jlineConsole;
 import com.poixson.commonjava.xLogger.console.xNoConsole;
@@ -172,6 +173,10 @@ public class xLog extends xLogPrinting {
 			throw new NullPointerException("name cannot be null");
 		this.name = logName;
 		this.parent = parentLogger;
+		// root logger
+		if(parentLogger == null) {
+			Keeper.add(this);
+		}
 	}
 
 

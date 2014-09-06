@@ -53,6 +53,8 @@ public class xClock {
 	// new instance
 	private xClock(final boolean blocking) {
 		this.blocking = blocking;
+		// just to prevent gc
+		Keeper.add(this);
 	}
 	@Override
 	public Object clone() throws CloneNotSupportedException {

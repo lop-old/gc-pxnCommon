@@ -78,9 +78,12 @@ public class xThreadPool implements Runnable {
 	protected xThreadPool(final String name, final Integer size) {
 		this.queueName = name;
 		this.group = new ThreadGroup(this.queueName);
-		if(name.toLowerCase().equals("main"))
+		if(name.toLowerCase().equals("main")) {
 			this.size = 0;
-		else if(size != null)
+			// just to prevent gc
+			Keeper.add(this);
+		} else
+		if(size != null)
 			this.size = size.intValue();
 		runLater(new xRunnable("Thread-Startup") {
 			private volatile String qName = null;

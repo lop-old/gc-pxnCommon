@@ -3,6 +3,7 @@ package com.poixson.commonjava.pxdb;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.poixson.commonjava.Utils.Keeper;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.xLogger.xLog;
 
@@ -30,6 +31,7 @@ public final class dbManager {
 		return manager;
 	}
 	private dbManager() {
+		Keeper.add(this);
 	}
 	@Override
 	public Object clone() throws CloneNotSupportedException {
