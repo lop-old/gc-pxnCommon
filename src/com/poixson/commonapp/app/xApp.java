@@ -5,6 +5,8 @@ import java.io.File;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
+import com.poixson.commonjava.Utils.Keeper;
+import com.poixson.commonjava.Utils.mvnProps;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsDirFile;
 import com.poixson.commonjava.Utils.utilsString;
@@ -39,11 +41,22 @@ public abstract class xApp implements Runnable {
 	private volatile xThreadPool threadPool = null;
 
 	// just to prevent gc
-	private static xVars xvars = null;
+	@SuppressWarnings("unused")
+	private static Keeper keeper = null;
 
 	@SuppressWarnings("unused")
 	private volatile long startTime = -1;
 	protected volatile int initLevel = 0;
+
+	// mvn properties
+	protected final String name;
+	protected final String title;
+	protected final String version;
+	protected final String url;
+	protected final String org_name;
+	protected final String org_url;
+	protected final String issue_name;
+	protected final String issue_url;
 
 
 
@@ -75,8 +88,19 @@ public abstract class xApp implements Runnable {
 	}
 	protected xApp() {
 		// just to prevent gc
-		if(xvars == null)
-			xvars = xVars.get();
+		keeper = Keeper.get();
+		// mvn properties
+		{
+			final mvnProps props = mvnProps.get(this.getClass());
+			this.name       = props.name;
+			this.title      = props.title;
+			this.version    = props.version;
+			this.url        = props.url;
+			this.org_name   = props.org_name;
+			this.org_url    = props.org_url;
+			this.issue_name = props.issue_name;
+			this.issue_url  = props.issue_url;
+		}
 	}
 
 
@@ -150,8 +174,8 @@ public abstract class xApp implements Runnable {
 		private final xApp app;
 		private final int step;
 		public _StartupRunnable(final xApp app, final int step) {
-			super(getAppName()+"-Startup-"+Integer.toString(step));
-			if(app == null) throw new NullPointerException();
+			super(app.getName()+"-Startup-"+Integer.toString(step));
+			//if(app == null) throw new NullPointerException();
 			if(step < 1 || step > 8) throw new UnsupportedOperationException("Unsupported startup step "+Integer.toString(step));
 			this.app = app;
 			this.step = step;
@@ -163,12 +187,12 @@ public abstract class xApp implements Runnable {
 			// first step in startup
 			case 1:
 				// lock file
-				utilsDirFile.lockInstance(getAppName()+".lock");
-				log().title("Starting "+getAppName()+"..");
+				utilsDirFile.lockInstance(this.app.getName()+".lock");
+				log().title("Starting "+this.app.getName()+"..");
 				break;
 			// last step in startup
 			case 8:
-				log().title(getAppName()+" Ready and Running!");
+				log().title(this.app.getName()+" Ready and Running!");
 				synchronized(xApp.appLock) {
 					this.app.initLevel = 9;
 				}
@@ -213,8 +237,8 @@ public abstract class xApp implements Runnable {
 		private final xApp app;
 		private final int step;
 		public _ShutdownRunnable(final xApp app, final int step) {
-			super(getAppName()+"-Shutdown-"+Integer.toString(step));
-			if(app == null) throw new NullPointerException();
+			super(app.getName()+"-Shutdown-"+Integer.toString(step));
+			//if(app == null) throw new NullPointerException();
 			if(step < 1 || step > 8) throw new UnsupportedOperationException("Unsupported shutdown step "+Integer.toString(step));
 			this.app = app;
 			this.step = step;
@@ -225,11 +249,11 @@ public abstract class xApp implements Runnable {
 			switch(this.step) {
 			// first step in shutdown
 			case 8:
-				log().title("Stopping "+getAppName()+"..");
+				log().title("Stopping "+this.app.getName()+"..");
 				break;
 			// last step in shutdown
 			case 1:
-				log().title(getAppName()+" Stopped.");
+				log().title(this.app.getName()+" Stopped.");
 				//TODO: display total time running
 				synchronized(xApp.appLock) {
 					this.app.initLevel = 0;
@@ -273,8 +297,36 @@ public abstract class xApp implements Runnable {
 	protected abstract void initConfig();
 	protected abstract void processArgs(final String[] args);
 
-	public abstract String getAppName();
-	public abstract String getVersion();
+
+
+	// mvn properties
+	public String getName() {
+		return this.name;
+	}
+	public String getTitle() {
+		return this.title;
+	}
+	public String getFullTitle() {
+		return this.getTitle()+" "+this.getVersion();
+	}
+	public String getVersion() {
+		return this.version;
+	}
+	public String getURL() {
+		return this.url;
+	}
+	public String getOrgName() {
+		return this.org_name;
+	}
+	public String getOrgURL() {
+		return this.org_url;
+	}
+	public String getIssueName() {
+		return this.issue_name;
+	}
+	public String getIssueURL() {
+		return this.issue_url;
+	}
 
 
 
