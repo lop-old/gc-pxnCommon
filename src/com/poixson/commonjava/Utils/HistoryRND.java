@@ -21,7 +21,7 @@ public class HistoryRND {
 		if(min > max) throw new IllegalArgumentException("min must be lower than max!");
 		this.min = min;
 		this.max = max;
-		this.historySize = utilsMath.MinMax(historySize, 2, (max-min)-1);
+		this.historySize = utilsNumbers.MinMax(historySize, 2, (max-min)-1);
 		this.last = min - 1;
 	}
 
@@ -44,7 +44,7 @@ public class HistoryRND {
 		// find unique random number
 		while(true) {
 			// find a new random number
-			number = utilsMath.getRandom(this.min, this.max);
+			number = utilsNumbers.getRandom(this.min, this.max);
 			if(!this.history.contains(new Integer(number))) break;
 			// give up trying
 			i--;

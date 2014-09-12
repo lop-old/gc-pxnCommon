@@ -175,7 +175,7 @@ public class xTime {
 				);
 				if(timeValues.containsKey(chr)) {
 					final double u = timeValues.get(chr).doubleValue();
-					time += (utilsMath.toDouble(tmp.toString()).doubleValue() * u);
+					time += (utilsNumbers.toDouble(tmp.toString()).doubleValue() * u);
 				}
 				tmp = new StringBuilder();
 				continue;

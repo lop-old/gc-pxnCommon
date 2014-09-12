@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.poixson.commonjava.Utils.utils;
-import com.poixson.commonjava.Utils.utilsMath;
+import com.poixson.commonjava.Utils.utilsNumbers;
 
 
 public class xLevel implements Serializable {
@@ -49,8 +49,8 @@ public class xLevel implements Serializable {
 	}
 	public static xLevel FindLevel(final String name) {
 		if(utils.isEmpty(name)) return null;
-		if(utilsMath.isNumeric(name))
-			return FindLevel(utilsMath.toInt(name));
+		if(utilsNumbers.isNumeric(name))
+			return FindLevel(utilsNumbers.toInteger(name));
 		final String nameStr = name.toUpperCase();
 		for(final xLevel level : knownLevels)
 			if(nameStr.equalsIgnoreCase(level.name))

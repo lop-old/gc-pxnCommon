@@ -1,7 +1,7 @@
 package com.poixson.commonjava.pxdb;
 
 import com.poixson.commonjava.Utils.CoolDown;
-import com.poixson.commonjava.Utils.utilsMath;
+import com.poixson.commonjava.Utils.utilsNumbers;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.xLogger.xLog;
 
@@ -107,10 +107,10 @@ public class dbPoolSize extends Thread {
 
 	// set hard/soft limits
 	public void setSoft(final int limit) {
-		this.SOFT = utilsMath.MinMax(limit, 1, 1000);
+		this.SOFT = utilsNumbers.MinMax(limit, 1, 1000);
 	}
 	public void setHard(final int limit) {
-		this.HARD = utilsMath.MinMax(limit, 1, 1000);
+		this.HARD = utilsNumbers.MinMax(limit, 1, 1000);
 	}
 	//get hard/soft limits
 	public int getSoft() {

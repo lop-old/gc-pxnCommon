@@ -111,10 +111,10 @@ public class xClock {
 			this.localOffset = ((msg.receiveTimestamp - msg.originateTimestamp) + (msg.transmitTimestamp - fromUnixTimestamp(time))) / 2.0;
 			// less than 100ms
 			if(this.localOffset < 0.1 && this.localOffset > -0.1) {
-				log().info("System time only off by "+utilsMath.FormatDecimal("0.000", this.localOffset)+", ignoring adjustment.");
+				log().info("System time only off by "+utilsNumbers.FormatDecimal("0.000", this.localOffset)+", ignoring adjustment.");
 				this.localOffset = 0.0;
 			} else {
-				log().info("Internal time adjusted by "+(this.localOffset>0 ? "+" : "-")+utilsMath.FormatDecimal("0.000", this.localOffset)+" seconds");
+				log().info("Internal time adjusted by "+(this.localOffset>0 ? "+" : "-")+utilsNumbers.FormatDecimal("0.000", this.localOffset)+" seconds");
 				log().info("System time:   "+timestampToString(time / 1000.0));
 				log().info("Internal time: "+getString());
 			}

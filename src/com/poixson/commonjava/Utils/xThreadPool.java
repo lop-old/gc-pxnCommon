@@ -118,7 +118,7 @@ public class xThreadPool implements Runnable {
 			final int count = this.threads.size();
 			final int globalCount = getGlobalThreadCount();
 			final int globalFree  = GLOBAL_LIMIT - globalCount;
-			final int free = utilsMath.MinMax(count - this.active, 0, globalFree);
+			final int free = utilsNumbers.MinMax(count - this.active, 0, globalFree);
 			log().finer(
 				"Pool Size: "+Integer.toString(count)+" ["+Integer.toString(this.size)+"]  "+
 				"Active/Free: "+
@@ -414,7 +414,7 @@ public class xThreadPool implements Runnable {
 		if(value == null)
 			this.size = 1;
 		else
-			this.size = utilsMath.MinMax(value.intValue(), 1, HARD_LIMIT);
+			this.size = utilsNumbers.MinMax(value.intValue(), 1, HARD_LIMIT);
 	}
 
 

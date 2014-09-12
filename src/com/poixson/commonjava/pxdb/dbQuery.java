@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.sql.SQLNonTransientConnectionException;
 
 import com.poixson.commonjava.Utils.utils;
-import com.poixson.commonjava.Utils.utilsMath;
+import com.poixson.commonjava.Utils.utilsNumbers;
 import com.poixson.commonjava.Utils.utilsSan;
 import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.xLogger.xLevel;
@@ -332,7 +332,7 @@ public class dbQuery {
 		try {
 			final String value = this.getString(label);
 			if(value != null)
-				return utilsMath.toInteger(value);
+				return utilsNumbers.toInteger(value);
 		} catch (SQLException e) {
 			log().trace(e);
 		}
@@ -367,7 +367,7 @@ public class dbQuery {
 		try {
 			final String value = this.getString(label);
 			if(value != null)
-				return utilsMath.toLong(value);
+				return utilsNumbers.toLong(value);
 		} catch (SQLException e) {
 			log().trace(e);
 		}
@@ -420,7 +420,7 @@ public class dbQuery {
 		try {
 			final String value = this.getString(label);
 			if(value != null)
-				return utilsMath.toDouble(value);
+				return utilsNumbers.toDouble(value);
 		} catch (SQLException e) {
 			log().trace(e);
 		}
@@ -455,7 +455,7 @@ public class dbQuery {
 		try {
 			final String value = this.getString(label);
 			if(value != null)
-				return utilsMath.toFloat(value);
+				return utilsNumbers.toFloat(value);
 		} catch (SQLException e) {
 			log().trace(e);
 		}
@@ -490,7 +490,7 @@ public class dbQuery {
 		try {
 			final String value = this.getString(label);
 			if(value != null)
-				return utilsMath.toBoolean(value);
+				return utilsNumbers.toBoolean(value);
 		} catch (SQLException e) {
 			log().trace(e);
 		}
