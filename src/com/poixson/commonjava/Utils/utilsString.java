@@ -166,9 +166,9 @@ public final class utilsString {
 
 	// replace with array
 	public static String replaceWith(final String replaceWhat, final String[] withWhat, final String data) {
-		if(utils.isEmpty(replaceWhat)) throw new NullPointerException("replaceWhat cannot be null");
-		if(utils.isEmpty(withWhat))    throw new NullPointerException("withWhat cannot be null");
-		if(utils.isEmpty(data)) return null;
+		if(utils.isEmpty(replaceWhat)) return data;
+		if(utils.isEmpty(withWhat))    return data;
+		if(utils.isEmpty(data))        return data;
 		final StringBuilder out = new StringBuilder();
 		final int count = withWhat.length;
 		int currentPos = 0;
@@ -232,7 +232,7 @@ public final class utilsString {
 			if(str == null) throw new NullPointerException();
 			buf.append(str);
 		}
-		return buf.toString().substring( 0, utilsMath.MinMax(length, 0, buf.length()) );
+		return buf.toString().substring( 0, utilsNumbers.MinMax(length, 0, buf.length()) );
 	}
 
 
