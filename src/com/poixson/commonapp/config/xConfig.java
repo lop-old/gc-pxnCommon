@@ -3,6 +3,7 @@ package com.poixson.commonapp.config;
 import java.util.List;
 import java.util.Map;
 
+import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsObject;
 
 
@@ -15,10 +16,11 @@ public class xConfig {
 		if(data == null) throw new NullPointerException();
 		this.data = data;
 	}
-//	@Override
-//	public Object clone() throws CloneNotSupportedException {
-//		throw new CloneNotSupportedException();
-//	}
+	@Override
+	public Object clone() {
+		return new xConfig(this.data);
+	}
+
 
 
 	// path exists
@@ -27,7 +29,7 @@ public class xConfig {
 	}
 	// get object
 	public Object get(final String path) {
-		if(path == null || path.isEmpty())
+		if(utils.isEmpty(path))
 			return null;
 		try {
 			return this.data.get(path);
@@ -38,60 +40,62 @@ public class xConfig {
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> getPath(final String path) {
 		try {
-			return (Map<String, Object>) get(path);
+			return (Map<String, Object>) this.get(path);
 		} catch (Exception ignore) {}
 		return null;
 	}
 
 
+
 	// get string
 	public String getString(final String path) {
 		try {
-			return (String) get(path);
+			return (String) this.get(path);
 		} catch (Exception ignore) {}
 		return null;
 	}
 	// get boolean
 	public Boolean getBoolean(final String path) {
 		try {
-			return (Boolean) get(path);
+			return (Boolean) this.get(path);
 		} catch (Exception ignore) {}
 		return null;
 	}
 	// get integer
 	public Integer getInteger(final String path) {
 		try {
-			return (Integer) get(path);
+			return (Integer) this.get(path);
 		} catch (Exception ignore) {}
 		return null;
 	}
 	// get long
 	public Long getLong(final String path) {
 		try {
-			return (Long) get(path);
+			return (Long) this.get(path);
 		} catch (Exception ignore) {}
 		return null;
 	}
 	// get double
 	public Double getDouble(final String path) {
 		try {
-			return (Double) get(path);
+			return (Double) this.get(path);
 		} catch (Exception ignore) {}
 		return null;
 	}
 	// get float
 	public Float getFloat(final String path) {
 		try {
-			return (Float) get(path);
+			return (Float) this.get(path);
 		} catch (Exception ignore) {}
 		return null;
 	}
 
 
+
 	// get list
 	public <T> List<T> getList(final Class<? extends T> clss, final String path) {
 		try {
-			return utilsObject.castList(clss, get(path));
+			return utilsObject.castList(clss, this.get(path));
 		} catch (Exception ignore) {}
 		return null;
 	}
@@ -102,6 +106,7 @@ public class xConfig {
 		} catch (Exception ignore) {}
 		return null;
 	}
+
 
 
 //	public List<HashMap<String, Object>> getKeyList(String path) {
@@ -120,6 +125,7 @@ public class xConfig {
 //			list.add(new pxnConfig(d));
 //		return list;
 //	}
+
 
 
 }
