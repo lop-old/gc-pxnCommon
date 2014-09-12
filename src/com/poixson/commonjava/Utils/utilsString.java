@@ -2,6 +2,7 @@ package com.poixson.commonjava.Utils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Set;
 import java.util.UUID;
 
 import com.poixson.commonjava.xLogger.xLog;
@@ -133,6 +134,32 @@ public final class utilsString {
 			.append(data)
 			.append(end)
 			.toString();
+	}
+
+
+
+	public static String ensureUnique(final String match, final Set<String> existing) {
+		if(utils.isEmpty(match)) throw new NullPointerException();
+		if(existing == null)     throw new NullPointerException();
+		// already unique
+		if(existing.isEmpty() || !existing.contains(match))
+			return match;
+		int i = 0;
+		while(true) {
+			i++;
+			final String dat = match+"_"+Integer.toString(i);
+			if(!existing.contains(dat))
+				return dat;
+		}
+	}
+
+
+
+	public static String getLastPart(final String delim, final String data) {
+		final int pos = data.lastIndexOf(delim);
+		if(pos == -1)
+			return data;
+		return data.substring(pos + delim.length());
 	}
 
 
