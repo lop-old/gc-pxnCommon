@@ -311,8 +311,11 @@ public class xThreadPool implements Runnable {
 
 
 
-	private boolean isMainPool() {
-		return this.queueName.equalsIgnoreCase("main");
+	public String getName() {
+		return this.queueName;
+	}
+	public boolean isMainPool() {
+		return "main".equalsIgnoreCase(this.queueName);
 	}
 
 

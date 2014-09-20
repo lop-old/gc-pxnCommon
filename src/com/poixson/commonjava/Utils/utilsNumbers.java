@@ -210,30 +210,28 @@ public final class utilsNumbers {
 		if(value > max) return max;
 		return value;
 	}
-/*
-	// min/max by object
-	public static boolean MinMax(Integer value, int min, int max) {
-		if(value == null) throw new NullPointerException("value cannot be null");
-		boolean changed = false;
-		if(value < min) {value = min; changed = true;}
-		if(value > max) {value = max; changed = true;}
-		return changed;
+
+
+
+	// is within range
+	public static boolean isMinMax(final int value, final int min, final int max) {
+		return (value == MinMax(value, min, max));
 	}
-	public static boolean MinMax(Long value, long min, long max) {
-		if(value == null) throw new NullPointerException("value cannot be null");
-		boolean changed = false;
-		if(value < min) {value = min; changed = true;}
-		if(value > max) {value = max; changed = true;}
-		return changed;
+	public static boolean isMinMax(final byte value, final byte min, final byte max) {
+		return (value == MinMax(value, min, max));
 	}
-	public static boolean MinMax(Double value, double min, double max) {
-		if(value == null) throw new NullPointerException("value cannot be null");
-		boolean changed = false;
-		if(value < min) {value = min; changed = true;}
-		if(value > max) {value = max; changed = true;}
-		return changed;
+	public static boolean isMinMax(final short value, final short min, final short max) {
+		return (value == MinMax(value, min, max));
 	}
-*/
+	public static boolean isMinMax(final long value, final long min, final long max) {
+		return (value == MinMax(value, min, max));
+	}
+	public static boolean isMinMax(final double value, final double min, final double max) {
+		return (value == MinMax(value, min, max));
+	}
+	public static boolean isMinMax(final float value, final float min, final float max) {
+		return (value == MinMax(value, min, max));
+	}
 
 
 
