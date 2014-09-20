@@ -9,6 +9,7 @@ import com.poixson.commonjava.Utils.utilsDirFile;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xClock;
 import com.poixson.commonjava.Utils.xRunnable;
+import com.poixson.commonjava.Utils.xStartable;
 import com.poixson.commonjava.Utils.xThreadPool;
 import com.poixson.commonjava.xLogger.xConsole;
 import com.poixson.commonjava.xLogger.xLevel;
@@ -30,7 +31,7 @@ import com.poixson.commonjava.xLogger.handlers.logHandlerConsole;
  *   a. shutdown()     | internal
  *   b. shutdown(step) | steps 7-2 abstracted to app
  */
-public abstract class xApp implements Runnable, Failure.FailureAction {
+public abstract class xApp implements xStartable, Failure.FailureAction {
 
 	private static volatile xApp appInstance = null;
 	protected static final Object appLock = new Object();
@@ -75,7 +76,7 @@ public abstract class xApp implements Runnable, Failure.FailureAction {
 			xApp.appInstance = app;
 		}
 		xApp.appInstance.processArgs(args);
-		xApp.appInstance.init();
+		xApp.appInstance.Start();
 	}
 	private static void _AlreadyStarted() {
 		log().trace(new UnsupportedOperationException("Cannot redefine singleton instance of xApp; appInstance already set."));
@@ -104,7 +105,8 @@ public abstract class xApp implements Runnable, Failure.FailureAction {
 	/**
 	 * Application startup.
 	 */
-	public void init() {
+	@Override
+	public boolean Start() {
 		synchronized(xApp.appLock) {
 			if(this.initLevel != 0) _AlreadyStarted();
 			this.initLevel = 1;
@@ -146,8 +148,10 @@ public abstract class xApp implements Runnable, Failure.FailureAction {
 		// main thread ended
 		Failure.fail("@|FG_RED Main process ended! (this shouldn't happen)|@");
 		System.exit(1);
+		return false;
 	}
-	public void shutdown() {
+	@Override
+	public void Stop() {
 		// trigger shutdown sequence
 		log().fine("Shutdown sequence.. 8..7..");
 		getThreadPool().runLater(
@@ -291,6 +295,13 @@ public abstract class xApp implements Runnable, Failure.FailureAction {
 
 
 
+	@Override
+	public boolean isRunning() {
+		return this.initLevel != 0;
+	}
+
+
+
 	protected abstract boolean startup(final int step);
 	protected abstract boolean shutdown(final int step);
 
@@ -343,6 +354,10 @@ public abstract class xApp implements Runnable, Failure.FailureAction {
 	 */
 	public xThreadPool getThreadPool() {
 		return this.threadPool;
+	}
+	@Override
+	public void doFailAction() {
+		this.Stop();
 	}
 
 
