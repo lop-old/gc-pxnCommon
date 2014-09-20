@@ -48,14 +48,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 	protected volatile int initLevel = 0;
 
 	// mvn properties
-	protected final String name;
-	protected final String title;
-	protected final String version;
-	protected final String url;
-	protected final String org_name;
-	protected final String org_url;
-	protected final String issue_name;
-	protected final String issue_url;
+	protected final mvnProps mvnprops;
 
 
 
@@ -89,17 +82,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		// just to prevent gc
 		keeper = Keeper.get();
 		// mvn properties
-		{
-			final mvnProps props = mvnProps.get(this.getClass());
-			this.name       = props.name;
-			this.title      = props.title;
-			this.version    = props.version;
-			this.url        = props.url;
-			this.org_name   = props.org_name;
-			this.org_url    = props.org_url;
-			this.issue_name = props.issue_name;
-			this.issue_url  = props.issue_url;
-		}
+		this.mvnprops = mvnProps.get(this.getClass());
 	}
 
 
@@ -318,31 +301,31 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 
 	// mvn properties
 	public String getName() {
-		return this.name;
+		return this.mvnprops.name;
 	}
 	public String getTitle() {
-		return this.title;
+		return this.mvnprops.title;
 	}
 	public String getFullTitle() {
-		return this.getTitle()+" "+this.getVersion();
+		return this.mvnprops.full_title;
 	}
 	public String getVersion() {
-		return this.version;
+		return this.mvnprops.version;
 	}
 	public String getURL() {
-		return this.url;
+		return this.mvnprops.url;
 	}
 	public String getOrgName() {
-		return this.org_name;
+		return this.mvnprops.org_name;
 	}
 	public String getOrgURL() {
-		return this.org_url;
+		return this.mvnprops.org_url;
 	}
 	public String getIssueName() {
-		return this.issue_name;
+		return this.mvnprops.issue_name;
 	}
 	public String getIssueURL() {
-		return this.issue_url;
+		return this.mvnprops.issue_url;
 	}
 
 

@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.poixson.commonjava.Failure;
+
 
 public class mvnProps {
 
@@ -53,6 +55,10 @@ public class mvnProps {
 		try {
 			props = new Properties();
 			in = clss.getResourceAsStream(PROPS_FILE);
+			if(in == null) {
+				Failure.fail("Failed to load "+PROPS_FILE+" resource from jar");
+				throw new RuntimeException();
+			}
 			props.load(in);
 		} catch (IOException e) {
 			e.printStackTrace();
