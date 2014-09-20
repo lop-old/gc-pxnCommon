@@ -19,14 +19,14 @@ public class TableDAO {
 
 
 	// table dao
-	public TableDAO(String tableName) {
+	public TableDAO(final String tableName) {
 		this.tableName = utilsSan.AlphaNumSafe(tableName);
 	}
 
 
 
 	// set id field
-	public TableDAO idField(String fieldName) {
+	public TableDAO idField(final String fieldName) {
 		this.idField = fieldName;
 		return this;
 	}
@@ -39,7 +39,8 @@ public class TableDAO {
 
 
 	// add field to table
-	public TableDAO addField(String type, String name, String size, String def, boolean nullable) {
+	public TableDAO addField(final String type, final String name,
+			final String size, final String def, final boolean nullable) {
 		this.fields.add(
 			new FieldDAO(type, name, size, def, nullable)
 		);
@@ -48,7 +49,7 @@ public class TableDAO {
 
 
 
-	public TableDAO unique(String fieldName) {
+	public TableDAO unique(final String fieldName) {
 		this.unique.add(fieldName);
 		return this;
 	}
@@ -66,12 +67,12 @@ public class TableDAO {
 		.toString();
 	}
 	// ALTER TABLE name ADD field
-	public String sqlAddField(FieldDAO field) {
+	public String sqlAddField(final FieldDAO field) {
 		return "ALTER TABLE `"+field.sqlField();
 	}
 	// sql for fields
 	public String sqlFields() {
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		// id field
 		if(getIdField() != null) {
 			sql.append(
@@ -79,13 +80,13 @@ public class TableDAO {
 			);
 		}
 		// all other fields
-		for(FieldDAO field : this.fields) {
+		for(final FieldDAO field : this.fields) {
 			if(sql.length() > 0)
 				sql.append(", ");
 			sql.append(field.sqlField());
 		}
 		// unique fields
-		for(String u : this.unique) {
+		for(final String u : this.unique) {
 			if(sql.length() > 0)
 				sql.append(", ");
 			sql.append("UNIQUE KEY `"+u+"` (`"+u+"`)");

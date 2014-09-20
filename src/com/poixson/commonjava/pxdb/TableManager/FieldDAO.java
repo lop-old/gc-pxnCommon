@@ -15,7 +15,8 @@ public class FieldDAO {
 
 
 	// field dao
-	public FieldDAO(String fieldType, String fieldName, String size, String def, boolean nullable) {
+	public FieldDAO(final String fieldType, final String fieldName,
+			final String size, final String def, final boolean nullable) {
 		this.type = fieldType;
 		this.fieldName = utilsSan.AlphaNumSafe(fieldName);
 		this.size = size;
@@ -26,7 +27,7 @@ public class FieldDAO {
 
 
 	// id field
-	public static String sqlIdField(String fieldName) {
+	public static String sqlIdField(final String fieldName) {
 		return (new StringBuilder())
 			.append("`")
 			.append(dbQuery.san(fieldName))
@@ -37,7 +38,7 @@ public class FieldDAO {
 	}
 	// `name` type(size) NULL DEFAULT NULL
 	public String sqlField() {
-		StringBuilder sql = new StringBuilder();
+		final StringBuilder sql = new StringBuilder();
 		sql.append("`").append(this.fieldName).append("` ");
 		switch(this.type.toLowerCase()) {
 		case "s":

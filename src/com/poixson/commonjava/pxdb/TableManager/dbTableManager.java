@@ -1,5 +1,7 @@
 package com.poixson.commonjava.pxdb.TableManager;
 
+import java.sql.SQLException;
+
 import com.poixson.commonjava.pxdb.dbManager;
 import com.poixson.commonjava.pxdb.dbQuery;
 import com.poixson.commonjava.xLogger.xLog;
@@ -9,45 +11,48 @@ public abstract class dbTableManager {
 
 
 
-	public abstract void InitTables();
+	public abstract void InitTables() throws SQLException;
 	protected abstract dbQuery getDB();
 	protected abstract String getTablePrefix();
 
 
 
 	// define new table
-	protected TableDAO defineTable(String tableName) {
+	protected TableDAO defineTable(final String tableName) {
 		return new TableDAO(tableName);
 	}
 
 
 
 	// check table exists
-	public boolean tableExists(String tableName) {
-		dbQuery db = getDB();
+	public boolean tableExists(final String tableName) throws SQLException {
+		final dbQuery db = getDB();
+		boolean result = false;
 		try {
-			db.prepare("SHOW TABLES LIKE ?");
+			db.Prepare("SHOW TABLES LIKE ?");
 			db.setString(1, tableName);
-			db.exec();
-			return db.next();
+			db.Execute();
+			result = db.hasNext();
 		} finally {
-			db.release();
+			db.free();
 		}
+		return result;
 	}
 	// create if needed
-	public void createIfMissing(TableDAO table) {
+	public void createIfMissing(final TableDAO table) throws SQLException {
 		if(!tableExists(table.tableName)) {
 			log().info("Creating db table: "+table.tableName);
 			// create table
-			dbQuery db = getDB();
+			final dbQuery db = getDB();
 			try {
-				String sql = "";
-				db.prepare("CREATE TABLE ? ( "+sql+" )");
-				db.setString(1, table.tableName);
-				db.exec();
-				return;
+//				final StringBuilder sql = new StringBuilder();
+//				//TODO: sql.append();
+//				db.Prepare("CREATE TABLE ? ( "+sql.toString()+" )");
+//				db.setString(1, table.tableName);
+//				db.Execute();
+//				return;
 			} finally {
-				db.release();
+				db.free();
 			}
 		}
 //		// check fields

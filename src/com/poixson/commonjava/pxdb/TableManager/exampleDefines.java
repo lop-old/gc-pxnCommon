@@ -1,5 +1,7 @@
 package com.poixson.commonjava.pxdb.TableManager;
 
+import java.sql.SQLException;
+
 import com.poixson.commonjava.pxdb.dbQuery;
 
 
@@ -10,7 +12,7 @@ public class exampleDefines extends dbTableManager {
 
 
 	@Override
-	public void InitTables() {
+	public void InitTables() throws SQLException {
 		// Example table
 		TableDAO tableExample =
 			defineTable("Example")
