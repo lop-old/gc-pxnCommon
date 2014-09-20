@@ -40,7 +40,7 @@ public class defaultLogFormatter_Color extends defaultLogFormatter {
 			.append(utilsString.padCenter(
 				7,
 				level.toString(),
-				" "
+				' '
 			))
 			.append("|@@|FG_BLACK,BOLD ]|@")
 			.toString();

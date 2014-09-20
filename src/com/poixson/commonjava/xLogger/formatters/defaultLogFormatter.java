@@ -42,7 +42,7 @@ public class defaultLogFormatter implements xLogFormatter {
 			.append(utilsString.padCenter(
 				7,
 				record.level().toString(),
-				" "
+				' '
 			))
 			.append("]")
 			.toString();

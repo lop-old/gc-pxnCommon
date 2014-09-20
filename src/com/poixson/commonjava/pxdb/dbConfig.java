@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import com.poixson.commonjava.Failure;
-import com.poixson.commonjava.Utils.CoolDown;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xTime;
@@ -83,7 +82,7 @@ public class dbConfig {
 
 
 	// connect to db
-	private final CoolDown coolFail = CoolDown.get("2s");
+//	private final CoolDown coolFail = CoolDown.get("2s");
 	public Connection getConnection() {
 		if(Failure.hasFailed())
 			return null;

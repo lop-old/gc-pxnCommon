@@ -6,11 +6,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.poixson.commonapp.xLogger.jlineConsole;
 import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.Utils.Keeper;
 import com.poixson.commonjava.Utils.utils;
-import com.poixson.commonjava.xLogger.console.jlineConsole;
-import com.poixson.commonjava.xLogger.console.xNoConsole;
 import com.poixson.commonjava.xLogger.formatters.defaultLogFormatter;
 import com.poixson.commonjava.xLogger.handlers.CommandHandler;
 import com.poixson.commonjava.xLogger.handlers.logHandlerConsole;

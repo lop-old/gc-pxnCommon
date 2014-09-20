@@ -2,6 +2,7 @@ package com.poixson.commonapp.app;
 
 import java.io.File;
 
+import com.poixson.commonapp.xLogger.jlineConsole;
 import com.poixson.commonjava.Failure;
 import com.poixson.commonjava.Utils.Keeper;
 import com.poixson.commonjava.Utils.mvnProps;
@@ -14,8 +15,7 @@ import com.poixson.commonjava.Utils.xThreadPool;
 import com.poixson.commonjava.xLogger.xConsole;
 import com.poixson.commonjava.xLogger.xLevel;
 import com.poixson.commonjava.xLogger.xLog;
-import com.poixson.commonjava.xLogger.console.jlineConsole;
-import com.poixson.commonjava.xLogger.console.xNoConsole;
+import com.poixson.commonjava.xLogger.xNoConsole;
 import com.poixson.commonjava.xLogger.formatters.defaultLogFormatter_Color;
 import com.poixson.commonjava.xLogger.handlers.logHandlerConsole;
 
@@ -26,10 +26,12 @@ import com.poixson.commonjava.xLogger.handlers.logHandlerConsole;
  *   b. processArgs()  | abstracted to app
  *   c. init()         | internal
  *   d. initConfig()   | abstracted to app
- *   e. startup(step)  | steps 2-7 abstracted to app
+ *   e. sync clock
+ *   f. start thread queue
+ *   g. startup(steps 1-7)  | steps abstracted to app
  * Shutdown sequence
  *   a. shutdown()     | internal
- *   b. shutdown(step) | steps 7-2 abstracted to app
+ *   b. shutdown(steps 7-1) | steps abstracted to app
  */
 public abstract class xApp implements xStartable, Failure.FailureAction {
 
@@ -108,7 +110,8 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 	@Override
 	public boolean Start() {
 		synchronized(xApp.appLock) {
-			if(this.initLevel != 0) _AlreadyStarted();
+			if(this.initLevel != 0)
+				_AlreadyStarted();
 			this.initLevel = 1;
 		}
 		// init logger
@@ -123,9 +126,11 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		// load clock
 		this.startTime = xClock.get(true).millis();
 		// load libraries
-		final String libPath = utilsDirFile.mergePaths(".", "lib");
-		if((new File(libPath)).isDirectory())
-			utilsDirFile.addLibraryPath(libPath);
+		{
+			final String libPath = utilsDirFile.mergePaths(".", "lib");
+			if((new File(libPath)).isDirectory())
+				utilsDirFile.addLibraryPath(libPath);
+		}
 		// no console
 		if(System.console() == null) {
 			System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
@@ -134,7 +139,8 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		if(this.threadPool == null)
 			this.threadPool = xThreadPool.get();
 		// run startup sequence (1-9)
-		if(this.initLevel != 1) _AlreadyStarted();
+		if(this.initLevel != 1)
+			_AlreadyStarted();
 		// trigger startup sequence
 		log().fine("Startup sequence.. 1..2..");
 		getThreadPool().runLater(
@@ -213,7 +219,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 				return;
 			}
 
-			// sleep for a moment
+			// sleep a short moment
 			utilsThread.Sleep(5);
 
 			// queue next step
@@ -399,9 +405,6 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		}
 		return log;
 	}
-
-
-
 
 
 
