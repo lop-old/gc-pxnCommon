@@ -2,14 +2,10 @@ package com.poixson.commonapp.app;
 
 import java.io.File;
 
-import org.fusesource.jansi.Ansi;
-import org.fusesource.jansi.AnsiConsole;
-
+import com.poixson.commonjava.Failure;
 import com.poixson.commonjava.Utils.Keeper;
 import com.poixson.commonjava.Utils.mvnProps;
-import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsDirFile;
-import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xClock;
 import com.poixson.commonjava.Utils.xRunnable;
@@ -34,7 +30,7 @@ import com.poixson.commonjava.xLogger.handlers.logHandlerConsole;
  *   a. shutdown()     | internal
  *   b. shutdown(step) | steps 7-2 abstracted to app
  */
-public abstract class xApp implements Runnable {
+public abstract class xApp implements Runnable, Failure.FailureAction {
 
 	private static volatile xApp appInstance = null;
 	protected static final Object appLock = new Object();
@@ -82,9 +78,9 @@ public abstract class xApp implements Runnable {
 		xApp.appInstance.init();
 	}
 	private static void _AlreadyStarted() {
-		fail("Program already started?",
-			new UnsupportedOperationException("Cannot redefine singleton instance of xApp; appInstance already set.")
-		);
+		log().trace(new UnsupportedOperationException("Cannot redefine singleton instance of xApp; appInstance already set."));
+		Failure.fail("Program already started?");
+		System.exit(1);
 	}
 	protected xApp() {
 		// just to prevent gc
@@ -115,6 +111,11 @@ public abstract class xApp implements Runnable {
 		}
 		// init logger
 		log().setLevel(xLevel.ALL);
+		if(Failure.hasFailed()) {
+			System.out.println("Failure, pre-init!");
+			System.exit(1);
+		}
+		Failure.register(this);
 		// load config
 		initConfig();
 		// load clock
@@ -143,11 +144,8 @@ public abstract class xApp implements Runnable {
 		// start main thread queue
 		run();
 		// main thread ended
-		AnsiConsole.out.println();
-		AnsiConsole.out.println(Ansi.ansi().fg(Ansi.Color.RED).a("Main process ended! (this shouldn't happen)").reset());
-		AnsiConsole.out.println();
-		AnsiConsole.out.println();
-		System.exit(0);
+		Failure.fail("@|FG_RED Main process ended! (this shouldn't happen)|@");
+		System.exit(1);
 	}
 	public void shutdown() {
 		// trigger shutdown sequence
@@ -182,6 +180,8 @@ public abstract class xApp implements Runnable {
 		}
 		@Override
 		public void run() {
+			if(Failure.hasFailed())
+				return;
 
 			switch(this.step) {
 			// first step in startup
@@ -202,11 +202,11 @@ public abstract class xApp implements Runnable {
 			// app steps 1-7
 			try {
 				if(!startup(this.step))
-					throw new RuntimeException();
+					throw new RuntimeException("Startup failed at step: "+Integer.toString(this.step));
 			} catch (Exception e) {
-				log().fatal("Startup failed at step: "+Integer.toString(this.step));
 				log().trace(e);
-				System.exit(1);
+				Failure.fail("Startup failed at step: "+Integer.toString(this.step));
+				return;
 			}
 
 			// sleep for a moment
@@ -387,28 +387,6 @@ public abstract class xApp implements Runnable {
 
 
 
-	// fail app startup
-	public static void fail(String msg, Exception e) {
-		if(utils.notEmpty(msg)) {
-			log().publish();
-			log().publish("    "+utilsString.repeat(msg.length(), "=")+"    ");
-			log().publish(" << "+msg+" >> ");
-			log().publish("    "+utilsString.repeat(msg.length(), "=")+"    ");
-			log().publish();
-		}
-		if(e != null)
-			log().trace(e);
-		System.exit(1);
-	}
-	public static void fail(String msg) {
-		fail(msg, null);
-	}
-	public static void fail(Exception e) {
-		fail(null, e);
-	}
-	public static void fail() {
-		fail(null, null);
-	}
 
 
 

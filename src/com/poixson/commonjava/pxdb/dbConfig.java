@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import com.poixson.commonjava.Failure;
 import com.poixson.commonjava.Utils.CoolDown;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsThread;
@@ -27,7 +28,6 @@ public class dbConfig {
 	private volatile int poolSizeHard = 10;
 
 	private volatile Connection connection = null;
-	private volatile boolean failed = false;
 
 
 
@@ -85,11 +85,8 @@ public class dbConfig {
 	// connect to db
 	private final CoolDown coolFail = CoolDown.get("2s");
 	public Connection getConnection() {
-		if(this.failed) {
-			if(this.coolFail.runAgain())
-				log().severe("Database connection previously failed. We're not gonna hammer the server, but rather give up.");
+		if(Failure.hasFailed())
 			return null;
-		}
 		// try connecting (5 times max)
 		for(long i = 0; i < 5L; i++) {
 			try {
@@ -106,18 +103,22 @@ public class dbConfig {
 				log().severe("Failed to connect to db server: "+this.key);
 				final String msg = e.getMessage();
 				if(msg.startsWith("Communications link failure"))
+					Failure.fail("Failed to connect to database server");
 				else
 				if(msg.startsWith("Access denied for user"))
+					Failure.fail("Failed to authenticate with database server");
 				else
+					Failure.fail("Problem connecting to database server");
 				log().trace(e);
 				return null;
 			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+				Failure.fail("MySQL lib failure");
 				log().trace(e);
 				return null;
 			}
 		}
 		// failed to connect
-		this.failed = true;
+		Failure.fail("Failed to connect to database server, max attempts");
 		return null;
 	}
 	// make new connection
