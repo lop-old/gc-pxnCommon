@@ -5,9 +5,7 @@ import com.poixson.commonjava.EventListener.xHandler;
 
 public class xNoConsole implements xConsole {
 
-//	private static final Object lock = new Object();
 	private static final Object printLock = new Object();
-//	private static volatile xConsole console = null;
 
 
 
@@ -44,8 +42,24 @@ public class xNoConsole implements xConsole {
 	}
 	@Override
 	public void print(final String msg) {
+		String str = msg;
+		// strip color tags
+		while(true) {
+			final int posA = str.indexOf("@|");
+			if(posA == -1) break;
+			final int posB = str.indexOf(' ', posA);
+			final int posC = str.indexOf("|@", posB);
+			if(posB == -1) break;
+			if(posC == -1) break;
+			// strip out color tags
+			final StringBuilder tmp = new StringBuilder();
+			tmp.append(str.substring(0, posA));
+			tmp.append(str.substring(posB+1, posC));
+			tmp.append(str.substring(posC+2));
+			str = tmp.toString();
+		}
 		synchronized(printLock) {
-			System.out.println(msg);
+			System.out.println(str);
 			System.out.flush();
 		}
 	}
@@ -76,6 +90,7 @@ public class xNoConsole implements xConsole {
 	public static xLog log() {
 		return xLog.getRoot();
 	}
+
 
 
 }

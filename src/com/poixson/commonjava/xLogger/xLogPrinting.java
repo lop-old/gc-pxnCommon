@@ -41,9 +41,9 @@ public abstract class xLogPrinting {
 	// title
 	public void title(final String msg) {
 		if(msg == null)
-			publish(" [[ <null> ]]");
+			publish(" @|FG_MAGENTA [[|@ @|FG_CYAN <null>|@ @|FG_MAGENTA ]]|@");
 		else
-			publish(" [[ "+msg+" ]]");
+			publish(" @|FG_MAGENTA [[|@ @|FG_CYAN "+msg+"|@ @|FG_MAGENTA ]]|@");
 	}
 	// multi-lined title
 	public void title(final String[] msgs) {
