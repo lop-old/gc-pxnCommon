@@ -22,6 +22,7 @@ public final class utilsDirFile {
 
 
 	// single instance lock
+	@SuppressWarnings("resource")
 	public static boolean lockInstance(final String fileStr) {
 		try {
 			final File lockFile = new File(fileStr);
@@ -186,8 +187,9 @@ public final class utilsDirFile {
 		return null;
 	}
 	// load yml from jar
+	@SuppressWarnings("resource")
 	public static InputJar OpenJarResource(final File jarFile, final String fileName) {
-		if(jarFile == null) throw new NullPointerException("jarFile cannot be null");
+		if(jarFile == null)         throw new NullPointerException("jarFile cannot be null");
 		if(utils.isEmpty(fileName)) throw new NullPointerException("fileName cannot be null/empty");
 		try {
 			final JarFile jar = new JarFile(jarFile);

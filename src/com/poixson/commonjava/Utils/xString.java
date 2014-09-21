@@ -24,6 +24,7 @@ public class xString {
 
 
 
+	@Override
 	public String toString() {
 		return this.data;
 	}

@@ -166,18 +166,15 @@ public class Dumper {
 				value.getClass() == java.util.Date.class ||
 				value.getClass().isEnum()) {
 			return value.toString();
-		} else {
-			final Integer visitedIndex = ctx.visited.get(value);
-			if(visitedIndex == null) {
-				ctx.visited.put(value, ctx.callCount);
-				if(ctx.maxDepth == 0 || ctx.callCount < ctx.maxDepth)
-					return dump(value, ctx);
-				else
-					return "<Reached max recursion depth>";
-			} else {
-				return "<Previously visited - see hashCode " + value.hashCode() + ">";
-			}
 		}
+		final Integer visitedIndex = ctx.visited.get(value);
+		if(visitedIndex == null) {
+			ctx.visited.put(value, Integer.valueOf(ctx.callCount));
+			if(ctx.maxDepth == 0 || ctx.callCount < ctx.maxDepth)
+				return dump(value, ctx);
+			return "<Reached max recursion depth>";
+		}
+		return "<Previously visited - see hashCode " + value.hashCode() + ">";
 	}
 
 

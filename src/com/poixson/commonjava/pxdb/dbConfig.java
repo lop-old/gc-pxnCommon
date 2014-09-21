@@ -86,6 +86,11 @@ public class dbConfig {
 	public Connection getConnection() {
 		if(Failure.hasFailed())
 			return null;
+//		if(this.failed) {
+//			if(this.coolFail.runAgain())
+//				log().severe("Database connection previously failed. We're not gonna hammer the server, but rather give up.");
+//			return null;
+//		}
 		// try connecting (5 times max)
 		for(long i = 0; i < 5L; i++) {
 			try {

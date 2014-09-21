@@ -28,10 +28,10 @@ import com.poixson.commonjava.xLogger.handlers.logHandlerConsole;
  *   d. initConfig()   | abstracted to app
  *   e. sync clock
  *   f. start thread queue
- *   g. startup(steps 1-7)  | steps abstracted to app
+ *   g. startup(steps 1-8)  | steps abstracted to app
  * Shutdown sequence
  *   a. shutdown()     | internal
- *   b. shutdown(steps 7-1) | steps abstracted to app
+ *   b. shutdown(steps 8-1) | steps abstracted to app
  */
 public abstract class xApp implements xStartable, Failure.FailureAction {
 
@@ -192,7 +192,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 				return;
 			}
 
-			// app steps 1-7
+			// app steps 1-8
 			try {
 				if(!startup(this.step))
 					throw new RuntimeException("Startup failed at step: "+Integer.toString(this.step));
@@ -256,7 +256,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 				System.exit(0);
 			}
 
-			// app steps 8-2
+			// app steps 8-1
 			try {
 				if(!shutdown(this.step))
 					throw new RuntimeException();

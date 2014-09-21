@@ -19,10 +19,6 @@ import com.poixson.commonjava.xLogger.handlers.xCommandEvent;
 
 
 public class jlineConsole implements xConsole {
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		throw new CloneNotSupportedException();
-	}
 
 	public static final String DEFAULT_PROMPT = " #>";
 
@@ -77,6 +73,10 @@ public class jlineConsole implements xConsole {
 				log().trace(e);
 			}
 		}
+	}
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		throw new CloneNotSupportedException();
 	}
 
 
@@ -239,6 +239,7 @@ public class jlineConsole implements xConsole {
 	@Override
 	public void setPrompt(final String prompt) {
 		this.prompt = prompt;
+		reader.setPrompt(prompt);
 	}
 	@Override
 	public String getPrompt() {

@@ -4,10 +4,6 @@ import com.poixson.commonjava.EventListener.xHandler;
 
 
 public class xNoConsole implements xConsole {
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		throw new CloneNotSupportedException();
-	}
 
 //	private static final Object lock = new Object();
 	private static final Object printLock = new Object();
@@ -16,6 +12,10 @@ public class xNoConsole implements xConsole {
 
 
 	public xNoConsole() {
+	}
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		throw new CloneNotSupportedException();
 	}
 
 

@@ -15,8 +15,8 @@ public class boolRef {
 
 
 
-	public void value(final boolean value) {
-		this.value = value;
+	public void value(final boolean val) {
+		this.value = val;
 	}
 	public boolean value() {
 		return this.value;

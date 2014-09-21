@@ -11,6 +11,9 @@ public class xConfig {
 
 	protected final Map<String, Object> data;
 
+//	protected volatile boolean loadedFromResource = false;
+
+
 
 	public xConfig(final Map<String, Object> data) {
 		if(data == null) throw new NullPointerException();

@@ -15,8 +15,8 @@ public class stringRef {
 
 
 
-	public void value(final String value) {
-		this.value = value;
+	public void value(final String val) {
+		this.value = val;
 	}
 	public String value() {
 		return this.value;
