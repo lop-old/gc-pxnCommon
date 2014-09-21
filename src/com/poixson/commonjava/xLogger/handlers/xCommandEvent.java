@@ -1,19 +1,20 @@
-package com.poixson.commonapp.listeners;
+package com.poixson.commonjava.xLogger.handlers;
 
 import com.poixson.commonjava.EventListener.xEventData;
 import com.poixson.commonjava.Utils.utils;
 
 
-public class CommandEvent extends xEventData {
+public class xCommandEvent extends xEventData {
 
 	public final String commandStr;
 	public final String[] args;
 	public final boolean help;
 
 
-	public CommandEvent(final String commandStr) {
-		if(utils.isEmpty(commandStr)) throw new NullPointerException();
-		this.commandStr = commandStr.trim();
+
+	public xCommandEvent(final String line) {
+		if(utils.isEmpty(line)) throw new NullPointerException();
+		this.commandStr = line.trim();
 		this.args = this.commandStr.split(" ");
 		{
 			final String firstArg = this.args[this.args.length - 1];

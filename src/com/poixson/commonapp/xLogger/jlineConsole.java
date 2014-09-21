@@ -10,12 +10,12 @@ import jline.console.history.History;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
+import com.poixson.commonjava.EventListener.xHandler;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsString;
-import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.xLogger.xConsole;
 import com.poixson.commonjava.xLogger.xLog;
-import com.poixson.commonjava.xLogger.handlers.CommandHandler;
+import com.poixson.commonjava.xLogger.handlers.xCommandEvent;
 
 
 public class jlineConsole implements xConsole {
@@ -32,7 +32,7 @@ public class jlineConsole implements xConsole {
 	private static volatile Boolean jlineEnabled = null;
 
 	private volatile String prompt = null;
-	private volatile CommandHandler handler = null;
+	private volatile xHandler handler = null;
 
 	// console input thread
 	private volatile Thread thread = null;
@@ -146,19 +146,23 @@ public class jlineConsole implements xConsole {
 				if("Stream closed".equals(e.getMessage()))
 					break;
 				log().trace(e);
-				utilsThread.Sleep(200);
-				continue;
+				break;
 			} catch (Exception e) {
 				log().trace(e);
 				break;
 			}
 			if(this.stopping) break;
 			if(utils.notEmpty(line)) {
-				// pass to command handler
-				if(this.handler == null)
-					System.out.println("Command handler not set!");
-				else
-					this.handler.processCommand(line);
+				// pass event to command handler
+				final xHandler hand = this.handler;
+				if(hand == null) {
+					log().severe("Command handler not set!");
+				} else {
+					final xCommandEvent event = new xCommandEvent(line);
+					hand.triggerNow(event);
+					if(!event.isHandled())
+						log().publish("Unknown command: "+event.arg(0));
+				}
 			}
 		}
 		this.running = false;
@@ -239,7 +243,7 @@ public class jlineConsole implements xConsole {
 	}
 
 
-	public void setCommandHandler(final CommandHandler handler) {
+	public void setCommandHandler(final xHandler handler) {
 		this.handler = handler;
 	}
 

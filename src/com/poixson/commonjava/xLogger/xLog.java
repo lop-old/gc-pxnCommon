@@ -8,10 +8,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.poixson.commonapp.xLogger.jlineConsole;
 import com.poixson.commonjava.xVars;
+import com.poixson.commonjava.EventListener.xHandler;
 import com.poixson.commonjava.Utils.Keeper;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.xLogger.formatters.defaultLogFormatter;
-import com.poixson.commonjava.xLogger.handlers.CommandHandler;
 import com.poixson.commonjava.xLogger.handlers.logHandlerConsole;
 
 
@@ -293,7 +293,7 @@ public class xLog extends xLogPrinting {
 
 
 	private static volatile xConsole consoleHandler = null;
-	private static volatile CommandHandler commandHandler = null;
+	private static volatile xHandler commandHandler = null;
 	private static final Object consoleLock = new Object();
 
 
@@ -320,7 +320,11 @@ public class xLog extends xLogPrinting {
 		if(peekConsole() != null)
 			peekConsole().stop();
 	}
-	public static void setCommandHandler(final CommandHandler handler) {
+
+
+
+	// set command handler
+	public static void setCommandHandler(final xHandler handler) {
 		synchronized(consoleLock) {
 			if(consoleHandler == null) return;
 			commandHandler = handler;
