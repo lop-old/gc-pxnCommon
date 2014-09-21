@@ -45,6 +45,24 @@ public abstract class xLogPrinting {
 		else
 			publish(" [[ "+msg+" ]]");
 	}
+	// multi-lined title
+	public void title(final String[] msgs) {
+		// find max length
+		int len = 0;
+		for(final String line : msgs)
+			if(line.length() > len)
+				len = line.length();
+		// print lines
+		for(final String line : msgs)
+			publish(" [[ "+line+utilsString.repeat(len - line.length(), " ")+" ]]");
+	}
+	public void title(final List<String> list) {
+		if(list == null) return;
+		this.title(list.toArray(new String[0]));
+	}
+
+
+
 	// exception
 	public void trace(final Exception e) {
 		publish(
