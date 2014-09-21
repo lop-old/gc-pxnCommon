@@ -16,6 +16,7 @@ public class xHandler {
 	protected final Set<ListenerHolder> listeners = new HashSet<ListenerHolder>();
 
 
+
 	/**
 	 * Listener data holder.
 	 */
@@ -40,6 +41,7 @@ public class xHandler {
 			this.ignoreCancelled = ignoreCancelled;
 		}
 	}
+
 
 
 	/**
@@ -69,8 +71,6 @@ System.out.println("Registered listener ["+Integer.toString(this.listeners.size(
 listener.toString()+" "+method.getName());
 			}
 		}
-
-
 	}
 	/**
 	 * Unregister an event listener.
@@ -92,6 +92,7 @@ listener.toString()+" "+method.getName());
 			this.listeners.clear();
 		}
 	}
+
 
 
 	// trigger all priorities
@@ -127,6 +128,7 @@ listener.toString()+" "+method.getName());
 	}
 
 
+
 	public class xRunnableEvent extends xRunnable {
 		private final xEventData event;
 		private final Priority priority;
@@ -146,6 +148,7 @@ listener.toString()+" "+method.getName());
 			}
 		}
 	}
+
 
 
 	/**
@@ -174,10 +177,12 @@ listener.toString()+" "+method.getName());
 	}
 
 
+
 	// logger
 	public static xLog log() {
 		return xLog.getRoot();
 	}
+
 
 
 }

@@ -9,8 +9,10 @@ import com.poixson.commonjava.xLogger.xLogRecord;
 public class logHandlerConsole extends xLogHandler {
 
 
+
 	public logHandlerConsole() {
 	}
+
 
 
 	@Override
@@ -26,6 +28,7 @@ public class logHandlerConsole extends xLogHandler {
 			console.print(msg);
 		}
 	}
+
 
 
 }

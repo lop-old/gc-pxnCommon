@@ -13,6 +13,7 @@ public class xLogRecord {
 	private final String msg;
 
 
+
 	// new record instance
 	public xLogRecord(final xLog log, final xLevel level, final String msg) {
 		this.timestamp = xClock.get(false).millis();
@@ -20,6 +21,7 @@ public class xLogRecord {
 		this.level = level;
 		this.msg   = msg;
 	}
+
 
 
 	// get level
@@ -34,10 +36,12 @@ public class xLogRecord {
 	}
 
 
+
 	// get timestamp
 	public long timestamp() {
 		return this.timestamp;
 	}
+
 
 
 	// get message
@@ -48,10 +52,12 @@ public class xLogRecord {
 	}
 
 
+
 	// [logger] [crumbs]
 	public List<String> getNameTree() {
 		return this.log.getNameTree();
 	}
+
 
 
 }

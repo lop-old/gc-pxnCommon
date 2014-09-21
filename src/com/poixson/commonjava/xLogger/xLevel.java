@@ -30,6 +30,7 @@ public class xLevel implements Serializable {
 	public final int value;
 
 
+
 	private xLevel(final String name, final int value) {
 		if(utils.isEmpty(name)) throw new NullPointerException("name cannot be null");
 		this.name = name.toUpperCase();
@@ -42,6 +43,7 @@ public class xLevel implements Serializable {
 	public Object clone() {
 		return this;
 	}
+
 
 
 	public static xLevel[] getKnownLevels() {
@@ -81,6 +83,7 @@ public class xLevel implements Serializable {
 	}
 
 
+
 	public boolean isLoggable(final xLevel level) {
 		if(level == null) return false;
 		// off (disabled)
@@ -93,10 +96,12 @@ public class xLevel implements Serializable {
 	}
 
 
+
 	public boolean equals(final xLevel level) {
 		if(level == null) return false;
 		return (level.value == this.value);
 	}
+
 
 
 	// to java level
@@ -107,10 +112,12 @@ public class xLevel implements Serializable {
 	}
 
 
+
 	@Override
 	public String toString() {
 		return this.name;
 	}
+
 
 
 }

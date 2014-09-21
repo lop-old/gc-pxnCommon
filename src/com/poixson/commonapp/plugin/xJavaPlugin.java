@@ -14,12 +14,14 @@ public abstract class xJavaPlugin {
 	private final Object initLock = new Object();
 
 
+
 	public xJavaPlugin(final xPluginManager manager, final xPluginYML yml) {
 		if(manager == null) throw new NullPointerException();
 		if(yml     == null) throw new NullPointerException();
 		this.manager = manager;
 		this.yml = yml;
 	}
+
 
 
 	protected void doInit() {
@@ -63,11 +65,13 @@ public abstract class xJavaPlugin {
 	}
 
 
+
 	public boolean isEnabled() {
 		if(!this.hasInited || this.hasUnloaded)
 			return false;
 		return this.enabled;
 	}
+
 
 
 	protected void onInit() {}
@@ -76,12 +80,14 @@ public abstract class xJavaPlugin {
 	protected abstract void onDisable();
 
 
+
 	public xPluginManager getPluginManager() {
 		return this.manager;
 	}
 	public xPluginYML getPluginYML() {
 		return this.yml;
 	}
+
 
 
 	public String getPluginName() {
@@ -98,6 +104,7 @@ public abstract class xJavaPlugin {
 	}
 
 
+
 	// logger
 	private volatile xLog _log = null;
 	private final Object logLock = new Object();
@@ -110,6 +117,7 @@ public abstract class xJavaPlugin {
 		}
 		return this._log;
 	}
+
 
 
 }

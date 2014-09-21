@@ -4,6 +4,7 @@ package com.poixson.commonjava.EventListener;
 public class xEventData {
 
 
+
 	// event handled
 	private volatile boolean handled = false;
 	public void setHandled() {
@@ -15,6 +16,7 @@ public class xEventData {
 	public boolean isHandled() {
 		return this.handled;
 	}
+
 
 
 	// event cancelled
@@ -30,10 +32,12 @@ public class xEventData {
 	}
 
 
+
 	/**
 	 * Reset state for next listener.
 	 */
 	public void reset() {}
+
 
 
 	@Override
@@ -44,6 +48,7 @@ public class xEventData {
 			return str.substring(i+1);
 		return str;
 	}
+
 
 
 }

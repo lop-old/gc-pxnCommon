@@ -5,6 +5,8 @@ import java.io.Closeable;
 
 public interface xCloseable extends Closeable {
 
+
 	public boolean isClosed();
+
 
 }

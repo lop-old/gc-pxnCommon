@@ -22,6 +22,7 @@ public class xPluginManager {
 	private static final Object lock = new Object();
 
 
+
 	public static xPluginManager get() {
 		if(manager == null) {
 			synchronized(lock) {
@@ -35,8 +36,10 @@ public class xPluginManager {
 	}
 
 
+
 	private final Map<String, PluginDAO> plugins = new HashMap<String, PluginDAO>();
 	private volatile String classFieldName = null;
+
 
 
 	protected class PluginDAO {
@@ -56,6 +59,7 @@ public class xPluginManager {
 		}
 
 	}
+
 
 
 	// load all plugins from dir
@@ -115,6 +119,7 @@ public class xPluginManager {
 			yml
 		);
 	}
+
 
 
 	// init all plugins
@@ -202,6 +207,7 @@ public class xPluginManager {
 	}
 
 
+
 	public void unloadAll() {
 		synchronized(this.plugins){
 			for(final PluginDAO dao : this.plugins.values()) {
@@ -215,6 +221,7 @@ public class xPluginManager {
 	}
 //	public void unload() {
 //	}
+
 
 
 	public void enableAll() {
@@ -239,6 +246,7 @@ public class xPluginManager {
 			}
 		}
 	}
+
 
 
 	public void addPlugin(final PluginDAO plugin) {
@@ -270,11 +278,13 @@ public class xPluginManager {
 	}
 
 
+
 	public void setClassField(final String field) {
 		synchronized(this.plugins){
 			this.classFieldName = field;
 		}
 	}
+
 
 
 	// logger
@@ -289,6 +299,7 @@ public class xPluginManager {
 		}
 		return this._log;
 	}
+
 
 
 }

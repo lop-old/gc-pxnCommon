@@ -8,6 +8,7 @@ import com.poixson.commonjava.Utils.utilsString;
 public abstract class xLogPrinting {
 
 
+
 	public abstract xLog get(final String name);
 	public abstract xLog getAnon();
 	public abstract xLog getAnon(final String name);
@@ -15,6 +16,7 @@ public abstract class xLogPrinting {
 	public abstract boolean isRoot();
 	public abstract List<String> getNameTree();
 	public abstract void addHandler(final xLogHandler handler);
+
 
 
 	// publish message
@@ -34,6 +36,7 @@ public abstract class xLogPrinting {
 	}
 
 
+
 	// title
 	public void title(final String msg) {
 		if(msg == null)
@@ -48,6 +51,7 @@ public abstract class xLogPrinting {
 			utilsString.ExceptionToString(e)
 		);
 	}
+
 
 
 	// finest
@@ -82,6 +86,7 @@ public abstract class xLogPrinting {
 	public void fatal(final String msg) {
 		publish(xLevel.FATAL, msg);
 	}
+
 
 
 }

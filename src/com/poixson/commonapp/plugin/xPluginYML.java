@@ -14,9 +14,11 @@ public class xPluginYML extends xConfig {
 	public static final String PLUGIN_WEBSITE = "Website";
 
 
+
 	public xPluginYML(Map<String, Object> data) {
 		super(data);
 	}
+
 
 
 	// plugin name
@@ -25,10 +27,12 @@ public class xPluginYML extends xConfig {
 	}
 
 
+
 	// plugin version
 	public String getPluginVersion() {
 		return getString(PLUGIN_VERSION);
 	}
+
 
 
 	// plugin author
@@ -37,10 +41,12 @@ public class xPluginYML extends xConfig {
 	}
 
 
+
 	// plugin website
 	public String getPluginWebsite() {
 		return getString(PLUGIN_WEBSITE);
 	}
+
 
 
 }

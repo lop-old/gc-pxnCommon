@@ -10,6 +10,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface xEvent {
 
+
 	public static enum Priority {
 		HIGHEST,
 		HIGH,
@@ -18,10 +19,12 @@ public @interface xEvent {
 		LOWEST
 	}
 
+
 	Priority priority()       default Priority.NORMAL;
 	boolean filtered()        default true;
 	boolean threaded()        default false;
 	boolean ignoreHandled()   default true;
 	boolean ignoreCancelled() default true;
+
 
 }

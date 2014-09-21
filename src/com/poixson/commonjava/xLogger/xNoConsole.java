@@ -14,8 +14,10 @@ public class xNoConsole implements xConsole {
 //	private static volatile xConsole console = null;
 
 
+
 	public xNoConsole() {
 	}
+
 
 
 	@Override
@@ -27,9 +29,11 @@ public class xNoConsole implements xConsole {
 	}
 
 
+
 	@Override
 	public void run() {
 	}
+
 
 
 	@Override
@@ -50,6 +54,7 @@ public class xNoConsole implements xConsole {
 	}
 
 
+
 	@Override
 	public void setPrompt(final String prompt) {
 	}
@@ -59,10 +64,12 @@ public class xNoConsole implements xConsole {
 	}
 
 
+
 	@Override
 	public void setCommandHandler(final xHandler handler) {
 		if(handler != null) throw new UnsupportedOperationException();
 	}
+
 
 
 	// logger

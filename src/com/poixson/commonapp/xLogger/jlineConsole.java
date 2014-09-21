@@ -40,6 +40,7 @@ public class jlineConsole implements xConsole {
 	private volatile boolean stopping = false;
 
 
+
 	// new instance
 	public jlineConsole() {
 		// console reader
@@ -77,6 +78,7 @@ public class jlineConsole implements xConsole {
 			}
 		}
 	}
+
 
 
 	@Override
@@ -128,6 +130,7 @@ public class jlineConsole implements xConsole {
 	}
 
 
+
 	// input listener loop
 	@Override
 	public void run() {
@@ -172,6 +175,7 @@ public class jlineConsole implements xConsole {
 		reader.shutdown();
 		reader = null;
 	}
+
 
 
 	// clear screen
@@ -230,6 +234,7 @@ public class jlineConsole implements xConsole {
 	}
 
 
+
 	// prompt string
 	@Override
 	public void setPrompt(final String prompt) {
@@ -243,16 +248,19 @@ public class jlineConsole implements xConsole {
 	}
 
 
+
 	@Override
 	public void setCommandHandler(final xHandler handler) {
 		this.handler = handler;
 	}
 
 
+
 	// logger
 	public static xLog log() {
 		return xLog.getRoot();
 	}
+
 
 
 }

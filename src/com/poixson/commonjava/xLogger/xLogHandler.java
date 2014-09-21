@@ -10,11 +10,13 @@ public abstract class xLogHandler {
 	private final Object formatLock = new Object();
 
 
+
 	public abstract void publish(final xLogRecord record);
 	public abstract void publish(final String msg);
 	protected String msgFormat(final xLogRecord record) {
 		return getFormatter().formatMsg(record);
 	}
+
 
 
 	// formatter
@@ -34,6 +36,7 @@ public abstract class xLogHandler {
 	}
 
 
+
 	// log level
 	public void setLevel(final xLevel lvl) {
 		this.level = lvl;
@@ -47,6 +50,7 @@ public abstract class xLogHandler {
 			return false;
 		return this.level.isLoggable(lvl);
 	}
+
 
 
 }
