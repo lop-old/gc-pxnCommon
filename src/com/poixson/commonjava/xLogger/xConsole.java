@@ -1,7 +1,10 @@
 package com.poixson.commonjava.xLogger;
 
+import com.poixson.commonjava.EventListener.xHandler;
+
 
 public interface xConsole extends Runnable {
+
 
 	public void start();
 	public void stop();
@@ -16,5 +19,8 @@ public interface xConsole extends Runnable {
 
 	public void setPrompt(final String prompt);
 	public String getPrompt();
+
+	public void setCommandHandler(final xHandler handler);
+
 
 }

@@ -1,5 +1,7 @@
 package com.poixson.commonjava.xLogger;
 
+import com.poixson.commonjava.EventListener.xHandler;
+
 
 public class xNoConsole implements xConsole {
 	@Override
@@ -54,6 +56,12 @@ public class xNoConsole implements xConsole {
 	@Override
 	public String getPrompt() {
 		return null;
+	}
+
+
+	@Override
+	public void setCommandHandler(final xHandler handler) {
+		if(handler != null) throw new UnsupportedOperationException();
 	}
 
 

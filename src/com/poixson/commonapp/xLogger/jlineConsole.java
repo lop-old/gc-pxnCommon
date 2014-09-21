@@ -243,6 +243,7 @@ public class jlineConsole implements xConsole {
 	}
 
 
+	@Override
 	public void setCommandHandler(final xHandler handler) {
 		this.handler = handler;
 	}
