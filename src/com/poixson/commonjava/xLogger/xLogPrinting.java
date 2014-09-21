@@ -16,6 +16,7 @@ public abstract class xLogPrinting {
 	public abstract boolean isRoot();
 	public abstract List<String> getNameTree();
 	public abstract void addHandler(final xLogHandler handler);
+	public abstract void setHandler(final xLogHandler handler);
 
 
 

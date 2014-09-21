@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.poixson.commonapp.xLogger.jlineConsole;
 import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.EventListener.xHandler;
 import com.poixson.commonjava.Utils.Keeper;
@@ -34,52 +33,23 @@ public class xLog extends xLogPrinting {
 
 
 
-// local caching
+// overridable
 /*
 	// logger
 	private volatile xLog _log = null;
-	private final Object logLock = new Object();
 	public xLog log() {
-		if(this._log == null) {
-			synchronized(this.logLock) {
-				if(this._log == null)
-					this._log = xLog.getRoot();
-			}
-		}
+		if(this._log == null)
+			return xLog.getRoot();
 		return this._log;
 	}
 	public void setLog(final xLog log) {
-		synchronized(this.logLock) {
-			this._log = log;
-		}
+		this._log = log;
 	}
 */
 
 
 
-// full with local caching
-/*
-	// logger
-	private volatile xLog _log = null;
-	private final Object logLock = new Object();
-	public xLog log() {
-		if(this._log == null) {
-			synchronized(this.logLock) {
-				if(this._log == null)
-					this._log = xLog.getRoot();
-			}
-		}
-		return this._log;
-	}
-	public xLog log(final String name) {
-		return log().get(name);
-	}
-	public void setLog(final xLog log) {
-		synchronized(this.logLock) {
-			this._log = log;
-		}
-	}
-*/
+	// ------------------------------------------------------------------------------- //
 
 
 
@@ -110,7 +80,7 @@ public class xLog extends xLogPrinting {
 		}
 	}
 	// default log handlers
-	protected static void initDefaultHandlers() {
+	private static void initDefaultHandlers() {
 		// console handler
 		xLogHandler handler = new logHandlerConsole();
 		handler.setFormatter(new defaultLogFormatter());
@@ -143,7 +113,7 @@ public class xLog extends xLogPrinting {
 		synchronized(this.loggers) {
 			if(this.loggers.containsKey(logName))
 				return this.loggers.get(logName);
-			final xLog log =new xLog(logName, this);
+			final xLog log = new xLog(logName, this);
 			this.loggers.put(logName, log);
 			return log;
 		}
@@ -173,7 +143,9 @@ public class xLog extends xLogPrinting {
 		this.name = logName;
 		this.parent = parentLogger;
 		// root logger
-		if(parentLogger == null) {
+		if(this.isRoot()) {
+			if(this.level == null)
+				this.level = DEFAULT_LEVEL;
 			Keeper.add(this);
 		}
 	}
@@ -183,7 +155,7 @@ public class xLog extends xLogPrinting {
 	// is root logger
 	@Override
 	public boolean isRoot() {
-		return (this.parent == null);
+		return (this.name == null && this.parent == null);
 	}
 
 
@@ -200,12 +172,15 @@ public class xLog extends xLogPrinting {
 	}
 	// is level loggable
 	public boolean isLoggable(final xLevel lvl) {
+		if(lvl == null || this.level == null)
+			return true;
 		// forced debug mode
 		if(xVars.get().debug())
 			return true;
 		// local logger level
-		if(this.level != null && !this.level.isLoggable(lvl))
-			return false;
+		if(this.level.isLoggable(lvl))
+			return true;
+		return false;
 //		// handlers
 //		for(xLogHandler handler : handlers)
 //			if(handler.isLoggable(lvl))
@@ -217,8 +192,6 @@ public class xLog extends xLogPrinting {
 //		// default level at root
 //		if(parent == null && level == null)
 //			return DEFAULT_LEVEL.isLoggable(lvl);
-		// default to all
-		return true;
 	}
 
 
@@ -226,10 +199,12 @@ public class xLog extends xLogPrinting {
 	// formatter
 	public void setFormatter(final xLogFormatter formatter, final Class<?> type) {
 		if(formatter == null) throw new NullPointerException("formatter cannot be null");
-		if(type      == null) throw new NullPointerException("handler type cannot be null");
 		for(final xLogHandler handler : this.handlers)
-			if(handler.getClass().equals(type))
+			if(type == null || type.equals(handler.getClass()))
 				handler.setFormatter(formatter);
+	}
+	public void setFormatter(final xLogFormatter formatter) {
+		this.setFormatter(formatter, null);
 	}
 
 
@@ -239,7 +214,8 @@ public class xLog extends xLogPrinting {
 	private void buildNameTree(final List<String> list) {
 		if(this.parent != null) {
 			this.parent.buildNameTree(list);
-			list.add(this.name);
+			if(utils.notEmpty(this.name))
+				list.add(this.name);
 		}
 	}
 	@Override
@@ -257,6 +233,11 @@ public class xLog extends xLogPrinting {
 	// log handlers
 	@Override
 	public void addHandler(final xLogHandler handler) {
+		this.handlers.add(handler);
+	}
+	@Override
+	public void setHandler(final xLogHandler handler) {
+		this.handlers.clear();
 		this.handlers.add(handler);
 	}
 	// publish record to handlers
@@ -288,29 +269,19 @@ public class xLog extends xLogPrinting {
 
 
 
-	// ### console handler
+	// ------------------------------------------------------------------------------- //
+	// console handler
 
 
 
 	private static volatile xConsole consoleHandler = null;
-	private static volatile xHandler commandHandler = null;
-	private static final Object consoleLock = new Object();
-
 
 	public static void setConsole(final xConsole console) {
-		synchronized(consoleLock) {
-			xLog.consoleHandler = console;
-		}
-		if(commandHandler != null)
-			setCommandHandler(commandHandler);
+		consoleHandler = console;
 	}
 	public static xConsole getConsole() {
-		if(consoleHandler == null) {
-			synchronized(consoleLock) {
-				if(consoleHandler == null)
-					consoleHandler = new xNoConsole();
-			}
-		}
+		if(consoleHandler == null)
+			consoleHandler = new xNoConsole();
 		return consoleHandler;
 	}
 	public static xConsole peekConsole() {
@@ -325,12 +296,9 @@ public class xLog extends xLogPrinting {
 
 	// set command handler
 	public static void setCommandHandler(final xHandler handler) {
-		synchronized(consoleLock) {
-			if(consoleHandler == null) return;
-			commandHandler = handler;
-			if(!(consoleHandler instanceof jlineConsole)) return;
-			((jlineConsole) consoleHandler).setCommandHandler(handler);
-		}
+		if(handler        == null) throw new NullPointerException();
+		if(consoleHandler == null) throw new RuntimeException("Console handler not set; command handler not supported.");
+		consoleHandler.setCommandHandler(handler);
 	}
 
 
