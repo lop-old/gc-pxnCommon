@@ -43,35 +43,35 @@ public class jlineConsole implements xConsole {
 	// new instance
 	public jlineConsole() {
 		// console reader
-		if(jlineConsole.reader == null) {
-			jlineConsole.jlineEnabled = null;
+		if(reader == null) {
+			jlineEnabled = null;
 			// no console
 			if(System.console() == null) {
-				jlineConsole.jlineEnabled = new Boolean(false);
+				jlineEnabled = Boolean.FALSE;
 				System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
 			}
 			try {
-				jlineConsole.reader = new ConsoleReader(System.in, System.out);
+				reader = new ConsoleReader(System.in, System.out);
 			} catch (IOException ignore) {
 				// try again with jline disabled
 				try {
-					jlineConsole.jlineEnabled = new Boolean(false);
+					jlineEnabled = Boolean.FALSE;
 					System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
 					System.setProperty("user.language", "en");
-					jlineConsole.reader = new ConsoleReader(System.in, System.out);
+					reader = new ConsoleReader(System.in, System.out);
 				} catch (IOException e) {
 					log().trace(e);
 				}
 			}
-			if(jlineConsole.jlineEnabled == null)
-				jlineConsole.jlineEnabled = new Boolean(true);
+			if(jlineEnabled == null)
+				jlineEnabled = Boolean.TRUE;
 			try {
-				jlineConsole.reader.setBellEnabled(false);
+				reader.setBellEnabled(false);
 				FileHistory history = new FileHistory(new File("./history.txt"));
 				history.setMaxSize(200);
-				jlineConsole.reader.setHistory(history);
-				jlineConsole.reader.setHistoryEnabled(true);
-				jlineConsole.reader.setExpandEvents(true);
+				reader.setHistory(history);
+				reader.setHistoryEnabled(true);
+				reader.setExpandEvents(true);
 			} catch (Exception e) {
 				log().trace(e);
 			}
@@ -106,9 +106,9 @@ public class jlineConsole implements xConsole {
 				} catch (Exception ignore) {}
 			}
 			// save command history
-			if(jlineConsole.reader != null) {
+			if(reader != null) {
 				try {
-					final History history = jlineConsole.reader.getHistory();
+					final History history = reader.getHistory();
 					if(history != null && history instanceof FileHistory)
 						((FileHistory) history).flush();
 				} catch (Exception e) {
@@ -140,7 +140,7 @@ public class jlineConsole implements xConsole {
 			String line = null;
 			try {
 				System.out.print('\r');
-				line = jlineConsole.reader.readLine(getPrompt());
+				line = reader.readLine(getPrompt());
 				flush();
 			} catch (IOException e) {
 				if("Stream closed".equals(e.getMessage()))
@@ -169,8 +169,8 @@ public class jlineConsole implements xConsole {
 		System.out.println();
 		System.out.println();
 		flush();
-		jlineConsole.reader.shutdown();
-		jlineConsole.reader = null;
+		reader.shutdown();
+		reader = null;
 	}
 
 
@@ -189,7 +189,7 @@ public class jlineConsole implements xConsole {
 	public void flush() {
 		try {
 			synchronized(printLock) {
-				jlineConsole.reader.flush();
+				reader.flush();
 				//System.out.flush();
 			}
 		} catch (Exception ignore) {}
@@ -216,11 +216,11 @@ public class jlineConsole implements xConsole {
 	// draw command prompt
 	@Override
 	public void drawPrompt() {
-		if(jlineConsole.reader == null) return;
+		if(reader == null) return;
 		try {
 			synchronized(printLock) {
-				jlineConsole.reader.drawLine();
-				jlineConsole.reader.flush();
+				reader.drawLine();
+				reader.flush();
 			}
 		} catch (IOException ignore) {}
 	}
