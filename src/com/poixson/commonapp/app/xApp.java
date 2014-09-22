@@ -191,14 +191,18 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 
 			switch(this.step) {
 			// first step in startup
-			case 1:
+			case 1: {
 				// lock file
 				utilsDirFile.lockInstance(this.app.getName()+".lock");
 				log().title("Starting "+this.app.getName()+"..");
 				break;
+			}
 			// last step in startup
-			case 8:
+			case 8: {
 				log().title(this.app.getName()+" Ready and Running!");
+				break;
+			}
+			default:
 				break;
 			}
 
@@ -259,17 +263,21 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 
 			switch(this.step) {
 			// first step in shutdown
-			case 8:
+			case 8: {
 				log().title("Stopping "+this.app.getName()+"..");
 				break;
+			}
 			// last step in shutdown
-			case 1:
+			case 1: {
 				log().title(this.app.getName()+" Stopped.");
 				//TODO: display total time running
 				synchronized(xApp.appLock) {
 					this.app.initLevel = 0;
 				}
 				termConsole();
+				break;
+			}
+			default:
 				break;
 			}
 
