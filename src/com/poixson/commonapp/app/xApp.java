@@ -1,6 +1,10 @@
 package com.poixson.commonapp.app;
 
 import java.io.File;
+import java.io.PrintStream;
+
+import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 
 import com.poixson.commonapp.xLogger.jlineConsole;
 import com.poixson.commonjava.Failure;
@@ -372,6 +376,53 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		final xConsole console = xLog.peekConsole();
 		if(console != null)
 			console.stop();
+	}
+
+
+
+	// ascii header
+	protected void displayColors() {
+		final PrintStream out = AnsiConsole.out;
+		out.println(Ansi.ansi().reset());
+		for(final Ansi.Color color : Ansi.Color.values()) {
+			final String name = utilsString.padCenter(7, color.name(), ' ');
+			out.println(Ansi.ansi()
+				.a("   ")
+				.fg(color).a(name)
+				.a("   ")
+				.bold().a("BOLD-"+name)
+				.a("   ")
+				.boldOff().fg(Ansi.Color.WHITE).bg(color).a(name)
+				.reset()
+			);
+		}
+		out.println(Ansi.ansi().reset());
+		out.println();
+		out.flush();
+	}
+	public void displayStartupVars() {
+		final PrintStream out = AnsiConsole.out;
+		out.println();
+		out.println(" "+this.mvnprops.full_title);
+		out.println(" Running as:  "+System.getProperty("user.name"));
+		out.println(" Current dir: "+System.getProperty("user.dir"));
+		out.println(" java home:   "+System.getProperty("java.home"));
+		out.println(" Terminal:    "+System.getProperty("jline.terminal"));
+		if(xVars.get().debug())
+			out.println(" Forcing Debug: true");
+//		if(utils.notEmpty(args)) {
+//			out.println();
+//			out.println(utilsString.addStrings(" ", args));
+//		}
+		out.println();
+		out.flush();
+	}
+	protected void displayLogo() {
+		final PrintStream out = AnsiConsole.out;
+		final Ansi.Color bgcolor = Ansi.Color.BLACK;
+		out.println();
+		out.println();
+		out.flush();
 	}
 
 
