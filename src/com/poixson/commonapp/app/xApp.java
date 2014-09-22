@@ -199,10 +199,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			// last step in startup
 			case 8:
 				log().title(this.app.getName()+" Ready and Running!");
-				synchronized(xApp.appLock) {
-					this.app.initLevel = 9;
-				}
-				return;
+				break;
 			}
 
 			// app steps 1-8
@@ -212,6 +209,14 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			} catch (Exception e) {
 				log().trace(e);
 				Failure.fail("Startup failed at step: "+Integer.toString(this.step));
+				return;
+			}
+
+			// finished startup sequence
+			if(this.step >= 8) {
+				synchronized(xApp.appLock) {
+					this.app.initLevel = 9;
+				}
 				return;
 			}
 
@@ -265,8 +270,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 					this.app.initLevel = 0;
 				}
 				termConsole();
-				System.out.println();
-				System.exit(0);
+				break;
 			}
 
 			// app steps 8-1
@@ -280,6 +284,14 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 
 			// sleep for a moment
 			utilsThread.Sleep(50);
+
+			// finished shutdown sequence
+			if(this.step <= 1) {
+				this.app.initLevel = 0;
+				System.out.println();
+				System.exit(0);
+				return;
+			}
 
 			// queue next step
 			synchronized(xApp.appLock) {
