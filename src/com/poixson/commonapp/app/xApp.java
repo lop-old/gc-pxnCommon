@@ -89,6 +89,8 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 	protected xApp() {
 		// mvn properties
 		this.mvnprops = mvnProps.get(this.getClass());
+		// initialize console and enable colors
+		this.initConsole();
 	}
 	// static
 	{
@@ -362,19 +364,23 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 
 
 
-	// start console prompt
+	// initialize console and enable colors
 	protected void initConsole() {
 		xConsole console = xLog.peekConsole();
 		if(console == null || console instanceof xNoConsole) {
 			console = new jlineConsole();
 			xLog.setConsole(console);
 		}
-		console.start();
 		// enable console color
 		log().setFormatter(
 			new defaultLogFormatter_Color(),
 			logHandlerConsole.class
 		);
+	}
+	// start console prompt
+	protected void startConsole() {
+		final xConsole console = xLog.peekConsole();
+		console.start();
 	}
 
 
