@@ -208,7 +208,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 
 			// app steps 1-8
 			try {
-				if(!startup(this.step))
+				if(!this.app.StartupStep(this.step))
 					throw new RuntimeException("Startup failed at step: "+Integer.toString(this.step));
 			} catch (Exception e) {
 				log().trace(e);
@@ -283,7 +283,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 
 			// app steps 8-1
 			try {
-				if(!shutdown(this.step))
+				if(!this.app.ShutdownStep(this.step))
 					throw new RuntimeException();
 			} catch (Exception e) {
 				log().severe("Shutdown failed at step: "+Integer.toString(this.step));
@@ -324,8 +324,8 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 
 
 
-	protected abstract boolean startup(final int step);
-	protected abstract boolean shutdown(final int step);
+	protected abstract boolean StartupStep(final int step);
+	protected abstract boolean ShutdownStep(final int step);
 
 	protected abstract void initConfig();
 	protected abstract void processArgs(final String[] args);
