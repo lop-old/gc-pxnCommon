@@ -421,9 +421,104 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		final PrintStream out = AnsiConsole.out;
 		final Ansi.Color bgcolor = Ansi.Color.BLACK;
 		out.println();
+		// line 1
+		out.println(Ansi.ansi()
+			.a(" ").bg(bgcolor)
+			.a("                                ")
+			.a("                                 ")
+			.reset() );
+		// line 2
+		out.println(Ansi.ansi()
+			.a(" ").bg(bgcolor)
+			.fg(Ansi.Color.YELLOW).a("         |`-.__")
+			.a("                         ")
+			.a("                         ")
+			.reset() );
+		// line 3
+		out.println(Ansi.ansi()
+			.a(" ").bg(bgcolor)
+			.fg(Ansi.Color.YELLOW).a("         / ' _/")
+			.a("                         ")
+			.a("                         ")
+			.reset() );
+		// line 4
+		out.println(Ansi.ansi()
+			.a(" ").bg(bgcolor)
+			.fg(Ansi.Color.RED).a("        ****")
+			.fg(Ansi.Color.RED).a("\"         ")
+			.a("                     ")
+			.a("                      ")
+			.reset() );
+		// line 5
+		out.println(Ansi.ansi()
+			.a(" ").bg(bgcolor)
+			.fg(Ansi.Color.YELLOW).a("      /    }")
+			.a("             ")
+			.fg(Ansi.Color.CYAN).bold()
+			.a(utilsString.padCenter(20, this.mvnprops.name, ' '))
+			.boldOff()
+			.a("                    ")
+			.reset() );
+		// line 6
+		out.println(Ansi.ansi()
+			.a(" ").bg(bgcolor)
+			.fg(Ansi.Color.YELLOW).a("     /    \\")
+			.a("              ")
+			.fg(Ansi.Color.CYAN)
+			.a(utilsString.padCenter(20, this.mvnprops.version, ' '))
+			.a("                    ")
+			.reset() );
+		// line 7
+		out.println(Ansi.ansi()
+			.a(" ").bg(bgcolor)
+			.fg(Ansi.Color.YELLOW).a(" \\ /`    \\\\\\")
+			.a("                          ")
+			.a("                           ")
+			.reset() );
+		// line 8
+		out.println(Ansi.ansi()
+			.a(" ").bg(bgcolor)
+			.fg(Ansi.Color.YELLOW).a("  `\\     /_\\\\")
+			.a("                          ")
+			.a("                          ")
+			.reset() );
+		// line 9
+		out.println(Ansi.ansi()
+			.a(" ").bg(bgcolor)
+			.fg(Ansi.Color.YELLOW).a("   `~~~~~~``~`")
+			.a("                         ")
+			.a("                          ")
+			.reset() );
+		// line 10
+		out.println(Ansi.ansi()
+			.a(" ").bg(bgcolor)
+			.fg(Ansi.Color.GREEN)
+			.a("^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/")
+			.a("^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^")
+			.reset() );
+		// line 11
+		out.println(Ansi.ansi()
+			.a(" ").bg(bgcolor)
+			.fg(Ansi.Color.GREEN)
+			.a("////////////////////////////////")
+			.a("/////////////////////////////////")
+			.reset() );
 		out.println();
 		out.flush();
 	}
+// 1 |                                                                   |
+// 2 |          |`-.__                                                   |
+// 3 |          / ' _/                                                   |
+// 4 |         ****\"                                                    |
+// 5 |       /    }                                                      |
+// 6 |      /    \                                                       |
+// 7 |  \ /`    \\\                                                      |
+// 8 |   `\     /_\\                                                     |
+// 9 |    `~~~~~~``~`                                                    |
+//10 | ^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^ |
+//11 | ///////////////////////////////////////////////////////////////// |
+//   0 2 4 6 8 0 2 4 6 8 0 2 4 6 8 0 2 4 6 8 0 2 4 6 8 0 2 4 6 8 0 2 4 6 8
+//   0         1         2         3         4         5         6
 
 
 
