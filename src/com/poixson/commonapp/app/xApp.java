@@ -122,7 +122,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		}
 		Failure.register(this);
 		// load config
-		initConfig();
+		this.initConfig();
 		// load clock
 		this.startTime = xClock.get(true).millis();
 		// load libraries
@@ -139,14 +139,14 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			_AlreadyStarted();
 		// trigger startup sequence
 		log().fine("Startup sequence.. 1..2..");
-		getThreadPool().runLater(
+		this.getThreadPool().runLater(
 			new _StartupRunnable(
 				this,
 				1
 			)
 		);
 		// start main thread queue
-		run();
+		this.run();
 		// main thread ended
 		Failure.fail("@|FG_RED Main process ended! (this shouldn't happen)|@");
 		System.exit(1);
@@ -156,7 +156,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 	public void Stop() {
 		// trigger shutdown sequence
 		log().fine("Shutdown sequence.. 8..7..");
-		getThreadPool().runLater(
+		this.getThreadPool().runLater(
 			new _ShutdownRunnable(
 				this,
 				8
@@ -230,7 +230,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			// queue next step
 			synchronized(xApp.appLock) {
 				this.app.initLevel = this.step + 1;
-				getThreadPool().runLater(
+				this.app.getThreadPool().runLater(
 					new _StartupRunnable(
 						this.app,
 						this.app.initLevel
@@ -274,7 +274,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 				synchronized(xApp.appLock) {
 					this.app.initLevel = 0;
 				}
-				termConsole();
+				this.app.termConsole();
 				break;
 			}
 			default:
@@ -304,7 +304,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			// queue next step
 			synchronized(xApp.appLock) {
 				this.app.initLevel = this.step - 1;
-				getThreadPool().runLater(
+				this.app.getThreadPool().runLater(
 					new _ShutdownRunnable(
 						this.app,
 						this.app.initLevel
@@ -368,7 +368,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 	 */
 	@Override
 	public void run() {
-		getThreadPool().run();
+		this.getThreadPool().run();
 	}
 	/**
 	 * Get the main thread queue.
