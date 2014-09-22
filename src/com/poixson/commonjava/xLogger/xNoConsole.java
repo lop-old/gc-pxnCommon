@@ -81,7 +81,6 @@ public class xNoConsole implements xConsole {
 
 	@Override
 	public void setCommandHandler(final xHandler handler) {
-		if(handler != null) throw new UnsupportedOperationException("Cannot register a command handler when using xNoConsole");
 	}
 
 

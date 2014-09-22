@@ -61,6 +61,8 @@ public class xLog extends xLogPrinting {
 	private final String name;
 	private final xLog parent;
 	private volatile xLevel level = null;
+	private static volatile xHandler commandHandler = null;
+
 	// sub-loggers
 	private final Map<String, xLog> loggers = new ConcurrentHashMap<String, xLog>();
 	// handlers
@@ -278,6 +280,8 @@ public class xLog extends xLogPrinting {
 
 	public static void setConsole(final xConsole console) {
 		consoleHandler = console;
+		if(consoleHandler != null && commandHandler != null)
+			consoleHandler.setCommandHandler(commandHandler);
 	}
 	public static xConsole getConsole() {
 		if(consoleHandler == null)
@@ -298,6 +302,7 @@ public class xLog extends xLogPrinting {
 	public static void setCommandHandler(final xHandler handler) {
 		if(handler        == null) throw new NullPointerException();
 		if(consoleHandler == null) throw new RuntimeException("Console handler not set; command handler not supported.");
+		commandHandler = handler;
 		consoleHandler.setCommandHandler(handler);
 	}
 
