@@ -8,9 +8,11 @@ import org.fusesource.jansi.AnsiConsole;
 
 import com.poixson.commonapp.xLogger.jlineConsole;
 import com.poixson.commonjava.Failure;
+import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.Utils.Keeper;
 import com.poixson.commonjava.Utils.mvnProps;
 import com.poixson.commonjava.Utils.utilsDirFile;
+import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xClock;
 import com.poixson.commonjava.Utils.xRunnable;
@@ -65,6 +67,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 
 
 
+	// call this from main(args)
 	protected static void initMain(final String[] args, final xApp app) {
 		// single instance
 		if(appInstance != null)
@@ -82,11 +85,19 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		Failure.fail("Program already started?");
 		System.exit(1);
 	}
+	// new instance
 	protected xApp() {
-		// just to prevent gc
-		keeper = Keeper.get();
 		// mvn properties
 		this.mvnprops = mvnProps.get(this.getClass());
+	}
+	// static
+	{
+		// just to prevent gc
+		keeper = Keeper.get();
+		// no console
+		if(System.console() == null) {
+			System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
+		}
 	}
 
 
@@ -117,10 +128,6 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			final String libPath = utilsDirFile.mergePaths(".", "lib");
 			if((new File(libPath)).isDirectory())
 				utilsDirFile.addLibraryPath(libPath);
-		}
-		// no console
-		if(System.console() == null) {
-			System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
 		}
 		// main thread queue
 		if(this.threadPool == null)
