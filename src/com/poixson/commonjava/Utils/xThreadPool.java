@@ -338,7 +338,7 @@ public class xThreadPool implements Runnable {
 				try {
 					pool.wait();
 				} catch (InterruptedException e) {
-					log().trace(e);
+					xLog.getRoot().trace(e);
 				}
 				it.remove();
 			}
@@ -423,8 +423,14 @@ public class xThreadPool implements Runnable {
 
 
 	// logger
-	public static xLog log() {
-		return xLog.getRoot();
+	private volatile xLog _log = null;
+	public xLog log() {
+		if(this._log == null)
+			return utils.log();
+		return this._log;
+	}
+	public void setLog(final xLog log) {
+		this._log = log;
 	}
 
 

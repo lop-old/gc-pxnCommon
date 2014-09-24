@@ -110,8 +110,11 @@ public final class dbManager {
 
 
 	// logger
+	private static volatile xLog _log = null;
 	public static xLog log() {
-		return xLog.getRoot("db");
+		if(_log == null)
+			_log = xLog.getRoot("db");
+		return _log;
 	}
 
 

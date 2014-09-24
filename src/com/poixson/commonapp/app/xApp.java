@@ -568,14 +568,9 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 
 	// logger
 	private static volatile xLog log = null;
-	private static final Object logLock = new Object();
 	public static xLog log() {
-		if(log == null) {
-			synchronized(logLock) {
-				if(log == null)
-					log = xLog.getRoot();
-			}
-		}
+		if(log == null)
+			log = xLog.getRoot();
 		return log;
 	}
 

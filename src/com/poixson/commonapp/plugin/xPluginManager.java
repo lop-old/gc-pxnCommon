@@ -289,14 +289,9 @@ public class xPluginManager {
 
 	// logger
 	private volatile xLog _log = null;
-	private final Object logLock = new Object();
 	public xLog log() {
-		if(this._log == null) {
-			synchronized(this.logLock) {
-				if(this._log == null)
-					this._log = xLog.getRoot("PluginManager");
-			}
-		}
+		if(this._log == null)
+			this._log = xLog.getRoot("PluginManager");
 		return this._log;
 	}
 

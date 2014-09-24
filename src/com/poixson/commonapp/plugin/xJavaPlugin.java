@@ -107,14 +107,9 @@ public abstract class xJavaPlugin {
 
 	// logger
 	private volatile xLog _log = null;
-	private final Object logLock = new Object();
 	public xLog log() {
-		if(this._log == null) {
-			synchronized(this.logLock) {
-				if(this._log == null)
-					this._log = xLog.getRoot(getPluginName());
-			}
-		}
+		if(this._log == null)
+			this._log = xLog.getRoot(getPluginName());
 		return this._log;
 	}
 
