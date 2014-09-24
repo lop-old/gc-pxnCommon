@@ -12,6 +12,7 @@ import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.Utils.Keeper;
 import com.poixson.commonjava.Utils.mvnProps;
 import com.poixson.commonjava.Utils.utilsDirFile;
+import com.poixson.commonjava.Utils.utilsNumbers;
 import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xClock;
@@ -49,6 +50,14 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 	@SuppressWarnings("unused")
 	private static Keeper keeper = null;
 
+	public enum APP_STATE {
+		STARTUP,
+		RUNNING,
+		STOPPING,
+		STOPPED
+	}
+	protected volatile APP_STATE state = APP_STATE.STOPPED;
+
 	@SuppressWarnings("unused")
 	private volatile long startTime = -1;
 	protected volatile int initLevel = 0;
@@ -80,11 +89,19 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		xApp.appInstance.processArgs(args);
 		xApp.appInstance.Start();
 	}
-	private static void _AlreadyStarted() {
-		log().trace(new UnsupportedOperationException("Cannot redefine singleton instance of xApp; appInstance already set."));
+	protected static void _AlreadyStarted() {
+		log().trace(new IllegalStateException("Illegal app state; this shouldn't happen; cannot start in this state; possibly already started?"));
 		Failure.fail("Program already started?");
 		System.exit(1);
 	}
+	protected static void _IllegalState(final APP_STATE state) {
+		log().trace(new IllegalStateException("Illegal app state; cannot continue; this shouldn't happen; Current state: "+state.toString()));
+		Failure.fail("Illegal app state: "+state.toString());
+		System.exit(1);
+	}
+
+
+
 	// new instance
 	protected xApp() {
 		// mvn properties
@@ -109,9 +126,15 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 	 */
 	@Override
 	public boolean Start() {
-		synchronized(xApp.appLock) {
-			if(this.initLevel != 0)
+		synchronized(this.state) {
+			if(this.initLevel != 0) {
 				_AlreadyStarted();
+				return false;
+			}
+			if(!APP_STATE.STOPPED.equals(this.state)) {
+				_IllegalState(this.state);
+				return false;
+			}
 			this.initLevel = 1;
 		}
 		// init logger
@@ -136,10 +159,16 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		// main thread queue
 		if(this.threadPool == null)
 			this.threadPool = xThreadPool.get();
-		// run startup sequence (1-9)
-		if(this.initLevel != 1)
+		// ready for startup sequence
+		if(this.initLevel != 1) {
 			_AlreadyStarted();
-		// trigger startup sequence
+			return false;
+		}
+		if(!APP_STATE.STOPPED.equals(this.state)) {
+			_IllegalState(this.state);
+			return false;
+		}
+		// run startup sequence (1-9)
 		log().fine("Startup sequence.. 1..2..");
 		this.getThreadPool().runLater(
 			new _StartupRunnable(
@@ -156,6 +185,9 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 	}
 	@Override
 	public void Stop() {
+		// already stopping
+		if(APP_STATE.STOPPING.equals(this.state))
+			return;
 		final xThreadPool pool = this.getThreadPool();
 		if(pool == null)
 			return;
@@ -185,7 +217,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		public _StartupRunnable(final xApp app, final int step) {
 			super(app.getName()+"-Startup-"+Integer.toString(step));
 			//if(app == null) throw new NullPointerException();
-			if(step < 1 || step > 8) throw new UnsupportedOperationException("Unsupported startup step "+Integer.toString(step));
+			if(!utilsNumbers.isMinMax(step, 1, 8)) throw new UnsupportedOperationException("Unsupported startup step "+Integer.toString(step));
 			this.app = app;
 			this.step = step;
 		}
@@ -197,13 +229,25 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			switch(this.step) {
 			// first step in startup
 			case 1: {
+				synchronized(this.app.state) {
+					if(!APP_STATE.STOPPED.equals(this.app.state)) {
+						_IllegalState(this.app.state);
+						return;
+					}
+					this.app.state = APP_STATE.STARTUP;
+				}
 				// lock file
-				utilsDirFile.lockInstance(this.app.getName()+".lock");
+				final String filename = this.app.getName()+".lock";
+				if(!utilsDirFile.lockInstance(filename)) {
+					Failure.fail("Failed to get lock on file: "+filename);
+					return;
+				}
 				log().title("Starting "+this.app.getName()+"..");
 				break;
 			}
 			// last step in startup
 			case 8: {
+				this.app.state = APP_STATE.RUNNING;
 				log().title(this.app.getName()+" Ready and Running!");
 				break;
 			}
@@ -223,7 +267,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 
 			// finished startup sequence
 			if(this.step >= 8) {
-				synchronized(xApp.appLock) {
+				synchronized(this.app.state) {
 					this.app.initLevel = 9;
 				}
 				return;
@@ -233,7 +277,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			utilsThread.Sleep(5);
 
 			// queue next step
-			synchronized(xApp.appLock) {
+			synchronized(this.app.state) {
 				this.app.initLevel = this.step + 1;
 				this.app.getThreadPool().runLater(
 					new _StartupRunnable(
@@ -259,7 +303,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		public _ShutdownRunnable(final xApp app, final int step) {
 			super(app.getName()+"-Shutdown-"+Integer.toString(step));
 			//if(app == null) throw new NullPointerException();
-			if(step < 1 || step > 8) throw new UnsupportedOperationException("Unsupported shutdown step "+Integer.toString(step));
+			if(!utilsNumbers.isMinMax(step, 1, 8)) throw new UnsupportedOperationException("Unsupported shutdown step "+Integer.toString(step));
 			this.app = app;
 			this.step = step;
 		}
@@ -269,6 +313,10 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			switch(this.step) {
 			// first step in shutdown
 			case 8: {
+				if(!APP_STATE.RUNNING.equals(this.app.state) && !APP_STATE.STARTUP.equals(this.app.state)) {
+					_IllegalState(this.app.state);
+					return;
+				}
 				log().title("Stopping "+this.app.getName()+"..");
 				break;
 			}
@@ -276,8 +324,9 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			case 1: {
 				log().title(this.app.getName()+" Stopped.");
 				//TODO: display total time running
-				synchronized(xApp.appLock) {
+				synchronized(this.app.state) {
 					this.app.initLevel = 0;
+					this.app.state = APP_STATE.STOPPED;
 				}
 				this.app.termConsole();
 				break;
@@ -307,7 +356,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			}
 
 			// queue next step
-			synchronized(xApp.appLock) {
+			synchronized(this.app.state) {
 				this.app.initLevel = this.step - 1;
 				this.app.getThreadPool().runLater(
 					new _ShutdownRunnable(
