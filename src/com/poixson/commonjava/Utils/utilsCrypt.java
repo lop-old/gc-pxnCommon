@@ -111,6 +111,7 @@ public final class utilsCrypt {
 	public static String toHex(final String data) {
 		return toHex(data.getBytes());
 	}
+	@SuppressWarnings("resource")
 	public static String toHex(final byte[] data) {
 		if(data == null || data.length == 0) return null;
 		final StringBuilder str = new StringBuilder(data.length * 2);
