@@ -8,10 +8,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.swing.JFrame;
 
+import com.poixson.commonapp.app.xApp;
 import com.poixson.commonapp.gui.annotations.xWindowProperties;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsString;
-import com.poixson.commonjava.xLogger.xLog;
 
 
 public abstract class xWindow extends JFrame implements Closeable {
@@ -37,7 +37,7 @@ public abstract class xWindow extends JFrame implements Closeable {
 				);
 			windows.put(this.windowName, this);
 		}
-		xLog.getRoot().finer("New window created: "+this.windowName);
+		xApp.log().finer("New window created: "+this.windowName);
 		// annotations
 		final xWindowProperties props = this.getClass().getAnnotation(xWindowProperties.class);
 		if(props != null) {
@@ -82,11 +82,9 @@ public abstract class xWindow extends JFrame implements Closeable {
 	public void close() {
 		// run in event dispatch thread
 		if(guiUtils.forceDispatchThread(this, "close")) return;
-		xLog.getRoot().fine("Closing window: "+this.windowName);
+		// close window
+		xApp.log().fine("Closing window: "+this.windowName);
 		this.dispose();
-//		// exit if dash not loaded
-//		if(!guiManager.get().getStartupMode().equals(guiManager.GUI.DASH))
-//			gcClient.get().Shutdown();
 	}
 
 
