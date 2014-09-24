@@ -391,8 +391,14 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 	protected void initConsole() {
 		xConsole console = xLog.peekConsole();
 		if(console == null || console instanceof xNoConsole) {
-			console = new jlineConsole();
-			xLog.setConsole(console);
+			try {
+				console = new jlineConsole();
+				xLog.setConsole(console);
+			} catch (NoClassDefFoundError e) {
+				System.out.println("ERROR: jline library not found");
+				Failure.fail("jline library not found");
+				throw e;
+			}
 		}
 		// enable console color
 		log().setFormatter(
