@@ -26,6 +26,7 @@ public class xHandler {
 		public final xListener listener;
 		public final Method method;
 		public final Priority priority;
+//TODO: these annotations aren't used yet
 		public final boolean threaded;
 		public final boolean filterHandled;
 		public final boolean filterCancelled;
@@ -35,10 +36,11 @@ public class xHandler {
 			if(listener == null) throw new NullPointerException("listener cannot be null");
 			if(method   == null) throw new NullPointerException("method cannot be null");
 			if(priority == null) throw new NullPointerException("priority cannot be null");
-			this.listener = listener;
-			this.method = method;
-			this.priority = priority;
-			this.threaded = threaded;
+			this.listener        = listener;
+			this.method          = method;
+			this.priority        = priority;
+//TODO: these annotations aren't used yet
+			this.threaded        = threaded;
 			this.filterHandled   = filterHandled;
 			this.filterCancelled = filterCancelled;
 		}
@@ -145,7 +147,7 @@ public class xHandler {
 		public void run() {
 			if(this.event == null) throw new NullPointerException();
 			if(this.priority == null) {
-				for(Priority p : Priority.values())
+				for(final Priority p : Priority.values())
 					doTrigger(this.event, p);
 			} else {
 				doTrigger(this.event, this.priority);
