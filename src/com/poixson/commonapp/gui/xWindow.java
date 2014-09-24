@@ -67,6 +67,17 @@ public abstract class xWindow extends JFrame implements Closeable {
 
 
 
+	// show window
+	public void Show() {
+		this.setVisible(true);
+		if(!this.isFocused()) {
+			this.setVisible(true);
+			this.requestFocus();
+		}
+	}
+
+
+
 	@Override
 	public void close() {
 		// run in event dispatch thread
