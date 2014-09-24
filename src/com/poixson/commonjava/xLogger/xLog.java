@@ -33,6 +33,19 @@ public class xLog extends xLogPrinting {
 
 
 
+// local caching
+/*
+	// logger
+	private static volatile xLog _log = null;
+	public static xLog log() {
+		if(_log == null)
+			_log = xApp.log();
+		return _log;
+	}
+*/
+
+
+
 // overridable
 /*
 	// logger
