@@ -161,29 +161,22 @@ public final class utilsDirFile {
 
 
 	// open file
-	public static InputStream OpenFile(final String fileStr) {
-		if(utils.isEmpty(fileStr)) return null;
-		return OpenFile(new File(fileStr));
-	}
 	public static InputStream OpenFile(final File file) {
-		if(file == null) return null;
+		if(file == null)   return null;
+		if(!file.exists()) return null;
 		try {
-			if(!file.exists()) throw new FileNotFoundException("File not found: "+file.getAbsoluteFile());
 			return new FileInputStream(file);
-		} catch (FileNotFoundException e) {
-			log().trace(e);
-//			pxnLog.get().warning("Failed to load file: "+file.getAbsoluteFile());
-		}
+		} catch (FileNotFoundException ignore) {}
 		return null;
 	}
 	// load resource
 	public static InputStream OpenResource(final String fileStr) {
 		if(utils.isEmpty(fileStr)) return null;
 		try {
-			return utilsDirFile.class.getResourceAsStream(fileStr);
-		} catch(Exception ignore) {
-//			pxnLog.get().debug("Not found as a resource!");
-		}
+			return utilsDirFile.class.getResourceAsStream(
+				utilsString.ensureStarts("/", fileStr)
+			);
+		} catch(Exception ignore) {}
 		return null;
 	}
 	// load yml from jar
