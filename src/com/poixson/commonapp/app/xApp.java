@@ -154,9 +154,12 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 	}
 	@Override
 	public void Stop() {
+		final xThreadPool pool = this.getThreadPool();
+		if(pool == null)
+			return;
 		// trigger shutdown sequence
 		log().fine("Shutdown sequence.. 8..7..");
-		this.getThreadPool().runLater(
+		pool.runLater(
 			new _ShutdownRunnable(
 				this,
 				8
