@@ -123,6 +123,8 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		Failure.register(this);
 		// load config
 		this.initConfig();
+		if(Failure.hasFailed())
+			return false;
 		// load clock
 		this.startTime = xClock.get(true).millis();
 		// load libraries
