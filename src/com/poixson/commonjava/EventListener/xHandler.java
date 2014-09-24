@@ -25,11 +25,11 @@ public class xHandler {
 		public final Method method;
 		public final Priority priority;
 		public final boolean threaded;
-		public final boolean ignoreHandled;
-		public final boolean ignoreCancelled;
+		public final boolean filterHandled;
+		public final boolean filterCancelled;
 		protected ListenerHolder(final xListener listener, final Method method,
 				final Priority priority, final boolean threaded,
-				final boolean ignoreHandled, final boolean ignoreCancelled) {
+				final boolean filterHandled, final boolean filterCancelled) {
 			if(listener == null) throw new NullPointerException("listener cannot be null");
 			if(method   == null) throw new NullPointerException("method cannot be null");
 			if(priority == null) throw new NullPointerException("priority cannot be null");
@@ -37,8 +37,8 @@ public class xHandler {
 			this.method = method;
 			this.priority = priority;
 			this.threaded = threaded;
-			this.ignoreHandled = ignoreHandled;
-			this.ignoreCancelled = ignoreCancelled;
+			this.filterHandled   = filterHandled;
+			this.filterCancelled = filterCancelled;
 		}
 	}
 
@@ -63,8 +63,8 @@ public class xHandler {
 					method,
 					annotate.priority(),
 					annotate.threaded(),
-					annotate.ignoreHandled(),
-					annotate.ignoreCancelled()
+					annotate.filterHandled(),
+					annotate.filterCancelled()
 				);
 				this.listeners.add(holder);
 System.out.println("Registered listener ["+Integer.toString(this.listeners.size())+"] "+

@@ -21,10 +21,9 @@ public @interface xEvent {
 
 
 	Priority priority()       default Priority.NORMAL;
-	boolean filtered()        default true;
 	boolean threaded()        default false;
-	boolean ignoreHandled()   default true;
-	boolean ignoreCancelled() default true;
+	boolean filterHandled()   default true;
+	boolean filterCancelled() default true;
 
 
 }
