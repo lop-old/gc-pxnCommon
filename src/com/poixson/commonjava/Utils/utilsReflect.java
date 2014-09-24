@@ -40,7 +40,7 @@ public final class utilsReflect {
 
 	// logger
 	public static xLog log() {
-		return xLog.getRoot();
+		return utils.log();
 	}
 
 
