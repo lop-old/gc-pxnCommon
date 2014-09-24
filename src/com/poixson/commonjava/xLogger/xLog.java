@@ -52,7 +52,7 @@ public class xLog extends xLogPrinting {
 	private volatile xLog _log = null;
 	public xLog log() {
 		if(this._log == null)
-			return xLog.getRoot();
+			return xApp.log();
 		return this._log;
 	}
 	public void setLog(final xLog log) {

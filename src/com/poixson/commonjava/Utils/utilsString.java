@@ -281,7 +281,7 @@ public final class utilsString {
 		if(width < 1) return null;
 		if(utils.isEmpty(text))
 			return repeat(width, padding);
-		final double count = ((double) (width - text.length())) / 2.0;
+		final double count = ( ((double) width) - ((double) text.length()) ) / 2.0;
 		if(Math.ceil(count) < 1.0) return text;
 		return (new StringBuilder(width))
 			.append(repeat((int) Math.floor(count), padding))

@@ -521,8 +521,8 @@ public class dbQuery {
 	// unlock table
 	public void unlockTables() {
 		synchronized(this.lock) {
-			final String sql = "UNLOCK TABLES /* unlock table */";
-			if(!Prep(sql) || !Exec())
+			final String sqlStr = "UNLOCK TABLES /* unlock table */";
+			if(!Prep(sqlStr) || !Exec())
 				log().severe("Failed to unlock tables");
 		}
 	}
