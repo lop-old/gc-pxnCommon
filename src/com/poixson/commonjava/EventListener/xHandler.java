@@ -3,7 +3,9 @@ package com.poixson.commonjava.EventListener;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.poixson.commonjava.EventListener.xEvent.Priority;
 import com.poixson.commonjava.Utils.xRunnable;
@@ -13,7 +15,7 @@ import com.poixson.commonjava.xLogger.xLog;
 
 public class xHandler {
 
-	protected final Set<ListenerHolder> listeners = new HashSet<ListenerHolder>();
+	protected final Set<ListenerHolder> listeners = new CopyOnWriteArraySet<ListenerHolder>();
 
 
 
@@ -50,27 +52,29 @@ public class xHandler {
 	 */
 	public void register(final xListener listener) {
 		if(listener == null) throw new NullPointerException("listener cannot be null");
-		synchronized(this.listeners) {
-			// find annotated listener methods
-			for(final Method method : listener.getClass().getMethods()) {
-				if(method == null) continue;
-				// has @xEvent annotation
-				final xEvent annotate = method.getAnnotation(xEvent.class);
-				if(annotate == null) continue;
-				// register listener
-				final ListenerHolder holder = new ListenerHolder(
-					listener,
-					method,
-					annotate.priority(),
-					annotate.threaded(),
-					annotate.filterHandled(),
-					annotate.filterCancelled()
-				);
-				this.listeners.add(holder);
-System.out.println("Registered listener ["+Integer.toString(this.listeners.size())+"] "+
-listener.toString()+" "+method.getName());
-			}
+		final Set<ListenerHolder> toadd = new HashSet<ListenerHolder>();
+		// find annotated listener methods
+		for(final Method method : listener.getClass().getMethods()) {
+			if(method == null) continue;
+			// has @xEvent annotation
+			final xEvent annotate = method.getAnnotation(xEvent.class);
+			if(annotate == null) continue;
+			// register listener
+			final ListenerHolder holder = new ListenerHolder(
+				listener,
+				method,
+				annotate.priority(),
+				annotate.threaded(),
+				annotate.filterHandled(),
+				annotate.filterCancelled()
+			);
+			toadd.add(holder);
+			// TODO: don't expect this index to be accurate or unique
+			log().finest("Registered listener ["+
+					Integer.toString(this.listeners.size() + toadd.size())+"] "+
+					listener.toString()+" "+method.getName());
 		}
+		this.listeners.addAll(toadd);
 	}
 	/**
 	 * Unregister an event listener.
@@ -159,19 +163,19 @@ listener.toString()+" "+method.getName());
 	public void doTrigger(final xEventData event, final Priority priority) {
 		if(event    == null) throw new NullPointerException("event cannot be null");
 		if(priority == null) throw new NullPointerException("priority cannot be null");
-		synchronized(this.listeners) {
-			for(ListenerHolder holder : this.listeners) {
-				if(!priority.equals(holder.priority))
-					continue;
-				try {
-					holder.method.invoke(holder.listener, event);
-				} catch (IllegalAccessException e) {
-					log().trace(e);
-				} catch (IllegalArgumentException e) {
-					log().trace(e);
-				} catch (InvocationTargetException e) {
-					log().trace(e);
-				}
+		final Iterator<ListenerHolder> it = this.listeners.iterator();
+		while(it.hasNext()) {
+			final ListenerHolder holder = it.next();
+			if(!priority.equals(holder.priority))
+				continue;
+			try {
+				holder.method.invoke(holder.listener, event);
+			} catch (IllegalAccessException e) {
+				log().trace(e);
+			} catch (IllegalArgumentException e) {
+				log().trace(e);
+			} catch (InvocationTargetException e) {
+				log().trace(e);
 			}
 		}
 	}
