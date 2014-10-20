@@ -10,8 +10,8 @@ public abstract class xLogPrinting {
 
 
 	public abstract xLog get(final String name);
-	public abstract xLog getAnon();
-	public abstract xLog getAnon(final String name);
+	public abstract xLog getWeak();
+	public abstract xLog getWeak(final String name);
 
 	public abstract boolean isRoot();
 	public abstract List<String> getNameTree();

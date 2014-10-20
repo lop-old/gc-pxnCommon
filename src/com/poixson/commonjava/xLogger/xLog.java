@@ -133,20 +133,20 @@ public class xLog extends xLogPrinting {
 			return log;
 		}
 	}
-	// new anonymous instance
+	// new instance (weak reference)
 	@Override
-	public xLog getAnon(final String logName) {
+	public xLog getWeak(final String logName) {
 		if(utils.isEmpty(logName))
 			return new xLog(logName, this.parent);
 		return new xLog(logName, this);
 	}
 	@Override
-	public xLog getAnon() {
-		return getAnon(null);
+	public xLog getWeak() {
+		return getWeak(null);
 	}
 	@Override
 	public xLog clone() {
-		return getAnon();
+		return getWeak();
 	}
 
 

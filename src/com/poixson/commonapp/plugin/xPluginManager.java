@@ -55,7 +55,7 @@ public class xPluginManager {
 			this.name = name;
 			this.file = file;
 			this.yml  = yml;
-			this.log = log().getAnon(name);
+			this.log = log().getWeak(name);
 		}
 
 	}
