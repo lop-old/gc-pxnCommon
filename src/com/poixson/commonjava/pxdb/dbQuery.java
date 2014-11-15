@@ -50,15 +50,15 @@ public class dbQuery {
 
 
 	// prepared query
-	public dbQuery Prepare(final String sql) throws SQLException {
-		if(utils.isEmpty(sql)) throw new IllegalArgumentException("sql cannot be empty");
+	public dbQuery Prepare(final String sqlStr) throws SQLException {
+		if(utils.isEmpty(sqlStr)) throw new IllegalArgumentException("sql cannot be empty");
 		synchronized(this.lock) {
 			if(!this.worker.inUse()) {
 				log().trace(new IllegalAccessException("dbWorker not locked!"));
 				return null;
 			}
 			this.clean();
-			this.sql = sql.replace(
+			this.sql = sqlStr.replace(
 				"_table_",
 				(this.tablePrefix == null ? "" : this.tablePrefix)
 			);
@@ -76,10 +76,10 @@ public class dbQuery {
 		}
 		return this;
 	}
-	public boolean Prep(final String sql) {
-		if(utils.isEmpty(sql)) throw new IllegalArgumentException("sql cannot be empty");
+	public boolean Prep(final String sqlStr) {
+		if(utils.isEmpty(sqlStr)) throw new IllegalArgumentException("sql cannot be empty");
 		try {
-			if(this.Prepare(sql) != null)
+			if(this.Prepare(sqlStr) != null)
 				return true;
 		} catch (SQLException e) {
 			log().trace(e);
@@ -138,10 +138,10 @@ public class dbQuery {
 		}
 		return true;
 	}
-	public boolean Execute(final String sql) throws SQLException {
-		if(utils.isEmpty(sql))
+	public boolean Execute(final String sqlStr) throws SQLException {
+		if(utils.isEmpty(sqlStr))
 			return false;
-		if(Prepare(sql) == null)
+		if(Prepare(sqlStr) == null)
 			return false;
 		return Execute();
 	}
@@ -157,9 +157,9 @@ public class dbQuery {
 		}
 		return false;
 	}
-	public boolean Exec(final String sql) {
+	public boolean Exec(final String sqlStr) {
 		try {
-			return this.Execute(sql);
+			return this.Execute(sqlStr);
 		} catch (SQLException e) {
 			log().trace(e);
 			this.clean();

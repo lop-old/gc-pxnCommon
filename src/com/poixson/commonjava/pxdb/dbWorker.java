@@ -103,8 +103,8 @@ public class dbWorker implements xCloseable {
 
 
 	// query description
-	public void desc(final String desc) {
-		this.desc = desc;
+	public void desc(final String descStr) {
+		this.desc = descStr;
 	}
 	public void logDesc() {
 		if(utils.isEmpty(this.desc))
