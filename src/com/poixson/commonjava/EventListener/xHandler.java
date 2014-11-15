@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.poixson.commonjava.EventListener.xEvent.Priority;
+import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.xRunnable;
 import com.poixson.commonjava.Utils.xThreadPool;
 import com.poixson.commonjava.xLogger.xLog;
@@ -165,11 +166,18 @@ public class xHandler {
 	public void doTrigger(final xEventData event, final Priority priority) {
 		if(event    == null) throw new NullPointerException("event cannot be null");
 		if(priority == null) throw new NullPointerException("priority cannot be null");
+//		log().finest("doTrigger ( "+
+//				utilsString.getLastPart(".", event.getClass().getName())+" , "+priority.name()+
+//				(event.isHandled()   ? " <HANDLED>"   : "" )+
+//				(event.isCancelled() ? " <CANCELLED>" : "" )+
+//				" )"
+//		);
 		final Iterator<ListenerHolder> it = this.listeners.iterator();
 		while(it.hasNext()) {
 			final ListenerHolder holder = it.next();
-			if(!priority.equals(holder.priority))
-				continue;
+			if(!priority.equals(holder.priority))             continue;
+			if(holder.filterHandled && event.isHandled())     continue;
+			if(holder.filterCancelled && event.isCancelled()) continue;
 			try {
 				holder.method.invoke(holder.listener, event);
 			} catch (IllegalAccessException e) {
