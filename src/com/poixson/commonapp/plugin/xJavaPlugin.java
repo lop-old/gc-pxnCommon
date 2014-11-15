@@ -8,48 +8,55 @@ public abstract class xJavaPlugin {
 	private volatile xPluginManager manager = null;
 	private volatile xPluginYML yml = null;
 
+	private enum INIT_STATE {FRESH, INITED, UNLOADED}
+	private volatile INIT_STATE inited = INIT_STATE.FRESH;
 	private volatile boolean enabled = false;
-	private volatile boolean hasInited = false;
-	private volatile boolean hasUnloaded = false;
-	private final Object initLock = new Object();
 
 
 
 	protected void doInit(final xPluginManager pluginManager, final xPluginYML yaml) {
-		if(this.hasUnloaded) throw new RuntimeException("Plugin already unloaded!");
-		if(this.hasInited)   throw new RuntimeException("Plugin already inited!");
-		synchronized(this.initLock) {
-			if(this.hasUnloaded) throw new RuntimeException("Plugin already unloaded!");
-			if(this.hasInited)   throw new RuntimeException("Plugin already inited!");
+		if(pluginManager == null) throw new NullPointerException();
+		if(yaml          == null) throw new NullPointerException();
+		if(this.inited.equals(INIT_STATE.INITED))   throw new IllegalStateException("Plugin already inited!");
+		if(this.inited.equals(INIT_STATE.UNLOADED)) throw new IllegalStateException("Cannot init plugin, already unloaded!");
+		synchronized(this.inited) {
+			if(this.inited.equals(INIT_STATE.INITED))   throw new IllegalStateException("Plugin already inited!");
+			if(this.inited.equals(INIT_STATE.UNLOADED)) throw new IllegalStateException("Cannot init plugin, already unloaded!");
+			this.manager = pluginManager;
+			this.yml = yaml;
 			onInit();
-			this.hasInited = true;
+			this.inited = INIT_STATE.INITED;
 		}
 	}
 	protected void doUnload() {
-		if(this.hasUnloaded) throw new RuntimeException("Plugin already unloaded!");
-		synchronized(this.initLock) {
-			if(!this.hasInited) return;
-			if(this.hasUnloaded) throw new RuntimeException("Plugin already unloaded!");
-			if(isEnabled()) doDisable();
-			this.hasUnloaded = true;
+		if(!this.inited.equals(INIT_STATE.INITED)) return;
+		if(isEnabled())
+			doDisable();
+		synchronized(this.inited) {
+			if(!this.inited.equals(INIT_STATE.INITED)) return;
+			this.inited = INIT_STATE.UNLOADED;
 		}
 	}
 	protected void doEnable() {
-		if(this.hasUnloaded) throw new RuntimeException("Plugin already unloaded!");
-		if(this.enabled)     throw new RuntimeException("Plugin already enabled!");
-		synchronized(this.initLock) {
-			if(this.hasUnloaded) throw new RuntimeException("Plugin already unloaded!");
-			if(this.enabled)     throw new RuntimeException("Plugin already enabled!");
+		if(this.inited.equals(INIT_STATE.UNLOADED)) throw new IllegalStateException("Cannot enable plugin, already unloaded!");
+		if(!this.inited.equals(INIT_STATE.INITED))  throw new IllegalStateException("Cannot enable plugin, not inited!");
+		if(this.enabled) return;
+		synchronized(this.inited) {
+			if(this.inited.equals(INIT_STATE.UNLOADED)) throw new IllegalStateException("Cannot enable plugin, already unloaded!");
+			if(!this.inited.equals(INIT_STATE.INITED))  throw new IllegalStateException("Cannot enable plugin, not inited!");
+			if(this.enabled) return;
 			onEnable();
 			this.enabled = true;
 		}
 	}
 	protected void doDisable() {
-		if(this.hasUnloaded) throw new RuntimeException("Plugin already unloaded!");
-		if(!this.enabled)    throw new RuntimeException("Plugin already disabled!");
-		synchronized(this.initLock){
-			if(this.hasUnloaded) throw new RuntimeException("Plugin already unloaded!");
-			if(!this.enabled)    throw new RuntimeException("Plugin already disabled!");
+		if(this.inited.equals(INIT_STATE.UNLOADED)) throw new IllegalStateException("Cannot enable plugin, already unloaded!");
+		if(!this.inited.equals(INIT_STATE.INITED))  throw new IllegalStateException("Cannot enable plugin, not inited!");
+		if(!this.enabled) return;
+		synchronized(this.inited){
+			if(this.inited.equals(INIT_STATE.UNLOADED)) throw new IllegalStateException("Cannot enable plugin, already unloaded!");
+			if(!this.inited.equals(INIT_STATE.INITED))  throw new IllegalStateException("Cannot enable plugin, not inited!");
+			if(!this.enabled) return;
 			this.enabled = false;
 			onDisable();
 		} 
@@ -58,7 +65,7 @@ public abstract class xJavaPlugin {
 
 
 	public boolean isEnabled() {
-		if(!this.hasInited || this.hasUnloaded)
+		if(!this.inited.equals(INIT_STATE.INITED))
 			return false;
 		return this.enabled;
 	}
