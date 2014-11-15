@@ -5,8 +5,8 @@ import com.poixson.commonjava.xLogger.xLog;
 
 public abstract class xJavaPlugin {
 
-	private final xPluginManager manager;
-	private final xPluginYML yml;
+	private volatile xPluginManager manager = null;
+	private volatile xPluginYML yml = null;
 
 	private volatile boolean enabled = false;
 	private volatile boolean hasInited = false;
@@ -15,16 +15,7 @@ public abstract class xJavaPlugin {
 
 
 
-	public xJavaPlugin(final xPluginManager manager, final xPluginYML yml) {
-		if(manager == null) throw new NullPointerException();
-		if(yml     == null) throw new NullPointerException();
-		this.manager = manager;
-		this.yml = yml;
-	}
-
-
-
-	protected void doInit() {
+	protected void doInit(final xPluginManager pluginManager, final xPluginYML yaml) {
 		if(this.hasUnloaded) throw new RuntimeException("Plugin already unloaded!");
 		if(this.hasInited)   throw new RuntimeException("Plugin already inited!");
 		synchronized(this.initLock) {

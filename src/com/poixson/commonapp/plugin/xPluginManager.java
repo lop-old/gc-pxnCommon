@@ -150,7 +150,7 @@ public class xPluginManager {
 		// new instance
 		log().info("Loading plugin: "+dao.name+" "+dao.yml.getPluginVersion());
 		dao.plugin = loadPluginJar(dao, className);
-		dao.plugin.doInit();
+		dao.plugin.doInit(this, dao.yml);
 	}
 	public xJavaPlugin loadPluginJar(final PluginDAO dao, final String className) {
 		final xLog log = dao.log;
@@ -179,7 +179,7 @@ public class xPluginManager {
 		}
 		final Constructor<?> construct;
 		try {
-			construct = clss.getConstructor(xPluginManager.class, xPluginYML.class);
+			construct = clss.getConstructor();
 		} catch (NoSuchMethodException e) {
 			log.trace(e);
 			return null;
@@ -189,7 +189,7 @@ public class xPluginManager {
 		}
 		final xJavaPlugin plugin;
 		try {
-			plugin = (xJavaPlugin) construct.newInstance(this, dao.yml);
+			plugin = (xJavaPlugin) construct.newInstance();
 		} catch (InstantiationException e) {
 			log.trace(e);
 			return null;
