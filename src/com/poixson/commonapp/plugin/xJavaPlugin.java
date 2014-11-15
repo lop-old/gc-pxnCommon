@@ -1,5 +1,6 @@
 package com.poixson.commonapp.plugin;
 
+import com.poixson.commonjava.EventListener.xListener;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -76,6 +77,8 @@ public abstract class xJavaPlugin {
 	protected void onUnload() {}
 	protected abstract void onEnable();
 	protected abstract void onDisable();
+
+	public abstract void register(final xListener listener);
 
 
 
