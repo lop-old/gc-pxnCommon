@@ -144,8 +144,8 @@ public class xString {
 
 
 
-	public xString delim(final String delim) {
-		this.delim = (utils.isEmpty(delim) ? null : delim);
+	public xString delim(final String delimStr) {
+		this.delim = (utils.isEmpty(delimStr) ? null : delimStr);
 		return this;
 	}
 	public String delim() {
