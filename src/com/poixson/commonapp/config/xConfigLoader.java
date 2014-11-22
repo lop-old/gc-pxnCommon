@@ -37,7 +37,6 @@ public final class xConfigLoader {
 		if(utils.isEmpty(file)) throw new NullPointerException();
 		return Load(new File(file), clss);
 	}
-	@SuppressWarnings("resource")
 	public static xConfig Load(final File file, final Class<? extends xConfig> clss) {
 		if(file == null) throw new NullPointerException();
 		if(clss == null) throw new NullPointerException();
@@ -71,7 +70,6 @@ public final class xConfigLoader {
 	public static xConfig LoadJar(final File jarFile, final String ymlFile) {
 		return LoadJar(jarFile, ymlFile, xConfig.class);
 	}
-	@SuppressWarnings("resource")
 	public static xConfig LoadJar(final File jarFile, final String ymlFile, final Class<? extends xConfig> clss) {
 		if(jarFile == null)        throw new NullPointerException();
 		if(utils.isEmpty(ymlFile)) throw new NullPointerException();
@@ -108,7 +106,6 @@ public final class xConfigLoader {
 		}
 		return null;
 	}
-	@SuppressWarnings("resource")
 	public static boolean Save(final File file, final Map<String, Object> data) {
 		if(file == null)        throw new NullPointerException();
 		if(utils.isEmpty(data)) throw new NullPointerException();

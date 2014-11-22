@@ -95,7 +95,6 @@ public class xClock {
 		double time = getSystemTime();
 		// checked in last 60 seconds
 		if(this.lastChecked != 0.0 && ((time - this.lastChecked) < 60.0)) return;
-		@SuppressWarnings("resource")
 		DatagramSocket socket = null;
 		try {
 			socket = new DatagramSocket();

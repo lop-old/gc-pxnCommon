@@ -85,7 +85,6 @@ public final class dbManager {
 				// initial connection
 				log().finest("Starting new db pool..");
 				final dbPool pool = new dbPool(config);
-				@SuppressWarnings("resource")
 				final dbWorker worker = pool.getWorkerLock();
 				if(worker == null) {
 					log().severe("Failed to start db conn pool");

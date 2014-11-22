@@ -53,7 +53,6 @@ public class dbPool {
 
 
 	// pool is connected
-	@SuppressWarnings("resource")
 	public boolean isConnected() {
 		// TODO: this get a lock and releases. can probably be improved using isLocked()
 		final dbWorker worker = getExisting();
@@ -63,7 +62,6 @@ public class dbPool {
 		return true;
 	}
 	// ping the db server
-	@SuppressWarnings("resource")
 	public boolean isConnectionValid() {
 		final dbWorker worker = getExisting();
 		if(worker == null)
@@ -80,7 +78,6 @@ public class dbPool {
 
 
 	// get unused worker
-	@SuppressWarnings("resource")
 	public dbWorker getWorkerLock() {
 		dbWorker worker = null;
 		synchronized(this.workers) {
@@ -152,7 +149,6 @@ public class dbPool {
 	}
 	// new worker/connection
 //	private final CoolDown coolFail = CoolDown.get("2s");
-	@SuppressWarnings("resource")
 	private dbWorker newWorker() {
 		// hard limit reached
 		if(getWorkerCount() >= this.poolSize.getHard())
