@@ -4,6 +4,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Properties;
 
 import com.poixson.commonjava.xLogger.xLog;
 
@@ -119,6 +120,13 @@ public final class utils {
 		System.out.println( "Free Memory:  " + (runtime.freeMemory() / MB)                           + " MB" );
 		System.out.println( "Total Memory: " + (runtime.totalMemory() / MB)                          + " MB" );
 		System.out.println( "Max Memory:   " + (runtime.maxMemory() / MB)                            + " MB" );
+	}
+
+
+
+	public static void ListProperties() {
+		final Properties props = System.getProperties();
+		props.list(System.out);
 	}
 
 
