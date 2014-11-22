@@ -1,4 +1,4 @@
-package com.poixson.apache;
+package com.poixson.commonjava.Utils;
 
 import org.apache.commons.codec.binary.Base64;
 
