@@ -40,7 +40,7 @@ public class Failure {
 		failed = true;
 		if(utils.notEmpty(msg)) {
 			xLog.getRoot().fatal(msg);
-			messages.add(msg);
+			addMessageSilently(msg);
 		}
 		doFailActions();
 	}
@@ -68,7 +68,8 @@ public class Failure {
 		new Thread() {
 			@Override
 			public void run() {
-				utilsThread.Sleep(150L);
+				// wait for things to finish
+				utilsThread.Sleep(300L);
 				System.exit(1);
 			}
 		}.start();
@@ -83,6 +84,9 @@ public class Failure {
 		if(!failed)
 			return null;
 		return messages.toArray(new String[0]);
+	}
+	public static void addMessageSilently(final String msg) {
+		messages.add(msg);
 	}
 //	@Override
 //	public String toString() {
