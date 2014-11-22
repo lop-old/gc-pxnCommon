@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.poixson.commonjava.xLogger.xLog;
 
 
-public class xThreadPool implements Runnable {
+public class xThreadPool implements xStartable {
 
 	// max threads
 	public static final int HARD_LIMIT = 20;
@@ -101,11 +101,18 @@ public class xThreadPool implements Runnable {
 
 
 
-	public void start() {
+	@Override
+	public boolean Start() {
 		newThread();
+		return true;
 	}
-	public void stop() {
+	@Override
+	public void Stop() {
 		this.stopping = true;
+	}
+	@Override
+	public boolean isRunning() {
+		return !this.stopping;
 	}
 
 
@@ -329,7 +336,7 @@ public class xThreadPool implements Runnable {
 			if(instances.isEmpty()) return;
 			// shutdown threads
 			for(final xThreadPool pool : instances.values())
-				pool.stop();
+				pool.Stop();
 			// wait for threads to stop
 			Iterator<Entry<String, xThreadPool>> it = instances.entrySet().iterator();
 			while(it.hasNext()) {
