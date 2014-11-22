@@ -86,7 +86,7 @@ public class xThreadPool implements xStartable {
 		} else
 		if(size != null)
 			this.size = size.intValue();
-		runLater(new xRunnable("Thread-Startup") {
+		this.runLater(new xRunnable("Thread-Startup") {
 			private volatile String qName = null;
 			public xRunnable init(final String nameStr) {
 				this.qName = nameStr;
@@ -94,7 +94,7 @@ public class xThreadPool implements xStartable {
 			}
 			@Override
 			public void run() {
-				log().fine("Started thread queue ("+this.qName+")");
+				utils.log().fine("Started thread queue ("+this.qName+")");
 			}
 		}.init(this.queueName));
 	}
@@ -103,7 +103,7 @@ public class xThreadPool implements xStartable {
 
 	@Override
 	public boolean Start() {
-		newThread();
+		this.newThread();
 		return true;
 	}
 	@Override
@@ -127,7 +127,7 @@ public class xThreadPool implements xStartable {
 			final int globalCount = getGlobalThreadCount();
 			final int globalFree  = GLOBAL_LIMIT - globalCount;
 			final int free = utilsNumbers.MinMax(count - this.active, 0, globalFree);
-			log().finer(
+			this.log().finer(
 				"Pool Size: "+Integer.toString(count)+" ["+Integer.toString(this.size)+"]  "+
 				"Active/Free: "+
 					Integer.toString(this.active)+"/"+
@@ -139,9 +139,9 @@ public class xThreadPool implements xStartable {
 			// global max threads
 			if(globalFree <= 0) {
 				if(this.coolMaxReached.runAgain())
-					log().warning("Global max threads limit [ "+Integer.toString(globalCount)+" ] reached!");
+					this.log().warning("Global max threads limit [ "+Integer.toString(globalCount)+" ] reached!");
 				else
-					log().warning("Global max threads limit [ "+Integer.toString(globalCount)+" ] reached!");
+					this.log().warning("Global max threads limit [ "+Integer.toString(globalCount)+" ] reached!");
 				utilsThread.Sleep(10L);
 				return;
 			}
@@ -149,9 +149,9 @@ public class xThreadPool implements xStartable {
 			if(count >= this.size) {
 				if(this.size > 1) {
 					if(this.coolMaxReached.runAgain())
-						log().warning("Max threads limit [ "+Integer.toString(count)+" ] reached!");
+						this.log().warning("Max threads limit [ "+Integer.toString(count)+" ] reached!");
 					else
-						log().warning("Max threads limit [ "+Integer.toString(count)+" ] reached!");
+						this.log().warning("Max threads limit [ "+Integer.toString(count)+" ] reached!");
 				}
 				utilsThread.Sleep(10L);
 				return;
@@ -185,7 +185,7 @@ public class xThreadPool implements xStartable {
 			xThreadPool.mainThread = Thread.currentThread();
 		while(true) {
 			if(this.stopping && !isMainPool()) {
-				log().finer("Stopping thread ("+this.queueName+":"+Integer.toString(threadId)+")");
+				this.log().finer("Stopping thread ("+this.queueName+":"+Integer.toString(threadId)+")");
 				break;
 			}
 			// run task now
@@ -197,7 +197,7 @@ public class xThreadPool implements xStartable {
 					try {
 						tmpTask.run();
 					} catch (Exception e) {
-						log().trace(e);
+						this.log().trace(e);
 					}
 					this.nowHasRun = true;
 					this.nowLock.notifyAll();
@@ -205,7 +205,7 @@ public class xThreadPool implements xStartable {
 				continue;
 			}
 			// pull from queue
-			xRunnable task = null;
+			final xRunnable task;
 			try {
 				task = this.queue.poll(1, xTimeU.S);
 			} catch (InterruptedException ignore) {
@@ -216,7 +216,7 @@ public class xThreadPool implements xStartable {
 				if(task == null) {
 					// stop inactive thread after 5 minutes
 					if(sleeping.value >= threadInactiveTimeout.value) {
-						log().finer("Inactive thread.. ("+this.queueName+":"+Integer.toString(threadId)+")");
+						this.log().finer("Inactive thread.. ("+this.queueName+":"+Integer.toString(threadId)+")");
 						break;
 					}
 					sleeping.add(threadSleepTime);
@@ -236,7 +236,7 @@ public class xThreadPool implements xStartable {
 					if(this.priority <= (Thread.NORM_PRIORITY - Thread.MIN_PRIORITY) / 2)
 						utilsThread.Sleep(10L); // sleep 10ms
 				} catch (Exception e) {
-					log().trace(e);
+					this.log().trace(e);
 				}
 				// task finished
 				this.active--;
@@ -244,7 +244,7 @@ public class xThreadPool implements xStartable {
 				Thread.currentThread().setName(this.queueName);
 			}
 		}
-		log().finer("Thread stopped ("+this.queueName+":"+Integer.toString(threadId)+")");
+		this.log().finer("Thread stopped ("+this.queueName+":"+Integer.toString(threadId)+")");
 		synchronized(this.threads) {
 			this.threads.remove(Thread.currentThread());
 		}
@@ -258,6 +258,7 @@ public class xThreadPool implements xStartable {
 		synchronized(this.nowLock) {
 			this.nowHasRun = false;
 			this.runThisNow = xRunnable.cast(run);
+			this.log().finest("Task running.. ("+this.queueName+") "+this.runThisNow.getTaskName());
 			// make sure there's a thread
 			synchronized(this.threads) {
 				if(this.threads.size() == 0)
@@ -298,9 +299,9 @@ public class xThreadPool implements xStartable {
 		}
 		try {
 			if(this.queue.offer(task, 5, xTimeU.S))
-				log().finest("Task queued.. ("+this.queueName+") "+task.getTaskName());
+				this.log().finest("Task queued.. ("+this.queueName+") "+task.getTaskName());
 			else
-				log().warning("Thread queue jammed! ("+this.queueName+") "+task.getTaskName());
+				this.log().warning("Thread queue jammed! ("+this.queueName+") "+task.getTaskName());
 		} catch (InterruptedException ignore) {
 			return;
 		}
@@ -338,7 +339,7 @@ public class xThreadPool implements xStartable {
 			for(final xThreadPool pool : instances.values())
 				pool.Stop();
 			// wait for threads to stop
-			Iterator<Entry<String, xThreadPool>> it = instances.entrySet().iterator();
+			final Iterator<Entry<String, xThreadPool>> it = instances.entrySet().iterator();
 			while(it.hasNext()) {
 				final Entry<String, xThreadPool> entry = it.next();
 				final xThreadPool pool = entry.getValue();
