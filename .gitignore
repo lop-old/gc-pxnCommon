@@ -6,6 +6,8 @@ build/
 
 .git/
 .settings/
+.project
+.classpath
 
 *.class
 *.iml
