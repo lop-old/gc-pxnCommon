@@ -356,7 +356,9 @@ public class xThreadPool implements xStartable {
 				final xThreadPool pool = entry.getValue();
 				if(pool.isMainPool()) continue;
 				try {
-					pool.wait();
+					synchronized(pool) {
+						pool.wait();
+					}
 				} catch (InterruptedException e) {
 					xLog.getRoot().trace(e);
 				}
