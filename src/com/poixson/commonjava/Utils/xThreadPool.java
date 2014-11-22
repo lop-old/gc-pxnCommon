@@ -329,20 +329,32 @@ public class xThreadPool implements xStartable {
 
 
 	/**
-	 * Stop all thread pools.
+	 * Stop all thread pools (except main)
 	 */
 	public static void ShutdownAll() {
-//TODO: queue and delay this
+		// be sure to run in main thread
+		if(mainThread != null && !mainThread.equals(Thread.currentThread())) {
+			get().runNow(new Runnable() {
+				@Override
+				public void run() {
+					ShutdownAll();
+				}
+			});
+			return;
+		}
 		synchronized(instances) {
 			if(instances.isEmpty()) return;
 			// shutdown threads
-			for(final xThreadPool pool : instances.values())
+			for(final xThreadPool pool : instances.values()) {
+				if(pool.isMainPool()) continue;
 				pool.Stop();
+			}
 			// wait for threads to stop
 			final Iterator<Entry<String, xThreadPool>> it = instances.entrySet().iterator();
 			while(it.hasNext()) {
 				final Entry<String, xThreadPool> entry = it.next();
 				final xThreadPool pool = entry.getValue();
+				if(pool.isMainPool()) continue;
 				try {
 					pool.wait();
 				} catch (InterruptedException e) {
@@ -356,7 +368,7 @@ public class xThreadPool implements xStartable {
 
 
 	public static void Exit() {
-		get().runLater(new xRunnable("Exit") {
+		final xRunnable runexit = new xRunnable("Exit") {
 			@Override
 			public void run() {
 				// display threads still running
@@ -365,7 +377,11 @@ public class xThreadPool implements xStartable {
 				System.out.println();
 				System.exit(0);
 			}
-		});
+		};
+		if(mainThread != null && !mainThread.equals(Thread.currentThread()) && get().isRunning())
+			get().runLater(runexit);
+		else
+			runexit.run();
 	}
 
 
