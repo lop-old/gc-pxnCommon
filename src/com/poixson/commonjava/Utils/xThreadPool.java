@@ -10,6 +10,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -366,9 +367,6 @@ public class xThreadPool implements xStartable {
 			}
 		}
 	}
-
-
-
 	public static void Exit() {
 		final xRunnable runexit = new xRunnable("Exit") {
 			@Override
@@ -390,13 +388,18 @@ public class xThreadPool implements xStartable {
 
 	// display threads still running
 	protected static void displayStillRunning() {
-		String[] names = utilsThread.getThreadNames();
-		if(names == null || names.length == 0) return;
-		String msg = "Threads still running:  [ "+Integer.toString(names.length)+" ]";
-		for(String name : names)
-			msg += "\n  "+name;
-		System.out.println(msg);
-		//pxnLog.get().Publish(msg);
+		if(!xVars.get().debug()) return;
+		final String[] names = utilsThread.getThreadNames();
+		if(utils.isEmpty(names)) return;
+		final StringBuilder msg = new StringBuilder();
+		msg.append("Threads still running:  ").append(names.length);
+		for(final String name : names) {
+			if("NonBlockingInputStreamThread".equals(name)) continue;
+			if("Finalizer".equals(name)) continue;
+			if(name.startsWith("main:")) continue;
+			msg.append("\n  ").append(name);
+		}
+		xLog.getRoot().publish(msg.toString());
 	}
 
 
