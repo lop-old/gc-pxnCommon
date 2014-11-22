@@ -123,6 +123,22 @@ public final class utils {
 
 
 
+	public static boolean isLibAvailable(final String classpath) {
+		try {
+			Class.forName(classpath);
+			return true;
+		} catch (ClassNotFoundException ignore) {}
+		return false;
+	}
+	public static boolean isJLineAvailable() {
+		return isLibAvailable("jline.Terminal");
+	}
+	public static boolean isRxtxAvailable() {
+		return isLibAvailable("gnu.io.CommPortIdentifier");
+	}
+
+
+
 	// logger
 	public static xLog log() {
 		return xLog.getRoot();
