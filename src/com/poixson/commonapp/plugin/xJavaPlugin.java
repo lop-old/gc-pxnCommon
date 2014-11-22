@@ -1,6 +1,8 @@
 package com.poixson.commonapp.plugin;
 
+import com.poixson.commonjava.Failure;
 import com.poixson.commonjava.EventListener.xListener;
+import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -12,6 +14,7 @@ public abstract class xJavaPlugin {
 	private enum INIT_STATE {FRESH, INITED, UNLOADED}
 	private volatile INIT_STATE inited = INIT_STATE.FRESH;
 	private volatile boolean enabled = false;
+	private volatile boolean failed = false;
 
 
 
@@ -46,7 +49,14 @@ public abstract class xJavaPlugin {
 			if(this.inited.equals(INIT_STATE.UNLOADED)) throw new IllegalStateException("Cannot enable plugin, already unloaded!");
 			if(!this.inited.equals(INIT_STATE.INITED))  throw new IllegalStateException("Cannot enable plugin, not inited!");
 			if(this.enabled) return;
+			this.log().finer("Enabling..");
 			onEnable();
+			if(this.failed) {
+				this.log().severe("Plugin failed to load");
+				this.enabled = false;
+				return;
+			}
+			this.log().finer("Enabled");
 			this.enabled = true;
 		}
 	}
@@ -59,8 +69,17 @@ public abstract class xJavaPlugin {
 			if(!this.inited.equals(INIT_STATE.INITED))  throw new IllegalStateException("Cannot enable plugin, not inited!");
 			if(!this.enabled) return;
 			this.enabled = false;
+			this.log().finer("Disabling..");
 			onDisable();
+			this.log().finer("Disabled");
 		} 
+	}
+	public void fail(final String msg) {
+		this.failed = true;
+		if(utils.notEmpty(msg)) {
+			this.log().fatal(msg);
+			Failure.addMessageSilently(msg);
+		}
 	}
 
 
