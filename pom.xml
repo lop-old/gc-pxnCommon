@@ -37,7 +37,7 @@
 	</ciManagement>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
-		<finalName>scant-${project.artifactId}-${project.version}</finalName>
+		<finalName>${project.artifactId}-${project.version}</finalName>
 		<resources>
 			<resource>
 				<directory>resources</directory>
@@ -67,32 +67,6 @@
 					</archive>
 				</configuration>
 -->
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.2</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<finalName>${project.artifactId}-${project.version}</finalName>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
