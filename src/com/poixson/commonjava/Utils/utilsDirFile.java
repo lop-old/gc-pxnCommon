@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
-import java.lang.reflect.Field;
 import java.nio.channels.FileLock;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -124,6 +123,8 @@ public final class utilsDirFile {
 
 
 
+/*
+//TODO: does this work?
 	// add lib to paths
 	public static void addLibraryPath(final String libDir) {
 		if(utils.isEmpty(libDir)) throw new NullPointerException("libDir cannot be null/empty");
@@ -157,6 +158,7 @@ public final class utilsDirFile {
 		} catch (IllegalAccessException ignore) {
 		}
 	}
+*/
 
 
 

@@ -1,6 +1,5 @@
 package com.poixson.commonapp.app;
 
-import java.io.File;
 import java.io.PrintStream;
 
 import org.fusesource.jansi.Ansi;
@@ -11,6 +10,7 @@ import com.poixson.commonjava.Failure;
 import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.Utils.Keeper;
 import com.poixson.commonjava.Utils.mvnProps;
+import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsDirFile;
 import com.poixson.commonjava.Utils.utilsNumbers;
 import com.poixson.commonjava.Utils.utilsString;
@@ -150,12 +150,13 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			return false;
 		// load clock
 		this.startTime = xClock.get(true).millis();
-		// load libraries
-		{
-			final String libPath = utilsDirFile.mergePaths(".", "lib");
-			if((new File(libPath)).isDirectory())
-				utilsDirFile.addLibraryPath(libPath);
-		}
+//TODO: does this work?
+//		// load libraries
+//		{
+//			final String libPath = utilsDirFile.mergePaths(".", "lib");
+//			if((new File(libPath)).isDirectory())
+//				utilsDirFile.addLibraryPath(libPath);
+//		}
 		// main thread queue
 		if(this.threadPool == null)
 			this.threadPool = xThreadPool.get();
