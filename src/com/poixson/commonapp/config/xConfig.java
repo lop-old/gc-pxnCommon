@@ -57,12 +57,24 @@ public class xConfig {
 		} catch (Exception ignore) {}
 		return null;
 	}
+	public String getStr(final String path, final String def) {
+		final String value = this.getString(path);
+		if(utils.isEmpty(value))
+			return def;
+		return value;
+	}
 	// get boolean
 	public Boolean getBoolean(final String path) {
 		try {
 			return (Boolean) this.get(path);
 		} catch (Exception ignore) {}
 		return null;
+	}
+	public boolean getBool(final String path, final boolean def) {
+		final Boolean value = this.getBoolean(path);
+		if(value == null)
+			return def;
+		return value.booleanValue();
 	}
 	// get integer
 	public Integer getInteger(final String path) {
@@ -71,12 +83,24 @@ public class xConfig {
 		} catch (Exception ignore) {}
 		return null;
 	}
+	public int getInt(final String path, final int def) {
+		final Integer value = this.getInteger(path);
+		if(value == null)
+			return def;
+		return value.intValue();
+	}
 	// get long
 	public Long getLong(final String path) {
 		try {
 			return (Long) this.get(path);
 		} catch (Exception ignore) {}
 		return null;
+	}
+	public long getLng(final String path, final long def) {
+		final Long value = this.getLong(path);
+		if(value == null)
+			return def;
+		return value.longValue();
 	}
 	// get double
 	public Double getDouble(final String path) {
@@ -85,12 +109,24 @@ public class xConfig {
 		} catch (Exception ignore) {}
 		return null;
 	}
+	public double getDbl(final String path, final double def) {
+		final Double value = this.getDouble(path);
+		if(value == null)
+			return def;
+		return value.doubleValue();
+	}
 	// get float
 	public Float getFloat(final String path) {
 		try {
 			return (Float) this.get(path);
 		} catch (Exception ignore) {}
 		return null;
+	}
+	public float getFlt(final String path, final float def) {
+		final Float value = this.getFloat(path);
+		if(value == null)
+			return def;
+		return value.floatValue();
 	}
 
 
