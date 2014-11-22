@@ -115,10 +115,10 @@ public final class utils {
 		final int MB = 1024 * 1024;
 		final Runtime runtime = Runtime.getRuntime();
 		System.out.println("##### Heap utilization statistics [MB] #####");
-		System.out.println( "Used Memory:"  + ((runtime.totalMemory() - runtime.freeMemory()) / MB) );
-		System.out.println( "Free Memory:"  + (runtime.freeMemory() / MB) );
-		System.out.println( "Total Memory:" + (runtime.totalMemory() / MB) );
-		System.out.println( "Max Memory:"   + (runtime.maxMemory() / MB) );
+		System.out.println( "Used Memory:  " + ((runtime.totalMemory() - runtime.freeMemory()) / MB) + " MB" );
+		System.out.println( "Free Memory:  " + (runtime.freeMemory() / MB)                           + " MB" );
+		System.out.println( "Total Memory: " + (runtime.totalMemory() / MB)                          + " MB" );
+		System.out.println( "Max Memory:   " + (runtime.maxMemory() / MB)                            + " MB" );
 	}
 
 

@@ -250,6 +250,8 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			case 8: {
 				this.app.state = APP_STATE.RUNNING;
 				log().title(this.app.getName()+" Ready and Running!");
+//				if(xVars.get().debug())
+//					utils.MemoryStats();
 				break;
 			}
 			default:
