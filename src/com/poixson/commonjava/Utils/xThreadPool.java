@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.poixson.commonjava.xLogger.xLog;
 
@@ -18,7 +19,7 @@ public class xThreadPool implements Runnable {
 	public static final int HARD_LIMIT = 20;
 	public static final int GLOBAL_LIMIT = 50;
 	private volatile int size = 1;
-	private volatile int nextThreadId = 1;
+	private volatile AtomicInteger nextThreadId = new AtomicInteger(1);
 	private final Object nextLock = new Object();
 	private static final xTime threadSleepTime = xTime.get("200n");
 	private static final xTime threadInactiveTimeout = xTime.get("30s");
@@ -303,8 +304,7 @@ public class xThreadPool implements Runnable {
 
 	protected int getNextThreadId() {
 		synchronized(this.nextLock) {
-			final int next = this.nextThreadId;
-			this.nextThreadId++;
+			final int next = this.nextThreadId.getAndAdd(1);
 			return next;
 		}
 	}
