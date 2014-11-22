@@ -118,14 +118,13 @@ public class jlineConsole implements xConsole {
 				}
 			}
 			// close input
-			try {
-				System.in.close();
-			} catch (IOException ignore) {}
+			utils.safeClose(System.in);
 			try {
 				AnsiConsole.systemUninstall();
 			} catch (Exception ignore) {}
 			System.out.print("\r  "+utilsString.repeat(DEFAULT_PROMPT.length(), " "));
-			System.out.println();
+			this.setPrompt("");
+			flush();
 		}
 	}
 
@@ -168,8 +167,9 @@ public class jlineConsole implements xConsole {
 				}
 			}
 		}
+		this.stopping = true;
 		this.running = false;
-		System.out.println();
+		this.setPrompt("");
 		System.out.println();
 		flush();
 		reader.shutdown();
