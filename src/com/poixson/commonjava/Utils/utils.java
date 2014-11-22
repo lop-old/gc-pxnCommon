@@ -139,6 +139,27 @@ public final class utils {
 
 
 
+	public static boolean validBaud(final int baud) {
+		switch(baud) {
+		case 300:
+		case 1200:
+		case 2400:
+		case 4800:
+		case 9600:
+		case 14400:
+		case 19200:
+		case 28800:
+		case 38400:
+		case 57600:
+		case 115200:
+			return true;
+		default:
+		}
+		return false;
+	}
+
+
+
 	// logger
 	public static xLog log() {
 		return xLog.getRoot();
