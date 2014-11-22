@@ -190,8 +190,10 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		if(APP_STATE.STOPPING.equals(this.state))
 			return;
 		final xThreadPool pool = this.getThreadPool();
-		if(pool == null)
-			return;
+		if(pool == null) {
+			log().severe("Failed to get thread pool for proper shutdown");
+			xThreadPool.Exit();
+		}
 		// trigger shutdown sequence
 		log().fine("Shutdown sequence.. 8..7..");
 		pool.runLater(
@@ -246,6 +248,13 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 				log().title("Starting "+this.app.getName()+"..");
 				break;
 			}
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+				break;
 			// last step in startup
 			case 8: {
 				this.app.state = APP_STATE.RUNNING;
@@ -255,7 +264,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 				break;
 			}
 			default:
-				break;
+				throw new RuntimeException("Unknown startup step: "+Integer.toString(this.step));
 			}
 
 			// app steps 1-8
@@ -323,6 +332,13 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 				log().title("Stopping "+this.app.getName()+"..");
 				break;
 			}
+			case 7:
+			case 6:
+			case 5:
+			case 4:
+			case 3:
+			case 2:
+				break;
 			// last step in shutdown
 			case 1: {
 				log().title(this.app.getName()+" Stopped.");
@@ -335,7 +351,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 				break;
 			}
 			default:
-				break;
+				throw new RuntimeException("Unknown shutdown step: "+Integer.toString(this.step));
 			}
 
 			// app steps 8-1
@@ -353,8 +369,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			// finished shutdown sequence
 			if(this.step <= 1) {
 				this.app.initLevel = 0;
-				System.out.println();
-				System.exit(0);
+				xThreadPool.Exit();
 				return;
 			}
 
