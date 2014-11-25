@@ -78,13 +78,18 @@ public class jlineConsole implements xConsole {
 	public Object clone() throws CloneNotSupportedException {
 		throw new CloneNotSupportedException();
 	}
+	public void finalize() {
+		if(this.running && !this.stopping)
+			this.Stop();
+	}
 
 
 
 	@Override
-	public void start() {
+	public boolean Start() {
 		log().finest("Start jlineConsole");
-		if(this.running || this.stopping) return;
+		if(this.running)  return true;
+		if(this.stopping) return false;
 		synchronized(lock) {
 			if(this.thread == null) {
 				this.thread = new Thread(this);
@@ -93,9 +98,10 @@ public class jlineConsole implements xConsole {
 			if(!this.running)
 				this.thread.start();
 		}
+		return true;
 	}
 	@Override
-	public void stop() {
+	public void Stop() {
 		this.stopping = true;
 		synchronized(lock) {
 			// stop console input thread
@@ -126,6 +132,12 @@ public class jlineConsole implements xConsole {
 			this.setPrompt("");
 			flush();
 		}
+	}
+	@Override
+	public boolean isRunning() {
+		if(this.stopping)
+			return false;
+		return this.running;
 	}
 
 

@@ -474,7 +474,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 	// start console prompt
 	protected void startConsole() {
 		final xConsole console = xLog.peekConsole();
-		console.start();
+		console.Start();
 	}
 
 
@@ -482,7 +482,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 	protected void termConsole() {
 		final xConsole console = xLog.peekConsole();
 		if(console != null)
-			console.stop();
+			console.Stop();
 	}
 
 
