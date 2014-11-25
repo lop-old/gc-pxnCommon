@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.xeustechnologies.jcl.JarClassLoader;
@@ -113,6 +114,17 @@ public class xPluginManager {
 			this.log().warning("Plugin name not set: "+file.toString());
 			return null;
 		}
+		// check required libraries
+		final List<String> required = yml.getStringList("Requires");
+		if(utils.notEmpty(required)) {
+			for(final String libPath : required) {
+				if(!utils.isLibAvailable(libPath)) {
+					this.log().fatal("Plugin requires library: "+libPath);
+					return null;
+				}
+			}
+		}
+		// plugin jar loaded
 		return new PluginDAO(
 			pluginName,
 			file,
