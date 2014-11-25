@@ -55,7 +55,7 @@ public class xPluginManager {
 			this.name = name;
 			this.file = file;
 			this.yml  = yml;
-			this.log = log().getWeak(name);
+			this.log  = log().getWeak(name);
 		}
 
 	}
@@ -64,7 +64,7 @@ public class xPluginManager {
 
 	// load all plugins from dir
 	public void loadAll() {
-		loadAll(null);
+		this.loadAll(null);
 	}
 	public void loadAll(final String path) {
 		final File dir = new File(path == null ? "plugins/" : path);
@@ -78,7 +78,7 @@ public class xPluginManager {
 		if(files == null) throw new NullPointerException();
 		// no plugins found
 		if(files.length == 0) {
-			log().warning("No plugins found to load.");
+			this.log().warning("No plugins found to load.");
 			return;
 		}
 		// load plugin jars
@@ -88,29 +88,29 @@ public class xPluginManager {
 				if(dao == null) continue;
 				// plugin already loaded
 				if(this.plugins.containsKey(dao.name)) {
-					log().warning("Plugin already loaded with name: "+dao.name);
+					this.log().warning("Plugin already loaded with name: "+dao.name);
 					continue;
 				}
-				log().finer("Found plugin file: "+f.toString());
-				addPlugin(dao);
+				this.log().finer("Found plugin file: "+f.toString());
+				this.addPlugin(dao);
 			}
 		}
 	}
 	public PluginDAO load(final File file) {
 		if(file == null) throw new NullPointerException();
 		if(!file.exists()) {
-			log().warning("Plugin file not found: "+file.toString());
+			this.log().warning("Plugin file not found: "+file.toString());
 			return null;
 		}
 		// load plugin.yml from jar
-		xPluginYML yml = (xPluginYML) xConfigLoader.LoadJar(file, "plugin.yml", xPluginYML.class);
+		final xPluginYML yml = (xPluginYML) xConfigLoader.LoadJar(file, "plugin.yml", xPluginYML.class);
 		if(yml == null) {
-			log().warning("plugin.yml not found in plugin: "+file.toString());
+			this.log().warning("plugin.yml not found in plugin: "+file.toString());
 			return null;
 		}
 		final String pluginName = yml.getPluginName();
 		if(utils.isEmpty(pluginName)) {
-			log().warning("Plugin name not set: "+file.toString());
+			this.log().warning("Plugin name not set: "+file.toString());
 			return null;
 		}
 		return new PluginDAO(
@@ -124,7 +124,7 @@ public class xPluginManager {
 
 	// init all plugins
 	public void initAll() {
-		initAll("Main Class");
+		this.initAll("Main Class");
 	}
 	public void initAll(final String classField) {
 		if(utils.isEmpty(classField)) throw new NullPointerException();
@@ -132,7 +132,7 @@ public class xPluginManager {
 		synchronized(this.plugins) {
 			for(final PluginDAO dao : this.plugins.values()) {
 				if(dao.plugin != null) continue;
-				init(dao);
+				this.init(dao);
 			}
 		}
 	}
@@ -148,7 +148,7 @@ public class xPluginManager {
 			return;
 		}
 		// new instance
-		log().info("Loading plugin: "+dao.name+" "+dao.yml.getPluginVersion());
+		this.log().info("Loading plugin: "+dao.name+" "+dao.yml.getPluginVersion());
 		dao.plugin = loadPluginJar(dao, className);
 		dao.plugin.doInit(this, dao.yml);
 	}

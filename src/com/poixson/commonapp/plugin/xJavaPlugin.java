@@ -28,14 +28,14 @@ public abstract class xJavaPlugin {
 			if(this.inited.equals(INIT_STATE.UNLOADED)) throw new IllegalStateException("Cannot init plugin, already unloaded!");
 			this.manager = pluginManager;
 			this.yml = yaml;
-			onInit();
+			this.onInit();
 			this.inited = INIT_STATE.INITED;
 		}
 	}
 	protected void doUnload() {
 		if(!this.inited.equals(INIT_STATE.INITED)) return;
-		if(isEnabled())
-			doDisable();
+		if(this.isEnabled())
+			this.doDisable();
 		synchronized(this.inited) {
 			if(!this.inited.equals(INIT_STATE.INITED)) return;
 			this.inited = INIT_STATE.UNLOADED;
@@ -50,7 +50,7 @@ public abstract class xJavaPlugin {
 			if(!this.inited.equals(INIT_STATE.INITED))  throw new IllegalStateException("Cannot enable plugin, not inited!");
 			if(this.enabled) return;
 			this.log().finer("Enabling..");
-			onEnable();
+			this.onEnable();
 			if(this.failed) {
 				this.log().severe("Plugin failed to load");
 				this.enabled = false;
@@ -70,7 +70,7 @@ public abstract class xJavaPlugin {
 			if(!this.enabled) return;
 			this.enabled = false;
 			this.log().finer("Disabling..");
-			onDisable();
+			this.onDisable();
 			this.log().finer("Disabled");
 		} 
 	}
