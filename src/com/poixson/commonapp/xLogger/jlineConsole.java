@@ -2,6 +2,8 @@ package com.poixson.commonapp.xLogger;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 
 import jline.console.ConsoleReader;
 import jline.console.history.FileHistory;
@@ -30,6 +32,9 @@ public class jlineConsole implements xConsole {
 	private volatile String prompt = null;
 	private volatile xHandler handler = null;
 
+	private static volatile PrintStream originalOut = null;
+	private static volatile PrintStream originalErr = null;
+
 	// console input thread
 	private volatile Thread thread = null;
 	private volatile boolean running = false;
@@ -48,14 +53,14 @@ public class jlineConsole implements xConsole {
 				System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
 			}
 			try {
-				reader = new ConsoleReader(System.in, System.out);
+				reader = new ConsoleReader(System.in, getOriginalOut());
 			} catch (IOException ignore) {
 				// try again with jline disabled
 				try {
 					jlineEnabled = Boolean.FALSE;
 					System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
 					System.setProperty("user.language", "en");
-					reader = new ConsoleReader(System.in, System.out);
+					reader = new ConsoleReader(System.in, getOriginalOut());
 				} catch (IOException e) {
 					log().trace(e);
 				}
@@ -91,6 +96,46 @@ public class jlineConsole implements xConsole {
 		if(this.running)  return true;
 		if(this.stopping) return false;
 		synchronized(lock) {
+			// capture std out
+			originalOut = System.out;
+			System.setOut(
+				new PrintStream(
+					new OutputStream() {
+						private final StringBuilder buf = new StringBuilder();
+						@Override
+						public void write(final int b) throws IOException {
+							if(b == '\r') return;
+							if(b == '\n') {
+								xLog.getRoot("STDOUT")
+									.info(this.buf.toString());
+								this.buf.setLength(0);
+								return;
+							}
+							this.buf.append( Character.toChars(b) );
+						}
+					}
+				)
+			);
+			// capture std err
+			originalErr = System.err;
+			System.setErr(
+				new PrintStream(
+					new OutputStream() {
+						private final StringBuilder buf = new StringBuilder();
+						public void write(final int b) throws IOException {
+							if(b == '\r') return;
+							if(b == '\n') {
+								xLog.getRoot("STDERR")
+									.warning(this.buf.toString());
+								this.buf.setLength(0);
+								return;
+							}
+							this.buf.append( Character.toChars(b) );
+						}
+					}
+				)
+			);
+			// input listener thread
 			if(this.thread == null) {
 				this.thread = new Thread(this);
 				this.thread.setDaemon(true);
@@ -104,6 +149,13 @@ public class jlineConsole implements xConsole {
 	public void Stop() {
 		this.stopping = true;
 		synchronized(lock) {
+			// restore original out/err
+			if(originalOut != null)
+				System.setOut(originalOut);
+			originalOut = null;
+			if(originalErr != null)
+				System.setErr(originalErr);
+			originalErr = null;
 			// stop console input thread
 			if(this.running && this.thread != null) {
 				try {
@@ -153,7 +205,7 @@ public class jlineConsole implements xConsole {
 			if(this.thread != null && this.thread.isInterrupted()) break;
 			String line = null;
 			try {
-				System.out.print('\r');
+				getOriginalOut().print('\r');
 				line = reader.readLine(getPrompt());
 				flush();
 			} catch (IOException e) {
@@ -182,10 +234,19 @@ public class jlineConsole implements xConsole {
 		this.stopping = true;
 		this.running = false;
 		this.setPrompt("");
-		System.out.println();
+		getOriginalOut().println();
 		flush();
 		reader.shutdown();
 		reader = null;
+	}
+
+
+
+	protected static PrintStream getOriginalOut() {
+		return originalOut == null ? System.out : originalOut;
+	}
+	protected static PrintStream getOriginalErr() {
+		return originalErr == null ? System.err : originalErr;
 	}
 
 
@@ -206,7 +267,7 @@ public class jlineConsole implements xConsole {
 		try {
 			synchronized(printLock) {
 				reader.flush();
-				//System.out.flush();
+				//getOriginalOut().flush();
 			}
 		} catch (Exception ignore) {}
 	}
@@ -223,7 +284,7 @@ public class jlineConsole implements xConsole {
 		}
 		synchronized(printLock) {
 			// print
-			System.out.print("\r"+str+"\r\n");
+			getOriginalOut().print("\r"+str+"\r\n");
 			// draw command prompt
 			drawPrompt();
 			flush();
