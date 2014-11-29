@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import java.util.Set;
 import java.util.UUID;
 
+import com.poixson.commonjava.Utils.byRef.StringRef;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -155,6 +156,27 @@ public final class utilsString {
 
 
 
+	// get first part
+	public static String getFirstPart(final String delim, final String data) {
+		final int pos = data.indexOf(delim);
+		if(pos == -1)
+			return data;
+		return data.substring(pos + delim.length());
+	}
+	// get next part
+	public static String getNextPart(final String delim, final StringRef data) {
+		final int pos = data.value.indexOf(delim);
+		final String part;
+		if(pos == -1) {
+			part       = data.value;
+			data.value = "";
+		} else {
+			part       = data.value.substring(0, pos);
+			data.value = data.value.substring(pos + delim.length());
+		}
+		return part;
+	}
+	// get last part
 	public static String getLastPart(final String delim, final String data) {
 		final int pos = data.lastIndexOf(delim);
 		if(pos == -1)
