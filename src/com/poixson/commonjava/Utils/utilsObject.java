@@ -10,6 +10,20 @@ public final class utilsObject {
 
 
 
+	@SuppressWarnings("unchecked")
+	public static <T> T cast(final Class<? extends T> clss, final Object object) {
+		if(clss == null) throw new NullPointerException();
+		if(object == null) return null;
+		try {
+			if( String.class.equals(clss) && !(object instanceof String) )
+				return (T) object.toString();
+			return clss.cast(object);
+		} catch (Exception ignore) {}
+		return null;
+	}
+
+
+
 	/**
 	 * Cast a collection to list.
 	 * @param clss
