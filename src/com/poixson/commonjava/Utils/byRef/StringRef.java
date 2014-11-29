@@ -1,16 +1,16 @@
 package com.poixson.commonjava.Utils.byRef;
 
 
-public class stringRef {
+public class StringRef {
 
 	public volatile String value = null;
 
 
 
-	public stringRef(final String value) {
+	public StringRef(final String value) {
 		this.value = value;
 	}
-	public stringRef() {
+	public StringRef() {
 	}
 
 

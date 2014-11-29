@@ -1,16 +1,16 @@
 package com.poixson.commonjava.Utils.byRef;
 
 
-public class boolRef {
+public class BoolRef {
 
 	public volatile boolean value = false;
 
 
 
-	public boolRef(final boolean value) {
+	public BoolRef(final boolean value) {
 		this.value = value;
 	}
-	public boolRef() {
+	public BoolRef() {
 	}
 
 
