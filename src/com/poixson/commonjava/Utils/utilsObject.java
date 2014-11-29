@@ -28,7 +28,7 @@ public final class utilsObject {
 
 
 	/**
-	 * Cast a collection to list.
+	 * Cast a collection object to a list.
 	 * @param clss
 	 * @param c
 	 * @return
@@ -36,15 +36,23 @@ public final class utilsObject {
 	public static <T> List<T> castList(final Class<? extends T> clss, final Collection<?> c) {
 		if(clss == null) throw new NullPointerException("clss cannot be null");
 		if(c    == null) return null;
-		final List<T> result = new ArrayList<T>(c.size());
 		try {
-			for(final Object o : c)
-				result.add(clss.cast(o));
-		} catch (Exception ignore) {
-			return null;
-		}
-		return result;
+			final List<T> result = new ArrayList<T>(c.size());
+			for(final Object o : c) {
+				try {
+					result.add(clss.cast(o));
+				} catch (Exception ignore) {}
+			}
+			return result;
+		} catch (Exception ignore) {}
+		return null;
 	}
+	/**
+	 * Cast an object to a list.
+	 * @param clss
+	 * @param c
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> castList(final Class<? extends T> clss, final Object object) {
 		if(clss   == null) throw new NullPointerException("clss cannot be null");
