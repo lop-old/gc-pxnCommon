@@ -18,6 +18,10 @@ public class BoolRef {
 	public void value(final boolean val) {
 		this.value = val;
 	}
+	public void value(final Boolean val) {
+		if(val == null) throw new NullPointerException();
+		this.value = val.booleanValue();
+	}
 	public boolean value() {
 		return this.value;
 	}
