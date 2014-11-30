@@ -107,13 +107,13 @@ public class xHandler {
 	}
 	// trigger only one priority
 	public void triggerNow(final xEventData event, final Priority onlyPriority) {
-		triggerNow(null, event, onlyPriority);
+		triggerNow( (xThreadPool) null, event, onlyPriority );
 	}
 	public void triggerNow(final xThreadPool pool, final xEventData event, final Priority onlyPriority) {
 		if(event == null) throw new NullPointerException();
 		final xThreadPool p = (pool == null ? xThreadPool.get() : pool);
 		p.runNow(
-			new xRunnableEvent(event, onlyPriority)
+			this.getRunnable(event, onlyPriority)
 		);
 	}
 
@@ -129,30 +129,33 @@ public class xHandler {
 		if(event == null) throw new NullPointerException();
 		final xThreadPool p = (pool == null ? xThreadPool.get() : pool);
 		p.runLater(
-			new xRunnableEvent(event, onlyPriority)
+			this.getRunnable(event, onlyPriority)
 		);
 	}
 
 
 
-	public class xRunnableEvent extends xRunnable {
-		private final xEventData event;
-		private final Priority priority;
-		public xRunnableEvent(final xEventData event, final Priority onlyPriority) {
-			super("Event-"+event.toString());
-			this.event = event;
-			this.priority = onlyPriority;
-		}
-		@Override
-		public void run() {
-			if(this.event == null) throw new NullPointerException();
-			if(this.priority == null) {
-				for(final Priority p : Priority.values())
-					doTrigger(this.event, p);
-			} else {
-				doTrigger(this.event, this.priority);
+	// xRunnableEvent
+	protected xRunnable getRunnable(final xEventData event, final Priority onlyPriority) {
+		return new xRunnable("Event-"+event.toString()) {
+			private volatile xEventData event;
+			private volatile Priority priority;
+			public xRunnable init(final xEventData event, final Priority onlyPriority) {
+				this.event = event;
+				this.priority = onlyPriority;
+				return this;
 			}
-		}
+			@Override
+			public void run() {
+				if(this.event == null) throw new NullPointerException();
+				if(this.priority == null) {
+					for(final Priority p : Priority.values())
+						doTrigger(this.event, p);
+				} else {
+					doTrigger(this.event, this.priority);
+				}
+			}
+		}.init(event, onlyPriority);
 	}
 
 
