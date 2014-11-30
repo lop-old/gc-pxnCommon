@@ -243,10 +243,12 @@ public final class utilsString {
 
 
 
-	// generate a random string
+	/**
+	 * Generate a random string hash.
+	 * @param length Number of characters to generate
+	 * @return The generated hash string
+	 */
 	public static String RandomString(final int length) {
-		//if(length == 0) return "";
-		//if(length <  0) return null;
 		if(length < 1) return null;
 		final StringBuilder buf = new StringBuilder(length);
 		while(buf.length() < length) {
@@ -254,7 +256,11 @@ public final class utilsString {
 			if(str == null) throw new NullPointerException();
 			buf.append(str);
 		}
-		return buf.toString().substring( 0, utilsNumbers.MinMax(length, 0, buf.length()) );
+		return buf.toString()
+			.substring(
+				0,
+				utilsNumbers.MinMax(length, 0, buf.length())
+			);
 	}
 
 
