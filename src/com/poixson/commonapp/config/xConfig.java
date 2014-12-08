@@ -134,14 +134,20 @@ public class xConfig {
 	// get list
 	public <T> List<T> getList(final Class<? extends T> clss, final String path) {
 		try {
-			return utilsObject.castList(clss, this.get(path));
+			return utilsObject.castList(
+				clss,
+				this.get(path)
+			);
 		} catch (Exception ignore) {}
 		return null;
 	}
 	// get string list
 	public List<String> getStringList(final String path) {
 		try {
-			return getList(String.class, path);
+			return this.getList(
+				String.class,
+				path
+			);
 		} catch (Exception ignore) {}
 		return null;
 	}
