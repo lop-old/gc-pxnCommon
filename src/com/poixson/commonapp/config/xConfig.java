@@ -148,6 +148,43 @@ public class xConfig {
 
 
 
+	// get map
+	public <K, V> Map<K, V> getMap(final Class<? extends K> clssK,
+			final Class<? extends V> clssV, final String path) {
+		try {
+			return utilsObject.castMap(
+				clssK,
+				clssV,
+				this.getPath(path)
+			);
+		} catch (Exception ignore) {}
+		return null;
+	}
+	// get string:object map
+	public Map<String, Object> getStringObjectMap(final String path) {
+		try {
+			return this.getMap(
+				String.class,
+				Object.class,
+				path
+			);
+		} catch (Exception ignore) {}
+		return null;
+	}
+	// get string:string map
+	public Map<String, String> getStringMap(final String path) {
+		try {
+			return this.getMap(
+				String.class,
+				String.class,
+				path
+			);
+		} catch (Exception ignore) {}
+		return null;
+	}
+
+
+
 //	public List<HashMap<String, Object>> getKeyList(String path) {
 //		try {
 //			@SuppressWarnings("unchecked")
