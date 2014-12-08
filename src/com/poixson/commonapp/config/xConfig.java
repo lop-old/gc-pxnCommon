@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsObject;
+import com.poixson.commonjava.Utils.utilsString;
+import com.poixson.commonjava.Utils.byRef.StringRef;
 
 
 public class xConfig {
@@ -43,6 +45,19 @@ public class xConfig {
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> getPath(final String path) {
 		try {
+			if(path.contains(".")) {
+				Map<String, Object> map = this.data;
+				final StringRef str = new StringRef(path);
+				while(str.notEmpty()) {
+					final String part = utilsString.getNextPart(".", str);
+					try {
+						map = (Map<String, Object>) map.get(part);
+					} catch (Exception ignore) {
+						return null;
+					}
+				}
+				return map;
+			}
 			return (Map<String, Object>) this.get(path);
 		} catch (Exception ignore) {}
 		return null;
