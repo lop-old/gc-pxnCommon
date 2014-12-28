@@ -65,6 +65,9 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 	// mvn properties
 	protected final mvnProps mvnprops;
 
+	protected static final String ALREADY_STARTED_EXCEPTION = "Illegal app state; this shouldn't happen; cannot start in this state; possibly already started?";
+	protected static final String ILLEGAL_STATE_EXCEPTION   = "Illegal app state; cannot continue; this shouldn't happen; Current state: ";
+
 
 
 	/**
@@ -79,25 +82,19 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 	// call this from main(args)
 	protected static void initMain(final String[] args, final xApp app) {
 		// single instance
-		if(appInstance != null)
-			_AlreadyStarted();
+		if(appInstance != null) {
+			log().trace(new RuntimeException(ALREADY_STARTED_EXCEPTION));
+			Failure.fail(ALREADY_STARTED_EXCEPTION);
+		}
 		synchronized(xApp.appLock) {
-			if(xApp.appInstance != null)
-				_AlreadyStarted();
+			if(xApp.appInstance != null) {
+				log().trace(new RuntimeException(ALREADY_STARTED_EXCEPTION));
+				Failure.fail(ALREADY_STARTED_EXCEPTION);
+			}
 			xApp.appInstance = app;
 		}
 		xApp.appInstance.processArgs(args);
 		xApp.appInstance.Start();
-	}
-	protected static void _AlreadyStarted() {
-		log().trace(new IllegalStateException("Illegal app state; this shouldn't happen; cannot start in this state; possibly already started?"));
-		Failure.fail("Program already started?");
-		System.exit(1);
-	}
-	protected static void _IllegalState(final APP_STATE state) {
-		log().trace(new IllegalStateException("Illegal app state; cannot continue; this shouldn't happen; Current state: "+state.toString()));
-		Failure.fail("Illegal app state: "+state.toString());
-		System.exit(1);
 	}
 
 
@@ -128,10 +125,12 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 	public void Start() {
 		synchronized(this.state) {
 			if(this.initLevel != 0) {
-				_AlreadyStarted();
+				log().trace(new RuntimeException(ILLEGAL_STATE_EXCEPTION+this.state.toString()));
+				Failure.fail(ILLEGAL_STATE_EXCEPTION+this.state.toString());
 			}
 			if(!APP_STATE.STOPPED.equals(this.state)) {
-				_IllegalState(this.state);
+				log().trace(new RuntimeException(ILLEGAL_STATE_EXCEPTION+this.state.toString()));
+				Failure.fail(ILLEGAL_STATE_EXCEPTION+this.state.toString());
 			}
 			this.initLevel = 1;
 		}
@@ -159,10 +158,12 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			this.threadPool = xThreadPool.get();
 		// ready for startup sequence
 		if(this.initLevel != 1) {
-			_AlreadyStarted();
+			log().trace(new RuntimeException(ALREADY_STARTED_EXCEPTION));
+			Failure.fail(ALREADY_STARTED_EXCEPTION);
 		}
 		if(!APP_STATE.STOPPED.equals(this.state)) {
-			_IllegalState(this.state);
+			log().trace(new RuntimeException(ILLEGAL_STATE_EXCEPTION+this.state.toString()));
+			Failure.fail(ILLEGAL_STATE_EXCEPTION+this.state.toString());
 		}
 		// run startup sequence (1-9)
 		log().fine("Startup sequence.. 1..2..");
@@ -228,8 +229,8 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			case 1: {
 				synchronized(this.app.state) {
 					if(!APP_STATE.STOPPED.equals(this.app.state)) {
-						_IllegalState(this.app.state);
-						return;
+						log().trace(new RuntimeException(ILLEGAL_STATE_EXCEPTION+this.app.state.toString()));
+						Failure.fail(ILLEGAL_STATE_EXCEPTION+this.app.state.toString());
 					}
 					this.app.state = APP_STATE.STARTUP;
 				}
@@ -320,8 +321,8 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			// first step in shutdown
 			case 8: {
 				if(!APP_STATE.RUNNING.equals(this.app.state) && !APP_STATE.STARTUP.equals(this.app.state)) {
-					_IllegalState(this.app.state);
-					return;
+					log().trace(new RuntimeException(ILLEGAL_STATE_EXCEPTION+this.app.state.toString()));
+					Failure.fail(ILLEGAL_STATE_EXCEPTION+this.app.state.toString());
 				}
 				log().title("Stopping "+this.app.getName()+"..");
 				break;
