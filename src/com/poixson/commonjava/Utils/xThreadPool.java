@@ -103,9 +103,8 @@ public class xThreadPool implements xStartable {
 
 
 	@Override
-	public boolean Start() {
+	public void Start() {
 		this.newThread();
-		return true;
 	}
 	@Override
 	public void Stop() {

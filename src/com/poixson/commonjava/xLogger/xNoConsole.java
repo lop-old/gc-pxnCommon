@@ -19,9 +19,8 @@ public class xNoConsole implements xConsole {
 
 
 	@Override
-	public boolean Start() {
+	public void Start() {
 		log().finest("Start xNoConsole");
-		return true;
 	}
 	@Override
 	public void Stop() {

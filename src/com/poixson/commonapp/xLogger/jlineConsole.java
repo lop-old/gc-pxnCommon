@@ -91,10 +91,10 @@ public class jlineConsole implements xConsole {
 
 
 	@Override
-	public boolean Start() {
+	public void Start() {
 		log().finest("Start jlineConsole");
-		if(this.running)  return true;
-		if(this.stopping) return false;
+		if(this.stopping) throw new RuntimeException("Console already stopped");
+		if(this.running)  throw new RuntimeException("Console already running");
 		synchronized(lock) {
 			// capture std out
 			originalOut = System.out;
@@ -143,7 +143,6 @@ public class jlineConsole implements xConsole {
 			if(!this.running)
 				this.thread.start();
 		}
-		return true;
 	}
 	@Override
 	public void Stop() {

@@ -125,15 +125,13 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 	 * Application startup.
 	 */
 	@Override
-	public boolean Start() {
+	public void Start() {
 		synchronized(this.state) {
 			if(this.initLevel != 0) {
 				_AlreadyStarted();
-				return false;
 			}
 			if(!APP_STATE.STOPPED.equals(this.state)) {
 				_IllegalState(this.state);
-				return false;
 			}
 			this.initLevel = 1;
 		}
@@ -146,8 +144,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		Failure.register(this);
 		// load config
 		this.initConfig();
-		if(Failure.hasFailed())
-			return false;
+		if(Failure.hasFailed()) return;
 		// load clock
 		this.startTime = xClock.get(true).millis();
 //TODO: does this work?
@@ -163,11 +160,9 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		// ready for startup sequence
 		if(this.initLevel != 1) {
 			_AlreadyStarted();
-			return false;
 		}
 		if(!APP_STATE.STOPPED.equals(this.state)) {
 			_IllegalState(this.state);
-			return false;
 		}
 		// run startup sequence (1-9)
 		log().fine("Startup sequence.. 1..2..");
@@ -182,7 +177,6 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		// main thread ended
 		Failure.fail("@|FG_RED Main process ended! (this shouldn't happen)|@");
 		System.exit(1);
-		return false;
 	}
 	@Override
 	public void Stop() {
