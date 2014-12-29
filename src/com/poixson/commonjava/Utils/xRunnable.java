@@ -46,6 +46,11 @@ public class xRunnable implements Runnable {
 	public String getTaskName() {
 		return this.taskName;
 	}
+	public boolean taskNameEquals(final String name) {
+		if(utils.isEmpty(name))
+			return utils.isEmpty(this.taskName);
+		return name.equals(this.taskName);
+	}
 
 
 
