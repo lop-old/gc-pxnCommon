@@ -19,6 +19,7 @@ import com.poixson.commonjava.Utils.xClock;
 import com.poixson.commonjava.Utils.xRunnable;
 import com.poixson.commonjava.Utils.xStartable;
 import com.poixson.commonjava.Utils.xThreadPool;
+import com.poixson.commonjava.scheduler.xScheduler;
 import com.poixson.commonjava.xLogger.xConsole;
 import com.poixson.commonjava.xLogger.xLevel;
 import com.poixson.commonjava.xLogger.xLog;
@@ -245,7 +246,12 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			}
 			case 2:
 			case 3:
-			case 4:
+				break;
+			// start scheduler
+			case 4: {
+				xScheduler.get().Start();
+				break;
+			}
 			case 5:
 			case 6:
 			case 7:
@@ -300,7 +306,8 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 	 * Shutdown sequence.
 	 *   9. Running
 	 *   8. First step in shutdown
-	 *   7-2. Abstracted to app
+	 *   7. Stop scheduler
+	 *   6-2. Abstracted to app
 	 *   1. Last step in shutdown
 	 *   0. Stopped
 	 */
@@ -327,7 +334,12 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 				log().title("Stopping "+this.app.getName()+"..");
 				break;
 			}
-			case 7:
+			// stop scheduler
+			case 7: {
+				xScheduler.get().Stop();
+				xThreadPool.ShutdownAll();
+				break;
+			}
 			case 6:
 			case 5:
 			case 4:
