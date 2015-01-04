@@ -224,6 +224,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		public void run() {
 			if(Failure.hasFailed())
 				return;
+			log().finest("[ "+Integer.toString(this.step)+" ] STARTUP");
 
 			switch(this.step) {
 			// first step in startup
@@ -323,6 +324,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		}
 		@Override
 		public void run() {
+			log().finest("[ "+Integer.toString(this.step)+" ] SHUTDOWN");
 
 			switch(this.step) {
 			// first step in shutdown
