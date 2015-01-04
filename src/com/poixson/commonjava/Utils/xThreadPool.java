@@ -388,16 +388,14 @@ public class xThreadPool implements xStartable {
 	// display threads still running
 	protected static void displayStillRunning() {
 		if(!xVars.get().debug()) return;
-		final String[] names = utilsThread.getThreadNames();
-		if(utils.isEmpty(names)) return;
+		final String[] threadNames = utilsThread.getThreadNames(false);;
+		// no threads still running
+		if(utils.isEmpty(threadNames)) return;
+		// build message
 		final StringBuilder msg = new StringBuilder();
-		msg.append("Threads still running:  ").append(names.length);
-		for(final String name : names) {
-			if("NonBlockingInputStreamThread".equals(name)) continue;
-			if("Finalizer".equals(name)) continue;
-			if(name.startsWith("main:")) continue;
+		msg.append("Threads still running:  ").append(threadNames.length);
+		for(final String name : threadNames)
 			msg.append("\n  ").append(name);
-		}
 		xLog.getRoot().publish(msg.toString());
 	}
 

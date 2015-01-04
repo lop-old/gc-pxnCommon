@@ -9,34 +9,39 @@ public final class utilsThread {
 
 
 
-	public static final String[] ignoreThreadNames = new String[] {
+//	public static final String[] ignoreThreadNames = new String[] {
 //		"Main-Server-Thread",
-		"Reference Handler",
-		"NonBlockingInputStreamThread",
-		"process reaper",
-		"Signal Dispatcher",
-		"Java2D Disposer",
-		"AWT-EventQueue-0",
-		"AWT-XAWT",
-		"AWT-Shutdown",
-		"Finalizer",
-		"Exit"
-	};
+//		"Reference Handler",
+//		"NonBlockingInputStreamThread",
+//		"process reaper",
+//		"Signal Dispatcher",
+//		"Java2D Disposer",
+//		"AWT-EventQueue-0",
+//		"AWT-XAWT",
+//		"AWT-Shutdown",
+//		"Finalizer",
+//		"Exit"
+//	};
 
 
 
 	// list running thread names
 	public static String[] getThreadNames() {
+		return getThreadNames(true);
+	}
+	public static String[] getThreadNames(final boolean includeDaemon) {
 		final Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
 		if(threadSet.isEmpty()) return null;
 		final Set<String> list = new HashSet<String>();
 		for(final Thread thread : threadSet) {
+			if(!includeDaemon && thread.isDaemon()) continue;
 			final String name = thread.getName();
 			if(utils.isEmpty(name)) continue;
-			// check ignore list
-			for(final String str : ignoreThreadNames)
-				if(name.equals(str))
-					continue;
+			if(!includeDaemon && name.startsWith("main:")) continue;
+//			// check ignore list
+//			for(final String str : ignoreThreadNames)
+//				if(name.equals(str))
+//					continue;
 			// add to list
 			list.add(thread.getName());
 		}
