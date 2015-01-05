@@ -88,7 +88,7 @@ public class xScheduler implements xStartable {
 			if(this.running)  throw new RuntimeException("Scheduler already running");
 			this.running = true;
 		}
-		xLog.getRoot().warning("Starting xScheduler");
+		xLog.getRoot().fine("Starting xScheduler..");
 		final Set<xScheduledTask> finished = new HashSet<xScheduledTask>();
 		while(!this.stopping) {
 			long sleep = this.threadSleepTime.getMS();
