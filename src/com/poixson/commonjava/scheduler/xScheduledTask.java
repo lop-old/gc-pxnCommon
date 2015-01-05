@@ -12,6 +12,7 @@ import com.poixson.commonjava.xLogger.xLog;
 public class xScheduledTask {
 
 	protected volatile boolean repeating = false;
+	protected volatile boolean finished  = false;
 	protected volatile xRunnable run = null;
 	protected volatile xThreadPool pool = null;
 	protected volatile TriggerType trigger = null;
@@ -30,15 +31,22 @@ public class xScheduledTask {
 
 
 	public long untilNextTrigger() {
+		if(this.finished)
+			return -1;
 		final TriggerType trigger = this.trigger;
 		if(trigger == null)
 			return -1;
 		return trigger.untilNextTrigger();
 	}
+	public boolean hasFinished() {
+		return this.finished;
+	}
 
 
 
 	public void trigger() {
+		if(!this.repeating)
+			this.finished = true;
 		final xRunnable r = this.run;
 		if(r == null) {
 			xLog.getRoot().warning("Scheduled task has null runnable");

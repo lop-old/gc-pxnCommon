@@ -1,5 +1,6 @@
 package com.poixson.commonjava.scheduler;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -88,6 +89,7 @@ public class xScheduler implements xStartable {
 			this.running = true;
 		}
 		xLog.getRoot().warning("Starting xScheduler");
+		final Set<xScheduledTask> finished = new HashSet<xScheduledTask>();
 		while(!this.stopping) {
 			long sleep = this.threadSleepTime.getMS();
 			// check task triggers
@@ -97,11 +99,23 @@ public class xScheduler implements xStartable {
 				final long s = task.untilNextTrigger();
 				if(s == -1) continue;
 				// trigger now
-				if(s == 0)
+				if(s == 0) {
 					task.trigger();
+					// not repeating
+					if(!task.repeating)
+						finished.add(task);
+				}
 				// sleep less
 				if(s < sleep)
 					sleep = s;
+			}
+			// remove finished
+			if(!finished.isEmpty()) {
+				for(final xScheduledTask task : finished) {
+					xLog.getRoot().finest("Finished scheduled task: "+task.getTaskName());
+					this.tasks.remove(task);
+				}
+				finished.clear();
 			}
 			// sleep thread
 			sleep = (long) (((double) sleep) * 0.9);
