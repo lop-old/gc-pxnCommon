@@ -1,7 +1,7 @@
 package com.poixson.commonjava.scheduler.triggers;
 
 
-public class triggerCron implements xSchedulerTrigger {
+public class triggerCron implements TriggerType {
 
 
 

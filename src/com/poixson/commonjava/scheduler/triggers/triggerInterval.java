@@ -4,7 +4,7 @@ import com.poixson.commonjava.Utils.xClock;
 import com.poixson.commonjava.Utils.xTime;
 
 
-public class triggerInterval implements xSchedulerTrigger {
+public class triggerInterval implements TriggerType {
 
 	protected final xTime delay    = xTime.get();
 	protected final xTime interval = xTime.get();

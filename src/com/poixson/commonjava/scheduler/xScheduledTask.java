@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.xRunnable;
 import com.poixson.commonjava.Utils.xThreadPool;
-import com.poixson.commonjava.scheduler.triggers.xSchedulerTrigger;
+import com.poixson.commonjava.scheduler.triggers.TriggerType;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -14,7 +14,7 @@ public class xScheduledTask {
 	protected volatile boolean repeating = false;
 	protected volatile xRunnable run = null;
 	protected volatile xThreadPool pool = null;
-	protected volatile xSchedulerTrigger trigger = null;
+	protected volatile TriggerType trigger = null;
 
 	// task run count
 	protected final AtomicInteger count = new AtomicInteger(0);
@@ -30,7 +30,7 @@ public class xScheduledTask {
 
 
 	public long untilNextTrigger() {
-		final xSchedulerTrigger trigger = this.trigger;
+		final TriggerType trigger = this.trigger;
 		if(trigger == null)
 			return -1;
 		return trigger.untilNextTrigger();
@@ -74,7 +74,7 @@ public class xScheduledTask {
 		this.pool = pool;
 		return this;
 	}
-	public xScheduledTask setTrigger(final xSchedulerTrigger trigger) {
+	public xScheduledTask setTrigger(final TriggerType trigger) {
 		this.trigger = trigger;
 		return this;
 	}

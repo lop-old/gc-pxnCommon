@@ -1,7 +1,7 @@
 package com.poixson.commonjava.scheduler.triggers;
 
 
-public interface xSchedulerTrigger {
+public interface TriggerType {
 
 
 	public long untilNextTrigger();
