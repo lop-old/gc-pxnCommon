@@ -58,6 +58,9 @@ public final class utilsThread {
 			Thread.sleep(ms);
 		} catch (InterruptedException ignore) {}
 	}
+	public static void Sleep(final String time) {
+		Sleep(xTime.get(time));
+	}
 	public static void Sleep(final xTime time) {
 		if(time == null) return;
 		Sleep(time.getMS());
