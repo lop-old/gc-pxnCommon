@@ -16,7 +16,8 @@
 		<org.yaml-version>1.14</org.yaml-version>
 		<org.xeustechnologies-version>2.5</org.xeustechnologies-version>
 		<commons-codec-version>1.10</commons-codec-version>
-		<junit-version>4.8.2</junit-version>
+		<junit-version>4.12</junit-version>
+		<surefire-version>2.18.1</surefire-version>
 	</properties>
 	<scm>
 		<url>https://github.com/PoiXson/pxnCommon</url>
@@ -37,6 +38,7 @@
 	</ciManagement>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>test</testSourceDirectory>
 		<finalName>${project.artifactId}-${project.version}</finalName>
 		<plugins>
 			<plugin>
@@ -84,7 +86,13 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit-version}</version>
+			<type>jar</type>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven.surefire</groupId>
+			<artifactId>surefire-junit47</artifactId>
+			<version>${surefire-version}</version>
 		</dependency>
 	</dependencies>
 	<repositories>
