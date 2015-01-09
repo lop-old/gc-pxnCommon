@@ -16,7 +16,7 @@ import com.poixson.commonjava.xLogger.xLog;
 
 public class xThreadPool implements xStartable {
 
-	public static final boolean DETAILED_LOGGING = true;
+	public static final boolean DETAILED_LOGGING = false;
 
 	// max threads
 	public static final int HARD_LIMIT = 20;
