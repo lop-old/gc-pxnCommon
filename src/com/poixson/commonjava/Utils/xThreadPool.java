@@ -125,7 +125,18 @@ public class xThreadPool implements xStartable {
 	 * Create a new thread if needed, skip if queue is empty.
 	 */
 	protected void newThread() {
-		if(this.stopping || this.size <= 0 || isMainPool()) return;
+		if(this.stopping) {
+			if(DETAILED_LOGGING)
+				this.logLocal().warning("thread pool is stopping; cannot start new thread as requested");
+			return;
+		}
+		if(isMainPool()) {
+			if(DETAILED_LOGGING)
+				this.logLocal().warning("thread pool is main; cannot start new thread as requested");
+			return;
+		}
+		if(this.size <= 0)
+			return;
 		synchronized(this.threads) {
 			final int count = this.threads.size();
 			final int globalCount = getGlobalThreadCount();
@@ -206,7 +217,11 @@ public class xThreadPool implements xStartable {
 					final xRunnable tmpTask = this.runThisNow;
 					this.runThisNow = null;
 					try {
+						if(DETAILED_LOGGING)
+							this.logLocal().publish("running thread id: "+Integer.toString(threadId));
 						tmpTask.run();
+						if(DETAILED_LOGGING)
+							this.logLocal().publish("finished thread id: "+Integer.toString(threadId));
 					} catch (Exception e) {
 						this.logLocal().trace(e);
 					}
