@@ -212,7 +212,6 @@ public class xTime {
 		for(final Entry<Character, Long> entry : timeValues.entrySet()) {
 			final char c = entry.getKey().charValue();
 			final long u = entry.getValue().longValue();
-			// 0 for this unit
 			if(tmp < u) continue;
 			final long val = (long) Math.floor(
 				((double) tmp) / ((double) u)
@@ -243,7 +242,7 @@ public class xTime {
 					out.append(" hour");
 					break;
 				case 'm':
-					out.append(" month");
+					out.append(" minute");
 					break;
 				case 's':
 					out.append(" second");
