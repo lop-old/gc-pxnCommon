@@ -173,6 +173,66 @@ public final class utilsNumbers {
 
 
 
+	public static double round(final double value, final int product) {
+		final double prod = (double) product;
+		final double val = Math.round( value / prod );
+		return val * prod;
+	}
+	public static double floor(final double value, final int product) {
+		final double prod = (double) product;
+		final double val = Math.floor( value / prod );
+		return val * prod;
+	}
+	public static double ceil(final double value, final int product) {
+		final double prod = (double) product;
+		final double val = Math.ceil( value / prod );
+		return val * prod;
+	}
+
+
+
+	public static int round(final int value, final int product) {
+		return (int) round(
+				(double) value,
+				product
+		);
+	}
+	public static int floor(final int value, final int product) {
+		return (int) floor(
+				(double) value,
+				product
+		);
+	}
+	public static int ceil(final int value, final int product) {
+		return (int) ceil(
+				(double) value,
+				product
+		);
+	}
+
+
+
+	public static long round(final long value, final int product) {
+		return (long) round(
+				(double) value,
+				product
+		);
+	}
+	public static long floor(final long value, final int product) {
+		return (long) floor(
+				(double) value,
+				product
+		);
+	}
+	public static long ceil(final long value, final int product) {
+		return (long) ceil(
+				(double) value,
+				product
+		);
+	}
+
+
+
 	// min/max value
 	public static int MinMax(final int value, final int min, final int max) {
 		if(min > max) throw new IllegalArgumentException("min cannot be greater than max");
