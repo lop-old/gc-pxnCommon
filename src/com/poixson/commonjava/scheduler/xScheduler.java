@@ -88,7 +88,7 @@ public class xScheduler implements xStartable {
 			if(this.running)  throw new RuntimeException("Scheduler already running");
 			this.running = true;
 		}
-		xLog.getRoot().fine("Starting xScheduler..");
+		xLog.getRoot().fine("Starting xScheduler Manager..");
 		final Set<xScheduledTask> finished = new HashSet<xScheduledTask>();
 		while(!this.stopping) {
 			long sleep = this.threadSleepTime.getMS();
@@ -105,9 +105,10 @@ public class xScheduler implements xStartable {
 					if(!task.repeating)
 						finished.add(task);
 				}
+				final long ss = (long) (((double) s) * 0.95);
 				// sleep less
-				if(s < sleep)
-					sleep = s;
+				if(ss < sleep)
+					sleep = ss;
 			}
 			// remove finished
 			if(!finished.isEmpty()) {
@@ -118,7 +119,7 @@ public class xScheduler implements xStartable {
 				finished.clear();
 			}
 			// sleep thread
-			sleep = (long) (((double) sleep) * 0.9);
+//xLog.getRoot().finest("sleeping: "+Long.toString(sleep));
 			if(sleep > 0)
 				utilsThread.Sleep(sleep);
 		}

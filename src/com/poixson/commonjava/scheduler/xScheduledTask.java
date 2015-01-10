@@ -32,10 +32,10 @@ public class xScheduledTask {
 
 	public long untilNextTrigger() {
 		if(this.finished)
-			return -1;
+			return -1L;
 		final TriggerType trigger = this.trigger;
 		if(trigger == null)
-			return -1;
+			return -1L;
 		return trigger.untilNextTrigger();
 	}
 	public boolean hasFinished() {
