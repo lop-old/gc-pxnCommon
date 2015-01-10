@@ -98,7 +98,7 @@ public class xThreadPool implements xStartable {
 				}
 				@Override
 				public void run() {
-					this.pool.logLocal().fine("Started thread queue");
+					this.pool.logLocal().fine("Thread queue is running..");
 				}
 			}.init(this)
 		);
@@ -142,17 +142,19 @@ public class xThreadPool implements xStartable {
 			final int globalCount = getGlobalThreadCount();
 			final int globalFree  = GLOBAL_LIMIT - globalCount;
 			final int free = utilsNumbers.MinMax(count - this.active, 0, globalFree);
-			this.logLocal().finer(
-				"Pool Size: "+
-					Integer.toString(count)+
-					" ["+Integer.toString(this.size)+"]  "+
-				"Active/Free: "+
-					Integer.toString(this.active)+"/"+
-					Integer.toString(free)+"  "+
-				"Global: "+
-					Integer.toString(globalCount)+
-					" ["+Integer.toString(GLOBAL_LIMIT)+"]"
-			);
+			if(DETAILED_LOGGING) {
+				this.logLocal().finer(
+					"Pool Size: "+
+						Integer.toString(count)+
+						" ["+Integer.toString(this.size)+"]  "+
+					"Active/Free: "+
+						Integer.toString(this.active)+"/"+
+						Integer.toString(free)+"  "+
+					"Global: "+
+						Integer.toString(globalCount)+
+						" ["+Integer.toString(GLOBAL_LIMIT)+"]"
+				);
+			}
 			// use an existing waiting thread
 			if(free > 0) return;
 			// global max threads
@@ -199,6 +201,8 @@ public class xThreadPool implements xStartable {
 
 	@Override
 	public void run() {
+		if(DETAILED_LOGGING)
+			this.logLocal().fine("Started pool thread..");
 		final int threadId = getNextThreadId();
 		final Thread currentThread = Thread.currentThread();
 		currentThread.setName( this.queueName+":"+Integer.toString(threadId) );
