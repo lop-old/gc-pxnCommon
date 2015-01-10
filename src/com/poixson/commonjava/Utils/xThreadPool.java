@@ -447,6 +447,13 @@ public class xThreadPool implements xStartable {
 		return this.active;
 	}
 	/**
+	 * Returns true if pool is not currently in use and queue is empty.
+	 * @return true if inactive and empty.
+	 */
+	public boolean isEmpty() {
+		return (this.queue.size() == 0 && this.active == 0);
+	}
+	/**
 	 * Get the thread count for all thread pools.
 	 * @return number of active threads in the application.
 	 */
