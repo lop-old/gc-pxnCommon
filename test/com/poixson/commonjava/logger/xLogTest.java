@@ -30,11 +30,9 @@ public class xLogTest {
 		Assert.assertFalse(Failure.hasFailed());
 		return log;
 	}
-
-
-
-
-
+	public static xLog get(final String name) {
+		return get().get(name);
+	}
 
 
 
