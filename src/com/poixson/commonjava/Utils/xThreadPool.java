@@ -1,6 +1,5 @@
 package com.poixson.commonjava.Utils;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -8,6 +7,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.poixson.commonjava.xVars;
@@ -23,7 +23,6 @@ public class xThreadPool implements xStartable {
 	public static final int GLOBAL_LIMIT = 50;
 	private volatile int size = 1;
 	private volatile AtomicInteger nextThreadId = new AtomicInteger(1);
-	private final Object nextLock = new Object();
 	private static final xTime threadSleepTime = xTime.get("200n");
 	private static final xTime threadInactiveTimeout = xTime.get("30s");
 
@@ -47,7 +46,7 @@ public class xThreadPool implements xStartable {
 	protected final CoolDown coolMaxReached = CoolDown.get("5s");
 
 	// pool instances
-	protected static final Map<String, xThreadPool> instances = new HashMap<String, xThreadPool>();
+	protected static final Map<String, xThreadPool> instances = new ConcurrentHashMap<String, xThreadPool>();
 
 
 
@@ -72,9 +71,10 @@ public class xThreadPool implements xStartable {
 		final String nameStr = utils.isEmpty(name) ? "main" : name;
 		final String key = nameStr.toLowerCase();
 		synchronized(instances) {
-			if(instances.containsKey(key))
-				return instances.get(key);
-			final xThreadPool pool = new xThreadPool(nameStr, size);
+			xThreadPool pool = instances.get(key);
+			if(pool != null)
+				return pool;
+			pool = new xThreadPool(nameStr, size);
 			instances.put(key, pool);
 			return pool;
 		}
@@ -178,7 +178,7 @@ public class xThreadPool implements xStartable {
 				return;
 			}
 			// start new thread
-			synchronized(this.threads) {
+			{
 				final Thread thread = new Thread(this.group, this);
 				this.threads.add(thread);
 				thread.start();
@@ -341,10 +341,7 @@ public class xThreadPool implements xStartable {
 
 
 	protected int getNextThreadId() {
-		synchronized(this.nextLock) {
-			final int next = this.nextThreadId.getAndAdd(1);
-			return next;
-		}
+		return this.nextThreadId.getAndAdd(1);
 	}
 
 
