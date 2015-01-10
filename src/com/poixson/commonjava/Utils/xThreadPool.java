@@ -463,14 +463,14 @@ public class xThreadPool implements xStartable {
 	 * Get the maximum number of threads for this pool.
 	 * @return max number of threads allowed.
 	 */
-	public int maxThreads() {
+	public int getMaxThreads() {
 		return this.size;
 	}
 	/**
 	 * Set the maximum number of threads for this pool.
 	 * @param size max number of threads allowed.
 	 */
-	public void maxThreads(final Integer value) {
+	public void setMaxThreads(final Integer value) {
 		if(value == null)
 			this.size = 1;
 		else
