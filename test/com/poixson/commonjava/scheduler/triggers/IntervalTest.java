@@ -20,17 +20,22 @@ public class IntervalTest extends xRunnable {
 	}
 	public IntervalTest() {
 		super("IntervalTest");
-		this.task = xScheduledTask.get();
-		this.task.setRunnable(this);
-		this.task.setRepeating(false);
-		this.task.setTrigger(triggerInterval.get("1s"));
+		try {
+			this.task = xScheduledTask.get();
+			this.task.setRunnable(this);
+			this.task.setRepeating(false);
+			this.task.setTrigger(triggerInterval.get("1s"));
+		} catch (Exception e) {
+			logLocal().trace(e);
+			throw e;
+		}
 	}
 
 
 
 	@Override
 	public void run() {
-		log().info("Interval Test Triggered!");
+		logLocal().info("Interval Test Triggered!");
 	}
 
 
@@ -42,8 +47,8 @@ public class IntervalTest extends xRunnable {
 
 
 	// logger
-	public static xLog log() {
-		return xLogTest.get();
+	public static xLog logLocal() {
+		return xLogTest.get("IntervalTest");
 	}
 
 

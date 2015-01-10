@@ -20,17 +20,22 @@ public class CronTest extends xRunnable {
 	}
 	public CronTest() {
 		super("CronTest");
-		this.task = xScheduledTask.get();
-		this.task.setRunnable(this);
-		this.task.setRepeating(false);
-		this.task.setTrigger(triggerCron.get("* * * * *"));
+		try {
+			this.task = xScheduledTask.get();
+			this.task.setRunnable(this);
+			this.task.setRepeating(false);
+			this.task.setTrigger(triggerCron.get("* * * * *"));
+		} catch (Exception e) {
+			logLocal().trace(e);
+			throw e;
+		}
 	}
 
 
 
 	@Override
 	public void run() {
-		log().info("Cron Test Triggered!");
+		logLocal().info("Cron Test Triggered!");
 	}
 
 
@@ -42,8 +47,8 @@ public class CronTest extends xRunnable {
 
 
 	// logger
-	public static xLog log() {
-		return xLogTest.get();
+	public static xLog logLocal() {
+		return xLogTest.get("CronTest");
 	}
 
 
