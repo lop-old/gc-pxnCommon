@@ -130,11 +130,8 @@ public class xThreadPool implements xStartable {
 				this.logLocal().warning("thread pool is stopping; cannot start new thread as requested");
 			return;
 		}
-		if(isMainPool()) {
-			if(DETAILED_LOGGING)
-				this.logLocal().warning("thread pool is main; cannot start new thread as requested");
+		if(isMainPool())
 			return;
-		}
 		if(this.size <= 0)
 			return;
 		synchronized(this.threads) {
