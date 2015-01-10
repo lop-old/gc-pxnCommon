@@ -41,10 +41,10 @@ public class xTime {
 		put(new Character('m'), new Long(MIN));
 		// seconds
 		put(new Character('s'), new Long(SEC));
-		// ticks in ms
-		put(new Character('t'), new Long(TICK));
 		// ms
 		put(new Character('n'), new Long(MS));
+		// ticks in ms
+		put(new Character('t'), new Long(TICK));
 	}};
 
 
