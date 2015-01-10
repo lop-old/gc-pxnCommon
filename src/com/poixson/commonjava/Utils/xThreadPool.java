@@ -24,7 +24,7 @@ public class xThreadPool implements xStartable {
 	private volatile int size = 1;
 	private volatile AtomicInteger nextThreadId = new AtomicInteger(1);
 	private static final xTime threadSleepTime = xTime.get("200n");
-	private static final xTime threadInactiveTimeout = xTime.get("30s");
+	private static final xTime threadInactiveTimeout = xTime.get("20s");
 
 	// run later queue
 	protected final String queueName;
