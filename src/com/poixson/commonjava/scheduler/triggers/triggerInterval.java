@@ -40,11 +40,11 @@ public class triggerInterval implements TriggerType {
 
 	@Override
 	public long untilNextTrigger() {
+		final long now = getCurrentMillis();
 		final long delay    = this.delay.getMS();
 		final long interval = this.interval.getMS();
 		if(interval == 0)
 			return -1;
-		final long now = xClock.get().millis();
 		// first trigger
 		if(this.last == -1) {
 			this.last = now;
@@ -59,6 +59,12 @@ public class triggerInterval implements TriggerType {
 		}
 		// sleep time
 		return until;
+	}
+
+
+
+	public static long getCurrentMillis() {
+		return xClock.get().millis();
 	}
 
 

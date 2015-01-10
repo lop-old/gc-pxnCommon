@@ -47,4 +47,10 @@ public class triggerCron implements TriggerType {
 
 
 
+	public static long getCurrentMillis() {
+		return xClock.get().millis();
+	}
+
+
+
 }
