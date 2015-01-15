@@ -6,8 +6,8 @@ import org.junit.Test;
 import com.poixson.commonjava.Failure;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xThreadPool;
-import com.poixson.commonjava.logger.xLogTest;
 import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.commonjava.xLogger.xLogTest;
 
 
 public class xThreadPoolFiringTest {

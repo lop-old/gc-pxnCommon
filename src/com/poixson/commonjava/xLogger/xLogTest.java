@@ -1,4 +1,4 @@
-package com.poixson.commonjava.logger;
+package com.poixson.commonjava.xLogger;
 
 import org.junit.Assert;
 

@@ -9,8 +9,8 @@ import org.junit.Assert;
 import com.poixson.commonjava.Utils.CoolDown;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xThreadPool;
-import com.poixson.commonjava.logger.xLogTest;
 import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.commonjava.xLogger.xLogTest;
 
 
 class xThreadQueuer {
