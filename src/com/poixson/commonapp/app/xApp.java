@@ -158,9 +158,6 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 //			if((new File(libPath)).isDirectory())
 //				utilsDirFile.addLibraryPath(libPath);
 //		}
-		// main thread queue
-		if(this.threadPool == null)
-			this.threadPool = xThreadPool.get();
 		// ready for startup sequence
 		if(this.initLevel != 1) {
 			log().trace(new RuntimeException(ALREADY_STARTED_EXCEPTION));
@@ -456,6 +453,8 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 	 * @return
 	 */
 	public xThreadPool getThreadPool() {
+		if(this.threadPool == null)
+			this.threadPool = xThreadPool.get();
 		return this.threadPool;
 	}
 	@Override
