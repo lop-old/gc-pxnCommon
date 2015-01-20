@@ -69,7 +69,7 @@ public class xLog extends xLogPrinting {
 	// root logger
 	protected static volatile xLog root = null;
 	protected static final Object lock = new Object();
-	public static final xLevel DEFAULT_LEVEL = xLevel.INFO;
+	public static final xLevel DEFAULT_LEVEL = xLevel.ALL;
 
 	private final String name;
 	private final xLog parent;
@@ -97,7 +97,7 @@ public class xLog extends xLogPrinting {
 	// default log handlers
 	private static void initDefaultHandlers() {
 		// console handler
-		xLogHandler handler = new logHandlerConsole();
+		final xLogHandler handler = new logHandlerConsole();
 		handler.setFormatter(new defaultLogFormatter());
 		root.addHandler(handler);
 	}
