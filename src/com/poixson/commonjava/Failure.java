@@ -8,10 +8,13 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import com.poixson.commonjava.Utils.Keeper;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsThread;
+import com.poixson.commonjava.Utils.xTime;
 import com.poixson.commonjava.xLogger.xLog;
 
 
 public class Failure {
+
+	public static final xTime EXIT_TIMEOUT = xTime.get("300n");
 
 	private static final List<String> messages = new CopyOnWriteArrayList<String>();
 	private static volatile boolean failed = false;
@@ -65,14 +68,12 @@ public class Failure {
 			act.doFailAction();
 			actions.remove(act);
 		}
-		new Thread() {
-			@Override
-			public void run() {
-				// wait for things to finish
-				utilsThread.Sleep(300L);
-				System.exit(1);
-			}
-		}.start();
+		ExitNow();
+	}
+	public static void ExitNow() {
+		// wait for things to finish
+		utilsThread.Sleep(EXIT_TIMEOUT.getMS());
+		System.exit(1);
 	}
 
 

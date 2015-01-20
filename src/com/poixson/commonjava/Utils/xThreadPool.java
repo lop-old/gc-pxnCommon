@@ -400,17 +400,20 @@ public class xThreadPool implements xStartable {
 		final xRunnable runexit = new xRunnable("Exit") {
 			@Override
 			public void run() {
-				// display threads still running
-				displayStillRunning();
-				System.out.println();
-				System.out.println();
-				System.exit(0);
+				ExitNow();
 			}
 		};
 		if(mainThread != null && !mainThread.equals(Thread.currentThread()) && get().isRunning())
 			get().runLater(runexit);
 		else
 			runexit.run();
+	}
+	public static void ExitNow() {
+		// display threads still running
+		displayStillRunning();
+		System.out.println();
+		System.out.println();
+		System.exit(0);
 	}
 
 
