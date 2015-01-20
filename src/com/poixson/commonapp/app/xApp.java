@@ -49,7 +49,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 
 	// just to prevent gc
 	@SuppressWarnings("unused")
-	private static Keeper keeper = null;
+	private static final Keeper keeper = Keeper.get();
 
 	public enum APP_STATE {
 		STARTUP,
@@ -94,8 +94,15 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			}
 			xApp.appInstance = app;
 		}
+		// process command line arguments
 		xApp.appInstance.processArgs(args);
+		// initialize app for startup
 		xApp.appInstance.Start();
+		// start main thread queue
+		xApp.appInstance.run();
+		// main thread ended
+		Failure.fail("@|FG_RED Main process ended! (this shouldn't happen)|@");
+		System.exit(1);
 	}
 
 
@@ -107,10 +114,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		// initialize console and enable colors
 		this.initConsole();
 	}
-	// static
 	{
-		// just to prevent gc
-		keeper = Keeper.get();
 		// no console
 		if(System.console() == null) {
 			System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
@@ -174,11 +178,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 				1
 			)
 		);
-		// start main thread queue
-		this.run();
-		// main thread ended
-		Failure.fail("@|FG_RED Main process ended! (this shouldn't happen)|@");
-		System.exit(1);
+		// ready to start
 	}
 	@Override
 	public void Stop() {
