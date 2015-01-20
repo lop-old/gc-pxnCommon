@@ -1,5 +1,8 @@
 package com.poixson.commonjava;
 
+import com.poixson.commonjava.Utils.Keeper;
+import com.poixson.commonjava.xLogger.xLog;
+
 
 public class xVars {
 
@@ -21,6 +24,7 @@ public class xVars {
 	}
 	// new instance
 	protected xVars() {
+		Keeper.add(this);
 	}
 	@Override
 	public Object clone() throws CloneNotSupportedException {
@@ -39,7 +43,10 @@ public class xVars {
 		return this.debug.booleanValue();
 	}
 	public void debug(final boolean value) {
-		this.debug = new Boolean(value);
+		if(this.debug != null && this.debug.booleanValue() == value) return;
+		if(!value) xLog.getRoot().fine("Disabled debug mode");
+		this.debug = Boolean.valueOf(value);
+		// if(value) xLog.getRoot().fine("Enabled debug mode");
 	}
 
 
