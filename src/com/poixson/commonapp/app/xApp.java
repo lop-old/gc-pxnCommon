@@ -81,7 +81,8 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 
 
 	// call this from main(args)
-	protected static void initMain(final String[] args, final xApp app) {
+	protected static void initMain(final String[] args, final Class<? extends xApp> appClass) {
+		if(appClass == null) throw new NullPointerException();
 		// single instance
 		if(appInstance != null) {
 			log().trace(new RuntimeException(ALREADY_STARTED_EXCEPTION));
@@ -92,10 +93,18 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 				log().trace(new RuntimeException(ALREADY_STARTED_EXCEPTION));
 				Failure.fail(ALREADY_STARTED_EXCEPTION);
 			}
-			xApp.appInstance = app;
+			try {
+				appInstance = appClass.newInstance();
+			} catch (ReflectiveOperationException e) {
+				Failure.fail(e.getMessage());
+				e.printStackTrace();
+				return;
+			}
 		}
 		// process command line arguments
 		xApp.appInstance.processArgs(args);
+		// handle command-line arguments
+		appInstance.displayStartupVars();
 		// initialize app for startup
 		xApp.appInstance.Start();
 		// start main thread queue
