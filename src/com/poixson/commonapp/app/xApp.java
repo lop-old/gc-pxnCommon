@@ -88,10 +88,11 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			log().trace(new RuntimeException(ALREADY_STARTED_EXCEPTION));
 			Failure.fail(ALREADY_STARTED_EXCEPTION);
 		}
-		synchronized(xApp.appLock) {
-			if(xApp.appInstance != null) {
+		synchronized(appLock) {
+			if(appInstance != null) {
 				log().trace(new RuntimeException(ALREADY_STARTED_EXCEPTION));
 				Failure.fail(ALREADY_STARTED_EXCEPTION);
+				return;
 			}
 			try {
 				appInstance = appClass.newInstance();
@@ -102,13 +103,13 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			}
 		}
 		// process command line arguments
-		xApp.appInstance.processArgs(args);
+		appInstance.processArgs(args);
 		// handle command-line arguments
 		appInstance.displayStartupVars();
 		// initialize app for startup
-		xApp.appInstance.Start();
+		appInstance.Start();
 		// start main thread queue
-		xApp.appInstance.run();
+		appInstance.run();
 		// main thread ended
 		Failure.fail("@|FG_RED Main process ended! (this shouldn't happen)|@");
 		System.exit(1);
