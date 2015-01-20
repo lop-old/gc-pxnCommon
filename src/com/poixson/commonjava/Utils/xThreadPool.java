@@ -78,8 +78,26 @@ public class xThreadPool implements xStartable {
 				return instances.get(key);
 			pool = new xThreadPool(nameStr, size);
 			instances.put(key, pool);
-			return pool;
+			// new main pool
+			if(pool.isMainPool()) {
+				// just to prevent gc
+				Keeper.add(pool);
+				pool.runLater(
+					new xRunnable("xThreadPool-Startup") {
+						private volatile xThreadPool pool = null;
+						public xRunnable init(final xThreadPool pool) {
+							this.pool = pool;
+							return this;
+						}
+						@Override
+						public void run() {
+							this.pool.logLocal().fine("Thread queue is running..");
+						}
+					}.init(pool)
+				);
+			}
 		}
+		return pool;
 	}
 	protected xThreadPool(final String name, final Integer size) {
 		this.queueName = name;
@@ -91,19 +109,6 @@ public class xThreadPool implements xStartable {
 		} else
 		if(size != null)
 			this.size = size.intValue();
-		this.runLater(
-			new xRunnable("Thread-Startup") {
-				private volatile xThreadPool pool = null;
-				public xRunnable init(final xThreadPool pool) {
-					this.pool = pool;
-					return this;
-				}
-				@Override
-				public void run() {
-					this.pool.logLocal().fine("Thread queue is running..");
-				}
-			}.init(this)
-		);
 	}
 
 
