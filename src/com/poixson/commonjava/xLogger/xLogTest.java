@@ -16,9 +16,8 @@ public class xLogTest {
 				if(log == null) {
 					if(Failure.hasFailed()) return null;
 					log = xLog.getRoot();
-					xLog.init();
 					if(Failure.hasFailed()) return null;
-					xLog.getRoot().setLevel(xLevel.ALL);
+					log.setLevel(xLevel.ALL);
 					log.publish();
 					log.title("Testing pxnCommon");
 				}
