@@ -156,6 +156,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			System.exit(1);
 		}
 		Failure.register(this);
+		log().title("Starting "+this.getName()+"..");
 		// load config
 		this.initConfig();
 		if(Failure.hasFailed()) return;
@@ -252,7 +253,6 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 					Failure.fail("Failed to get lock on file: "+filename);
 					return;
 				}
-				log().title("Starting "+this.app.getName()+"..");
 				break;
 			}
 			case 2:
@@ -270,9 +270,9 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			// last step in startup
 			case 8: {
 				this.app.state = APP_STATE.RUNNING;
+				if(xVars.get().debug())
+					utils.MemoryStats();
 				log().title(this.app.getName()+" Ready and Running!");
-//				if(xVars.get().debug())
-//					utils.MemoryStats();
 				break;
 			}
 			default:
@@ -535,7 +535,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		out.println(" Running as:  "+System.getProperty("user.name"));
 		out.println(" Current dir: "+System.getProperty("user.dir"));
 		out.println(" java home:   "+System.getProperty("java.home"));
-		out.println(" Terminal:    "+System.getProperty("jline.terminal"));
+//		out.println(" Terminal:    "+System.getProperty("jline.terminal"));
 		if(xVars.get().debug())
 			out.println(" Forcing Debug: true");
 //		if(utils.notEmpty(args)) {
