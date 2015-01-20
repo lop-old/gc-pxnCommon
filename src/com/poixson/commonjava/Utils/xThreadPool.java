@@ -70,10 +70,12 @@ public class xThreadPool implements xStartable {
 	public static xThreadPool get(final String name, final Integer size) {
 		final String nameStr = utils.isEmpty(name) ? "main" : name;
 		final String key = nameStr.toLowerCase();
+		xThreadPool pool = instances.get(key);
+		if(pool != null)
+			return pool;
 		synchronized(instances) {
-			xThreadPool pool = instances.get(key);
-			if(pool != null)
-				return pool;
+			if(instances.containsKey(key))
+				return instances.get(key);
 			pool = new xThreadPool(nameStr, size);
 			instances.put(key, pool);
 			return pool;
@@ -455,7 +457,8 @@ public class xThreadPool implements xStartable {
 	 * @return number of active threads in the application.
 	 */
 	public static int getGlobalThreadCount() {
-		if(instances.size() == 0) return 0;
+		if(instances.size() == 0)
+			return 0;
 		int count = 0;
 		synchronized(instances) {
 			for(final xThreadPool pool : instances.values())
