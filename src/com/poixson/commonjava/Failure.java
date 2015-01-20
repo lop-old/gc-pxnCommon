@@ -31,8 +31,8 @@ public class Failure {
 
 
 
-	public static void init() {
-		// just to prevent gc
+	// just to prevent gc
+	{
 		Keeper.add(new Failure());
 	}
 	private Failure() {}
