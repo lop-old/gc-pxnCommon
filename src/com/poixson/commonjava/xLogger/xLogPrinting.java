@@ -24,7 +24,7 @@ public abstract class xLogPrinting {
 	public abstract void publish(final xLogRecord record);
 	public abstract void publish(final String msg);
 	public void publish(final xLevel level, final String msg) {
-		publish(
+		this.publish(
 			new xLogRecord(
 				(xLog) this,
 				level,
@@ -41,9 +41,9 @@ public abstract class xLogPrinting {
 	// title
 	public void title(final String msg) {
 		if(msg == null)
-			publish(" @|FG_MAGENTA [[|@ @|FG_CYAN <null>|@ @|FG_MAGENTA ]]|@");
+			this.publish(" @|FG_MAGENTA [[|@ @|FG_CYAN <null>|@ @|FG_MAGENTA ]]|@");
 		else
-			publish(" @|FG_MAGENTA [[|@ @|FG_CYAN "+msg+"|@ @|FG_MAGENTA ]]|@");
+			this.publish(" @|FG_MAGENTA [[|@ @|FG_CYAN "+msg+"|@ @|FG_MAGENTA ]]|@");
 	}
 	// multi-lined title
 	public void title(final String[] msgs) {
@@ -54,7 +54,7 @@ public abstract class xLogPrinting {
 				len = line.length();
 		// print lines
 		for(final String line : msgs)
-			publish(" [[ "+line+utilsString.repeat(len - line.length(), " ")+" ]]");
+			this.publish(" [[ "+line+utilsString.repeat(len - line.length(), " ")+" ]]");
 	}
 	public void title(final List<String> list) {
 		if(list == null) return;
@@ -65,7 +65,7 @@ public abstract class xLogPrinting {
 
 	// exception
 	public void trace(final Exception e) {
-		publish(
+		this.publish(
 			xLevel.SEVERE,
 			utilsString.ExceptionToString(e)
 		);
@@ -75,35 +75,35 @@ public abstract class xLogPrinting {
 
 	// finest
 	public void finest(final String msg) {
-		publish(xLevel.FINEST, msg);
+		this.publish(xLevel.FINEST, msg);
 	}
 	// finer
 	public void finer(final String msg) {
-		publish(xLevel.FINER, msg);
+		this.publish(xLevel.FINER, msg);
 	}
 	// fine
 	public void fine(final String msg) {
-		publish(xLevel.FINE, msg);
+		this.publish(xLevel.FINE, msg);
 	}
 	// stats
 	public void stats(final String msg) {
-		publish(xLevel.STATS, msg);
+		this.publish(xLevel.STATS, msg);
 	}
 	// info
 	public void info(final String msg) {
-		publish(xLevel.INFO, msg);
+		this.publish(xLevel.INFO, msg);
 	}
 	// warning
 	public void warning(final String msg) {
-		publish(xLevel.WARNING, msg);
+		this.publish(xLevel.WARNING, msg);
 	}
 	// severe
 	public void severe(final String msg) {
-		publish(xLevel.SEVERE, msg);
+		this.publish(xLevel.SEVERE, msg);
 	}
 	// fatal
 	public void fatal(final String msg) {
-		publish(xLevel.FATAL, msg);
+		this.publish(xLevel.FATAL, msg);
 	}
 
 
