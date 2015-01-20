@@ -100,13 +100,11 @@ public class xThreadPool implements xStartable {
 		return pool;
 	}
 	protected xThreadPool(final String name, final Integer size) {
-		this.queueName = name;
+		this.queueName = utils.isEmpty(name) ? "main" : name;
 		this.group = new ThreadGroup(this.queueName);
-		if(name.toLowerCase().equals("main")) {
+		if("main".equalsIgnoreCase(this.queueName))
 			this.size = 0;
-			// just to prevent gc
-			Keeper.add(this);
-		} else
+		else
 		if(size != null)
 			this.size = size.intValue();
 	}
@@ -176,9 +174,8 @@ public class xThreadPool implements xStartable {
 				if(this.size > 1) {
 					if(this.coolMaxReached.runAgain())
 						this.logLocal().warning("Max threads limit [ "+Integer.toString(count)+" ] reached!");
-//TODO: what is this?
 					else
-						this.logLocal().warning("Max threads limit [ "+Integer.toString(count)+" ] reached!                     **************                     SHOULD THIS RUN HERE???");
+						this.logLocal().finest("Max threads limit [ "+Integer.toString(count)+" ] reached!                     **************                     SHOULD THIS RUN HERE???");
 				}
 				utilsThread.Sleep(10L);
 				return;
