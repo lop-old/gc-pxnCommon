@@ -43,7 +43,7 @@ public final class xConfigLoader {
 		final String fileName = file.toString();
 		// load file.yml
 		{
-			log().info("Loading config file: "+fileName);
+			log().fine("Loading config file: "+fileName);
 			final InputStream in = utilsDirFile.OpenFile(file);
 			if(in != null)
 				return Load(in, clss);
@@ -52,10 +52,10 @@ public final class xConfigLoader {
 		{
 			final InputStream in = utilsDirFile.OpenResource(fileName);
 			if(in != null) {
-				log().info("Loaded config from jar: "+fileName);
+				log().fine("Loaded config from jar: "+fileName);
 				final xConfig config = Load(in, clss);
 				if(config != null) {
-//					config.loadedFromResource = true;
+					config.loadedFromResource = true;
 					Save(file, config.data);
 					return config;
 				}
@@ -116,7 +116,7 @@ public final class xConfigLoader {
 			out.print(
 				yml.dump(data)
 			);
-			log().info("Saved config file: "+file.toString());
+			log().fine("Saved config file: "+file.toString());
 			return true;
 		} catch (FileNotFoundException e) {
 			log().trace(e);

@@ -13,7 +13,7 @@ public class xConfig {
 
 	protected final Map<String, Object> data;
 
-//	protected volatile boolean loadedFromResource = false;
+	protected volatile boolean loadedFromResource = false;
 
 
 
@@ -61,6 +61,12 @@ public class xConfig {
 			return (Map<String, Object>) this.get(path);
 		} catch (Exception ignore) {}
 		return null;
+	}
+
+
+
+	public boolean isFromResource() {
+		return this.loadedFromResource;
 	}
 
 
