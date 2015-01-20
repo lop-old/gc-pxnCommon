@@ -14,17 +14,20 @@ public class RemappedRunnable implements Runnable {
 
 
 
-	public static Thread Thread(final Object targetClass, final String methodName) {
+	public static RemappedRunnable get(final Object targetClass, final String methodName) {
 		try {
-			return new Thread(
-				new RemappedRunnable(targetClass, methodName)
-			);
-		} catch (NoSuchMethodException e) {
-			xLog.getRoot().trace(e);
-		} catch (SecurityException e) {
+			final RemappedRunnable mapped =
+					new RemappedRunnable(targetClass, methodName);
+			return mapped;
+		} catch (Exception e) {
 			xLog.getRoot().trace(e);
 		}
 		return null;
+	}
+	public static Thread getThread(final Object targetClass, final String methodName) {
+		return new Thread(
+			get(targetClass, methodName)
+		);
 	}
 	public RemappedRunnable(final Object targetClass, final String methodName)
 			throws NoSuchMethodException, SecurityException {
@@ -32,6 +35,7 @@ public class RemappedRunnable implements Runnable {
 		if(utils.isEmpty(methodName)) throw new NullPointerException();
 		this.obj = targetClass;
 		final Class<?> clss = targetClass.getClass();
+		// find method to call
 		this.method = clss.getMethod(methodName);
 		if(this.method == null)
 			throw new NoSuchMethodException();
