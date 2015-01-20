@@ -157,7 +157,7 @@ public class xLog extends xLogPrinting {
 			throw new NullPointerException("name cannot be null");
 		this.name = logName;
 		this.parent = parentLogger;
-		// root logger
+		// new root logger
 		if(this.isRoot()) {
 			if(this.level == null)
 				this.level = DEFAULT_LEVEL;

@@ -188,7 +188,10 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			xThreadPool.Exit();
 		}
 		// trigger shutdown sequence
-		log().fine("Shutdown sequence.. 8..7..");
+		if(log().isLoggable(xLevel.FINEST))
+			log().fine("Shutdown sequence.. 8..7..");
+		else
+			log().info("Shutdown..");
 		pool.runLater(
 			new _ShutdownRunnable(
 				this,
@@ -221,7 +224,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		public void run() {
 			if(Failure.hasFailed())
 				return;
-			log().finest("[ "+Integer.toString(this.step)+" ] STARTUP");
+			log().finest("[ "+Integer.toString(this.step)+" ] Startup step..");
 
 			switch(this.step) {
 			// first step in startup
@@ -321,7 +324,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		}
 		@Override
 		public void run() {
-			log().finest("[ "+Integer.toString(this.step)+" ] SHUTDOWN");
+			log().finest("[ "+Integer.toString(this.step)+" ] Shutdown step..");
 
 			switch(this.step) {
 			// first step in shutdown
