@@ -18,39 +18,23 @@ public final class utilsProc {
 	 * @return process id number (pid)
 	 */
 	public static int getPid() {
-		final java.lang.management.RuntimeMXBean runtime =
-				java.lang.management.ManagementFactory.getRuntimeMXBean();
-		final java.lang.reflect.Field jvm;
 		try {
-			jvm = runtime.getClass().getDeclaredField("jvm");
-		} catch (NoSuchFieldException | SecurityException e) {
-			e.printStackTrace();
-			return -1;
+			final java.lang.management.RuntimeMXBean runtime =
+					java.lang.management.ManagementFactory.getRuntimeMXBean();
+			final java.lang.reflect.Field jvm = runtime.getClass().getDeclaredField("jvm");
+			jvm.setAccessible(true);
+			final sun.management.VMManagement mgmt =
+					(sun.management.VMManagement) jvm.get(runtime);
+			final java.lang.reflect.Method pid_method =
+					mgmt.getClass().getDeclaredMethod("getProcessId");
+			pid_method.setAccessible(true);
+			return (int) pid_method.invoke(mgmt);
+		} catch (IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException | NoSuchFieldException
+				| SecurityException | NoSuchMethodException e) {
+			xLog.getRoot().trace(e);
 		}
-		jvm.setAccessible(true);
-		final sun.management.VMManagement mgmt;
-		try {
-			mgmt = (sun.management.VMManagement) jvm.get(runtime);
-		} catch (IllegalArgumentException | IllegalAccessException e) {
-			e.printStackTrace();
-			return -1;
-		}
-		final java.lang.reflect.Method pid_method;
-		try {
-			pid_method = mgmt.getClass().getDeclaredMethod("getProcessId");
-		} catch (NoSuchMethodException | SecurityException e) {
-			e.printStackTrace();
-			return -1;
-		}
-		pid_method.setAccessible(true);
-		final int pid;
-		try {
-			pid = (int) pid_method.invoke(mgmt);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			e.printStackTrace();
-			return -1;
-		}
-		return pid;
+		return -1;
 	}
 
 
