@@ -11,8 +11,8 @@ import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.Utils.Keeper;
 import com.poixson.commonjava.Utils.mvnProps;
 import com.poixson.commonjava.Utils.utils;
-import com.poixson.commonjava.Utils.utilsDirFile;
 import com.poixson.commonjava.Utils.utilsNumbers;
+import com.poixson.commonjava.Utils.utilsProc;
 import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xClock;
@@ -249,7 +249,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 				}
 				// lock file
 				final String filename = this.app.getName()+".lock";
-				if(!utilsDirFile.lockInstance(filename)) {
+				if(!utilsProc.lockInstance(filename)) {
 					Failure.fail("Failed to get lock on file: "+filename);
 					return;
 				}
@@ -536,6 +536,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		out.println(" Current dir: "+System.getProperty("user.dir"));
 		out.println(" java home:   "+System.getProperty("java.home"));
 //		out.println(" Terminal:    "+System.getProperty("jline.terminal"));
+		out.println(" Pid: "+utilsProc.getPid());
 		if(xVars.get().debug())
 			out.println(" Forcing Debug: true");
 //		if(utils.notEmpty(args)) {
