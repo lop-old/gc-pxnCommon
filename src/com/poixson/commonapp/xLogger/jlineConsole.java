@@ -24,20 +24,20 @@ public class jlineConsole implements xConsole {
 
 	public static final String DEFAULT_PROMPT = " #>";
 
-	private static final Object lock = new Object();
+	private static final Object lock      = new Object();
 	private static final Object printLock = new Object();
 	private static volatile ConsoleReader reader = null;
 	private static volatile Boolean jlineEnabled = null;
 
-	private volatile String prompt = null;
+	private volatile String   prompt = null;
 	private volatile xHandler handler = null;
 
 	private static volatile PrintStream originalOut = null;
 	private static volatile PrintStream originalErr = null;
 
 	// console input thread
-	private volatile Thread thread = null;
-	private volatile boolean running = false;
+	private volatile Thread  thread   = null;
+	private volatile boolean running  = false;
 	private volatile boolean stopping = false;
 
 
@@ -59,7 +59,7 @@ public class jlineConsole implements xConsole {
 				try {
 					jlineEnabled = Boolean.FALSE;
 					System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
-					System.setProperty("user.language", "en");
+					System.setProperty("user.language",  "en");
 					reader = new ConsoleReader(System.in, getOriginalOut());
 				} catch (IOException e) {
 					log().trace(e);
@@ -205,7 +205,7 @@ public class jlineConsole implements xConsole {
 			String line = null;
 			try {
 				getOriginalOut().print('\r');
-				line = reader.readLine(getPrompt());
+				line = reader.readLine(this.getPrompt());
 				flush();
 			} catch (IOException e) {
 				if("Stream closed".equals(e.getMessage()))
@@ -274,18 +274,21 @@ public class jlineConsole implements xConsole {
 	@Override
 	public void print(final String msg) {
 		// render jAnsi
-		String str = renderAnsi(msg);
+		final StringBuilder str = new StringBuilder();
+		str.append(renderAnsi(msg));
 		// be sure to overwrite prompt
 		{
-			final int minLength = getPrompt().length() + 2;
+			final int minLength = this.getPrompt().length() + 2;
 			if(str.length() < minLength)
-				str += utilsString.repeat(minLength - str.length(), " ");
+				str.append(utilsString.repeat(minLength - str.length(), " "));
 		}
 		synchronized(printLock) {
 			// print
-			getOriginalOut().print("\r"+str+"\r\n");
+			AnsiConsole.out().print(
+					"\r"+str.append("\r\n").toString()
+			);
 			// draw command prompt
-			drawPrompt();
+			this.drawPrompt();
 			flush();
 		}
 	}
