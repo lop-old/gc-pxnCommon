@@ -1,8 +1,8 @@
 package com.poixson.commonjava.Utils;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.channels.FileLock;
 
 import com.poixson.commonjava.xLogger.xLog;
@@ -18,14 +18,39 @@ public final class utilsProc {
 	 * @return process id number (pid)
 	 */
 	public static int getPid() {
+		final java.lang.management.RuntimeMXBean runtime =
+				java.lang.management.ManagementFactory.getRuntimeMXBean();
+		final java.lang.reflect.Field jvm;
 		try {
-			return Integer.parseInt(
-				(new File("/proc/self")).getCanonicalFile().getName()
-			);
-		} catch (NumberFormatException | IOException e) {
-			xLog.getRoot().trace(e);
+			jvm = runtime.getClass().getDeclaredField("jvm");
+		} catch (NoSuchFieldException | SecurityException e) {
+			e.printStackTrace();
+			return -1;
 		}
-		return -1;
+		jvm.setAccessible(true);
+		final sun.management.VMManagement mgmt;
+		try {
+			mgmt = (sun.management.VMManagement) jvm.get(runtime);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			e.printStackTrace();
+			return -1;
+		}
+		final java.lang.reflect.Method pid_method;
+		try {
+			pid_method = mgmt.getClass().getDeclaredMethod("getProcessId");
+		} catch (NoSuchMethodException | SecurityException e) {
+			e.printStackTrace();
+			return -1;
+		}
+		pid_method.setAccessible(true);
+		final int pid;
+		try {
+			pid = (int) pid_method.invoke(mgmt);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
+			return -1;
+		}
+		return pid;
 	}
 
 
