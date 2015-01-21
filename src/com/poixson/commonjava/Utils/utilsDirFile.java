@@ -18,9 +18,6 @@ public final class utilsDirFile {
 
 
 
-
-
-
 	// get current working directory
 	public static String cwd() {
 		try {
@@ -149,7 +146,7 @@ public final class utilsDirFile {
 		}
 		@Override
 		public void finalize() {
-			close();
+			this.close();
 		}
 		@Override
 		public void close() {
@@ -163,7 +160,8 @@ public final class utilsDirFile {
 	// these functions can have inconsistent results. a better class will be needed
 
 	// build path+file
-	public static String buildFilePath(final String filePath, final String fileName, final String extension) {
+	public static String buildFilePath(final String filePath,
+			final String fileName, final String extension) {
 		if(utils.isEmpty(fileName)) throw new NullPointerException("fileName cannot be null/empty");
 		// file extension
 		final String ext;
