@@ -7,8 +7,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.RandomAccessFile;
-import java.nio.channels.FileLock;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -20,64 +18,6 @@ public final class utilsDirFile {
 
 
 
-	// single instance lock
-	public static boolean lockInstance(final String fileStr) {
-		try {
-			final File lockFile = new File(fileStr);
-			final RandomAccessFile randomAccessFile = new RandomAccessFile(lockFile, "rw");
-			final FileLock fileLock = randomAccessFile.getChannel().tryLock();
-			final int pid = getPid();
-			if(pid > 0)
-				randomAccessFile.write(Integer.toString(pid).getBytes());
-			if(fileLock == null) {
-				utils.safeClose(randomAccessFile);
-				return false;
-			}
-			// register shutdown hook
-			Runtime.getRuntime().addShutdownHook(new Thread() {
-				private volatile File fle = null;
-				private volatile RandomAccessFile acc = null;
-				private volatile FileLock lck = null;
-				public Thread init(final File file, final RandomAccessFile access, final FileLock lock) {
-					this.fle = file;
-					this.acc = access;
-					this.lck = lock;
-					return this;
-				}
-				@Override
-				public void run() {
-					try {
-						this.lck.release();
-						utils.safeClose(this.acc);
-						this.fle.delete();
-					} catch (Exception e) {
-						log().trace(e);
-//						pxnLog.get().severe("Unable to remove lock file: "+lockFile);
-//						pxnLog.get().exception(e);
-					}
-				}
-			}.init(lockFile, randomAccessFile, fileLock));
-			return true;
-		} catch (Exception e) {
-			log().trace(e);
-//			pxnLog.get().severe("Unable to create and/or lock file: "+lockFile);
-//			pxnLog.get().exception(e);
-		}
-		return false;
-	}
-	// get pid for process (if possible)
-	public static int getPid() {
-		try {
-			return Integer.parseInt(
-				(new File("/proc/self")).getCanonicalFile().getName()
-			);
-		} catch (NumberFormatException e) {
-			log().trace(e);
-		} catch (IOException e) {
-			log().trace(e);
-		}
-		return -1;
-	}
 
 
 
