@@ -96,21 +96,4 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<repositories>
-		<repository>
-			<id>maven central</id>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<url>http://repo1.maven.org/maven2/</url>
-		</repository>
-<!--
-		<repository>
-			<id>gclibs</id>
-			<name>gc libraries</name>
-			<layout>default</layout>
-			<url>file://${project.basedir}/lib/</url>
-		</repository>
--->
-	</repositories>
 </project>
