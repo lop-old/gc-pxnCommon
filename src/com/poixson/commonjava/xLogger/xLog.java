@@ -50,10 +50,13 @@ public class xLog extends xLogPrinting {
 /*
 	// logger
 	private volatile xLog _log = null;
+	private volatile xLog _log_default = null;
 	public xLog log() {
-		if(this._log == null)
-			return xApp.log();
-		return this._log;
+		if(this._log != null)
+			return this._log;
+		if(this._log_default == null)
+			this._log_default = xLog.getRoot();
+		return this._log_default;
 	}
 	public void setLog(final xLog log) {
 		this._log = log;
