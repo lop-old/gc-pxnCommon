@@ -1,0 +1,45 @@
+package com.poixson.commonjava.Utils.threads;
+
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
+
+
+public class xThreadFactory implements ThreadFactory {
+
+	protected final String  name;
+	protected final ThreadGroup group;
+	protected final boolean daemon;
+	protected final int     priority;
+
+	protected final AtomicInteger count = new AtomicInteger(0);
+
+
+
+	public xThreadFactory(final String name) {
+		this(name, false);
+	}
+	public xThreadFactory(final String name, final boolean daemon) {
+		this(name, null, daemon, Thread.NORM_PRIORITY);
+	}
+	public xThreadFactory(final String name, final ThreadGroup group, final boolean daemon, final int priority) {
+		this.name     = name;
+		this.group    = group;
+		this.daemon   = daemon;
+		this.priority = priority;
+	}
+
+
+
+	@Override
+	public Thread newThread(final Runnable run) {
+		final int id = this.count.incrementAndGet();
+		final Thread thread = new Thread(this.group, run);
+		thread.setPriority(this.priority);
+		thread.setDaemon(this.daemon);
+		thread.setName(this.name+":"+Integer.toString(id));
+		return thread;
+	}
+
+
+
+}

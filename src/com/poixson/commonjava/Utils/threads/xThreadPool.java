@@ -38,6 +38,7 @@ public class xThreadPool implements xStartable {
 	// run later queue
 	protected final String queueName;
 	protected final ThreadGroup group;
+	protected final xThreadFactory threadFactory;
 	protected final Set<Thread> threads = new HashSet<Thread>();
 	protected final BlockingQueue<xRunnable> queue = new ArrayBlockingQueue<xRunnable>(10, true);
 	protected static volatile Thread mainThread = null;
@@ -111,6 +112,7 @@ public class xThreadPool implements xStartable {
 	protected xThreadPool(final String name, final Integer size) {
 		this.queueName = utils.isEmpty(name) ? "main" : name;
 		this.group = new ThreadGroup(this.queueName);
+		this.threadFactory = new xThreadFactory(this.queueName, this.group, true, Thread.NORM_PRIORITY);
 		if("main".equalsIgnoreCase(this.queueName))
 			this.size = 0;
 		else
@@ -191,7 +193,8 @@ public class xThreadPool implements xStartable {
 			}
 			// start new thread
 			{
-				final Thread thread = new Thread(this.group, this);
+				final Thread thread = this.threadFactory.newThread(this);
+				//final Thread thread = new Thread(this.group, this);
 				this.threads.add(thread);
 				thread.start();
 				thread.setPriority(this.priority);
