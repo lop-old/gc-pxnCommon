@@ -6,7 +6,7 @@ BuildArch       : noarch
 Prefix          : %{_javadir}
 Requires        : java >= 7
 %define  _rpmfilename  %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm
-%define  jarfile       "%{SOURCE_ROOT}/pxnCommon-%{version}-SNAPSHOT.jar"
+%define  jarfile       "%{SOURCE_ROOT}/pxnCommon-%{version}.jar"
 
 Group           : Development
 License         : (c) PoiXson
