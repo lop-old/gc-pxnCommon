@@ -15,7 +15,6 @@
 		<jline-version>2.12</jline-version>
 		<org.yaml-version>1.14</org.yaml-version>
 		<org.xeustechnologies-version>2.5</org.xeustechnologies-version>
-		<commons-codec-version>1.10</commons-codec-version>
 		<io.netty-version>4.0.25.Final</io.netty-version>
 		<junit-version>4.12</junit-version>
 		<surefire-version>2.18.1</surefire-version>
@@ -75,12 +74,6 @@
 			<groupId>org.xeustechnologies</groupId>
 			<artifactId>jcl-core</artifactId>
 			<version>${org.xeustechnologies-version}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-			<version>${commons-codec-version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
