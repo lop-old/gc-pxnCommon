@@ -3,6 +3,7 @@ package com.poixson.commonjava.Utils;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.Formatter;
 
 import javax.crypto.Mac;
@@ -103,6 +104,31 @@ public final class utilsCrypt {
 			log().trace(e);
 		}
 		return null;
+	}
+
+
+
+	// base64 encode
+	public static String Base64Encode(final String data) {
+		if(data == null)   return null;
+		if(data.isEmpty()) return "";
+		return new String(Base64Encode(data.getBytes()));
+	}
+	public static byte[] Base64Encode(final byte[] data) {
+		if(data == null)     return null;
+		if(data.length == 0) return new byte[0];
+		return Base64.getEncoder().encode(data);
+	}
+	// base64 decode
+	public static String Base64Decode(final String data) {
+		if(data == null)   return null;
+		if(data.isEmpty()) return "";
+		return new String(Base64Decode(data.getBytes()));
+	}
+	public static byte[] Base64Decode(final byte[] data) {
+		if(data == null)     return null;
+		if(data.length == 0) return new byte[0];
+		return Base64.getDecoder().decode(data);
 	}
 
 
