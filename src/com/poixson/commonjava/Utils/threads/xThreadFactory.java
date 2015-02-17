@@ -32,6 +32,8 @@ public class xThreadFactory implements ThreadFactory {
 
 	@Override
 	public Thread newThread(final Runnable run) {
+		if(this.count.get() > Integer.MAX_VALUE - 100)
+			throw new IllegalStateException("ThreadFactory count overflow!");
 		final int id = this.count.incrementAndGet();
 		final Thread thread = new Thread(this.group, run);
 		thread.setPriority(this.priority);
