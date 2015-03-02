@@ -2,6 +2,7 @@ package com.poixson.commonapp.config;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsObject;
@@ -166,6 +167,29 @@ public class xConfig {
 	public List<String> getStringList(final String path) {
 		try {
 			return this.getList(
+				String.class,
+				path
+			);
+		} catch (Exception ignore) {}
+		return null;
+	}
+
+
+
+	// get set
+	public <T> Set<T> getSet(final Class<? extends T> clss, final String path) {
+		try {
+			return utilsObject.castSet(
+				clss,
+				this.get(path)
+			);
+		} catch (Exception ignore) {}
+		return null;
+	}
+	// get string list
+	public Set<String> getStringSet(final String path) {
+		try {
+			return this.getSet(
 				String.class,
 				path
 			);

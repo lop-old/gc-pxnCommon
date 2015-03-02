@@ -3,9 +3,11 @@ package com.poixson.commonjava.Utils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 
 public final class utilsObject {
@@ -59,6 +61,44 @@ public final class utilsObject {
 		if(object == null) return null;
 		try {
 			return castList(clss, (Collection<T>) object);
+		} catch (Exception ignore) {}
+		return null;
+	}
+
+
+
+	/**
+	 * Cast a collection object to a set.
+	 * @param clss
+	 * @param c
+	 * @return
+	 */
+	public static <T> Set<T> castSet(final Class<? extends T> clss, final Collection<?> c) {
+		if(clss == null) throw new NullPointerException("clss cannot be null");
+		if(c    == null) return null;
+		try {
+			final Set<T> result = new HashSet<T>(c.size());
+			for(final Object o : c) {
+				try {
+					result.add(clss.cast(o));
+				} catch (Exception ignore) {}
+			}
+			return result;
+		} catch (Exception ignore) {}
+		return null;
+	}
+	/**
+	 * Cast an object to a set.
+	 * @param clss
+	 * @param c
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> Set<T> castSet(final Class<? extends T> clss, final Object object) {
+		if(clss   == null) throw new NullPointerException("clss cannot be null");
+		if(object == null) return null;
+		try {
+			return castSet(clss, (Collection<T>) object);
 		} catch (Exception ignore) {}
 		return null;
 	}
