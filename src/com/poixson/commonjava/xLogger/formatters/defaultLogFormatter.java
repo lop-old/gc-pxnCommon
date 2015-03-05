@@ -14,6 +14,8 @@ public class defaultLogFormatter implements xLogFormatter {
 	@Override
 	public String formatMsg(final xLogRecord record) {
 		if(record == null) throw new NullPointerException();
+		if(record.level() == null)
+			return record.msg();
 		String[] parts = new String[4];
 		// timestamp
 		parts[0] = partTimestamp(record);
