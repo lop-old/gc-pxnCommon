@@ -57,6 +57,19 @@ public final class utilsString {
 
 
 
+	public static String FormatMessage(final String format, final Object... args) {
+		String msg = format;
+		for(final Object obj : args) {
+			msg = msg.replaceFirst(
+					"\\{\\}",
+					toString(obj)
+			);
+		}
+		return msg;
+	}
+
+
+
 	// string equals
 	public static boolean strEquals(final String a, final String b) {
 		if(utils.isEmpty(a)) return false;
