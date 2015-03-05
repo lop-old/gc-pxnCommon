@@ -281,8 +281,6 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			// last step in startup
 			case 8: {
 				this.app.state = APP_STATE.RUNNING;
-				if(xVars.get().debug())
-					utils.MemoryStats();
 				log().title(this.app.getName()+" Ready and Running!");
 				break;
 			}
@@ -302,6 +300,8 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 
 			// finished startup sequence
 			if(this.step >= 8) {
+//				if(xVars.get().debug())
+//					utils.MemoryStats(null, log());
 				synchronized(this.app.state) {
 					this.app.initLevel = 9;
 				}

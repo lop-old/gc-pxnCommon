@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Properties;
 
+import com.poixson.commonjava.xLogger.xLevel;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -113,13 +114,35 @@ public final class utils {
 
 
 	public static void MemoryStats() {
+		MemoryStats(xLog.getRoot());
+	}
+	public static void MemoryStats(final xLog log) {
+		MemoryStats(null, log);
+	}
+	public static void MemoryStats(final xLevel level, final xLog log) {
+		final int[] stats = getMemoryStats();
+		final String[] str = new String[4];
+		int longest = 0;
+		for(int i=0; i<4; i++) {
+			str[i] = Integer.toString(stats[i]);
+			if(str[i].length() > longest)
+				longest = str[i].length();
+		}
+		log.publish(level, "##### Heap utilization statistics [MB] #####");
+		log.publish(level, "Used Memory:  "+utilsString.padFront(longest, str[0], ' ')+" MB");
+		log.publish(level, "Free Memory:  "+utilsString.padFront(longest, str[1], ' ')+" MB");
+		log.publish(level, "Total Memory: "+utilsString.padFront(longest, str[2], ' ')+" MB");
+		log.publish(level, "Max Memory:   "+utilsString.padFront(longest, str[3], ' ')+" MB");
+	}
+	public static int[] getMemoryStats() {
 		final int MB = 1024 * 1024;
 		final Runtime runtime = Runtime.getRuntime();
-		System.out.println("##### Heap utilization statistics [MB] #####");
-		System.out.println( "Used Memory:  " + ((runtime.totalMemory() - runtime.freeMemory()) / MB) + " MB" );
-		System.out.println( "Free Memory:  " + (runtime.freeMemory() / MB)                           + " MB" );
-		System.out.println( "Total Memory: " + (runtime.totalMemory() / MB)                          + " MB" );
-		System.out.println( "Max Memory:   " + (runtime.maxMemory() / MB)                            + " MB" );
+		return new int[] {
+				(int) ((runtime.totalMemory() - runtime.freeMemory()) / MB),
+				(int) (runtime.freeMemory()  / MB),
+				(int) (runtime.totalMemory() / MB),
+				(int) (runtime.maxMemory()   / MB)
+		};
 	}
 
 
