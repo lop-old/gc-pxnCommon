@@ -248,10 +248,21 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 					this.app.state = APP_STATE.STARTUP;
 				}
 				// lock file
-				final String filename = this.app.getName()+".lock";
-				if(!utilsProc.lockInstance(filename)) {
-					Failure.fail("Failed to get lock on file: "+filename);
-					return;
+				{
+					final String filename = this.app.getName()+".lock";
+					if(!utilsProc.lockInstance(filename)) {
+						Failure.fail("Failed to get lock on file: "+filename);
+						return;
+					}
+				}
+				// ensure not root
+				{
+					final String user = System.getProperty("user.name");
+					if("root".equals(user))
+						log().warning("It is recommended to run as a non-root user");
+					else
+					if("administrator".equalsIgnoreCase(user) || "admin".equalsIgnoreCase(user))
+						log().warning("It is recommended to run as a non-administrator user");
 				}
 				break;
 			}
