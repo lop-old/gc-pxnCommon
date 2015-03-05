@@ -64,7 +64,7 @@ public abstract class xLogPrinting {
 
 
 	// exception
-	public void trace(final Exception e) {
+	public void trace(final Throwable e) {
 		this.publish(
 			xLevel.SEVERE,
 			utilsString.ExceptionToString(e)
