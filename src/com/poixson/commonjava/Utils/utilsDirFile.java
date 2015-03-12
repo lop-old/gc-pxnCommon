@@ -56,6 +56,12 @@ public final class utilsDirFile {
 			}
 		}.init(extensions));
 	}
+	public static File[] listContents(final File dir, final String extension) {
+		return listContents(dir, new String[] {extension});
+	}
+	public static File[] listContents(final File dir) {
+		return listContents(dir, (String[]) null);
+	}
 
 
 
