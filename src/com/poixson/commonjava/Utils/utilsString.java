@@ -174,7 +174,7 @@ public final class utilsString {
 		final int pos = data.indexOf(delim);
 		if(pos == -1)
 			return data;
-		return data.substring(pos + delim.length());
+		return data.substring(0, pos);
 	}
 	// get next part
 	public static String getNextPart(final String delim, final StringRef data) {
