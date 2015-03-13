@@ -199,10 +199,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			xThreadPool.Exit();
 		}
 		// trigger shutdown sequence
-		if(log().isLoggable(xLevel.FINEST))
-			log().fine("Shutdown sequence.. 8..7..");
-		else
-			log().info("Shutdown..");
+		log().title("Stopping "+this.getName()+"..");
 		pool.runLater(
 			new _ShutdownRunnable(
 				this,
@@ -217,8 +214,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 	 * Startup sequence.
 	 *   0. Stopped
 	 *   1. First step in startup
-	 *   2-7. Abstracted to app
-	 *   8. Last step in startup
+	 *   2-8. Abstracted to app
 	 *   9. Running
 	 */
 	private class _StartupRunnable extends xRunnable {
@@ -277,13 +273,8 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			case 5:
 			case 6:
 			case 7:
+			case 8:
 				break;
-			// last step in startup
-			case 8: {
-				this.app.state = APP_STATE.RUNNING;
-				log().title(this.app.getName()+" Ready and Running!");
-				break;
-			}
 			default:
 				throw new RuntimeException("Unknown startup step: "+Integer.toString(this.step));
 			}
@@ -300,16 +291,23 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 
 			// finished startup sequence
 			if(this.step >= 8) {
-//				if(xVars.get().debug())
-//					utils.MemoryStats(null, log());
+				//if(xVars.get().debug())
+				//	utils.MemoryStats(null, log());
 				synchronized(this.app.state) {
+					if(!APP_STATE.STARTUP.equals(this.app.state)) {
+						log().trace(new IllegalStateException());
+						Failure.fail("Illegal startup state!");
+						return;
+					}
 					this.app.initLevel = 9;
+					this.app.state = APP_STATE.RUNNING;
 				}
+				log().title(this.app.getName()+" Ready and Running!");
 				return;
 			}
 
 			// sleep a short moment
-			utilsThread.Sleep(5);
+			utilsThread.Sleep(50);
 
 			// queue next step
 			synchronized(this.app.state) {
@@ -342,6 +340,10 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			if(!utilsNumbers.isMinMax(step, 1, 8)) throw new UnsupportedOperationException("Unsupported shutdown step "+Integer.toString(step));
 			this.app = app;
 			this.step = step;
+			if(log().isLoggable(xLevel.FINEST))
+				log().fine("Shutdown sequence.. 8..7..");
+			else
+				log().info("Shutdown..");
 		}
 		@Override
 		public void run() {
@@ -354,7 +356,6 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 					log().trace(new RuntimeException(ILLEGAL_STATE_EXCEPTION+this.app.state.toString()));
 					Failure.fail(ILLEGAL_STATE_EXCEPTION+this.app.state.toString());
 				}
-				log().title("Stopping "+this.app.getName()+"..");
 				break;
 			}
 			// stop scheduler
