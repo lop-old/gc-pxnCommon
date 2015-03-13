@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xStartable;
 import com.poixson.commonjava.Utils.xTime;
 import com.poixson.commonjava.xLogger.xLog;
@@ -37,17 +36,9 @@ public class xScheduler implements xStartable {
 		return instance;
 	}
 	protected xScheduler() {
-		this.thread = new Thread() {
-			private volatile xScheduler sched = null;
-			public Thread init(final xScheduler sched) {
-				this.sched = sched;
-				return this;
-			}
-			@Override
-			public void run() {
-				this.sched.run();
-			}
-		}.init(this);
+		this.thread = new Thread(this);
+		this.thread.setDaemon(true);
+		this.thread.setName("xScheduler");
 	}
 	@Override
 	public Object clone() throws CloneNotSupportedException {
@@ -69,6 +60,7 @@ public class xScheduler implements xStartable {
 	@Override
 	public void Stop() {
 		this.stopping = true;
+		this.thread.interrupt();
 	}
 	@Override
 	public boolean isRunning() {
@@ -119,9 +111,14 @@ public class xScheduler implements xStartable {
 				finished.clear();
 			}
 			// sleep thread
-//xLog.getRoot().finest("sleeping: "+Long.toString(sleep));
-			if(sleep > 0)
-				utilsThread.Sleep(sleep);
+			//xLog.getRoot().finest("SLEEPING: "+Long.toString(sleep));
+			if(sleep > 0) {
+				try {
+					Thread.sleep(sleep);
+				} catch (InterruptedException ignore) {
+					break;
+				}
+			}
 		}
 		xLog.getRoot().finer("Stopped xScheduler thread");
 		this.stopping = true;

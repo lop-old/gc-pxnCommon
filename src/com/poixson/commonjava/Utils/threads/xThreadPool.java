@@ -435,7 +435,7 @@ public class xThreadPool implements xStartable {
 	// display threads still running
 	protected static void displayStillRunning() {
 		if(!xVars.get().debug()) return;
-		final String[] threadNames = utilsThread.getThreadNames(false);;
+		final String[] threadNames = utilsThread.getThreadNames(false);
 		// no threads still running
 		if(utils.isEmpty(threadNames)) return;
 		// build message
