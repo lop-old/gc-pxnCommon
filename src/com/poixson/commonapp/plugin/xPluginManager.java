@@ -65,17 +65,20 @@ public class xPluginManager {
 
 	// load all plugins from dir
 	public void loadAll() {
-		this.loadAll(null);
+		this.loadAll((String) null);
 	}
-	public void loadAll(final String path) {
-		final File dir = new File(path == null ? "plugins/" : path);
-		// create plugins directory if needed
+	public void loadAll(final String dir) {
+		this.loadAll(new File(
+				utils.isEmpty(dir) ? "plugins/" : dir
+		));
+	}
+	public void loadAll(final File dir) {
+		if(dir == null) throw new NullPointerException();
+		// create plugins dir if needed
 		if(!dir.isDirectory())
 			dir.mkdir();
-		final String[] extensions = new String[] {
-			".jar"
-		};
-		final File[] files = utilsDirFile.listContents(dir, extensions);
+		// list dir contents
+		final File[] files = utilsDirFile.listContents(dir, ".jar");
 		if(files == null) throw new NullPointerException();
 		// no plugins found
 		if(files.length == 0) {
@@ -83,9 +86,10 @@ public class xPluginManager {
 			return;
 		}
 		// load plugin jars
+		int count = 0;
 		synchronized(this.plugins) {
 			for(final File f : files) {
-				final PluginDAO dao = load(f);
+				final PluginDAO dao = this.load(f);
 				if(dao == null) continue;
 				// plugin already loaded
 				if(this.plugins.containsKey(dao.name)) {
@@ -93,9 +97,11 @@ public class xPluginManager {
 					continue;
 				}
 				this.log().finer("Found plugin file: "+f.toString());
-				this.addPlugin(dao);
+				this.plugins.put(dao.name, dao);
+				count++;
 			}
 		}
+		this.log().info("Found [ "+Integer.toString(count)+" ] plugins.");
 	}
 	public PluginDAO load(final File file) {
 		if(file == null) throw new NullPointerException();
@@ -151,6 +157,11 @@ public class xPluginManager {
 	public void init(final PluginDAO dao) {
 		if(dao == null) throw new NullPointerException();
 		final xLog log = dao.log;
+		// already inited
+		if(dao.plugin != null) {
+			log.finer("Plugin already inited");
+			return;
+		}
 		// plugin main class
 		final String className = dao.yml.getString(this.classFieldName);
 //		log.finer("Init: "+this.classFieldName+": "+className);
