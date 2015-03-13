@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xStartable;
 import com.poixson.commonjava.Utils.xTime;
 import com.poixson.commonjava.xLogger.xLog;
@@ -64,8 +65,7 @@ public class xScheduler implements xStartable {
 	}
 	@Override
 	public boolean isRunning() {
-		if(this.stopping) return false;
-		return this.running;
+		return this.running && !this.stopping;
 	}
 
 
@@ -112,13 +112,8 @@ public class xScheduler implements xStartable {
 			}
 			// sleep thread
 			//xLog.getRoot().finest("SLEEPING: "+Long.toString(sleep));
-			if(sleep > 0) {
-				try {
-					Thread.sleep(sleep);
-				} catch (InterruptedException ignore) {
-					break;
-				}
-			}
+			if(sleep > 0)
+				utilsThread.Sleep(sleep);
 		}
 		xLog.getRoot().finer("Stopped xScheduler thread");
 		this.stopping = true;
