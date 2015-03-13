@@ -12,9 +12,9 @@
 	<url>http://poixson.com</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jline-version>2.12</jline-version>
-		<org.yaml-version>1.14</org.yaml-version>
-		<org.xeustechnologies-version>2.5</org.xeustechnologies-version>
+		<jline-version>2.12.1</jline-version>
+		<org.yaml-version>1.15</org.yaml-version>
+		<org.xeustechnologies-version>2.6</org.xeustechnologies-version>
 		<junit-version>4.12</junit-version>
 		<surefire-version>2.18.1</surefire-version>
 	</properties>
