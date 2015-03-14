@@ -50,7 +50,7 @@ public class triggerInterval implements TriggerType {
 			this.last = now;
 			return (delay > 0 ? delay : 0);
 		}
-		final long until = this.interval.getMS() - (now - last);
+		final long until = this.interval.getMS() - (now - this.last);
 //xLog.getRoot().warning("UNTIL: "+Long.toString(until)+"   "+this.interval.getString());
 		// trigger now
 		if(until <= 0) {

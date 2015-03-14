@@ -39,8 +39,8 @@ public class IntArrayValueMatcher implements ValueMatcher {
 	 */
 	@Override
 	public boolean match(final int value) {
-		for(int i = 0; i < values.length; i++) {
-			if(values[i] == value)
+		for(int i = 0; i < this.values.length; i++) {
+			if(this.values[i] == value)
 				return true;
 		}
 		return false;

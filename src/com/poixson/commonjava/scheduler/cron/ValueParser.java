@@ -51,7 +51,7 @@ public class ValueParser {
 		} catch (NumberFormatException ignore) {
 			throw new Exception("invalid integer value");
 		}
-		if(i < minValue || i > maxValue)
+		if(i < this.minValue || i > this.maxValue)
 			throw new Exception("value out of range: "+str);
 		return i;
 	}
@@ -59,10 +59,10 @@ public class ValueParser {
 
 
 	public int getMinValue() {
-		return minValue;
+		return this.minValue;
 	}
 	public int getMaxValue() {
-		return maxValue;
+		return this.maxValue;
 	}
 
 
