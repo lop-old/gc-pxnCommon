@@ -88,6 +88,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			log().trace(new RuntimeException(ALREADY_STARTED_EXCEPTION));
 			Failure.fail(ALREADY_STARTED_EXCEPTION);
 		}
+		xVars.init();
 		synchronized(appLock) {
 			if(appInstance != null) {
 				log().trace(new RuntimeException(ALREADY_STARTED_EXCEPTION));
@@ -549,7 +550,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 		out.println(" java home:   "+System.getProperty("java.home"));
 //		out.println(" Terminal:    "+System.getProperty("jline.terminal"));
 		out.println(" Pid: "+utilsProc.getPid());
-		if(xVars.get().debug())
+		if(xVars.debug())
 			out.println(" Forcing Debug: true");
 //		if(utils.notEmpty(args)) {
 //			out.println();

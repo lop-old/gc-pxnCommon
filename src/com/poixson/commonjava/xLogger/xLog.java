@@ -193,7 +193,7 @@ public class xLog extends xLogPrinting {
 		if(lvl == null || this.level == null)
 			return true;
 		// forced debug mode
-		if(xVars.get().debug())
+		if(xVars.debug())
 			return true;
 		// local logger level
 		if(this.level.isLoggable(lvl))

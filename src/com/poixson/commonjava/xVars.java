@@ -8,44 +8,29 @@ public class xVars {
 
 
 
-	// single instance
-	protected static volatile xVars instance = null;
-	protected static final Object instanceLock = new Object();
-
-	// get instance
-	public static xVars get() {
-		if(instance == null) {
-			synchronized(instanceLock) {
-				if(instance == null)
-					instance = new xVars();
-			}
-		}
-		return instance;
+	private static volatile boolean inited = false;
+	public static void init() {
+		if(!inited)
+			Keeper.add(new xVars());
 	}
-	// new instance
-	protected xVars() {
-		Keeper.add(this);
-	}
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		throw new CloneNotSupportedException();
+	private xVars() {
 	}
 
 
 
 	// debug mode
 	private static final boolean DEFAULT_DEBUG = false;
-	private volatile Boolean debug = null;
+	private static volatile Boolean debug = null;
 
-	public boolean debug() {
-		if(this.debug == null)
+	public static boolean debug() {
+		if(debug == null)
 			return DEFAULT_DEBUG;
-		return this.debug.booleanValue();
+		return debug.booleanValue();
 	}
-	public void debug(final boolean value) {
-		if(this.debug != null && this.debug.booleanValue() == value) return;
+	public static void debug(final boolean value) {
+		if(debug != null && debug.booleanValue() == value) return;
 		if(!value) xLog.getRoot().fine("Disabled debug mode");
-		this.debug = Boolean.valueOf(value);
+		debug = Boolean.valueOf(value);
 		// if(value) xLog.getRoot().fine("Enabled debug mode");
 	}
 
