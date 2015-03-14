@@ -307,7 +307,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			}
 
 			// sleep a short moment
-			utilsThread.Sleep(50);
+			utilsThread.Sleep(50L);
 
 			// queue next step
 			synchronized(this.app.state) {
@@ -395,7 +395,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 			}
 
 			// sleep for a moment
-			utilsThread.Sleep(50);
+			utilsThread.Sleep(50L);
 
 			// finished shutdown sequence
 			if(this.step <= 1) {

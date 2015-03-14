@@ -68,7 +68,7 @@ public class xSchedulersFiringTest {
 		// interval test
 		this.test_interval = new IntervalTest(this.sched);
 
-		utilsThread.Sleep(20);
+		utilsThread.Sleep(20L);
 		assertHasntFailed();
 		// reset cooldown
 		maxRunTime.reset();

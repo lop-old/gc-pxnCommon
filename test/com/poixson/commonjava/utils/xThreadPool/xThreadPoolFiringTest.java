@@ -49,7 +49,7 @@ public class xThreadPoolFiringTest {
 		// start more thread pools
 		this.pool_short.Start();
 		this.pool_long.Start();
-		utilsThread.Sleep(20);
+		utilsThread.Sleep(20L);
 		assertHasntFailed();
 	}
 
