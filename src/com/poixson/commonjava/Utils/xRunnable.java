@@ -28,9 +28,20 @@ public class xRunnable implements Runnable {
 
 
 	public static xRunnable cast(final Runnable run) {
-		if(run instanceof xRunnable)
-			return (xRunnable) run;
-		return new xRunnable("<Runnable>", run);
+		return cast(null, run);
+	}
+	public static xRunnable cast(final String name, final Runnable run) {
+		if(run == null) throw new NullPointerException();
+		if(run instanceof xRunnable) {
+			final xRunnable xrun = (xRunnable) run;
+			if(utils.notEmpty(name))
+				xrun.setTaskName(name);
+			return xrun;
+		}
+		return new xRunnable(
+				utils.isEmpty(name) ? "<Runnable>" : name,
+				run
+		);
 	}
 
 
@@ -45,6 +56,9 @@ public class xRunnable implements Runnable {
 
 	public String getTaskName() {
 		return this.taskName;
+	}
+	public void setTaskName(final String name) {
+		this.taskName = utils.isEmpty(name) ? null : name;
 	}
 	public boolean taskNameEquals(final String name) {
 		if(utils.isEmpty(name))
