@@ -9,7 +9,7 @@ public class xThreadFactory implements ThreadFactory {
 	protected final String  name;
 	protected final ThreadGroup group;
 	protected final boolean daemon;
-	protected final int     priority;
+	protected volatile int  priority;
 
 	protected final AtomicInteger count = new AtomicInteger(0);
 
@@ -40,6 +40,16 @@ public class xThreadFactory implements ThreadFactory {
 		thread.setDaemon(this.daemon);
 		thread.setName(this.name+":"+Integer.toString(id));
 		return thread;
+	}
+
+
+
+	public void setPriority(final int priority) {
+		if(priority > this.priority)
+			this.group.setMaxPriority(priority);
+		this.priority = priority;
+		if(priority < this.group.getMaxPriority())
+			this.group.setMaxPriority(priority);
 	}
 
 
