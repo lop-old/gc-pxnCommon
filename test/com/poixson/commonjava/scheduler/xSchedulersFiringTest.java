@@ -12,7 +12,6 @@ import com.poixson.commonjava.Utils.threads.xThreadPool;
 import com.poixson.commonjava.scheduler.cron.CronPredictor;
 import com.poixson.commonjava.scheduler.triggers.CronTest;
 import com.poixson.commonjava.scheduler.triggers.IntervalTest;
-import com.poixson.commonjava.xLogger.xLog;
 import com.poixson.commonjava.xLogger.xLogTest;
 
 
@@ -34,14 +33,14 @@ public class xSchedulersFiringTest {
 
 	public xSchedulersFiringTest() {
 		assertHasntFailed();
-		log().info("Starting xScheduler Firing Test..");
+		xLogTest.publish("Starting xScheduler Firing Test..");
 		this.sched = xScheduler.get();
 		assertHasntFailed();
 		// start main thread pool
 		mainThread = new Thread() {
 			@Override
 			public void run() {
-				xThreadPool.get().run();
+				xThreadPool.getMainPool().run();
 			}
 		};
 		mainThread.start();
@@ -61,7 +60,7 @@ public class xSchedulersFiringTest {
 				untilA,
 				untilB
 			);
-			log().info("CronPredictor successfully calculated next trigger!");
+			xLogTest.publish("CronPredictor successfully calculated next trigger!");
 		}
 		if(!QUICK_CRON_TEST)
 			this.test_cron = new CronTest(this.sched);
@@ -79,10 +78,9 @@ public class xSchedulersFiringTest {
 		assertHasntFailed();
 		// start scheduler
 		this.sched.Start();
-		log().publish();
 		assertHasntFailed();
 		// wait until finished
-		log().info("Waiting for schedulers..");
+		xLogTest.publish("Waiting for schedulers..");
 		boolean allfinished = true;
 		while(true) {
 			allfinished = true;
@@ -110,7 +108,7 @@ public class xSchedulersFiringTest {
 			);
 		}
 		assertHasntFailed();
-		log().info("xScheduler Firing Tests Passed!");
+		xLogTest.publish("xScheduler Firing Tests Passed!");
 	}
 
 
@@ -120,13 +118,6 @@ public class xSchedulersFiringTest {
 			"App Failed!",
 			Failure.hasFailed()
 		);
-	}
-
-
-
-	// logger
-	public static xLog log() {
-		return xLogTest.get();
 	}
 
 

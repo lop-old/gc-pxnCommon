@@ -32,4 +32,13 @@ public class xLogTest {
 
 
 
+	public static void publish(final String msg) {
+		get().publish("*** "+msg);
+	}
+	public static void trace(final Throwable e) {
+		get().trace(e);
+	}
+
+
+
 }

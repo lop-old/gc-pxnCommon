@@ -6,7 +6,6 @@ import org.junit.Test;
 import com.poixson.commonjava.Failure;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.threads.xThreadPool;
-import com.poixson.commonjava.xLogger.xLog;
 import com.poixson.commonjava.xLogger.xLogTest;
 
 
@@ -32,8 +31,8 @@ public class xThreadPoolFiringTest {
 
 	public xThreadPoolFiringTest() {
 		assertHasntFailed();
-		log().info("Starting up thread pools..");
-		this.pool_main = xThreadPool.get();
+		xLogTest.publish("Starting up thread pools..");
+		this.pool_main = xThreadPool.getMainPool();
 		this.pool_short = xThreadPool.get("short", THREAD_COUNT_SHORT);
 		this.pool_long  = xThreadPool.get("long",  THREAD_COUNT_LONG);
 		assertHasntFailed();
@@ -41,7 +40,7 @@ public class xThreadPoolFiringTest {
 		mainThread = new Thread() {
 			@Override
 			public void run() {
-				xThreadPool.get().run();
+				xThreadPool.getMainPool().run();
 			}
 		};
 		mainThread.start();
@@ -64,16 +63,14 @@ public class xThreadPoolFiringTest {
 		this.queuer_long  = new xThreadQueuer(this.pool_long,  TASK_COUNT_LONG);
 		assertHasntFailed();
 		// start producers
-		log().info("Starting task producers..");
-		log().publish();
+		xLogTest.publish("Starting task producers..");
 		xThreadQueuer.runAll();
-		log().publish();
 		// ensure all finished
 		Assert.assertTrue(this.queuer_main.hasFinished());
 		Assert.assertTrue(this.queuer_short.hasFinished());
 		Assert.assertTrue(this.queuer_long.hasFinished());
 		assertHasntFailed();
-		log().info("xThreadPool Tests Passed!");
+		xLogTest.publish("xThreadPool Tests Passed!");
 	}
 
 
@@ -83,13 +80,6 @@ public class xThreadPoolFiringTest {
 			"App Failed!",
 			Failure.hasFailed()
 		);
-	}
-
-
-
-	// logger
-	public static xLog log() {
-		return xLogTest.get();
 	}
 
 

@@ -31,20 +31,13 @@ public class ClockTest extends xRunnable {
 
 	@Override
 	public void run() {
-		log().info("Clock Test Triggered!");
+		xLogTest.publish("Clock Test Triggered!");
 	}
 
 
 
 	public boolean hasFinished() {
 		return (this.task.getRunCount() > 0);
-	}
-
-
-
-	// logger
-	public static xLog log() {
-		return xLogTest.get();
 	}
 
 

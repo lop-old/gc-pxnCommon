@@ -3,7 +3,6 @@ package com.poixson.commonjava.scheduler.triggers;
 import com.poixson.commonjava.Utils.xRunnable;
 import com.poixson.commonjava.scheduler.xScheduledTask;
 import com.poixson.commonjava.scheduler.xScheduler;
-import com.poixson.commonjava.xLogger.xLog;
 import com.poixson.commonjava.xLogger.xLogTest;
 
 
@@ -26,7 +25,7 @@ public class IntervalTest extends xRunnable {
 			this.task.setRepeating(false);
 			this.task.setTrigger(triggerInterval.get("1s"));
 		} catch (Exception e) {
-			logLocal().trace(e);
+			xLogTest.trace(e);
 			throw e;
 		}
 	}
@@ -35,20 +34,13 @@ public class IntervalTest extends xRunnable {
 
 	@Override
 	public void run() {
-		logLocal().info("Interval Test Triggered!");
+		xLogTest.publish("Interval Test Triggered!");
 	}
 
 
 
 	public boolean hasFinished() {
 		return (this.task.getRunCount() > 0);
-	}
-
-
-
-	// logger
-	public static xLog logLocal() {
-		return xLogTest.get("IntervalTest");
 	}
 
 

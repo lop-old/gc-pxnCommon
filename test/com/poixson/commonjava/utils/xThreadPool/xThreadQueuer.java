@@ -9,7 +9,6 @@ import org.junit.Assert;
 import com.poixson.commonjava.Utils.CoolDown;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.threads.xThreadPool;
-import com.poixson.commonjava.xLogger.xLog;
 import com.poixson.commonjava.xLogger.xLogTest;
 
 
@@ -30,7 +29,7 @@ class xThreadQueuer {
 		this.pool = pool;
 		this.maxTaskCount = maxTaskCount;
 		this.currentTaskCount = 0;
-		this.logLocal().info("Testing with "+
+		xLogTest.publish("Testing with "+
 				(pool.getMaxThreads() == 0
 					? "MAIN thread"
 					: Integer.toString(pool.getMaxThreads())+" threads"
@@ -84,7 +83,7 @@ class xThreadQueuer {
 			if(!hasadded)
 				utilsThread.Sleep(10L);
 		}
-		xLogTest.get().info("Finished xThreadPool Tests");
+		xLogTest.publish("Finished xThreadPool Tests");
 		allFinished = true;
 	}
 
@@ -94,7 +93,7 @@ class xThreadQueuer {
 		if(this.maxTaskCount <= this.currentTaskCount) {
 			while(!this.pool.isEmpty())
 				utilsThread.Sleep(10L);
-			this.logLocal().info("Finished testing pool");
+			xLogTest.publish("Finished testing pool");
 			this.finished = true;
 			return false;
 		}
@@ -106,20 +105,12 @@ class xThreadQueuer {
 				@Override
 				public void run() {
 					if(xThreadPool.DETAILED_LOGGING)
-						logLocal().warning("TICK");
+						xLogTest.publish("TICK");
 				}
 			}
 		);
 		this.currentTaskCount++;
 		return true;
-	}
-
-
-
-	// logger
-	public xLog logLocal() {
-		return xLogTest.get()
-				.get(this.pool.getName());
 	}
 
 
