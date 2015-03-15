@@ -480,7 +480,7 @@ public abstract class xApp implements xStartable, Failure.FailureAction {
 	 */
 	public xThreadPool getThreadPool() {
 		if(this.threadPool == null)
-			this.threadPool = xThreadPool.get();
+			this.threadPool = xThreadPool.getMainPool();
 		return this.threadPool;
 	}
 	@Override

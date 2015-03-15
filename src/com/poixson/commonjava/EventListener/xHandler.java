@@ -111,7 +111,7 @@ public class xHandler {
 	}
 	public void triggerNow(final xThreadPool pool, final xEventData event, final Priority onlyPriority) {
 		if(event == null) throw new NullPointerException();
-		final xThreadPool p = (pool == null ? xThreadPool.get() : pool);
+		final xThreadPool p = (pool == null ? xThreadPool.getMainPool() : pool);
 		p.runNow(
 			this.getRunnable(event, onlyPriority)
 		);
@@ -127,7 +127,7 @@ public class xHandler {
 	}
 	public void triggerLater(final xThreadPool pool, final xEventData event, final Priority onlyPriority) {
 		if(event == null) throw new NullPointerException();
-		final xThreadPool p = (pool == null ? xThreadPool.get() : pool);
+		final xThreadPool p = (pool == null ? xThreadPool.getMainPool() : pool);
 		p.runLater(
 			this.getRunnable(event, onlyPriority)
 		);

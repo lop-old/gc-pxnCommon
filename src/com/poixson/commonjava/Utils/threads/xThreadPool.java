@@ -63,7 +63,7 @@ public class xThreadPool implements xStartable {
 	/**
 	 * Get main thread queue
 	 */
-	public static xThreadPool get() {
+	public static xThreadPool getMainPool() {
 		return get(null, null);
 	}
 	/**
@@ -340,7 +340,7 @@ public class xThreadPool implements xStartable {
 		final xRunnable task = xRunnable.cast(run);
 		// add to main thread queue
 		if(this.size <= 0 && !isMainPool()) {
-			get().runLater(run);
+			getMainPool().runLater(run);
 			return;
 		}
 		try {
@@ -378,7 +378,7 @@ public class xThreadPool implements xStartable {
 	public static void ShutdownAll() {
 		// be sure to run in main thread
 		if(mainThread != null && !mainThread.equals(Thread.currentThread())) {
-			get().runNow(new Runnable() {
+			getMainPool().runNow(new Runnable() {
 				@Override
 				public void run() {
 					ShutdownAll();
@@ -417,8 +417,8 @@ public class xThreadPool implements xStartable {
 				ExitNow();
 			}
 		};
-		if(mainThread != null && !mainThread.equals(Thread.currentThread()) && get().isRunning())
-			get().runLater(runexit);
+		if(mainThread != null && !mainThread.equals(Thread.currentThread()) && getMainPool().isRunning())
+			getMainPool().runLater(runexit);
 		else
 			runexit.run();
 	}

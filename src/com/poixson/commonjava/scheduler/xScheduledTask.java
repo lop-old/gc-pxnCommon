@@ -56,7 +56,7 @@ public class xScheduledTask {
 		xThreadPool p = this.pool;
 		// use main thread pool
 		if(p == null)
-			p = xThreadPool.get();
+			p = xThreadPool.getMainPool();
 		// run task
 		p.runLater(r);
 		this.count.incrementAndGet();
