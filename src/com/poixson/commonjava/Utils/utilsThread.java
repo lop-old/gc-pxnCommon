@@ -3,6 +3,9 @@ package com.poixson.commonjava.Utils;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.poixson.commonjava.xVars;
+import com.poixson.commonjava.xLogger.xLog;
+
 
 public final class utilsThread {
 	private utilsThread() {}
@@ -47,6 +50,19 @@ public final class utilsThread {
 		}
 		if(list.isEmpty()) return null;
 		return list.toArray(new String[0]);
+	}
+	// display threads still running
+	public static void displayStillRunning() {
+		if(!xVars.debug()) return;
+		final String[] threadNames = utilsThread.getThreadNames(false);
+		// no threads still running
+		if(utils.isEmpty(threadNames)) return;
+		// build message
+		final StringBuilder msg = new StringBuilder();
+		msg.append("Threads still running:  ").append(threadNames.length);
+		for(final String name : threadNames)
+			msg.append("\n  ").append(name);
+		xLog.getRoot().publish(msg.toString());
 	}
 
 

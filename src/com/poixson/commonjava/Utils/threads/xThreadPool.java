@@ -10,7 +10,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.Utils.CoolDown;
 import com.poixson.commonjava.Utils.Keeper;
 import com.poixson.commonjava.Utils.utils;
@@ -424,26 +423,10 @@ public class xThreadPool implements xStartable {
 	}
 	public static void ExitNow() {
 		// display threads still running
-		displayStillRunning();
+		utilsThread.displayStillRunning();
 		System.out.println();
 		System.out.println();
 		System.exit(0);
-	}
-
-
-
-	// display threads still running
-	protected static void displayStillRunning() {
-		if(!xVars.debug()) return;
-		final String[] threadNames = utilsThread.getThreadNames(false);
-		// no threads still running
-		if(utils.isEmpty(threadNames)) return;
-		// build message
-		final StringBuilder msg = new StringBuilder();
-		msg.append("Threads still running:  ").append(threadNames.length);
-		for(final String name : threadNames)
-			msg.append("\n  ").append(name);
-		xLog.getRoot().publish(msg.toString());
 	}
 
 
