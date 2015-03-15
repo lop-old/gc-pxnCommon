@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import com.poixson.commonjava.Utils.utils;
+import com.poixson.commonjava.Utils.xRunnable;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -23,6 +24,13 @@ public class RemappedRunnable implements Runnable {
 			xLog.getRoot().trace(e);
 		}
 		return null;
+	}
+	public static xRunnable get(final String taskName,
+			final Object targetClass, final String methodName) {
+		return xRunnable.cast(
+				taskName,
+				RemappedRunnable.get(targetClass, methodName)
+		);
 	}
 	public static Thread getThread(final Object targetClass, final String methodName) {
 		return new Thread(
