@@ -1,11 +1,12 @@
 package com.poixson.commonjava.Utils;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 
 public class CoolDown {
 
-	protected final xTime coolDuration = xTime.get();
-	protected volatile long last = -1L;
-	protected final Object lock = new Object();
+	protected final xTime duration = xTime.get();
+	protected final AtomicLong last = new AtomicLong(-1L);
 
 
 
@@ -32,21 +33,21 @@ public class CoolDown {
 
 
 
+	/**
+	 * Checks the state of the cooldown period.
+	 * @return true if period reached and reset, false if not yet reached.
+	 */
 	public boolean runAgain() {
-		synchronized(this.lock) {
-			final long current = utils.getSystemMillis();
-			// first run
-			if(this.last == -1L) {
-				this.last = current;
-				return true;
-			}
-			final long since = current - this.last;
-			// run again
-			if(since >= this.coolDuration.getMS()) {
-				this.last = current;
-				return true;
-			}
-		}
+		final long current = this.getCurrent();
+		// first run
+		if(this.last.compareAndSet(-1L, current))
+			return true;
+		// run again
+		final long expected = this.last.get();
+		if(expected == -1L)
+			return false;
+		if(current - expected >= this.duration.getMS())
+			return this.last.compareAndSet(expected, current);
 		// cooling
 		return false;
 	}
@@ -54,26 +55,24 @@ public class CoolDown {
 
 
 	public void reset() {
-		synchronized(this.lock) {
-			this.last = -1L;
-		}
+		this.last.set(-1L);
 	}
 
 
 
 	// set duration
 	public void setDuration(final long ms) {
-		this.coolDuration.set(ms, xTimeU.MS);
+		this.duration.set(ms, xTimeU.MS);
 	}
 	public void setDuration(final String time) {
-		this.coolDuration.set(time);
+		this.duration.set(time);
 	}
 	public void setDuration(final xTime time) {
-		this.coolDuration.set(time);
+		this.duration.set(time);
 	}
 	// get duration
 	public xTime getDuration() {
-		return this.coolDuration.clone();
+		return this.duration.clone();
 	}
 
 
