@@ -54,8 +54,35 @@ public class CoolDown {
 
 
 
+	public long getCurrent() {
+		return utils.getSystemMillis();
+	}
+	public long getLast() {
+		return this.last.get();
+	}
+
+
+
+	public long getTimeSince() {
+		final long last = this.last.get();
+		if(last == -1)
+			return -1;
+		return this.getCurrent() - last;
+	}
+	public long getTimeUntil() {
+		final long last = this.last.get();
+		if(last == -1)
+			return -1;
+		return (last + this.duration.getMS()) - this.getCurrent();
+	}
+
+
+
 	public void reset() {
 		this.last.set(-1L);
+	}
+	public void resetRun() {
+		this.last.set(utils.getSystemMillis());
 	}
 
 
