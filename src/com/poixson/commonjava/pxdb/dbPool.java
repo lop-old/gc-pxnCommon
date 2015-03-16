@@ -82,7 +82,7 @@ public class dbPool {
 		dbWorker worker = null;
 		synchronized(this.workers) {
 			final CoolDown maxHardBlocking = CoolDown.get("5s");
-			maxHardBlocking.runAgain();
+			maxHardBlocking.resetRun();
 			int count = 0;
 			while(true) {
 				count = getWorkerCount();
