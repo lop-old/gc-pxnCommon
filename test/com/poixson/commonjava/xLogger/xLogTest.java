@@ -1,5 +1,7 @@
 package com.poixson.commonjava.xLogger;
 
+import org.junit.Assert;
+
 import com.poixson.commonjava.Failure;
 import com.poixson.commonjava.xVars;
 
@@ -15,17 +17,15 @@ public class xLogTest {
 		if(log == null) {
 			synchronized(instanceLock) {
 				if(log == null) {
-					if(Failure.hasFailed()) return null;
+					assertHasntFailed();
 					xVars.debug(true);
 					log = xLog.getRoot();
-					if(Failure.hasFailed()) return null;
+					assertHasntFailed();
 					log.setLevel(xLevel.ALL);
-					log.publish();
-					log.title("Testing pxnCommon");
 				}
 			}
 		}
-		if(Failure.hasFailed()) return null;
+		assertHasntFailed();
 		return log;
 	}
 	public static xLog get(final String name) {
@@ -50,6 +50,15 @@ public class xLogTest {
 	}
 	public static void trace(final Throwable e) {
 		get().trace(e);
+	}
+
+
+
+	public static void assertHasntFailed() {
+		Assert.assertFalse(
+			"Failed!",
+			Failure.hasFailed()
+		);
 	}
 
 
