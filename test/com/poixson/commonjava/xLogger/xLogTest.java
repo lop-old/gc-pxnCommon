@@ -1,6 +1,7 @@
 package com.poixson.commonjava.xLogger;
 
 import com.poixson.commonjava.Failure;
+import com.poixson.commonjava.xVars;
 
 
 public class xLogTest {
@@ -15,6 +16,7 @@ public class xLogTest {
 			synchronized(instanceLock) {
 				if(log == null) {
 					if(Failure.hasFailed()) return null;
+					xVars.debug(true);
 					log = xLog.getRoot();
 					if(Failure.hasFailed()) return null;
 					log.setLevel(xLevel.ALL);
