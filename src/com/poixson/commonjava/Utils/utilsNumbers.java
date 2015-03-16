@@ -173,19 +173,19 @@ public final class utilsNumbers {
 
 
 
-	public static double round(final double value, final int product) {
+	public static double round(final double value, final double product) {
 		final double prod = (double) product;
-		final double val = Math.round( value / prod );
+		final double val = (double) ((long) Math.round( value / prod ));
 		return val * prod;
 	}
-	public static double floor(final double value, final int product) {
+	public static double floor(final double value, final double product) {
 		final double prod = (double) product;
-		final double val = Math.floor( value / prod );
+		final double val = (double) ((long) Math.floor( value / prod ));
 		return val * prod;
 	}
-	public static double ceil(final double value, final int product) {
+	public static double ceil(final double value, final double product) {
 		final double prod = (double) product;
-		final double val = Math.ceil( value / prod );
+		final double val = (double) ((long) Math.ceil( value / prod ));
 		return val * prod;
 	}
 
@@ -194,19 +194,19 @@ public final class utilsNumbers {
 	public static int round(final int value, final int product) {
 		return (int) round(
 				(double) value,
-				product
+				(double) product
 		);
 	}
 	public static int floor(final int value, final int product) {
 		return (int) floor(
 				(double) value,
-				product
+				(double) product
 		);
 	}
 	public static int ceil(final int value, final int product) {
 		return (int) ceil(
 				(double) value,
-				product
+				(double) product
 		);
 	}
 
@@ -215,19 +215,19 @@ public final class utilsNumbers {
 	public static long round(final long value, final int product) {
 		return (long) round(
 				(double) value,
-				product
+				(double) product
 		);
 	}
 	public static long floor(final long value, final int product) {
 		return (long) floor(
 				(double) value,
-				product
+				(double) product
 		);
 	}
 	public static long ceil(final long value, final int product) {
 		return (long) ceil(
 				(double) value,
-				product
+				(double) product
 		);
 	}
 
