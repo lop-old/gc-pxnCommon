@@ -32,6 +32,17 @@ public class xLogTest {
 
 
 
+	public static void testStart(final String name) {
+		get().publish();
+		get().title("Testing "+name+"..");
+	}
+	public static void testPassed(final String name) {
+		get().title(name+" passed!");
+		get().publish();
+	}
+	public static void title(final String msg) {
+		get().title(msg);
+	}
 	public static void publish(final String msg) {
 		get().publish("*** "+msg);
 	}
