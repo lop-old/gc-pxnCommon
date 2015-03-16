@@ -1,85 +1,72 @@
 package com.poixson.commonjava.utils.xThreadPool;
 
-import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
-import com.poixson.commonjava.Failure;
-import com.poixson.commonjava.Utils.utilsThread;
+import com.poixson.commonjava.Utils.Keeper;
+import com.poixson.commonjava.Utils.xTime;
 import com.poixson.commonjava.Utils.threads.xThreadPool;
 import com.poixson.commonjava.xLogger.xLogTest;
 
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class xThreadPoolFiringTest {
 
+	private static final String TEST_NAME_MAIN  = "xThreadPool Main";
+	private static final String TEST_NAME_SHORT = "xThreadPool Short";
+	private static final String TEST_NAME_LONG  = "xThreadPool Long";
+
+	protected static final xTime MAX_RUN_TIME = xTime.get("10s");
+
+	// main pool
+	private static final int TASK_COUNT_MAIN    = 10000;
+	// short pool
 	private static final int THREAD_COUNT_SHORT = 1;
+	private static final int TASK_COUNT_SHORT   = 10000;
+	// long pool
 	private static final int THREAD_COUNT_LONG  = 20;
-	private static final int TASK_COUNT_MAIN  = 1000;
-	private static final int TASK_COUNT_SHORT = 1000;
-	private static final int TASK_COUNT_LONG  = 1000;
+	private static final int TASK_COUNT_LONG    = 10000;
 
-	private static volatile Thread mainThread = null;
-
-	private final xThreadPool pool_main;
-	private final xThreadPool pool_short;
-	private final xThreadPool pool_long;
-
-	private volatile xThreadQueuer queuer_main  = null;
-	private volatile xThreadQueuer queuer_short = null;
-	private volatile xThreadQueuer queuer_long  = null;
+	@SuppressWarnings("unused")
+	private static final Keeper keeper = Keeper.get();
 
 
 
 	public xThreadPoolFiringTest() {
-		assertHasntFailed();
-		xLogTest.publish("Starting up thread pools..");
-		this.pool_main = xThreadPool.getMainPool();
-		this.pool_short = xThreadPool.get("short", THREAD_COUNT_SHORT);
-		this.pool_long  = xThreadPool.get("long",  THREAD_COUNT_LONG);
-		assertHasntFailed();
-		// start main thread pool
-		mainThread = new Thread() {
-			@Override
-			public void run() {
-				xThreadPool.getMainPool().run();
-			}
-		};
-		mainThread.start();
-		assertHasntFailed();
-		// start more thread pools
-		this.pool_short.Start();
-		this.pool_long.Start();
-		utilsThread.Sleep(20L);
-		assertHasntFailed();
 	}
 
 
 
-	@Test
-	public void StartFiringTest() {
-		assertHasntFailed();
-		// task producers
-		this.queuer_main  = new xThreadQueuer(this.pool_main,  TASK_COUNT_MAIN);
-		this.queuer_short = new xThreadQueuer(this.pool_short, TASK_COUNT_SHORT);
-		this.queuer_long  = new xThreadQueuer(this.pool_long,  TASK_COUNT_LONG);
-		assertHasntFailed();
-		// start producers
-		xLogTest.publish("Starting task producers..");
-		xThreadQueuer.runAll();
-		// ensure all finished
-		Assert.assertTrue(this.queuer_main.hasFinished());
-		Assert.assertTrue(this.queuer_short.hasFinished());
-		Assert.assertTrue(this.queuer_long.hasFinished());
-		assertHasntFailed();
-		xLogTest.publish("xThreadPool Tests Passed!");
-	}
-
-
-
-	public static void assertHasntFailed() {
-		Assert.assertFalse(
-			"App Failed!",
-			Failure.hasFailed()
+	// main pool
+	@Test (timeout=30000)
+	public void testPool1_Main() {
+		xLogTest.testStart(TEST_NAME_MAIN);
+		new xThreadQueuer(
+				xThreadPool.getMainPool(),
+				TASK_COUNT_MAIN
 		);
+		xLogTest.testPassed(TEST_NAME_MAIN);
+	}
+	// short pool
+	@Test (timeout=30000)
+	public void testPool2_Short() {
+		xLogTest.testStart(TEST_NAME_SHORT);
+		new xThreadQueuer(
+				xThreadPool.get("short", THREAD_COUNT_SHORT),
+				TASK_COUNT_SHORT
+		);
+		xLogTest.testPassed(TEST_NAME_SHORT);
+	}
+	// long pool
+	@Test (timeout=30000)
+	public void testPool3_Long() {
+		xLogTest.testStart(TEST_NAME_LONG);
+		new xThreadQueuer(
+				xThreadPool.get("long", THREAD_COUNT_LONG),
+				TASK_COUNT_LONG
+		);
+		xLogTest.testPassed(TEST_NAME_LONG);
 	}
 
 

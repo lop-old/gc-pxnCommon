@@ -1,12 +1,10 @@
 package com.poixson.commonjava.utils.xThreadPool;
 
-import java.util.Iterator;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
-
 import org.junit.Assert;
 
+import com.poixson.commonjava.Failure;
 import com.poixson.commonjava.Utils.CoolDown;
+import com.poixson.commonjava.Utils.utilsNumbers;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.threads.xThreadPool;
 import com.poixson.commonjava.xLogger.xLogTest;
@@ -14,103 +12,68 @@ import com.poixson.commonjava.xLogger.xLogTest;
 
 class xThreadQueuer {
 
-	private static final Set<xThreadQueuer> instances = new CopyOnWriteArraySet<xThreadQueuer>();
-	private static volatile boolean allFinished = false;
-	private static final CoolDown maxRunTime = CoolDown.get("10s");
-
-	private final xThreadPool pool;
-	private final int maxTaskCount;
-	private volatile int currentTaskCount = 0;
-	private volatile boolean finished = false;
 
 
-
-	public xThreadQueuer(final xThreadPool pool, final int maxTaskCount) {
-		this.pool = pool;
-		this.maxTaskCount = maxTaskCount;
-		this.currentTaskCount = 0;
-		xLogTest.publish("Testing with "+
-				(pool.getMaxThreads() == 0
-					? "MAIN thread"
-					: Integer.toString(pool.getMaxThreads())+" threads"
-				)+" and "+
-				Integer.toString(maxTaskCount)+" tasks");
-		// reset cooldown
-		maxRunTime.reset();
-		maxRunTime.runAgain();
-		this.finished = false;
-		instances.add(this);
-	}
-
-
-
-	public boolean hasFinished() {
-		return this.finished;
-	}
-	public static boolean allFinished() {
-		return allFinished;
-	}
-
-
-
-	public static void runAll() {
-		// reset cooldown
-		maxRunTime.reset();
-		maxRunTime.runAgain();
-		boolean allfinished;
-		boolean hasadded;
-		while(true) {
-			allfinished = true;
-			hasadded = false;
-			// run the instances
-			final Iterator<xThreadQueuer> it = instances.iterator();
-			while(it.hasNext()) {
-				final xThreadQueuer queuer = it.next();
-				if(!queuer.hasFinished()) {
-					// run instance
-					if(queuer.queueMore())
-						hasadded = true;
-					allfinished = false;
-				}
-			}
-			if(allfinished)
-				break;
-			// max run timeout
+	public xThreadQueuer(final xThreadPool pool, final int taskCount) {
+		if(pool == null)  throw new NullPointerException();
+		if(taskCount < 1) throw new IllegalArgumentException();
+		assertHasntFailed();
+		// start thread pool
+		pool.Start();
+		utilsThread.Sleep(10L);
+		assertHasntFailed();
+		// timeout
+		final CoolDown cool = CoolDown.get(xThreadPoolFiringTest.MAX_RUN_TIME);
+		cool.resetRun();
+		// queue tasks
+		final xThreadRunnable run = new xThreadRunnable(taskCount);
+		for(int i=0; i<taskCount; i++) {
 			Assert.assertFalse(
-				"Run Timeout!",
-				maxRunTime.runAgain()
+					"Tasks took to long to complete!",
+					cool.runAgain()
 			);
-			if(!hasadded)
-				utilsThread.Sleep(10L);
+			pool.runLater(run);
 		}
-		xLogTest.publish("Finished xThreadPool Tests");
-		allFinished = true;
+		assertHasntFailed();
+		// wait for tasks to finish
+		while(!run.hasFinished()) {
+			Assert.assertFalse(
+					"Tasks took to long to complete!",
+					cool.runAgain()
+			);
+			utilsThread.Sleep(10L);
+		}
+		final long since = cool.getTimeSince();
+		xLogTest.publish("Finished tasks in "+Long.toString(since)+
+				"ms to run "+Long.toString(taskCount)+" tasks  "+
+				utilsNumbers.FormatDecimal( "0.000", ((double)since) / ((double)taskCount))+"ms per task  "+
+				utilsNumbers.FormatDecimal( "0.0",   ((double)taskCount) / ((double)since))+" tasks per ms."
+		);
+		// stop thread pool
+		final int count = pool.getThreadCount();
+		xLogTest.publish("Active threads: "+Integer.toString(pool.getActiveCount())+
+				" ["+Integer.toString(count)+"]");
+		pool.Stop();
+		assertHasntFailed();
+		// wait for pool to stop
+		if(count > 0 && !pool.isMainPool()) {
+			while(pool.isRunning()) {
+				xLogTest.publish("Waiting for pool to stop..");
+				utilsThread.Sleep(100L);
+				xLogTest.publish("Active threads: "+Integer.toString(pool.getActiveCount())+
+						" ["+Integer.toString(pool.getThreadCount())+"]");
+			}
+		}
+		assertHasntFailed();
 	}
 
 
 
-	public boolean queueMore() {
-		if(this.maxTaskCount <= this.currentTaskCount) {
-			while(!this.pool.isEmpty())
-				utilsThread.Sleep(10L);
-			xLogTest.publish("Finished testing pool");
-			this.finished = true;
-			return false;
-		}
-		if(Math.min(1, this.pool.getMaxThreads()) + 5 <= this.pool.getActiveCount())
-			return false;
-		// queue another task
-		this.pool.runLater(
-			new Runnable() {
-				@Override
-				public void run() {
-					if(xThreadPool.DETAILED_LOGGING)
-						xLogTest.publish("TICK");
-				}
-			}
+	public static void assertHasntFailed() {
+		Assert.assertFalse(
+			"Failed!",
+			Failure.hasFailed()
 		);
-		this.currentTaskCount++;
-		return true;
 	}
 
 
