@@ -65,14 +65,14 @@ public class CoolDown {
 
 	public long getTimeSince() {
 		final long last = this.last.get();
-		if(last == -1)
-			return -1;
+		if(last == -1L)
+			return -1L;
 		return this.getCurrent() - last;
 	}
 	public long getTimeUntil() {
 		final long last = this.last.get();
-		if(last == -1)
-			return -1;
+		if(last == -1L)
+			return -1L;
 		return (last + this.duration.getMS()) - this.getCurrent();
 	}
 
