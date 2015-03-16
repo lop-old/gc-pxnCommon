@@ -53,9 +53,12 @@ public class xTime {
 	public static xTime get() {
 		return new xTime(0);
 	}
-	public static xTime get(final Long ms, final TimeUnit unit) {
-		if(ms == null) return null;
-		return get().set(ms.longValue(), unit);
+	public static xTime get(final long ms) {
+		return get(ms, xTimeU.MS);
+	}
+	public static xTime get(final long value, final TimeUnit unit) {
+		if(value < 0) return null;
+		return get().set(value, unit);
 	}
 	public static xTime get(final String value) {
 		if(utils.isEmpty(value)) return null;
