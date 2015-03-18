@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 import com.poixson.commonjava.xLogger.xLevel;
 import com.poixson.commonjava.xLogger.xLog;
@@ -187,6 +188,42 @@ public final class utils {
 		default:
 		}
 		return false;
+	}
+
+
+
+	// compare versions
+	public static String compareVersions(final String versionA, final String versionB) {
+		if(utils.isEmpty(versionA) || utils.isEmpty(versionB))
+			throw new NullPointerException();
+		final String normA = normalisedVersion(versionA);
+		final String normB = normalisedVersion(versionB);
+		final int cmp = normA.compareTo(normB);
+		if(cmp < 0)
+			return "<";
+		if(cmp > 0)
+			return ">";
+		return "=";
+	}
+	public static String normalisedVersion(final String version) {
+		final int maxWidth = 5;
+		final String[] split = Pattern.compile(".", Pattern.LITERAL).split(version);
+		final StringBuilder output = new StringBuilder();
+		for(final String s : split) {
+			output.append(
+					String.format("%"+maxWidth+'s', s)
+			);
+		}
+		return output.toString();
+	}
+	public static boolean checkJavaVersion(final String requiredVersion) {
+		final String javaVersion;
+		{
+			final String vers = System.getProperty("java.version");
+			if(vers == null || vers.isEmpty()) throw new NullPointerException("Failed to get java version");
+			javaVersion = vers.replace('_', '.');
+		}
+		return !(compareVersions(javaVersion, requiredVersion).equals("<"));
 	}
 
 
