@@ -4,7 +4,7 @@ Version         : 3.5.%{BUILD_NUMBER}
 Release         : 1
 BuildArch       : noarch
 Prefix          : %{_javadir}
-Requires        : java >= 7
+Requires        : java >= 8
 %define  _rpmfilename  %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm
 %define  jarfile       "%{SOURCE_ROOT}/pxnCommon-%{version}.jar"
 
