@@ -251,6 +251,18 @@ public abstract class xApp implements xStartable {
 
 
 
+	public long getUptime() {
+		if(this.startTime == -1)
+			return 0;
+		return xClock.get(true).millis() - this.startTime;
+	}
+	public String getUptimeString() {
+//TODO:
+		return "<UPTIME>";
+	}
+
+
+
 	// mvn properties
 	public String getName() {
 		return this.mvnprops.name;
