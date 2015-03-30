@@ -497,11 +497,14 @@ public class xThreadPool implements xStartable {
 		);
 	}
 	public static void ExitNow() {
+		ExitNow(0);
+	}
+	public static void ExitNow(final int status) {
 		// display threads still running
 		utilsThread.displayStillRunning();
 		System.out.println();
 		System.out.println();
-		System.exit(0);
+		System.exit(status);
 	}
 
 
