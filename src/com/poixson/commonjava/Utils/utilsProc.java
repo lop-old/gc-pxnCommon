@@ -57,11 +57,11 @@ public final class utilsProc {
 				private volatile File fle = null;
 				private volatile RandomAccessFile acc = null;
 				private volatile FileLock lck = null;
-				public Thread init(final File file,
-						final RandomAccessFile access, final FileLock lock) {
+				public Thread init(final File file, final RandomAccessFile access, final FileLock lock) {
 					this.fle = file;
 					this.acc = access;
 					this.lck = lock;
+					this.setName("LockFileRelease");
 					return this;
 				}
 				@Override
