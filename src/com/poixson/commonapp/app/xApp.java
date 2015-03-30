@@ -49,17 +49,7 @@ public abstract class xApp implements xStartable {
 	@SuppressWarnings("unused")
 	private static final Keeper keeper = Keeper.get();
 
-	public enum APP_STATE {
-		STARTUP,
-		RUNNING,
-		STOPPING,
-		STOPPED
-	}
-	protected volatile APP_STATE state = APP_STATE.STOPPED;
-
-	@SuppressWarnings("unused")
 	private volatile long startTime = -1;
-	protected volatile int initLevel = 0;
 
 	// mvn properties
 	protected final mvnProps mvnprops;
@@ -255,7 +245,8 @@ public abstract class xApp implements xStartable {
 
 	@Override
 	public boolean isRunning() {
-		return this.initLevel != 0;
+		return xAppManager.get()
+				.isRunning();
 	}
 
 
