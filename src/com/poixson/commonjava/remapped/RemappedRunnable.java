@@ -45,12 +45,15 @@ public class RemappedRunnable extends xRunnable {
 		if(utils.isEmpty(methodName)) throw new NullPointerException();
 		this.setTaskName( utils.isEmpty(taskName) ? methodName : taskName );
 		this.obj = targetClass;
-		final Class<?> clss = targetClass.getClass();
+		// static or instance class
+		final Class<?> clss =
+				(targetClass instanceof Class)
+				? (Class<?>) targetClass
+				: targetClass.getClass();
+		if(clss == null) throw new RuntimeException();
 		// find method to call
 		this.method = clss.getMethod(methodName);
-		if(this.method == null)
-			throw new NoSuchMethodException();
-		xLog.getRoot().finest("New Runnable created for: "+clss.getName()+"::"+methodName+"()");
+		if(this.method == null) throw new NoSuchMethodException();
 	}
 
 
