@@ -488,13 +488,17 @@ public class xThreadPool implements xStartable {
 		}
 	}
 	public static void Exit() {
-		getMainPool().runLater(
-				RemappedRunnable.get(
-						"Exit",
-						xThreadPool.class,
-						"ExitNow"
-				)
-		);
+		try {
+			getMainPool().runLater(
+					new RemappedRunnable(
+							xThreadPool.class,
+							"ExitNow"
+					)
+			);
+		} catch (Exception e) {
+			xLog.getRoot().trace(e);
+			ExitNow(1);
+		}
 	}
 	public static void ExitNow() {
 		ExitNow(0);
