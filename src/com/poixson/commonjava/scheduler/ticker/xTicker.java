@@ -3,6 +3,7 @@ package com.poixson.commonjava.scheduler.ticker;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.poixson.commonjava.EventListener.xHandler;
+import com.poixson.commonjava.Utils.Keeper;
 import com.poixson.commonjava.Utils.xStartable;
 import com.poixson.commonjava.Utils.xTime;
 import com.poixson.commonjava.scheduler.xScheduledTask;
@@ -15,6 +16,9 @@ public class xTicker extends xHandler implements xStartable {
 
 	public static final String SCHEDULER_NAME = "xTicker";
 
+	protected static volatile xTicker instance = null;
+	protected static final Object instanceLock = new Object();
+
 	protected final xTime interval = xTime.get("1s");
 	protected final AtomicLong nextId = new AtomicLong(0);
 
@@ -22,8 +26,18 @@ public class xTicker extends xHandler implements xStartable {
 
 
 
-	public xTicker() {
+	public static xTicker get() {
+		if(instance == null) {
+			synchronized(instanceLock) {
+				if(instance == null)
+					instance = new xTicker();
+			}
+		}
+		return instance;
+	}
+	protected xTicker() {
 		super();
+		Keeper.add(this);
 	}
 
 
