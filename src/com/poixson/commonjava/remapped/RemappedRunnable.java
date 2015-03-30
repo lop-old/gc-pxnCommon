@@ -8,7 +8,7 @@ import com.poixson.commonjava.Utils.xRunnable;
 import com.poixson.commonjava.xLogger.xLog;
 
 
-public class RemappedRunnable implements Runnable {
+public class RemappedRunnable extends xRunnable {
 
 	protected final Object obj;
 	protected final Method method;
@@ -16,31 +16,34 @@ public class RemappedRunnable implements Runnable {
 
 
 	public static RemappedRunnable get(final Object targetClass, final String methodName) {
+		return get(null, targetClass, methodName);
+	}
+	public static RemappedRunnable get(final String taskName,
+			final Object targetClass, final String methodName) {
 		try {
-			final RemappedRunnable mapped =
-					new RemappedRunnable(targetClass, methodName);
-			return mapped;
+			return new RemappedRunnable(
+					taskName,
+					targetClass,
+					methodName
+			);
 		} catch (Exception e) {
 			xLog.getRoot().trace(e);
 		}
 		return null;
 	}
-	public static xRunnable get(final String taskName,
-			final Object targetClass, final String methodName) {
-		return xRunnable.cast(
-				taskName,
-				RemappedRunnable.get(targetClass, methodName)
-		);
-	}
-	public static Thread getThread(final Object targetClass, final String methodName) {
-		return new Thread(
-			get(targetClass, methodName)
-		);
-	}
+
+
+
 	public RemappedRunnable(final Object targetClass, final String methodName)
+			throws NoSuchMethodException, SecurityException {
+		this(null, targetClass, methodName);
+	}
+	public RemappedRunnable(final String taskName,
+			final Object targetClass, final String methodName)
 			throws NoSuchMethodException, SecurityException {
 		if(targetClass == null)       throw new NullPointerException();
 		if(utils.isEmpty(methodName)) throw new NullPointerException();
+		this.setTaskName( utils.isEmpty(taskName) ? methodName : taskName );
 		this.obj = targetClass;
 		final Class<?> clss = targetClass.getClass();
 		// find method to call
