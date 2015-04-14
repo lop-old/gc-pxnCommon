@@ -232,9 +232,7 @@ public abstract class xApp implements xStartable {
 	// stop console input
 	@xAppStep(type=StepType.SHUTDOWN, title="Console", priority=32)
 	public void _shutdown_console_() {
-		final xConsole console = xLog.peekConsole();
-		if(console != null)
-			console.Stop();
+		xLog.shutdown();
 	}
 
 
