@@ -93,6 +93,21 @@ public class xHandler {
 		}
 	}
 	/**
+	 * Unregister an event listener by class type.
+	 * @param clss
+	 */
+	public void unregister(final Class<? extends xListener> clss) {
+		if(this.listeners.isEmpty()) return;
+		synchronized(this.listeners){
+			final Iterator<ListenerHolder> it = this.listeners.iterator();
+			while(it.hasNext()) {
+				final ListenerHolder listener = it.next();
+				if(clss.isInstance(listener.listener))
+					it.remove();
+			}
+		}
+	}
+	/**
 	 * Unregister all listeners.
 	 */
 	public void unregisterAll() {
