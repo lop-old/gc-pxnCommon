@@ -179,9 +179,7 @@ public class jlineConsole implements xConsole {
 			try {
 				AnsiConsole.systemUninstall();
 			} catch (Exception ignore) {}
-			System.out.print("\r  "+utilsString.repeat(DEFAULT_PROMPT.length(), " "));
 			this.setPrompt("");
-			flush();
 		}
 	}
 	@Override
@@ -260,6 +258,17 @@ public class jlineConsole implements xConsole {
 		);
 		flush();
 	}
+	public void clearLine() {
+		final PrintStream out = getOriginalOut();
+		final String prompt = this.getPrompt();
+		synchronized(printLock) {
+			if(utils.isEmpty(prompt))
+				out.print('\r');
+			else
+				out.print('\r'+utilsString.repeat(prompt.length()+2, ' ')+'\r');
+			out.flush();
+		}
+	}
 	// flush buffer
 	@Override
 	public void flush() {
@@ -298,6 +307,7 @@ public class jlineConsole implements xConsole {
 		if(reader == null) return;
 		try {
 			synchronized(printLock) {
+				this.clearLine();
 				reader.drawLine();
 				reader.flush();
 			}
@@ -314,13 +324,15 @@ public class jlineConsole implements xConsole {
 	@Override
 	public void setPrompt(final String prompt) {
 		this.prompt = prompt;
-		reader.setPrompt(prompt);
+		reader.setPrompt(this.getPrompt());
+		this.drawPrompt();
 	}
 	@Override
 	public String getPrompt() {
-		if(this.prompt == null || this.prompt.isEmpty())
-			return DEFAULT_PROMPT;
-		return this.prompt;
+		final String prompt = this.prompt;
+		return utils.isEmpty(prompt)
+				? DEFAULT_PROMPT
+				: prompt;
 	}
 
 
