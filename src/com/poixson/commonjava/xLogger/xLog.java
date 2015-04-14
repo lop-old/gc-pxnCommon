@@ -10,6 +10,8 @@ import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.EventListener.xHandler;
 import com.poixson.commonjava.Utils.Keeper;
 import com.poixson.commonjava.Utils.utils;
+import com.poixson.commonjava.scheduler.ticker.xTickPrompt;
+import com.poixson.commonjava.scheduler.ticker.xTicker;
 import com.poixson.commonjava.xLogger.formatters.defaultLogFormatter;
 import com.poixson.commonjava.xLogger.handlers.logHandlerConsole;
 
@@ -308,8 +310,13 @@ public class xLog extends xLogPrinting {
 		return consoleHandler;
 	}
 	public static void shutdown() {
-		if(peekConsole() != null)
-			peekConsole().Stop();
+		// stop prompt ticker
+		xTicker.get()
+			.unregister(xTickPrompt.class);
+		// stop console input
+		final xConsole console = peekConsole();
+		if(console != null)
+			console.Stop();
 	}
 
 
