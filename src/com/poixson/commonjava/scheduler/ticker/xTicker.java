@@ -1,7 +1,9 @@
 package com.poixson.commonjava.scheduler.ticker;
 
+import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.poixson.commonjava.EventListener.xEvent;
 import com.poixson.commonjava.EventListener.xHandler;
 import com.poixson.commonjava.Utils.Keeper;
 import com.poixson.commonjava.Utils.xStartable;
@@ -60,6 +62,35 @@ public class xTicker extends xHandler implements xStartable {
 	@Override
 	public boolean isRunning() {
 		return xScheduler.get().hasTask(SCHEDULER_NAME);
+	}
+
+
+
+	public void register(final xTickListener listener) {
+		if(listener == null) throw new NullPointerException("listener cannot be null");
+		final Method method;
+		try {
+			method = listener.getClass().getMethod("onTick", xTickEvent.class);
+		} catch (NoSuchMethodException e) {
+			log().severe("onTick method is missing!");
+			log().trace(e);
+			return;
+		} catch (SecurityException e) {
+			log().trace(e);
+			return;
+		}
+		if(method == null) throw new NullPointerException("onTick method is missing!");
+		final ListenerHolder holder = new xHandler.ListenerHolder(
+			listener,
+			method,
+			xEvent.Priority.NORMAL,
+			false, // threaded
+			false, // filter handled
+			true   // filter cancelled
+		);
+		log().finest("Registered listener ["+Long.toString(holder.id)+"] "+
+				listener.toString()+" "+method.getName());
+		this.listeners.add(holder);
 	}
 
 

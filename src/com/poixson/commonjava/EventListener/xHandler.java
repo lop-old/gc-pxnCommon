@@ -16,7 +16,8 @@ import com.poixson.commonjava.xLogger.xLog;
 
 public class xHandler {
 
-	protected final Set<ListenerHolder> listeners = new CopyOnWriteArraySet<ListenerHolder>();
+	protected final CopyOnWriteArraySet<ListenerHolder> listeners =
+			new CopyOnWriteArraySet<ListenerHolder>();
 
 
 
@@ -33,7 +34,7 @@ public class xHandler {
 		public final boolean threaded;
 		public final boolean filterHandled;
 		public final boolean filterCancelled;
-		protected ListenerHolder(final xListener listener, final Method method,
+		public ListenerHolder(final xListener listener, final Method method,
 				final Priority priority, final boolean threaded,
 				final boolean filterHandled, final boolean filterCancelled) {
 			if(listener == null) throw new NullPointerException("listener cannot be null");
@@ -75,7 +76,6 @@ public class xHandler {
 				annotate.filterCancelled()
 			);
 			toadd.add(holder);
-			// TODO: don't expect this index to be accurate or unique
 			log().finest("Registered listener ["+Long.toString(holder.id)+"] "+
 					listener.toString()+" "+method.getName());
 		}
