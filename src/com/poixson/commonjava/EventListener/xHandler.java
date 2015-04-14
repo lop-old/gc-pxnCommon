@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.atomic.AtomicLong;
 
 import com.poixson.commonjava.EventListener.xEvent.Priority;
 import com.poixson.commonjava.Utils.xRunnable;
@@ -23,6 +24,8 @@ public class xHandler {
 	 * Listener data holder.
 	 */
 	protected static class ListenerHolder {
+		private static final AtomicLong nextId = new AtomicLong(1);
+		public final long id;
 		public final xListener listener;
 		public final Method method;
 		public final Priority priority;
@@ -36,6 +39,7 @@ public class xHandler {
 			if(listener == null) throw new NullPointerException("listener cannot be null");
 			if(method   == null) throw new NullPointerException("method cannot be null");
 			if(priority == null) throw new NullPointerException("priority cannot be null");
+			this.id = nextId.getAndIncrement();
 			this.listener        = listener;
 			this.method          = method;
 			this.priority        = priority;
@@ -72,8 +76,7 @@ public class xHandler {
 			);
 			toadd.add(holder);
 			// TODO: don't expect this index to be accurate or unique
-			log().finest("Registered listener ["+
-					Integer.toString(this.listeners.size() + toadd.size())+"] "+
+			log().finest("Registered listener ["+Long.toString(holder.id)+"] "+
 					listener.toString()+" "+method.getName());
 		}
 		this.listeners.addAll(toadd);
