@@ -1,14 +1,14 @@
-package com.poixson.commonjava.utils.utilsCrypt;
+package com.poixson.commonjava.utils;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.poixson.commonjava.xLogTest;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsCrypt;
-import com.poixson.commonjava.xLogger.xLogTest;
 
 
-public class base64Test {
+public class utilsCryptTest {
 
 	private static final String TEST_NAME_ENCODE = "Base64 Encode";
 	private static final String TEST_NAME_DECODE = "Base64 Decode";

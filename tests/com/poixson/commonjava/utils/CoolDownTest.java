@@ -1,11 +1,11 @@
-package com.poixson.commonjava.utils.CoolDown;
+package com.poixson.commonjava.utils;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.poixson.commonjava.xLogTest;
 import com.poixson.commonjava.Utils.CoolDown;
 import com.poixson.commonjava.Utils.utilsThread;
-import com.poixson.commonjava.xLogger.xLogTest;
 
 
 public class CoolDownTest {
