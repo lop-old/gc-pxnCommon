@@ -150,7 +150,7 @@ public abstract class xApp implements xStartable {
 
 	// lock file
 	@xAppStep(type=StepType.STARTUP, title="LockFile", priority=1)
-	public void _startup_lockfile_() {
+	public void __STARTUP_lockfile() {
 		final String filename = this.getName()+".lock";
 		if(!utilsProc.lockInstance(filename)) {
 			Failure.fail("Failed to get lock on file: "+filename);
@@ -166,7 +166,7 @@ public abstract class xApp implements xStartable {
 
 	// ensure not root
 	@xAppStep(type=StepType.STARTUP, title="RootCheck", priority=3)
-	public void _startup_rootcheck_() {
+	public void __STARTUP_rootcheck() {
 		final String user = System.getProperty("user.name");
 		if("root".equals(user))
 			log().warning("It is recommended to run as a non-root user");
@@ -177,20 +177,20 @@ public abstract class xApp implements xStartable {
 
 	// clock
 	@xAppStep(type=StepType.STARTUP, title="Clock", priority=4)
-	public void _startup_clock_() {
+	public void __STARTUP_clock() {
 		this.startTime = xClock.get(true).millis();
 	}
 
 	// scheduler
 	@xAppStep(type=StepType.STARTUP, title="Scheduler", priority=75)
-	public void _startup_scheduler_() {
+	public void __STARTUP_scheduler() {
 		xScheduler.get()
 			.Start();
 	}
 
 	// tick scheduler
 	@xAppStep(type=StepType.STARTUP, title="Ticker", priority=80)
-	public void _startup_ticker_() {
+	public void __STARTUP_ticker() {
 		xTicker.get()
 			.Start();
 	}
@@ -204,34 +204,34 @@ public abstract class xApp implements xStartable {
 
 	// total time running
 	@xAppStep(type=StepType.SHUTDOWN, title="TimeRunning", priority=100)
-	public void _shutdown_timerunning_() {
+	public void __SHUTDOWN_timerunning() {
 //TODO: display total time running
 	}
 
 	// stop ticker
 	@xAppStep(type=StepType.SHUTDOWN, title="Ticker", priority=80)
-	public void _shutdown_ticker_() {
+	public void __SHUTDOWN_ticker() {
 		xTicker.get()
 			.Stop();
 	}
 
 	// stop scheduler
 	@xAppStep(type=StepType.SHUTDOWN, title="Scheduler", priority=75)
-	public void _shutdown_scheduler_() {
+	public void __SHUTDOWN_scheduler() {
 		xScheduler.get()
 			.Stop();
 	}
 
 	// stop thread pools
 	@xAppStep(type=StepType.SHUTDOWN, title="ThreadPools", priority=70)
-	public void _shutdown_threadpools_() {
+	public void __SHUTDOWN_threadpools() {
 		xThreadPool
 			.ShutdownAll();
 	}
 
 	// stop console input
 	@xAppStep(type=StepType.SHUTDOWN, title="Console", priority=32)
-	public void _shutdown_console_() {
+	public void __SHUTDOWN_console() {
 		xLog.shutdown();
 	}
 
