@@ -4,11 +4,11 @@
                              http://maven.apache.org/maven-v4_0_0.xsd">
 <!-- http://maven-repository.com/ -->
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.poixson</groupId>
+	<name>pxnCommon</name>
 	<artifactId>pxnCommon</artifactId>
-	<packaging>jar</packaging>
+	<groupId>com.poixson</groupId>
 	<version>3.5.x</version>
-	<name>pxnCommon-Library</name>
+	<packaging>jar</packaging>
 	<url>http://poixson.com</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,8 +16,8 @@
 		<org.yaml-version>1.15</org.yaml-version>
 		<org.xeustechnologies-version>2.6</org.xeustechnologies-version>
 		<junit-version>4.12</junit-version>
-		<maven-compiler-plugin-version>3.2</maven-compiler-plugin-version>
-		<maven-jar-plugin-version>2.5</maven-jar-plugin-version>
+		<maven-compiler-plugin-version>3.3</maven-compiler-plugin-version>
+		<maven-jar-plugin-version>2.6</maven-jar-plugin-version>
 		<surefire-version>2.18.1</surefire-version>
 	</properties>
 	<scm>
