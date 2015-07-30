@@ -41,7 +41,7 @@
 	</ciManagement>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
-		<testSourceDirectory>test</testSourceDirectory>
+		<testSourceDirectory>tests</testSourceDirectory>
 		<finalName>${project.artifactId}-${project.version}</finalName>
 		<plugins>
 			<plugin>
