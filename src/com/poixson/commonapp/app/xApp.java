@@ -119,7 +119,6 @@ public abstract class xApp implements xStartable {
 
 
 
-	protected abstract void initConfig();
 	protected abstract void processArgs(final String[] args);
 
 
@@ -158,11 +157,7 @@ public abstract class xApp implements xStartable {
 		}
 	}
 
-	// load config
-	@xAppStep(type=StepType.STARTUP, title="Config", priority=2)
-	public void _startup_config_() {
-		this.initConfig();
-	}
+
 
 	// ensure not root
 	@xAppStep(type=StepType.STARTUP, title="RootCheck", priority=5)
@@ -175,11 +170,15 @@ public abstract class xApp implements xStartable {
 			log().warning("It is recommended to run as a non-administrator user");
 	}
 
+
+
 	// clock
 	@xAppStep(type=StepType.STARTUP, title="Clock", priority=11)
 	public void __STARTUP_clock() {
 		this.startTime = xClock.get(true).millis();
 	}
+
+
 
 	// scheduler
 	@xAppStep(type=StepType.STARTUP, title="Scheduler", priority=75)
@@ -187,6 +186,8 @@ public abstract class xApp implements xStartable {
 		xScheduler.get()
 			.Start();
 	}
+
+
 
 	// tick scheduler
 	@xAppStep(type=StepType.STARTUP, title="Ticker", priority=80)
@@ -208,12 +209,16 @@ public abstract class xApp implements xStartable {
 //TODO: display total time running
 	}
 
+
+
 	// stop ticker
 	@xAppStep(type=StepType.SHUTDOWN, title="Ticker", priority=80)
 	public void __SHUTDOWN_ticker() {
 		xTicker.get()
 			.Stop();
 	}
+
+
 
 	// stop scheduler
 	@xAppStep(type=StepType.SHUTDOWN, title="Scheduler", priority=75)
@@ -222,12 +227,16 @@ public abstract class xApp implements xStartable {
 			.Stop();
 	}
 
+
+
 	// stop thread pools
 	@xAppStep(type=StepType.SHUTDOWN, title="ThreadPools", priority=70)
 	public void __SHUTDOWN_threadpools() {
 		xThreadPool
 			.ShutdownAll();
 	}
+
+
 
 	// stop console input
 	@xAppStep(type=StepType.SHUTDOWN, title="Console", priority=32)
