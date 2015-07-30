@@ -149,7 +149,7 @@ public abstract class xApp implements xStartable {
 
 
 	// lock file
-	@xAppStep(type=StepType.STARTUP, title="LockFile", priority=1)
+	@xAppStep(type=StepType.STARTUP, title="LockFile", priority=3)
 	public void __STARTUP_lockfile() {
 		final String filename = this.getName()+".lock";
 		if(!utilsProc.lockInstance(filename)) {
@@ -165,7 +165,7 @@ public abstract class xApp implements xStartable {
 	}
 
 	// ensure not root
-	@xAppStep(type=StepType.STARTUP, title="RootCheck", priority=3)
+	@xAppStep(type=StepType.STARTUP, title="RootCheck", priority=5)
 	public void __STARTUP_rootcheck() {
 		final String user = System.getProperty("user.name");
 		if("root".equals(user))
@@ -176,7 +176,7 @@ public abstract class xApp implements xStartable {
 	}
 
 	// clock
-	@xAppStep(type=StepType.STARTUP, title="Clock", priority=4)
+	@xAppStep(type=StepType.STARTUP, title="Clock", priority=11)
 	public void __STARTUP_clock() {
 		this.startTime = xClock.get(true).millis();
 	}
