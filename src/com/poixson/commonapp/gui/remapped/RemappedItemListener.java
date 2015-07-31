@@ -18,8 +18,8 @@ public class RemappedItemListener implements ItemListener {
 
 	public RemappedItemListener(final Object listenerClass, final String methodName)
 			throws NoSuchMethodException {
-		if(listenerClass == null)     throw new NullPointerException();
-		if(utils.isEmpty(methodName)) throw new NullPointerException();
+		if(listenerClass == null)     throw new NullPointerException("listenerClass argument is required!");
+		if(utils.isEmpty(methodName)) throw new NullPointerException("methodName argument is required!");
 		this.obj = listenerClass;
 		final Class<?> clss = listenerClass.getClass();
 		this.method = clss.getMethod(methodName, ItemEvent.class);

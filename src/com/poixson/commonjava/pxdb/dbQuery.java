@@ -42,7 +42,7 @@ public class dbQuery {
 	}
 	// new query (must already have lock)
 	public dbQuery(final dbWorker worker) {
-		if(worker == null) throw new NullPointerException("worker cannot be null");
+		if(worker == null) throw new NullPointerException("worker argument is required!");
 		this.worker = worker;
 		this.tablePrefix = worker.getTablePrefix();
 	}
@@ -51,7 +51,7 @@ public class dbQuery {
 
 	// prepared query
 	public dbQuery Prepare(final String sqlStr) throws SQLException {
-		if(utils.isEmpty(sqlStr)) throw new IllegalArgumentException("sql cannot be empty");
+		if(utils.isEmpty(sqlStr)) throw new IllegalArgumentException("sql argument is required!");
 		synchronized(this.lock) {
 			if(!this.worker.inUse()) {
 				log().trace(new IllegalAccessException("dbWorker not locked!"));
@@ -77,7 +77,7 @@ public class dbQuery {
 		return this;
 	}
 	public boolean Prep(final String sqlStr) {
-		if(utils.isEmpty(sqlStr)) throw new IllegalArgumentException("sql cannot be empty");
+		if(utils.isEmpty(sqlStr)) throw new IllegalArgumentException("sql argument is required!");
 		try {
 			if(this.Prepare(sqlStr) != null)
 				return true;
@@ -501,7 +501,7 @@ public class dbQuery {
 
 	// lock table (readable/unreadable)
 	public boolean lockTable(final String tableName, final boolean readable) {
-		if(utils.isEmpty(tableName)) throw new NullPointerException("tableName cannot be null");
+		if(utils.isEmpty(tableName)) throw new NullPointerException("tableName argument is required!");
 		synchronized(this.lock) {
 			final StringBuilder str = (new StringBuilder())
 				.append("LOCK TABLES `").append(tableName).append("` ")

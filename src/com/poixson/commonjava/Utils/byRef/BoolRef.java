@@ -19,7 +19,7 @@ public class BoolRef {
 		this.value = val;
 	}
 	public void value(final Boolean val) {
-		if(val == null) throw new NullPointerException();
+		if(val == null) throw new NullPointerException("val argument is required!");
 		this.value = val.booleanValue();
 	}
 	public boolean value() {

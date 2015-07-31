@@ -16,7 +16,7 @@ public final class utilsSwing {
 
 	// change font size
 	public static void changeFontSize(final JComponent component, final int size) {
-		if(component == null) throw new NullPointerException();
+		if(component == null) throw new NullPointerException("component argument is required!");
 		final Font font = component.getFont();
 		component.setFont(new Font(
 			font.getFontName(),

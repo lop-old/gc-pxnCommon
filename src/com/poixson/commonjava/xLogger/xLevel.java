@@ -32,7 +32,7 @@ public class xLevel implements Serializable {
 
 
 	private xLevel(final String name, final int value) {
-		if(utils.isEmpty(name)) throw new NullPointerException("name cannot be null");
+		if(utils.isEmpty(name)) throw new NullPointerException("name argument is required!");
 		this.name = name.toUpperCase();
 		this.value = value;
 		if(value != Integer.MIN_VALUE && value < minValue) minValue = value;

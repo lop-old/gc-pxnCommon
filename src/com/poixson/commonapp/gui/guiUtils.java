@@ -52,8 +52,8 @@ public final class guiUtils {
 	 */
 	public static boolean forceDispatchThread(final Object callingFrom,
 			final String callingMethod, final Object...args) {
-		if(callingFrom == null)          throw new NullPointerException();
-		if(utils.isEmpty(callingMethod)) throw new NullPointerException();
+		if(callingFrom == null)          throw new NullPointerException("callingFrom argument is required!");
+		if(utils.isEmpty(callingMethod)) throw new NullPointerException("callingMethod argument is required!");
 		// already running from event dispatch thread
 		if(SwingUtilities.isEventDispatchThread())
 			return false;

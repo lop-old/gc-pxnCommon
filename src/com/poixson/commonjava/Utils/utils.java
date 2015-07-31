@@ -194,8 +194,8 @@ public final class utils {
 
 	// compare versions
 	public static String compareVersions(final String versionA, final String versionB) {
-		if(utils.isEmpty(versionA) || utils.isEmpty(versionB))
-			throw new NullPointerException();
+		if(utils.isEmpty(versionA)) throw new NullPointerException("versionA argument is required!");
+		if(utils.isEmpty(versionB)) throw new NullPointerException("versionB argument is required!");
 		final String normA = normalisedVersion(versionA);
 		final String normB = normalisedVersion(versionB);
 		final int cmp = normA.compareTo(normB);

@@ -13,7 +13,7 @@ public class defaultLogFormatter implements xLogFormatter {
 
 	@Override
 	public String formatMsg(final xLogRecord record) {
-		if(record == null) throw new NullPointerException();
+		if(record == null) throw new NullPointerException("record argument is required!");
 		if(record.level() == null)
 			return record.msg();
 		String[] parts = new String[4];
@@ -32,13 +32,13 @@ public class defaultLogFormatter implements xLogFormatter {
 
 	// timestamp
 	protected String partTimestamp(final xLogRecord record) {
-		if(record == null) throw new NullPointerException();
+		if(record == null) throw new NullPointerException("record argument is required!");
 		SimpleDateFormat dateFormat = new SimpleDateFormat("D yyyy-MM-dd HH:mm:ss");
 		return dateFormat.format(new Long(record.timestamp()));
 	}
 	// level
 	protected String partLevel(final xLogRecord record) {
-		if(record == null) throw new NullPointerException();
+		if(record == null) throw new NullPointerException("record argument is required!");
 		return (new StringBuilder())
 			.append("[")
 			.append(utilsString.padCenter(
@@ -51,7 +51,7 @@ public class defaultLogFormatter implements xLogFormatter {
 	}
 	// [logger] [crumbs]
 	protected String partCrumbs(final xLogRecord record) {
-		if(record == null) throw new NullPointerException();
+		if(record == null) throw new NullPointerException("record argument is required!");
 		final StringBuilder crumbs = new StringBuilder();
 		for(String name : record.getNameTree()) {
 			if(name == null || name.isEmpty())

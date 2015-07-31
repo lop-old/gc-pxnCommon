@@ -73,7 +73,7 @@ public class xPluginManager {
 		));
 	}
 	public void loadAll(final File dir) {
-		if(dir == null) throw new NullPointerException();
+		if(dir == null) throw new NullPointerException("dir argument is required!");
 		// create plugins dir if needed
 		if(!dir.isDirectory())
 			dir.mkdir();
@@ -104,7 +104,7 @@ public class xPluginManager {
 		this.log().info("Found [ "+Integer.toString(count)+" ] plugins.");
 	}
 	public PluginDAO load(final File file) {
-		if(file == null) throw new NullPointerException();
+		if(file == null) throw new NullPointerException("file argument is required!");
 		if(!file.exists()) {
 			this.log().warning("Plugin file not found: "+file.toString());
 			return null;
@@ -145,7 +145,7 @@ public class xPluginManager {
 		this.initAll("Main Class");
 	}
 	public void initAll(final String classField) {
-		if(utils.isEmpty(classField)) throw new NullPointerException();
+		if(utils.isEmpty(classField)) throw new NullPointerException("classField argument is required!");
 		// init plugins
 		synchronized(this.plugins) {
 			for(final PluginDAO dao : this.plugins.values()) {
@@ -155,7 +155,7 @@ public class xPluginManager {
 		}
 	}
 	public void init(final PluginDAO dao) {
-		if(dao == null) throw new NullPointerException();
+		if(dao == null) throw new NullPointerException("dao argument is required!");
 		final xLog log = dao.log;
 		// already inited
 		if(dao.plugin != null) {
@@ -273,13 +273,13 @@ public class xPluginManager {
 
 
 	public void addPlugin(final PluginDAO plugin) {
-		if(plugin == null) throw new NullPointerException();
+		if(plugin == null) throw new NullPointerException("plugin argument is required!");
 		synchronized(this.plugins) {
 			this.plugins.put(plugin.name, plugin);
 		}
 	}
 	public void removePlugin(final String name) {
-		if(utils.isEmpty(name)) throw new NullPointerException();
+		if(utils.isEmpty(name)) throw new NullPointerException("name argument is required!");
 		synchronized(this.plugins) {
 			final PluginDAO dao = this.plugins.get(name);
 			if(dao.plugin != null) {

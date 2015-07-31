@@ -13,7 +13,7 @@ public class xCommandEvent extends xEventData {
 
 
 	public xCommandEvent(final String line) {
-		if(utils.isEmpty(line)) throw new NullPointerException();
+		if(utils.isEmpty(line)) throw new NullPointerException("line argument is required!");
 		String str = line.trim();
 		boolean ishelp = false;
 		// starts with ?
@@ -43,7 +43,7 @@ public class xCommandEvent extends xEventData {
 
 
 	public String arg(final int index) {
-		if(index < 0) throw new ArrayIndexOutOfBoundsException();
+		if(index < 0) throw new ArrayIndexOutOfBoundsException("index cannot be less than 0");
 		if(index > this.args.length-1) return null;
 		return this.args[index];
 	}

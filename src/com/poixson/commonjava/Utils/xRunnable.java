@@ -33,7 +33,7 @@ public class xRunnable implements Runnable {
 		return cast(null, run);
 	}
 	public static xRunnable cast(final String name, final Runnable run) {
-		if(run == null) throw new NullPointerException();
+		if(run == null) throw new NullPointerException("run argument is required!");
 		if(run instanceof xRunnable) {
 			final xRunnable xrun = (xRunnable) run;
 			if(utils.notEmpty(name))
@@ -50,7 +50,7 @@ public class xRunnable implements Runnable {
 
 	@Override
 	public void run() {
-		if(this.task == null) throw new NullPointerException();
+		if(this.task == null) throw new NullPointerException("task variable cannot be null!");
 		this.task.run();
 	}
 

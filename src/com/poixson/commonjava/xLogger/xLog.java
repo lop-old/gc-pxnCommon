@@ -159,7 +159,7 @@ public class xLog extends xLogPrinting {
 	// new logger instance
 	protected xLog(final String logName, final xLog parentLogger) {
 		if(utils.isEmpty(logName) && parentLogger != null)
-			throw new NullPointerException("name cannot be null");
+			throw new NullPointerException("name argument is required!");
 		this.name = logName;
 		this.parent = parentLogger;
 		// new root logger
@@ -218,7 +218,7 @@ public class xLog extends xLogPrinting {
 
 	// formatter
 	public void setFormatter(final xLogFormatter formatter, final Class<?> type) {
-		if(formatter == null) throw new NullPointerException("formatter cannot be null");
+		if(formatter == null) throw new NullPointerException("formatter argument is required!");
 		for(final xLogHandler handler : this.handlers)
 			if(type == null || type.equals(handler.getClass()))
 				handler.setFormatter(formatter);
@@ -323,7 +323,7 @@ public class xLog extends xLogPrinting {
 
 	// set command handler
 	public static void setCommandHandler(final xHandler handler) {
-		if(handler        == null) throw new NullPointerException();
+		if(handler        == null) throw new NullPointerException("handler argument is required!");
 		if(consoleHandler == null) throw new RuntimeException("Console handler not set; command handler not supported.");
 		commandHandler = handler;
 		consoleHandler.setCommandHandler(handler);

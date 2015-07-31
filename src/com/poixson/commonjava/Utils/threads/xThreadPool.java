@@ -115,7 +115,7 @@ public class xThreadPool implements xStartable {
 		return pool;
 	}
 	protected xThreadPool(final String name, final int size) {
-		if(utils.isEmpty(name)) throw new IllegalArgumentException();
+		if(utils.isEmpty(name)) throw new NullPointerException("name argument is required!");
 		if(MAIN_POOL_NAME.equals(name)) {
 			if(size != 0) throw new IllegalArgumentException();
 			this.isMainPool = true;
@@ -358,7 +358,7 @@ public class xThreadPool implements xStartable {
 
 	// run a task as soon as possible (generally 0.9ms)
 	public void runNow(final Runnable run) {
-		if(run == null) throw new NullPointerException("run cannot be null");
+		if(run == null) throw new NullPointerException("run argument is required!");
 		final xRunnable task = xRunnable.cast(run);
 		// already in main thread, run it now
 		if(this.isMainPool()) {
@@ -426,7 +426,7 @@ public class xThreadPool implements xStartable {
 	}
 	// queue a task
 	public void runLater(final Runnable run) {
-		if(run == null) throw new NullPointerException("run cannot be null");
+		if(run == null) throw new NullPointerException("run argument is required!");
 		final xRunnable task = xRunnable.cast(run);
 		// pass to main pool
 		if(this.getMaxThreads() < 1 && !this.isMainPool) {

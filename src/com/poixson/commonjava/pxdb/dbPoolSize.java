@@ -25,7 +25,7 @@ public class dbPoolSize extends Thread {
 
 	// hard/soft pool size limits
 	protected dbPoolSize(final dbPool pool) {
-		if(pool == null) throw new NullPointerException("pool cannot be null");
+		if(pool == null) throw new NullPointerException("pool argument is required!");
 		this.pool = pool;
 		this.setName(pool.dbKey()+" Warning Thread");
 	}

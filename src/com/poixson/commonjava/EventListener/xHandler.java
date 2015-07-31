@@ -37,9 +37,9 @@ public class xHandler {
 		public ListenerHolder(final xListener listener, final Method method,
 				final Priority priority, final boolean threaded,
 				final boolean filterHandled, final boolean filterCancelled) {
-			if(listener == null) throw new NullPointerException("listener cannot be null");
-			if(method   == null) throw new NullPointerException("method cannot be null");
-			if(priority == null) throw new NullPointerException("priority cannot be null");
+			if(listener == null) throw new NullPointerException("listener argument is required!");
+			if(method   == null) throw new NullPointerException("method argument is required!");
+			if(priority == null) throw new NullPointerException("priority argument is required!");
 			this.id = nextId.getAndIncrement();
 			this.listener        = listener;
 			this.method          = method;
@@ -58,7 +58,7 @@ public class xHandler {
 	 * @param listener
 	 */
 	public void register(final xListener listener) {
-		if(listener == null) throw new NullPointerException("listener cannot be null");
+		if(listener == null) throw new NullPointerException("listener argument is required!");
 		final Set<ListenerHolder> toadd = new HashSet<ListenerHolder>();
 		// find annotated listener methods
 		for(final Method method : listener.getClass().getMethods()) {
@@ -128,7 +128,7 @@ public class xHandler {
 		triggerNow( (xThreadPool) null, event, onlyPriority );
 	}
 	public void triggerNow(final xThreadPool pool, final xEventData event, final Priority onlyPriority) {
-		if(event == null) throw new NullPointerException();
+		if(event == null) throw new NullPointerException("event argument is required!");
 		final xThreadPool p = (pool == null ? xThreadPool.getMainPool() : pool);
 		p.runNow(
 			this.getRunnable(event, onlyPriority)
@@ -144,7 +144,7 @@ public class xHandler {
 		triggerLater(null, event, onlyPriority);
 	}
 	public void triggerLater(final xThreadPool pool, final xEventData event, final Priority onlyPriority) {
-		if(event == null) throw new NullPointerException();
+		if(event == null) throw new NullPointerException("event argument is required!");
 		final xThreadPool p = (pool == null ? xThreadPool.getMainPool() : pool);
 		p.runLater(
 			this.getRunnable(event, onlyPriority)
@@ -165,7 +165,7 @@ public class xHandler {
 			}
 			@Override
 			public void run() {
-				if(this.event == null) throw new NullPointerException();
+				if(this.event == null) throw new NullPointerException("event argument is required!");
 				if(this.priority == null) {
 					for(final Priority p : Priority.values())
 						doTrigger(this.event, p);
@@ -184,8 +184,8 @@ public class xHandler {
 	 * @param priority The priority level for the event. (this is required)
 	 */
 	public void doTrigger(final xEventData event, final Priority priority) {
-		if(event    == null) throw new NullPointerException("event cannot be null");
-		if(priority == null) throw new NullPointerException("priority cannot be null");
+		if(event    == null) throw new NullPointerException("event argument is required!");
+		if(priority == null) throw new NullPointerException("priority argument is required!");
 //		log().finest("doTrigger ( "+
 //				utilsString.getLastPart(".", event.getClass().getName())+" , "+priority.name()+
 //				(event.isHandled()   ? " <HANDLED>"   : "" )+

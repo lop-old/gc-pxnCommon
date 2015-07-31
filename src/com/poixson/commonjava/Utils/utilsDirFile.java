@@ -36,7 +36,7 @@ public final class utilsDirFile {
 	 * @return
 	 */
 	public static File[] listContents(final File dir, final String[] extensions) {
-		if(dir == null) throw new NullPointerException();
+		if(dir == null) throw new NullPointerException("dir argument is required!");
 		if(!dir.isDirectory()) return null;
 		return dir.listFiles(new FileFilter() {
 			private String[] exts;
@@ -125,8 +125,8 @@ public final class utilsDirFile {
 	}
 	// load yml from jar
 	public static InputJar OpenJarResource(final File jarFile, final String fileName) {
-		if(jarFile == null)         throw new NullPointerException("jarFile cannot be null");
-		if(utils.isEmpty(fileName)) throw new NullPointerException("fileName cannot be null/empty");
+		if(jarFile == null)         throw new NullPointerException("jarFile argument is required!");
+		if(utils.isEmpty(fileName)) throw new NullPointerException("fileName argument is required!");
 		try {
 			final JarFile jar = new JarFile(jarFile);
 			final JarEntry entry = jar.getJarEntry(fileName);
@@ -168,7 +168,7 @@ public final class utilsDirFile {
 	// build path+file
 	public static String buildFilePath(final String filePath,
 			final String fileName, final String extension) {
-		if(utils.isEmpty(fileName)) throw new NullPointerException("fileName cannot be null/empty");
+		if(utils.isEmpty(fileName)) throw new NullPointerException("fileName argument is required!");
 		// file extension
 		final String ext;
 		if(utils.isEmpty(extension))

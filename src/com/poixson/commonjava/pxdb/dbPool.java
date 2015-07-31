@@ -28,7 +28,7 @@ public class dbPool {
 
 
 	protected dbPool(final dbConfig config) {
-		if(config == null) throw new NullPointerException("config object cannot be null");
+		if(config == null) throw new NullPointerException("config argument is required!");
 		this.config = config;
 		this.poolSize = new dbPoolSize(this);
 		this.poolSize.setSoft(config.getPoolSizeWarn());
@@ -46,7 +46,7 @@ public class dbPool {
 
 	// get db key
 	public String dbKey() {
-		if(this.config == null) throw new NullPointerException("config object cannot be null");
+		if(this.config == null) throw new NullPointerException("config argument is required!");
 		return this.config.dbKey();
 	}
 

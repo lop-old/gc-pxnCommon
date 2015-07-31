@@ -70,7 +70,7 @@ public abstract class xApp implements xStartable {
 
 	// call this from main(args)
 	protected static void initMain(final String[] args, final Class<? extends xApp> appClass) {
-		if(appClass == null) throw new NullPointerException();
+		if(appClass == null) throw new NullPointerException("appClass argument is required!");
 		// single instance
 		if(appInstance != null) {
 			log().trace(new RuntimeException(ALREADY_STARTED_EXCEPTION));

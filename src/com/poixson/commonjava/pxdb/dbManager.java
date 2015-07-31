@@ -73,9 +73,9 @@ public final class dbManager {
 
 	// new db connection pool and initial connection
 	protected static boolean register(final dbConfig config) {
-		if(config == null) throw new NullPointerException();
+		if(config == null) throw new NullPointerException("config argument is required!");
 		if(utils.isEmpty(config.dbKey()))
-			throw new IllegalArgumentException("dbKey returned from dbConfig is empty!");
+			throw new NullPointerException("dbKey returned from dbConfig is empty!");
 		synchronized(pools) {
 			if(!configs.containsKey(config.dbKey()))
 				configs.put(config.dbKey(), config);

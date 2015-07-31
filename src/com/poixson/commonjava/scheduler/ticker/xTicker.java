@@ -67,7 +67,7 @@ public class xTicker extends xHandler implements xStartable {
 
 
 	public void register(final xTickListener listener) {
-		if(listener == null) throw new NullPointerException("listener cannot be null");
+		if(listener == null) throw new NullPointerException("listener argument is required!");
 		final Method method;
 		try {
 			method = listener.getClass().getMethod("onTick", xTickEvent.class);

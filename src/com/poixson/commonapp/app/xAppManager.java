@@ -50,8 +50,8 @@ public class xAppManager implements xStartable, FailureAction {
 		public final Method method;
 
 		public StepDAO(final xAppStep annotation, final Method method) {
-			if(annotation == null) throw new NullPointerException();
-			if(method     == null) throw new NullPointerException();
+			if(annotation == null) throw new NullPointerException("annotation argument is required!");
+			if(method     == null) throw new NullPointerException("method argument is required!");
 			this.type     = annotation.type();
 			this.priority = annotation.priority();
 			// strip method down to name

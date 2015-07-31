@@ -17,7 +17,7 @@ public final class utilsObject {
 
 	@SuppressWarnings("unchecked")
 	public static <T> T cast(final Class<? extends T> clss, final Object object) {
-		if(clss == null) throw new NullPointerException();
+		if(clss == null) throw new NullPointerException("clss argument is required!");
 		if(object == null) return null;
 		try {
 			if( String.class.equals(clss) && !(object instanceof String) )
@@ -36,7 +36,7 @@ public final class utilsObject {
 	 * @return
 	 */
 	public static <T> List<T> castList(final Class<? extends T> clss, final Collection<?> c) {
-		if(clss == null) throw new NullPointerException("clss cannot be null");
+		if(clss == null) throw new NullPointerException("clss argument is required!");
 		if(c    == null) return null;
 		try {
 			final List<T> result = new ArrayList<T>(c.size());
@@ -57,7 +57,7 @@ public final class utilsObject {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> castList(final Class<? extends T> clss, final Object object) {
-		if(clss   == null) throw new NullPointerException("clss cannot be null");
+		if(clss   == null) throw new NullPointerException("clss argument is required!");
 		if(object == null) return null;
 		try {
 			return castList(clss, (Collection<T>) object);
@@ -74,7 +74,7 @@ public final class utilsObject {
 	 * @return
 	 */
 	public static <T> Set<T> castSet(final Class<? extends T> clss, final Collection<?> c) {
-		if(clss == null) throw new NullPointerException("clss cannot be null");
+		if(clss == null) throw new NullPointerException("clss argument is required!");
 		if(c    == null) return null;
 		try {
 			final Set<T> result = new HashSet<T>(c.size());
@@ -95,7 +95,7 @@ public final class utilsObject {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> Set<T> castSet(final Class<? extends T> clss, final Object object) {
-		if(clss   == null) throw new NullPointerException("clss cannot be null");
+		if(clss   == null) throw new NullPointerException("clss argument is required!");
 		if(object == null) return null;
 		try {
 			return castSet(clss, (Collection<T>) object);
@@ -114,8 +114,8 @@ public final class utilsObject {
 	 */
 	public static <K, V> Map<K, V> castMap(final Class<? extends K> keyClss,
 			final Class<? extends V> valClss, final Map<?, ?> m) {
-		if(keyClss == null) throw new NullPointerException("key clss cannot be null");
-		if(valClss == null) throw new NullPointerException("val clss cannot be null");
+		if(keyClss == null) throw new NullPointerException("key argument is required!");
+		if(valClss == null) throw new NullPointerException("val argument is required!");
 		if(m       == null) return null;
 		try {
 			final Map<K, V> result = new HashMap<K, V>(m.size());
@@ -141,8 +141,8 @@ public final class utilsObject {
 	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> castMap(final Class<? extends K> keyClss,
 			final Class<? extends V> valClss, final Object object) {
-		if(keyClss == null) throw new NullPointerException("key clss cannot be null");
-		if(valClss == null) throw new NullPointerException("val clss cannot be null");
+		if(keyClss == null) throw new NullPointerException("key argument is required!");
+		if(valClss == null) throw new NullPointerException("val argument is required!");
 		if(object == null) return null;
 		try {
 			return castMap(keyClss, valClss, (Map<K, V>) object);

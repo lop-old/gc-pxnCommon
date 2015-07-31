@@ -19,7 +19,7 @@ public class xConfig {
 
 
 	public xConfig(final Map<String, Object> datamap) {
-		if(datamap == null) throw new NullPointerException();
+		if(datamap == null) throw new NullPointerException("datamap argument is required!");
 		this.datamap = datamap;
 	}
 	@Override

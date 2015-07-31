@@ -26,11 +26,11 @@ public class Keeper {
 
 
 	public static void add(final Object obj) {
-		if(obj == null) throw new NullPointerException();
+		if(obj == null) throw new NullPointerException("obj argument is required!");
 		holder.add(obj);
 	}
 	public static void remove(final Object obj) {
-		if(obj == null) throw new NullPointerException();
+		if(obj == null) throw new NullPointerException("obj argument is required!");
 		holder.remove(obj);
 	}
 

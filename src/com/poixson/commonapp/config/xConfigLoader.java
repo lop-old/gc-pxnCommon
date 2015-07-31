@@ -37,15 +37,15 @@ public final class xConfigLoader {
 		return Load(file, clss, false);
 	}
 	public static xConfig Load(final String file, final Class<? extends xConfig> clss, boolean checkInJar) {
-		if(utils.isEmpty(file)) throw new NullPointerException();
+		if(utils.isEmpty(file)) throw new NullPointerException("file argument is required!");
 		return Load(new File(file), clss, checkInJar);
 	}
 	public static xConfig Load(final File file, final Class<? extends xConfig> clss) {
 		return Load(file, clss, false);
 	}
 	public static xConfig Load(final File file, final Class<? extends xConfig> clss, boolean checkInJar) {
-		if(file == null) throw new NullPointerException();
-		if(clss == null) throw new NullPointerException();
+		if(file == null) throw new NullPointerException("file argument is required!");
+		if(clss == null) throw new NullPointerException("clss argument is required!");
 		final String fileName = file.toString();
 		// load file.yml
 		{
@@ -77,9 +77,9 @@ public final class xConfigLoader {
 		return LoadJar(jarFile, ymlFile, xConfig.class);
 	}
 	public static xConfig LoadJar(final File jarFile, final String ymlFile, final Class<? extends xConfig> clss) {
-		if(jarFile == null)        throw new NullPointerException();
-		if(utils.isEmpty(ymlFile)) throw new NullPointerException();
-		if(clss == null)           throw new NullPointerException();
+		if(jarFile == null)        throw new NullPointerException("jarFile argument is required!");
+		if(utils.isEmpty(ymlFile)) throw new NullPointerException("yamlFile argument is required!");
+		if(clss == null)           throw new NullPointerException("clss argument is required!");
 		final utilsDirFile.InputJar in = utilsDirFile.OpenJarResource(jarFile, ymlFile);
 		if(in == null) return null;
 		try {
@@ -92,8 +92,8 @@ public final class xConfigLoader {
 
 
 	public static <T> xConfig Load(final InputStream in, final Class<? extends xConfig> clss) {
-		if(in   == null) throw new NullPointerException();
-		if(clss == null) throw new NullPointerException();
+		if(in   == null) throw new NullPointerException("in argument is required!");
+		if(clss == null) throw new NullPointerException("clss argument is required!");
 		try {
 			final Yaml yml = new Yaml();
 			@SuppressWarnings("unchecked")
@@ -113,8 +113,8 @@ public final class xConfigLoader {
 		return null;
 	}
 	public static boolean Save(final File file, final Map<String, Object> datamap) {
-		if(file == null)           throw new NullPointerException();
-		if(utils.isEmpty(datamap)) throw new NullPointerException();
+		if(file == null)           throw new NullPointerException("file argument is required!");
+		if(utils.isEmpty(datamap)) throw new NullPointerException("datamap argument is required!");
 		final Yaml yml = new Yaml();
 		PrintWriter out = null;
 		try {

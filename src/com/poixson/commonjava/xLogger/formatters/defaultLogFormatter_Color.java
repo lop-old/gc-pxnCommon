@@ -12,7 +12,7 @@ public class defaultLogFormatter_Color extends defaultLogFormatter {
 	// level
 	@Override
 	protected String partLevel(final xLogRecord record) {
-		if(record == null) throw new NullPointerException();
+		if(record == null) throw new NullPointerException("record argument is required!");
 		final xLevel level = record.level();
 		final String color;
 		// all, finest, finer, fine
