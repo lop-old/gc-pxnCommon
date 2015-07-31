@@ -86,8 +86,8 @@ public abstract class xApp implements xStartable {
 			try {
 				appInstance = appClass.newInstance();
 			} catch (ReflectiveOperationException e) {
-				Failure.fail(e.getMessage());
 				log().trace(e);
+				Failure.fail(e.getMessage());
 				return;
 			}
 		}

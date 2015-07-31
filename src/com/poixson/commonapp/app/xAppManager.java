@@ -190,8 +190,8 @@ public class xAppManager implements xStartable, FailureAction {
 				try {
 					dao.method.invoke(this.manager.app);
 				} catch (Exception e) {
-					Failure.fail("Startup failed at step: "+desc);
 					this.log().getWeak(desc).trace(e);
+					Failure.fail("Startup failed at step: "+desc);
 					break;
 				}
 				// sleep a moment
@@ -284,8 +284,8 @@ public class xAppManager implements xStartable, FailureAction {
 				try {
 					dao.method.invoke(this.manager.app);
 				} catch (Exception e) {
-					Failure.fail("Shutdown failed at step: "+desc);
 					this.log().getWeak(desc).trace(e);
+					Failure.fail("Shutdown failed at step: "+desc);
 					break;
 				}
 				// sleep a moment
