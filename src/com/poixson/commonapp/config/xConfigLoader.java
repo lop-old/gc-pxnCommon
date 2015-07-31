@@ -34,10 +34,16 @@ public final class xConfigLoader {
 
 	// load extended xConfig
 	public static xConfig Load(final String file, final Class<? extends xConfig> clss) {
+		return Load(file, clss, false);
+	}
+	public static xConfig Load(final String file, final Class<? extends xConfig> clss, boolean checkInJar) {
 		if(utils.isEmpty(file)) throw new NullPointerException();
-		return Load(new File(file), clss);
+		return Load(new File(file), clss, checkInJar);
 	}
 	public static xConfig Load(final File file, final Class<? extends xConfig> clss) {
+		return Load(file, clss, false);
+	}
+	public static xConfig Load(final File file, final Class<? extends xConfig> clss, boolean checkInJar) {
 		if(file == null) throw new NullPointerException();
 		if(clss == null) throw new NullPointerException();
 		final String fileName = file.toString();
@@ -49,7 +55,7 @@ public final class xConfigLoader {
 				return Load(in, clss);
 		}
 		// try loading as resource
-		{
+		if(checkInJar) {
 			final InputStream in = utilsDirFile.OpenResource(fileName);
 			if(in != null) {
 				log().fine("Loaded config from jar: "+fileName);
