@@ -12,33 +12,33 @@ import com.poixson.commonjava.Utils.byRef.StringRef;
 
 public class xConfig {
 
-	protected final Map<String, Object> data;
+	protected final Map<String, Object> datamap;
 
 	protected volatile boolean loadedFromResource = false;
 
 
 
-	public xConfig(final Map<String, Object> data) {
-		if(data == null) throw new NullPointerException();
-		this.data = data;
+	public xConfig(final Map<String, Object> datamap) {
+		if(datamap == null) throw new NullPointerException();
+		this.datamap = datamap;
 	}
 	@Override
 	public Object clone() {
-		return new xConfig(this.data);
+		return new xConfig(this.datamap);
 	}
 
 
 
 	// path exists
 	public boolean exists(final String path) {
-		return this.data.containsKey(path);
+		return this.datamap.containsKey(path);
 	}
 	// get object
 	public Object get(final String path) {
 		if(utils.isEmpty(path))
 			return null;
 		try {
-			return this.data.get(path);
+			return this.datamap.get(path);
 		} catch (Exception ignore) {}
 		return null;
 	}
@@ -47,7 +47,7 @@ public class xConfig {
 	public Map<String, Object> getPath(final String path) {
 		try {
 			if(path.contains(".")) {
-				Map<String, Object> map = this.data;
+				Map<String, Object> map = this.datamap;
 				final StringRef str = new StringRef(path);
 				while(str.notEmpty()) {
 					final String part = utilsString.getNextPart(".", str);

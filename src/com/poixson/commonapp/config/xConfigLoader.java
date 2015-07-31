@@ -62,7 +62,7 @@ public final class xConfigLoader {
 				final xConfig config = Load(in, clss);
 				if(config != null) {
 					config.loadedFromResource = true;
-					Save(file, config.data);
+					Save(file, config.datamap);
 					return config;
 				}
 			}
@@ -97,13 +97,13 @@ public final class xConfigLoader {
 		try {
 			final Yaml yml = new Yaml();
 			@SuppressWarnings("unchecked")
-			final Map<String, Object> data = (HashMap<String, Object>) yml.load(in);
-			if(utils.isEmpty(data))
+			final Map<String, Object> datamap = (HashMap<String, Object>) yml.load(in);
+			if(utils.isEmpty(datamap))
 				return null;
 			@SuppressWarnings("unchecked")
 			final Constructor<? extends Map<String, Object>> construct =
 				(Constructor<? extends Map<String, Object>>) clss.getDeclaredConstructor(Map.class);
-			return (xConfig) construct.newInstance(data);
+			return (xConfig) construct.newInstance(datamap);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
 				InvocationTargetException | NoSuchMethodException | SecurityException e) {
 			log().trace(e);
@@ -112,15 +112,15 @@ public final class xConfigLoader {
 		}
 		return null;
 	}
-	public static boolean Save(final File file, final Map<String, Object> data) {
-		if(file == null)        throw new NullPointerException();
-		if(utils.isEmpty(data)) throw new NullPointerException();
+	public static boolean Save(final File file, final Map<String, Object> datamap) {
+		if(file == null)           throw new NullPointerException();
+		if(utils.isEmpty(datamap)) throw new NullPointerException();
 		final Yaml yml = new Yaml();
 		PrintWriter out = null;
 		try {
 			out = new PrintWriter(file);
 			out.print(
-				yml.dump(data)
+				yml.dump(datamap)
 			);
 			log().fine("Saved config file: "+file.toString());
 			return true;
