@@ -7,7 +7,7 @@
 	<name>pxnCommon</name>
 	<artifactId>pxnCommon</artifactId>
 	<groupId>com.poixson</groupId>
-	<version>3.5.x</version>
+	<version>3.5.27</version>
 	<packaging>jar</packaging>
 	<url>http://poixson.com</url>
 	<properties>

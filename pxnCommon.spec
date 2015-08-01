@@ -1,6 +1,6 @@
 Name            : pxnCommon
 Summary         : Common library for PoiXson java projects
-Version         : 3.5.%{BUILD_NUMBER}
+Version         : 3.5.27
 Release         : 1
 BuildArch       : noarch
 Prefix          : %{_javadir}
