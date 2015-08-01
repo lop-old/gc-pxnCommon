@@ -16,6 +16,14 @@ public class RemappedActionListener implements ActionListener {
 
 
 
+	public static RemappedActionListener get(final Object listenerClass, final String methodName) {
+		try {
+			return new RemappedActionListener(listenerClass, methodName);
+		} catch (NoSuchMethodException e) {
+xLog.getRoot().trace(e);
+		}
+		throw new RuntimeException();
+	}
 	public RemappedActionListener(final Object listenerClass, final String methodName)
 			throws NoSuchMethodException {
 		if(listenerClass == null)     throw new NullPointerException("listenerClass argument is required!");

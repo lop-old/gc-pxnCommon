@@ -16,6 +16,14 @@ public class RemappedItemListener implements ItemListener {
 
 
 
+	public static RemappedItemListener get(final Object listenerClass, final String methodName) {
+		try {
+			return new RemappedItemListener(listenerClass, methodName);
+		} catch (NoSuchMethodException e) {
+xLog.getRoot().trace(e);
+		}
+		throw new RuntimeException();
+	}
 	public RemappedItemListener(final Object listenerClass, final String methodName)
 			throws NoSuchMethodException {
 		if(listenerClass == null)     throw new NullPointerException("listenerClass argument is required!");
