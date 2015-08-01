@@ -31,9 +31,11 @@ xLog.getRoot().trace(e);
 		this.obj = listenerClass;
 		final Class<?> clss = listenerClass.getClass();
 		this.method = clss.getMethod(methodName, ActionEvent.class);
-		if(this.method == null)
+		if(this.method == null) {
+xLog.getRoot().severe("Method: "+methodName+"() in class: "+listenerClass.getClass().getName());
 			throw new NoSuchMethodException();
-		xLog.getRoot().finest("New ActionListener created for: "+clss.getName()+"::"+methodName+"()");
+		}
+xLog.getRoot().finest("New ActionListener created for: "+clss.getName()+"::"+methodName+"()");
 	}
 
 
@@ -43,13 +45,13 @@ xLog.getRoot().trace(e);
 		try {
 			this.method.invoke(this.obj, event);
 		} catch (IllegalAccessException e) {
-			xLog.getRoot().trace(e);
+xLog.getRoot().trace(e);
 		} catch (IllegalArgumentException e) {
-			xLog.getRoot().trace(e);
+xLog.getRoot().trace(e);
 		} catch (InvocationTargetException e) {
-			xLog.getRoot().trace(e);
+xLog.getRoot().trace(e);
 		} catch (Exception e) {
-			xLog.getRoot().trace(e);
+xLog.getRoot().trace(e);
 		}
 	}
 
