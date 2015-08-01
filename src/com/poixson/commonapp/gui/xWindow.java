@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 
 import com.poixson.commonapp.app.xApp;
 import com.poixson.commonapp.gui.annotations.xWindowProperties;
+import com.poixson.commonapp.gui.remapped.RemappedWindowAdapter;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsString;
 
@@ -21,7 +22,8 @@ public abstract class xWindow extends JFrame implements Closeable {
 	private static final Map<String, xWindow> windows = new ConcurrentHashMap<String, xWindow>();
 
 	public final String windowName;
-	protected final AtomicBoolean closing = new AtomicBoolean(false);
+	protected final AtomicBoolean closing     = new AtomicBoolean(false);
+	private final   AtomicBoolean closeHooked = new AtomicBoolean(false);
 
 
 
@@ -63,6 +65,7 @@ public abstract class xWindow extends JFrame implements Closeable {
 
 
 	public void autoHeight(final int width) {
+		if(guiUtils.forceDispatchThread(this, "autoHeight")) return;
 		this.pack();
 		this.setSize(width, this.getHeight());
 	}
@@ -71,6 +74,7 @@ public abstract class xWindow extends JFrame implements Closeable {
 
 	// show window
 	public void Show() {
+		if(guiUtils.forceDispatchThread(this, "Show")) return;
 		this.setVisible(true);
 		if(!this.isFocused()) {
 			this.setVisible(true);
@@ -80,12 +84,22 @@ public abstract class xWindow extends JFrame implements Closeable {
 
 
 
+	protected void registerCloseHook() {
+		if(!this.closeHooked.compareAndSet(false, true))
+			return;
+		if(guiUtils.forceDispatchThread(this, "registerCloseHook")) return;
+		// window close event listener
+		this.addWindowListener(
+				RemappedWindowAdapter.get(
+						this,
+						"close"
+				)
+		);
+	}
 	@Override
 	public void close() {
-		if(!this.closing.compareAndSet(false, true))
-			return;
-		// run in event dispatch thread
 		if(guiUtils.forceDispatchThread(this, "close")) return;
+		if(!this.closing.compareAndSet(false, true)) return;
 		// close window
 		xApp.log().fine("Closing window: "+this.windowName);
 		this.dispose();
