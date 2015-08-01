@@ -19,7 +19,6 @@ import com.poixson.commonjava.Utils.xClock;
 import com.poixson.commonjava.Utils.xStartable;
 import com.poixson.commonjava.Utils.threads.xThreadPool;
 import com.poixson.commonjava.scheduler.xScheduler;
-import com.poixson.commonjava.scheduler.ticker.xTicker;
 import com.poixson.commonjava.xLogger.xConsole;
 import com.poixson.commonjava.xLogger.xLog;
 import com.poixson.commonjava.xLogger.xNoConsole;
@@ -189,15 +188,6 @@ public abstract class xApp implements xStartable {
 
 
 
-	// tick scheduler
-	@xAppStep(type=StepType.STARTUP, title="Ticker", priority=80)
-	public void __STARTUP_ticker() {
-		xTicker.get()
-			.Start();
-	}
-
-
-
 	// ------------------------------------------------------------------------------- //
 	// shutdown
 
@@ -207,15 +197,6 @@ public abstract class xApp implements xStartable {
 	@xAppStep(type=StepType.SHUTDOWN, title="TimeRunning", priority=100)
 	public void __SHUTDOWN_timerunning() {
 //TODO: display total time running
-	}
-
-
-
-	// stop ticker
-	@xAppStep(type=StepType.SHUTDOWN, title="Ticker", priority=80)
-	public void __SHUTDOWN_ticker() {
-		xTicker.get()
-			.Stop();
 	}
 
 
