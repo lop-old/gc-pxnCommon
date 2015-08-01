@@ -9,7 +9,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.nodes.Tag;
 
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsDirFile;
@@ -120,7 +122,7 @@ public final class xConfigLoader {
 		try {
 			out = new PrintWriter(file);
 			out.print(
-				yml.dump(datamap)
+				yml.dumpAs(datamap, Tag.MAP, FlowStyle.BLOCK)
 			);
 			log().fine("Saved config file: "+file.toString());
 			return true;
