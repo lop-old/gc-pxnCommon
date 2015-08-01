@@ -5,6 +5,7 @@ import java.awt.LayoutManager;
 import java.io.Closeable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JFrame;
 
@@ -20,6 +21,7 @@ public abstract class xWindow extends JFrame implements Closeable {
 	private static final Map<String, xWindow> windows = new ConcurrentHashMap<String, xWindow>();
 
 	public final String windowName;
+	protected final AtomicBoolean closing = new AtomicBoolean(false);
 
 
 
@@ -80,6 +82,8 @@ public abstract class xWindow extends JFrame implements Closeable {
 
 	@Override
 	public void close() {
+		if(!this.closing.compareAndSet(false, true))
+			return;
 		// run in event dispatch thread
 		if(guiUtils.forceDispatchThread(this, "close")) return;
 		// close window
