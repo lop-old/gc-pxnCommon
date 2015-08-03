@@ -1,5 +1,6 @@
 package com.poixson.commonjava.Utils;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -34,6 +35,34 @@ public final class utilsReflect {
 		for(int i = 0; i < classes.length; i++)
 			classes[i] = params[i].getClass();
 		return classes;
+	}
+
+
+
+	public static String getStaticString(final Class<?> clss, final String name) {
+		if(clss == null)        throw new NullPointerException();
+		if(utils.isEmpty(name)) throw new NullPointerException();
+		final Field field;
+		final String value;
+		try {
+			field = clss.getField(name);
+		} catch (NoSuchFieldException e) {
+			xLog.getRoot().trace(e);
+			return null;
+		} catch (SecurityException e) {
+			xLog.getRoot().trace(e);
+			return null;
+		}
+		try {
+			value = (String) field.get(String.class);
+		} catch (IllegalArgumentException e) {
+			xLog.getRoot().trace(e);
+			return null;
+		} catch (IllegalAccessException e) {
+			xLog.getRoot().trace(e);
+			return null;
+		}
+		return value;
 	}
 
 
