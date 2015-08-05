@@ -8,6 +8,11 @@ import java.util.regex.Pattern;
 public final class utilsNumbers {
 	private utilsNumbers() {}
 
+	/**
+	 * Max valid tcp/udp port number.
+	 */
+	public static final int MAX_PORT = 65535;
+
 
 
 	// true;
