@@ -53,9 +53,10 @@ public final class utilsNumbers {
 		return null;
 	}
 	public static int toInteger(final String value, final int def) {
-		final Integer num = toInteger(value);
-		if(num == null) return def;
-		return num.intValue();
+		try {
+			return Integer.parseInt(value);
+		} catch (NumberFormatException ignore) {}
+		return def;
 	}
 
 	// parse byte
@@ -67,9 +68,10 @@ public final class utilsNumbers {
 		return null;
 	}
 	public static byte toByte(final String value, final byte def) {
-		final Byte num = toByte(value);
-		if(num == null) return def;
-		return num.byteValue();
+		try {
+			return Byte.parseByte(value);
+		} catch (NumberFormatException ignore) {}
+		return def;
 	}
 
 	// parse short
@@ -81,9 +83,10 @@ public final class utilsNumbers {
 		return null;
 	}
 	public static short toShort(final String value, final short def) {
-		final Short num = toShort(value);
-		if(num == null) return def;
-		return num.shortValue();
+		try {
+			return Short.parseShort(value);
+		} catch (NumberFormatException ignore) {}
+		return def;
 	}
 
 	// parse long
@@ -95,9 +98,10 @@ public final class utilsNumbers {
 		return null;
 	}
 	public static long toLong(final String value, final long def) {
-		final Long num = toLong(value);
-		if(num == null) return def;
-		return num.longValue();
+		try {
+			return Long.parseLong(value);
+		} catch (NumberFormatException ignore) {}
+		return def;
 	}
 
 	// parse double
@@ -109,9 +113,10 @@ public final class utilsNumbers {
 		return null;
 	}
 	public static double toDouble(final String value, final double def) {
-		final Double num = toDouble(value);
-		if(num == null) return def;
-		return num.doubleValue();
+		try {
+			return Double.parseDouble(value);
+		} catch (NumberFormatException ignore) {}
+		return def;
 	}
 
 	// parse float
@@ -123,9 +128,10 @@ public final class utilsNumbers {
 		return null;
 	}
 	public static float toFloat(final String value, final float def) {
-		final Float num = toFloat(value);
-		if(num == null) return def;
-		return num.floatValue();
+		try {
+			return Float.parseFloat(value);
+		} catch (NumberFormatException ignore) {}
+		return def;
 	}
 
 	// parse boolean
@@ -149,7 +155,8 @@ public final class utilsNumbers {
 	}
 	public static boolean toBoolean(final String value, final boolean def) {
 		final Boolean bool = toBoolean(value);
-		if(bool == null) return def;
+		if(bool == null)
+			return def;
 		return bool.booleanValue();
 	}
 
