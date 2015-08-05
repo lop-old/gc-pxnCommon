@@ -16,6 +16,7 @@ import com.poixson.commonjava.xLogger.xLogTest;
 
 
 public class xSchedulersFiringTest {
+	static final String TEST_NAME = "Schedulers";
 
 	private static final boolean QUICK_CRON_TEST = true;
 
@@ -32,8 +33,8 @@ public class xSchedulersFiringTest {
 
 
 	public xSchedulersFiringTest() {
+		xLogTest.testStart(TEST_NAME);
 		assertHasntFailed();
-		xLogTest.publish("Starting xScheduler Firing Test..");
 		this.sched = xScheduler.get();
 		assertHasntFailed();
 		// start main thread pool
@@ -72,6 +73,7 @@ public class xSchedulersFiringTest {
 		// reset cooldown
 		maxRunTime.reset();
 		maxRunTime.runAgain();
+		xLogTest.testPassed(TEST_NAME);
 	}
 	@Test
 	public void StartFiringTest() {
