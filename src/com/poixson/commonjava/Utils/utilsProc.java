@@ -17,6 +17,7 @@ public final class utilsProc {
 	 * Get the pid for the jvm process.
 	 * @return process id number (pid)
 	 */
+	@SuppressWarnings("restriction")
 	public static int getPid() {
 		try {
 			final java.lang.management.RuntimeMXBean runtime =
