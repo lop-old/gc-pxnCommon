@@ -9,10 +9,10 @@ import com.poixson.commonjava.Utils.utilsThread;
 
 
 public class CoolDownTest {
+	static final String TEST_NAME = "CoolDown";
 
-	private static final String TEST_NAME = "CoolDown";
-	private static final long TEST_SLEEP_TIME   = 500L;
-	private static final long DEVIATION_ALLOWED = 50L;
+	static final long TEST_SLEEP_TIME   = 500L;
+	static final long DEVIATION_ALLOWED = 50L;
 
 
 

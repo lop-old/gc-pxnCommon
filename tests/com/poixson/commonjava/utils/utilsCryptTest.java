@@ -9,12 +9,11 @@ import com.poixson.commonjava.Utils.utilsCrypt;
 
 
 public class utilsCryptTest {
+	static final String TEST_NAME_ENCODE = "Base64 Encode";
+	static final String TEST_NAME_DECODE = "Base64 Decode";
 
-	private static final String TEST_NAME_ENCODE = "Base64 Encode";
-	private static final String TEST_NAME_DECODE = "Base64 Decode";
-
-	private static final String TEST_DECODED = "This is the test data! This is the test data!";
-	private static final String TEST_ENCODED = "VGhpcyBpcyB0aGUgdGVzdCBkYXRhISBUaGlzIGlzIHRoZSB0ZXN0IGRhdGEh";
+	static final String TEST_DECODED = "This is the test data! This is the test data!";
+	static final String TEST_ENCODED = "VGhpcyBpcyB0aGUgdGVzdCBkYXRhISBUaGlzIGlzIHRoZSB0ZXN0IGRhdGEh";
 
 
 

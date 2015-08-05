@@ -357,7 +357,7 @@ public final class utilsString {
 			case '}':
 			case '|':
 			case '\\':
-				str.append("\\");
+				str.append('\\');
 				str.append(c);
 				break;
 			default:

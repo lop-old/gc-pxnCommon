@@ -12,10 +12,10 @@ import com.poixson.commonjava.xLogger.xLogTest;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class xThreadPoolFiringTest {
-
-	private static final String TEST_NAME_MAIN  = "xThreadPool Main";
-	private static final String TEST_NAME_SHORT = "xThreadPool Short";
-	private static final String TEST_NAME_LONG  = "xThreadPool Long";
+	static final String TEST_NAME = "xThreadPool";
+	static final String TEST_NAME_MAIN  = "xThreadPool Main";
+	static final String TEST_NAME_SHORT = "xThreadPool Short";
+	static final String TEST_NAME_LONG  = "xThreadPool Long";
 
 	protected static final xTime MAX_RUN_TIME = xTime.get("10s");
 
