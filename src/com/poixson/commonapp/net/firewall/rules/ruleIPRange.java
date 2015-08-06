@@ -1,7 +1,7 @@
-package com.poixson.commonapp.net.rules;
+package com.poixson.commonapp.net.firewall.rules;
 
-import com.poixson.commonapp.net.NetFirewallRule;
-import com.poixson.commonapp.net.RuleType;
+import com.poixson.commonapp.net.firewall.NetFirewallRule;
+import com.poixson.commonapp.net.firewall.RuleType;
 
 
 public class ruleIPRange extends NetFirewallRule {

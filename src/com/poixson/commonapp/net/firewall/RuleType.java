@@ -1,5 +1,4 @@
-package com.poixson.commonapp.net;
-
+package com.poixson.commonapp.net.firewall;
 
 
 public enum RuleType {

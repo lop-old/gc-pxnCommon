@@ -1,7 +1,7 @@
-package com.poixson.commonapp.net.rules;
+package com.poixson.commonapp.net.firewall.rules;
 
-import com.poixson.commonapp.net.NetFirewallRule;
-import com.poixson.commonapp.net.RuleType;
+import com.poixson.commonapp.net.firewall.NetFirewallRule;
+import com.poixson.commonapp.net.firewall.RuleType;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.byRef.StringRef;

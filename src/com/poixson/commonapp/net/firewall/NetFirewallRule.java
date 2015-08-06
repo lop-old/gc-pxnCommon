@@ -1,4 +1,4 @@
-package com.poixson.commonapp.net;
+package com.poixson.commonapp.net.firewall;
 
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsNumbers;

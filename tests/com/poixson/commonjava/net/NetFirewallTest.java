@@ -3,9 +3,9 @@ package com.poixson.commonjava.net;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.poixson.commonapp.net.NetFirewall;
-import com.poixson.commonapp.net.RuleType;
-import com.poixson.commonapp.net.rules.ruleHostname;
+import com.poixson.commonapp.net.firewall.NetFirewall;
+import com.poixson.commonapp.net.firewall.RuleType;
+import com.poixson.commonapp.net.firewall.rules.ruleHostname;
 import com.poixson.commonjava.xLogTest;
 import com.poixson.commonjava.Utils.utilsNumbers;
 

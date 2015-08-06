@@ -1,4 +1,4 @@
-package com.poixson.commonapp.net;
+package com.poixson.commonapp.net.firewall;
 
 import java.util.concurrent.CopyOnWriteArraySet;
 
