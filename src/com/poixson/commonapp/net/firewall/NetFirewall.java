@@ -32,16 +32,23 @@ public class NetFirewall {
 		for(final NetFirewallRule rule : this.rules) {
 			final Boolean result = rule.check(local, remote);
 			if(result != null) {
-xLog.getRoot("NET").finest("Found matching firewall rule:  "+rule.toString()+" - "+
-"Local: "+local.getHostString()+":"+Integer.toString(local.getPort())+" - "+
-"Remote: "+remote.getHostString()+":"+Integer.toString(remote.getPort()));
+				log().finest("Found matching firewall rule:  "+rule.toString()+" - "+
+						"Local: "+local.getHostString()+":"+Integer.toString(local.getPort())+" - "+
+						"Remote: "+remote.getHostString()+":"+Integer.toString(remote.getPort()));
 				return result;
 			}
 		}
-xLog.getRoot("NET").finest("No matching firewall rule!  "+
-"Local: "+local.getHostString()+":"+Integer.toString(local.getPort())+"  "+
-"Remote: "+remote.getHostString()+":"+Integer.toString(remote.getPort()));
+		log().finest("No matching firewall rule!  "+
+				"Local: "+local.getHostString()+":"+Integer.toString(local.getPort())+"  "+
+				"Remote: "+remote.getHostString()+":"+Integer.toString(remote.getPort()));
 		return null;
+	}
+
+
+
+	// logger
+	public static xLog log() {
+		return xLog.getRoot("FIREWALL");
 	}
 
 
