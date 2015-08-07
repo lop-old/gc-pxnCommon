@@ -1,5 +1,6 @@
 package com.poixson.commonapp.net.firewall;
 
+import java.net.InetSocketAddress;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.poixson.commonjava.Utils.utils;
@@ -25,28 +26,21 @@ public class NetFirewall {
 	 * @param channel
 	 * @return true if ok to accept, false to deny, null if no match
 	 */
-	public Boolean check(
-			final String localHost,  final int localPort,
-			final String remoteHost, final int remotePort) {
+	public Boolean check(final InetSocketAddress local, final InetSocketAddress remote) {
 		if(utils.isEmpty(this.rules))
 			return Boolean.TRUE;
 		for(final NetFirewallRule rule : this.rules) {
-			final Boolean result = rule.check(
-					localHost,
-					localPort,
-					remoteHost,
-					remotePort
-			);
+			final Boolean result = rule.check(local, remote);
 			if(result != null) {
-xLog.getRoot("NET").finer("Found matching firewall rule:  "+rule.toString()+" - "+
-"Local: "+localHost+":"+Integer.toString(localPort)+" - "+
-"Remote: "+remoteHost+":"+Integer.toString(remotePort));
+xLog.getRoot("NET").finest("Found matching firewall rule:  "+rule.toString()+" - "+
+"Local: "+local.getHostString()+":"+Integer.toString(local.getPort())+" - "+
+"Remote: "+remote.getHostString()+":"+Integer.toString(remote.getPort()));
 				return result;
 			}
 		}
-xLog.getRoot("NET").finer("No matching firewall rule!  "+
-"Local: "+localHost+":"+Integer.toString(localPort)+"  "+
-"Remote: "+remoteHost+":"+Integer.toString(remotePort));
+xLog.getRoot("NET").finest("No matching firewall rule!  "+
+"Local: "+local.getHostString()+":"+Integer.toString(local.getPort())+"  "+
+"Remote: "+remote.getHostString()+":"+Integer.toString(remote.getPort()));
 		return null;
 	}
 

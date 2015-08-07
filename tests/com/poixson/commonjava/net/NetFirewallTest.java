@@ -1,5 +1,7 @@
 package com.poixson.commonjava.net;
 
+import java.net.InetSocketAddress;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -19,6 +21,9 @@ public class NetFirewallTest {
 	static final String REMOTE_HOST = "remote.hostname";
 	static final int    LOCAL_PORT  = 1111;
 	static final int    REMOTE_PORT = 2222;
+
+	static final InetSocketAddress LOCAL  = new InetSocketAddress(LOCAL_HOST,  LOCAL_PORT);
+	static final InetSocketAddress REMOTE = new InetSocketAddress(REMOTE_HOST, REMOTE_PORT);
 
 
 

@@ -1,5 +1,7 @@
 package com.poixson.commonapp.net.firewall.rules;
 
+import java.net.InetSocketAddress;
+
 import com.poixson.commonapp.net.firewall.NetFirewallRule;
 import com.poixson.commonapp.net.firewall.RuleType;
 import com.poixson.commonjava.Utils.utils;
@@ -21,42 +23,35 @@ public class ruleHostname extends NetFirewallRule {
 
 
 	@Override
-	public Boolean check(
-			final String localHost,  final int localPort,
-			final String remoteHost, final int remotePort) {
+	public Boolean check(final InetSocketAddress local, final InetSocketAddress remote) {
+		if(!this.type.isLocal() && !this.type.isRemote())
+			throw new RuntimeException("Not local or remote type!");
 		if(utils.isEmpty(this.pattern)) return null;
-		if("*".equals(this.pattern))    return Boolean.TRUE;
+		if("*".equals(this.pattern))    return Boolean.valueOf(this.type.isAllow());
 		// split pattern by :
 		final StringRef hostPattern = new StringRef();
 		final StringRef portPattern = new StringRef();
 		this.SplitPattern(this.pattern, hostPattern, portPattern);
-		final String host;
-		if(this.type.isLocal()) {
-			host = localHost;
-		} else
-		if(this.type.isRemote()) {
-			host = remoteHost;
-		} else {
-			throw new RuntimeException();
-		}
 		// check port
-		boolean portResult = false;
 		if(utils.notEmpty(portPattern.value)) {
-			final Boolean match = this.checkPort(localPort, remotePort, portPattern.value);
+			final Boolean match = this.checkPort(
+					local.getPort(),
+					remote.getPort(),
+					portPattern.value
+			);
 			if(match != null) {
-				if(match.booleanValue())
-					portResult = true;
-				else
+				if(match.booleanValue()) {
+					if(utils.isEmpty(hostPattern.value))
+						return Boolean.valueOf(this.type.isAllow());
+				} else {
 					return null;
+				}
 			}
 		}
 		// check hostname
-		if(utils.notEmpty(hostPattern.value)){
-			if(host.matches(utilsString.wildcardToRegex(hostPattern.value)))
-				return Boolean.valueOf(this.type.isAllow());
-		}
-		if(portResult)
-			return Boolean.TRUE;
+		final String host = (this.type.isLocal() ? local.getHostName() : remote.getHostName());
+		if(host.matches(utilsString.wildcardToRegex(hostPattern.value)))
+			return Boolean.valueOf(this.type.isAllow());
 		return null;
 	}
 

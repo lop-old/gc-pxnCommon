@@ -1,5 +1,7 @@
 package com.poixson.commonapp.net.firewall.rules;
 
+import java.net.InetSocketAddress;
+
 import com.poixson.commonapp.net.firewall.NetFirewallRule;
 import com.poixson.commonapp.net.firewall.RuleType;
 
@@ -15,9 +17,7 @@ public class ruleIPList extends NetFirewallRule {
 
 
 	@Override
-	public Boolean check(
-			final String localHost,  final int localPort,
-			final String remoteHost, final int remotePort) {
+	public Boolean check(final InetSocketAddress local, final InetSocketAddress remote) {
 
 		return Boolean.FALSE;
 	}

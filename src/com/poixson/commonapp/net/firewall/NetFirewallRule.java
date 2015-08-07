@@ -1,5 +1,7 @@
 package com.poixson.commonapp.net.firewall;
 
+import java.net.InetSocketAddress;
+
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsNumbers;
 import com.poixson.commonjava.Utils.byRef.StringRef;
@@ -18,9 +20,7 @@ public abstract class NetFirewallRule {
 
 
 
-	public abstract Boolean check(
-			final String localHost,  final int localPort,
-			final String remoteHost, final int remotePort);
+	public abstract Boolean check(final InetSocketAddress local, final InetSocketAddress remote);
 
 
 
@@ -39,17 +39,11 @@ public abstract class NetFirewallRule {
 
 
 	public Boolean checkPort(final int localPort, final int remotePort, final String portPattern) {
+		if(!this.type.isLocal() && !this.type.isRemote())
+			throw new RuntimeException("Not local or remote type!");
 		if(utils.isEmpty(portPattern)) return null;
 		if("*".equals(portPattern))    return Boolean.TRUE;
-		final int port;
-		if(this.type.isLocal()) {
-			port = localPort;
-		} else
-		if(this.type.isRemote()) {
-			port = remotePort;
-		} else {
-			throw new RuntimeException();
-		}
+		final int port = (this.type.isLocal() ? localPort : remotePort);
 		final String[] parts = portPattern.split("-", 2);
 		// port range
 		if(parts.length > 1) {
