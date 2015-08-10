@@ -1,5 +1,7 @@
 package com.poixson.commonjava.utils;
 
+import junit.framework.TestCase;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -8,7 +10,7 @@ import com.poixson.commonjava.Utils.CoolDown;
 import com.poixson.commonjava.Utils.utilsThread;
 
 
-public class CoolDownTest {
+public class CoolDownTest extends TestCase {
 	static final String TEST_NAME = "CoolDown";
 
 	static final long TEST_SLEEP_TIME   = 500L;
@@ -22,7 +24,7 @@ public class CoolDownTest {
 
 
 	@Test (timeout=2000)
-	public void CoolDownDelayTest() {
+	public void testCoolDownDelay() {
 		xLogTest.testStart(TEST_NAME);
 		final CoolDown cool = CoolDown.get("1s");
 		cool.resetRun();
@@ -31,7 +33,7 @@ public class CoolDownTest {
 		// check time values
 		final long since = cool.getTimeSince();
 		final long until = cool.getTimeUntil();
-		Assert.assertFalse(
+		assertFalse(
 				"Time since sleep started is less than expected!",
 				since < TEST_SLEEP_TIME
 		);
@@ -48,7 +50,7 @@ public class CoolDownTest {
 		Assert.assertNotEquals(-1L, value);
 		final long val = value - 500L;
 		final long v = (val < 0L ? val * -1L : val);
-		Assert.assertFalse("Time result out of range", v > DEVIATION_ALLOWED);
+		assertFalse("Time result out of range! result: "+Long.toString(value), v > DEVIATION_ALLOWED);
 	}
 
 

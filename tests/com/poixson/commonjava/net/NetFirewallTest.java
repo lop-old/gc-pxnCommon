@@ -2,7 +2,8 @@ package com.poixson.commonjava.net;
 
 import java.net.InetSocketAddress;
 
-import org.junit.Assert;
+import junit.framework.TestCase;
+
 import org.junit.Test;
 
 import com.poixson.commonapp.net.firewall.NetFirewall;
@@ -12,7 +13,7 @@ import com.poixson.commonjava.xLogTest;
 import com.poixson.commonjava.Utils.utilsNumbers;
 
 
-public class NetFirewallTest {
+public class NetFirewallTest extends TestCase {
 	static final String TEST_NAME_HOSTNAME = "NetFirewall Hostname";
 	static final String TEST_NAME_IPLIST   = "NetFirewall IP List";
 	static final String TEST_NAME_IPRANGE  = "NetFirewall IP Range";
@@ -31,7 +32,7 @@ public class NetFirewallTest {
 
 	// hostname rules
 	@Test
-	public void ruleHostnameTest() {
+	public void testRuleHostname() {
 		xLogTest.testStart(TEST_NAME_HOSTNAME);
 		// expect success
 		this.checkHost(Boolean.TRUE, RuleType.ALLOW_LOCAL, "*",           LOCAL, REMOTE);
@@ -61,14 +62,14 @@ public class NetFirewallTest {
 		final NetFirewall firewall = new NetFirewall();
 		firewall.addRule(new ruleHostname(type, pattern));
 		final Boolean result = firewall.check(local, remote);
-		Assert.assertEquals("Pattern didn't return expected result: "+pattern, expected, result);
+		assertEquals("Pattern didn't return expected result: "+pattern, expected, result);
 	}
 
 
 
 	// ip list
 	@Test
-	public void ruleIPListTest() {
+	public void testRuleIPList() {
 		xLogTest.testStart(TEST_NAME_IPLIST);
 
 		xLogTest.testPassed(TEST_NAME_IPLIST);
@@ -78,7 +79,7 @@ public class NetFirewallTest {
 
 	// ip range
 	@Test
-	public void ruleIPRangeTest() {
+	public void testRuleIPRange() {
 		xLogTest.testStart(TEST_NAME_IPRANGE);
 
 		xLogTest.testPassed(TEST_NAME_IPRANGE);
