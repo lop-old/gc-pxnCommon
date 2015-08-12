@@ -37,6 +37,7 @@ public enum RuleType {
 
 
 
+	@Override
 	public String toString() {
 		final StringBuilder str = new StringBuilder();
 		// allow

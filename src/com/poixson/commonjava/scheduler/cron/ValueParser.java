@@ -94,6 +94,7 @@ public class ValueParser {
 		 * @throws Exception
 		 *             if the input value is invalid
 		 */
+		@Override
 		public int parse(final String str) throws Exception {
 			if(str.equalsIgnoreCase("L"))
 				return 32;
@@ -106,6 +107,7 @@ public class ValueParser {
 		public MonthValueParser() {
 			super(1, 12);
 		}
+		@Override
 		public int parse(final String str) throws Exception {
 			// try as a simple value
 			try {
@@ -120,6 +122,7 @@ public class ValueParser {
 		public DayOfWeekValueParser() {
 			super(0, 7);
 		}
+		@Override
 		public int parse(final String str) throws Exception {
 			// try as a simple value
 			try {

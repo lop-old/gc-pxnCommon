@@ -83,6 +83,7 @@ public class jlineConsole implements xConsole {
 	public Object clone() throws CloneNotSupportedException {
 		throw new CloneNotSupportedException();
 	}
+	@Override
 	public void finalize() {
 		if(this.running && !this.stopping)
 			this.Stop();
@@ -122,6 +123,7 @@ public class jlineConsole implements xConsole {
 				new PrintStream(
 					new OutputStream() {
 						private final StringBuilder buf = new StringBuilder();
+						@Override
 						public void write(final int b) throws IOException {
 							if(b == '\r') return;
 							if(b == '\n') {

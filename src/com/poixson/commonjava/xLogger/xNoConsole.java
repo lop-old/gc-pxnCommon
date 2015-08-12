@@ -25,6 +25,7 @@ public class xNoConsole implements xConsole {
 	@Override
 	public void Stop() {
 	}
+	@Override
 	public boolean isRunning() {
 		return false;
 	}
