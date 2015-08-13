@@ -2,8 +2,7 @@ package com.poixson.commonjava.net;
 
 import java.net.InetSocketAddress;
 
-import junit.framework.TestCase;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.poixson.commonapp.net.firewall.NetFirewall;
@@ -13,7 +12,7 @@ import com.poixson.commonjava.xLogTest;
 import com.poixson.commonjava.Utils.utilsNumbers;
 
 
-public class NetFirewallTest extends TestCase {
+public class NetFirewallTest {
 	static final String TEST_NAME_HOSTNAME = "NetFirewall Hostname";
 	static final String TEST_NAME_IPLIST   = "NetFirewall IP List";
 	static final String TEST_NAME_IPRANGE  = "NetFirewall IP Range";
@@ -62,7 +61,7 @@ public class NetFirewallTest extends TestCase {
 		final NetFirewall firewall = new NetFirewall();
 		firewall.addRule(new ruleHostname(type, pattern));
 		final Boolean result = firewall.check(local, remote);
-		assertEquals("Pattern didn't return expected result: "+pattern, expected, result);
+		Assert.assertEquals("Pattern didn't return expected result: "+pattern, expected, result);
 	}
 
 

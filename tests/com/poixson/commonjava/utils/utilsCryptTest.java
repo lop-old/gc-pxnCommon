@@ -1,7 +1,6 @@
 package com.poixson.commonjava.utils;
 
-import junit.framework.TestCase;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.poixson.commonjava.xLogTest;
@@ -9,7 +8,7 @@ import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsCrypt;
 
 
-public class utilsCryptTest extends TestCase {
+public class utilsCryptTest {
 	static final String TEST_NAME_ENCODE = "Base64 Encode";
 	static final String TEST_NAME_DECODE = "Base64 Decode";
 
@@ -25,8 +24,8 @@ public class utilsCryptTest extends TestCase {
 		xLogTest.publish("Input:  "+TEST_DECODED);
 		final String data = utilsCrypt.Base64Encode(TEST_DECODED);
 		xLogTest.publish("Output: "+data);
-		assertTrue(utils.notEmpty(data));
-		assertEquals(TEST_ENCODED, data);
+		Assert.assertTrue(utils.notEmpty(data));
+		Assert.assertEquals(TEST_ENCODED, data);
 		xLogTest.testPassed(TEST_NAME_ENCODE);
 	}
 	// base64 decode
@@ -36,8 +35,8 @@ public class utilsCryptTest extends TestCase {
 		xLogTest.publish("Input:  "+TEST_ENCODED);
 		final String data = utilsCrypt.Base64Decode(TEST_ENCODED);
 		xLogTest.publish("Output: "+data);
-		assertTrue(utils.notEmpty(data));
-		assertEquals(TEST_DECODED, data);
+		Assert.assertTrue(utils.notEmpty(data));
+		Assert.assertEquals(TEST_DECODED, data);
 		xLogTest.testPassed(TEST_NAME_DECODE);
 	}
 
