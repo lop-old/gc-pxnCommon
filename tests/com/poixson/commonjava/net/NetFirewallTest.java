@@ -17,14 +17,14 @@ public class NetFirewallTest {
 	static final String TEST_NAME_IPLIST   = "NetFirewall IP List";
 	static final String TEST_NAME_IPRANGE  = "NetFirewall IP Range";
 
-	static final String LOCAL_HOST  = "local.hostname";
-	static final String REMOTE_HOST = "remote.hostname";
+	static final String LOCAL_HOST      = "local.hostname";
+	static final String REMOTE_HOST     = "remote.hostname";
 	static final String REMOTE_HOST_BAD = "bad.host";
 	static final int    LOCAL_PORT  = 1111;
 	static final int    REMOTE_PORT = 2222;
 
-	static final InetSocketAddress LOCAL  = new InetSocketAddress(LOCAL_HOST,  LOCAL_PORT);
-	static final InetSocketAddress REMOTE = new InetSocketAddress(REMOTE_HOST, REMOTE_PORT);
+	static final InetSocketAddress LOCAL      = new InetSocketAddress(LOCAL_HOST,      LOCAL_PORT);
+	static final InetSocketAddress REMOTE     = new InetSocketAddress(REMOTE_HOST,     REMOTE_PORT);
 	static final InetSocketAddress REMOTE_BAD = new InetSocketAddress(REMOTE_HOST_BAD, REMOTE_PORT);
 
 
