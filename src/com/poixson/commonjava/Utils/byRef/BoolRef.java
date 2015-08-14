@@ -28,4 +28,11 @@ public class BoolRef {
 
 
 
+	public boolean invert() {
+		return this.value = (!this.value);
+//		return this.value;
+	}
+
+
+
 }

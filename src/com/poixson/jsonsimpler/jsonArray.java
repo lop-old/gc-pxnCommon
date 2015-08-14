@@ -72,7 +72,7 @@ public class jsonArray extends ArrayList<Object> implements JSON {
 		if(this.indent != null) {
 			if(writeIndent)
 				JSON.WriteIndent(out, this.indent);
-			this.indent.value++;
+			this.indent.increment();
 		}
 		out.write('[');
 		final Iterator<Object> it = this.iterator();
@@ -93,7 +93,7 @@ public class jsonArray extends ArrayList<Object> implements JSON {
 		}
 		if(this.indent != null) {
 			out.write(JSON.NEWLINE);
-			this.indent.value--;
+			this.indent.decrement();
 			JSON.WriteIndent(out, this.indent);
 		}
 		out.write(']');

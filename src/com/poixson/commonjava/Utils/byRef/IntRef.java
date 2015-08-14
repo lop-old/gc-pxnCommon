@@ -28,4 +28,13 @@ public class IntRef {
 
 
 
+	public void increment() {
+		this.value++;
+	}
+	public void decrement() {
+		this.value--;
+	}
+
+
+
 }

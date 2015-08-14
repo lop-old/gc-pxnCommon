@@ -70,7 +70,7 @@ public class jsonMap extends HashMap<String, Object> implements JSON {
 		if(this.indent != null) {
 			if(writeIndent)
 				JSON.WriteIndent(out, this.indent);
-			this.indent.value++;
+			this.indent.increment();
 		}
 		out.write('{');
 		final Iterator<Entry<String, Object>> it = this.entrySet().iterator();
@@ -96,7 +96,7 @@ public class jsonMap extends HashMap<String, Object> implements JSON {
 		}
 		if(this.indent != null) {
 			out.write(JSON.NEWLINE);
-			this.indent.value--;
+			this.indent.decrement();
 			JSON.WriteIndent(out, this.indent);
 		}
 		out.write('}');
