@@ -16,12 +16,12 @@ import com.poixson.commonjava.Utils.byRef.IntRef;
 import com.poixson.commonjava.xLogger.xLog;
 
 
-public class jsonTest {
+public class jsonEncodeTest {
 	static final boolean DEBUG = true;
 
-	static final String TEST_WRITE_STRING  = "jsonSimpler WriteString";
-	static final String TEST_NAME_MINIFIED = "jsonSimpler Minified";
-	static final String TEST_NAME_PRETTY   = "jsonSimpler Pretty";
+	static final String TEST_WRITE_STRING  = "jsonSimpler encode WriteString";
+	static final String TEST_NAME_MINIFIED = "jsonSimpler encode Minified";
+	static final String TEST_NAME_PRETTY   = "jsonSimpler encode Pretty";
 	static final String QQ = "\"";
 	static final String NL = "\n";
 
@@ -34,13 +34,14 @@ public class jsonTest {
 			// primitives
 			doTest("null",    false, null,  "null");
 			doTest("String",  false, "abc", QQ+"abc"+QQ);
-			doTest("double",  false, 1.1,   "1.1");
-			doTest("float",   false, 2.2F,  "2.2");
+			doTest("double",  false, 1.1d,   "1.1");
+			doTest("float",   false, 2.2f,  "2.2");
 			doTest("int",     false, 0,     "0");
 			doTest("int",     false, 3,     "3");
 			doTest("long",    false, 4L,    "4");
 			doTest("boolean", false, true,  "true");
 			doTest("boolean", false, false, "false");
+			doTest("char",    false, 'a',    "a");
 			// List
 			doTest(
 					"List",
@@ -144,6 +145,9 @@ public class jsonTest {
 		} catch (Exception e) {
 			xLogTest.trace(e);
 			throw new RuntimeException(e);
+		} catch (Error e) {
+			xLogTest.trace(e);
+			throw new RuntimeException(e);
 		}
 		xLogTest.testPassed(TEST_WRITE_STRING);
 	}
@@ -238,6 +242,9 @@ public class jsonTest {
 		} catch (Exception e) {
 			xLogTest.trace(e);
 			throw new RuntimeException(e);
+		} catch (Error e) {
+			xLogTest.trace(e);
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -245,16 +252,17 @@ public class jsonTest {
 
 	static void doTest(final String name, final boolean pretty,
 			final Object value, final String... expected) {
+		if(DEBUG) {
+			xLog.getRoot().publish();
+			xLogTest.publish("Testing: "+name);
+		}
 		final String result = JSON.ToString(
 				value,
 				(pretty ? new IntRef(0) : null),
 				true
 		);
-		if(DEBUG) {
-			xLog.getRoot().publish();
-			xLogTest.publish("Testing: "+name);
+		if(DEBUG)
 			xLogTest.publish("Result: "+result);
-		}
 		Assert.assertNotNull(result);
 		for(final String expect : expected) {
 			if(DEBUG)
