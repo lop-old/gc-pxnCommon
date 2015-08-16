@@ -186,19 +186,16 @@ public final class utilsNumbers {
 
 
 	public static double round(final double value, final double product) {
-		final double prod = (double) product;
-		final double val = (double) ((long) Math.round( value / prod ));
-		return val * prod;
+		final double val = Math.round( value / product );
+		return val * product;
 	}
 	public static double floor(final double value, final double product) {
-		final double prod = (double) product;
-		final double val = (double) ((long) Math.floor( value / prod ));
-		return val * prod;
+		final double val = Math.floor( value / product );
+		return val * product;
 	}
 	public static double ceil(final double value, final double product) {
-		final double prod = (double) product;
-		final double val = (double) ((long) Math.ceil( value / prod ));
-		return val * prod;
+		final double val = Math.ceil( value / product );
+		return val * product;
 	}
 
 

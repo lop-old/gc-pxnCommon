@@ -97,7 +97,8 @@ public class xScheduler implements xStartable {
 					if(!task.repeating)
 						finished.add(task);
 				}
-				final long ss = (long) (((double) s) * 0.95);
+				final double d = s;
+				final long ss = (long) Math.floor(d * 0.95);
 				// sleep less
 				if(ss < sleep)
 					sleep = ss;

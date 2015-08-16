@@ -96,7 +96,7 @@ public final class SystemHash {
 		}
 		final StringBuffer str = new StringBuffer();
 		while(e.hasMoreElements()) {
-			NetworkInterface net = (NetworkInterface) e.nextElement();
+			NetworkInterface net = e.nextElement();
 			final StringBuffer str1 = getMACAddressDescriptor(net);
 			final StringBuffer str2 = getInetAddressDescriptor(net);
 			final StringBuffer str3 = new StringBuffer();
