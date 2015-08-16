@@ -24,21 +24,29 @@ public class CoolDownTest {
 	@Test (timeout=2000)
 	public void testCoolDownDelay() {
 		xLogTest.testStart(TEST_NAME);
-		final CoolDown cool = CoolDown.get("1s");
-		cool.resetRun();
-		xLogTest.publish("Sleeping "+Long.toString(TEST_SLEEP_TIME)+"ms..");
-		utilsThread.Sleep(TEST_SLEEP_TIME);
-		// check time values
-		final long since = cool.getTimeSince();
-		final long until = cool.getTimeUntil();
-		Assert.assertFalse(
-				"Time since sleep started is less than expected!",
-				since < TEST_SLEEP_TIME
-		);
-		xLogTest.publish("Time Since: "+Long.toString(since));
-		this.verifyTime(since);
-		xLogTest.publish("Time Until: "+Long.toString(until));
-		this.verifyTime(until);
+		try {
+			final CoolDown cool = CoolDown.get("1s");
+			cool.resetRun();
+			xLogTest.publish("Sleeping "+Long.toString(TEST_SLEEP_TIME)+"ms..");
+			utilsThread.Sleep(TEST_SLEEP_TIME);
+			// check time values
+			final long since = cool.getTimeSince();
+			final long until = cool.getTimeUntil();
+			Assert.assertFalse(
+					"Time since sleep started is less than expected!",
+					since < TEST_SLEEP_TIME
+					);
+			xLogTest.publish("Time Since: "+Long.toString(since));
+			this.verifyTime(since);
+			xLogTest.publish("Time Until: "+Long.toString(until));
+			this.verifyTime(until);
+		} catch (Exception e) {
+			xLogTest.trace(e);
+			throw new RuntimeException(e);
+		} catch (Error e) {
+			xLogTest.trace(e);
+			throw new RuntimeException(e);
+		}
 		xLogTest.testPassed(TEST_NAME);
 	}
 

@@ -33,27 +33,35 @@ public class NetFirewallTest {
 	@Test
 	public void testRuleHostname() {
 		xLogTest.testStart(TEST_NAME_HOSTNAME);
-		// expect success
-		this.checkHost(Boolean.TRUE, RuleType.ALLOW_LOCAL, "*",           LOCAL, REMOTE);
-		this.checkHost(Boolean.TRUE, RuleType.ALLOW_LOCAL, "*hostname",   LOCAL, REMOTE);
-		this.checkHost(Boolean.TRUE, RuleType.ALLOW_LOCAL, "*.hostname",  LOCAL, REMOTE);
-		this.checkHost(Boolean.TRUE, RuleType.ALLOW_LOCAL, "local.host*", LOCAL, REMOTE);
-		this.checkHost(Boolean.TRUE, RuleType.ALLOW_LOCAL, "local.*",     LOCAL, REMOTE);
-		this.checkHost(Boolean.TRUE, RuleType.ALLOW_LOCAL, "*:1111",      LOCAL, REMOTE);
-		this.checkHost(Boolean.TRUE, RuleType.ALLOW_LOCAL, "*:1110-1112", LOCAL, REMOTE);
-		this.checkHost(Boolean.TRUE, RuleType.ALLOW_LOCAL, "*:*-1112",    LOCAL, REMOTE);
-		this.checkHost(Boolean.TRUE, RuleType.ALLOW_LOCAL, "*:1110-*",    LOCAL, REMOTE);
-		// expect fail
-		this.checkHost(null, RuleType.ALLOW_LOCAL, null,       LOCAL, REMOTE);
-		this.checkHost(null, RuleType.ALLOW_LOCAL, "invalid*", LOCAL, REMOTE);
-		this.checkHost(null, RuleType.ALLOW_LOCAL, "*invalid", LOCAL, REMOTE);
-		this.checkHost(null, RuleType.ALLOW_LOCAL, "*:2222",   LOCAL, REMOTE);
-		this.checkHost(null, RuleType.ALLOW_LOCAL, "*:0-1110", LOCAL, REMOTE);
-		this.checkHost(null, RuleType.ALLOW_LOCAL, "*:*-1110", LOCAL, REMOTE);
-		this.checkHost(null, RuleType.ALLOW_LOCAL, "*:1112-"+Integer.toString(utilsNumbers.MAX_PORT), LOCAL, REMOTE);
-		this.checkHost(null, RuleType.ALLOW_LOCAL, "*:1112-*", LOCAL, REMOTE);
-		// deny host
-		this.checkHost(Boolean.FALSE, RuleType.DENY_REMOTE, "bad.*", LOCAL, REMOTE_BAD);
+		try {
+			// expect success
+			this.checkHost(Boolean.TRUE, RuleType.ALLOW_LOCAL, "*",           LOCAL, REMOTE);
+			this.checkHost(Boolean.TRUE, RuleType.ALLOW_LOCAL, "*hostname",   LOCAL, REMOTE);
+			this.checkHost(Boolean.TRUE, RuleType.ALLOW_LOCAL, "*.hostname",  LOCAL, REMOTE);
+			this.checkHost(Boolean.TRUE, RuleType.ALLOW_LOCAL, "local.host*", LOCAL, REMOTE);
+			this.checkHost(Boolean.TRUE, RuleType.ALLOW_LOCAL, "local.*",     LOCAL, REMOTE);
+			this.checkHost(Boolean.TRUE, RuleType.ALLOW_LOCAL, "*:1111",      LOCAL, REMOTE);
+			this.checkHost(Boolean.TRUE, RuleType.ALLOW_LOCAL, "*:1110-1112", LOCAL, REMOTE);
+			this.checkHost(Boolean.TRUE, RuleType.ALLOW_LOCAL, "*:*-1112",    LOCAL, REMOTE);
+			this.checkHost(Boolean.TRUE, RuleType.ALLOW_LOCAL, "*:1110-*",    LOCAL, REMOTE);
+			// expect fail
+			this.checkHost(null, RuleType.ALLOW_LOCAL, null,       LOCAL, REMOTE);
+			this.checkHost(null, RuleType.ALLOW_LOCAL, "invalid*", LOCAL, REMOTE);
+			this.checkHost(null, RuleType.ALLOW_LOCAL, "*invalid", LOCAL, REMOTE);
+			this.checkHost(null, RuleType.ALLOW_LOCAL, "*:2222",   LOCAL, REMOTE);
+			this.checkHost(null, RuleType.ALLOW_LOCAL, "*:0-1110", LOCAL, REMOTE);
+			this.checkHost(null, RuleType.ALLOW_LOCAL, "*:*-1110", LOCAL, REMOTE);
+			this.checkHost(null, RuleType.ALLOW_LOCAL, "*:1112-"+Integer.toString(utilsNumbers.MAX_PORT), LOCAL, REMOTE);
+			this.checkHost(null, RuleType.ALLOW_LOCAL, "*:1112-*", LOCAL, REMOTE);
+			// deny host
+			this.checkHost(Boolean.FALSE, RuleType.DENY_REMOTE, "bad.*", LOCAL, REMOTE_BAD);
+		} catch (Exception e) {
+			xLogTest.trace(e);
+			throw new RuntimeException(e);
+		} catch (Error e) {
+			xLogTest.trace(e);
+			throw new RuntimeException(e);
+		}
 		xLogTest.testPassed(TEST_NAME_HOSTNAME);
 	}
 	void checkHost(final Boolean expected, final RuleType type, final String pattern,
@@ -70,7 +78,16 @@ public class NetFirewallTest {
 	@Test
 	public void testRuleIPList() {
 		xLogTest.testStart(TEST_NAME_IPLIST);
+		try {
 
+
+		} catch (Exception e) {
+			xLogTest.trace(e);
+			throw new RuntimeException(e);
+		} catch (Error e) {
+			xLogTest.trace(e);
+			throw new RuntimeException(e);
+		}
 		xLogTest.testPassed(TEST_NAME_IPLIST);
 	}
 
@@ -80,7 +97,16 @@ public class NetFirewallTest {
 	@Test
 	public void testRuleIPRange() {
 		xLogTest.testStart(TEST_NAME_IPRANGE);
+		try {
 
+
+		} catch (Exception e) {
+			xLogTest.trace(e);
+			throw new RuntimeException(e);
+		} catch (Error e) {
+			xLogTest.trace(e);
+			throw new RuntimeException(e);
+		}
 		xLogTest.testPassed(TEST_NAME_IPRANGE);
 	}
 
