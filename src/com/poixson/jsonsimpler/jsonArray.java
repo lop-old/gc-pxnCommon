@@ -1,3 +1,4 @@
+/*
 package com.poixson.jsonsimpler;
 // Based on https://github.com/fangyidong/json-simple/
 
@@ -11,9 +12,9 @@ import java.util.List;
 import com.poixson.commonjava.Utils.byRef.IntRef;
 
 
-/**
+/ **
  * JSON Array. Values are ordered. Supports java.utils.List interface
- */
+ * /
 public class jsonArray extends ArrayList<Object> implements JSON {
 	private static final long serialVersionUID = 1L;
 
@@ -102,3 +103,4 @@ public class jsonArray extends ArrayList<Object> implements JSON {
 
 
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package com.poixson.jsonsimpler;
 //Based on https://github.com/fangyidong/json-simple/
 
@@ -11,9 +12,9 @@ import java.util.Map;
 import com.poixson.commonjava.Utils.byRef.IntRef;
 
 
-/**
+/ **
  * JSON Object. Key/value pairs are unordered. Supports java.util.Map interface.
- */
+ * /
 public class jsonMap extends HashMap<String, Object> implements JSON {
 	private static final long serialVersionUID = 1L;
 
@@ -105,3 +106,4 @@ public class jsonMap extends HashMap<String, Object> implements JSON {
 
 
 }
+*/

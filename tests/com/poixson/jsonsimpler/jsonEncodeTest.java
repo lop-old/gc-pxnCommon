@@ -1,3 +1,4 @@
+/*
 package com.poixson.jsonsimpler;
 
 import java.util.ArrayList;
@@ -276,7 +277,7 @@ public class jsonEncodeTest {
 
 
 
-/*
+/ *
 	static void doTestEncodeArray(final boolean pretty, final String... expected) {
 	static void doTestEncodeMap(final boolean pretty, final String... expected) {
 		final jsonArray array = new jsonArray();
@@ -311,8 +312,9 @@ public class jsonEncodeTest {
 	}
 	static void doTestDecode() {
 	}
-*/
+* /
 
 
 
 }
+*/
