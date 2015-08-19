@@ -2,9 +2,9 @@ package com.poixson.commonjava.Utils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import com.poixson.commonjava.Failure;
 
@@ -13,7 +13,8 @@ public class mvnProps {
 
 	private static final String PROPS_FILE = "/app.properties";
 
-	private static final Map<String, mvnProps> instances = new ConcurrentHashMap<String, mvnProps>();
+	private static final ConcurrentMap<String, mvnProps> instances =
+			new ConcurrentHashMap<String, mvnProps>();
 
 	// properties
 	public final String name;

@@ -3,8 +3,8 @@ package com.poixson.commonapp.gui;
 import java.awt.HeadlessException;
 import java.awt.LayoutManager;
 import java.io.Closeable;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JFrame;
@@ -19,7 +19,8 @@ import com.poixson.commonjava.Utils.utilsString;
 public abstract class xWindow extends JFrame implements Closeable {
 	private static final long serialVersionUID = 1L;
 
-	private static final Map<String, xWindow> windows = new ConcurrentHashMap<String, xWindow>();
+	private static final ConcurrentMap<String, xWindow> windows =
+			new ConcurrentHashMap<String, xWindow>();
 
 	public final String windowName;
 	protected final AtomicBoolean closing     = new AtomicBoolean(false);

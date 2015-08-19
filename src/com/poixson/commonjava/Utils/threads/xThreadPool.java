@@ -1,11 +1,11 @@
 package com.poixson.commonjava.Utils.threads;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -38,7 +38,8 @@ public class xThreadPool implements xStartable {
 	private final CoolDown coolMaxReached = CoolDown.get("5s");
 
 	// pool instances
-	protected static final Map<String, xThreadPool> instances = new ConcurrentHashMap<String, xThreadPool>();
+	protected static final ConcurrentMap<String, xThreadPool> instances =
+			new ConcurrentHashMap<String, xThreadPool>();
 
 	// main thread pool
 	protected static final xThreadPool mainPool = getMainPool();

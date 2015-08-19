@@ -2,8 +2,8 @@ package com.poixson.commonjava.xLogger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.poixson.commonjava.xVars;
@@ -82,7 +82,7 @@ public class xLog extends xLogPrinting {
 	private static volatile xHandler commandHandler = null;
 
 	// sub-loggers
-	private final Map<String, xLog> loggers = new ConcurrentHashMap<String, xLog>();
+	private final ConcurrentMap<String, xLog> loggers = new ConcurrentHashMap<String, xLog>();
 	// handlers
 	private final List<xLogHandler> handlers = new CopyOnWriteArrayList<xLogHandler>();
 
