@@ -10,16 +10,14 @@ import com.poixson.commonapp.app.annotations.xAppStep.StepType;
 import com.poixson.commonapp.xLogger.jlineConsole;
 import com.poixson.commonjava.Failure;
 import com.poixson.commonjava.xVars;
-import com.poixson.commonjava.Utils.Keeper;
 import com.poixson.commonjava.Utils.mvnProps;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsProc;
 import com.poixson.commonjava.Utils.utilsString;
-import com.poixson.commonjava.Utils.xClock;
-import com.poixson.commonjava.Utils.xStartable;
 import com.poixson.commonjava.Utils.threads.xThreadPool;
 import com.poixson.commonjava.scheduler.xScheduler;
 import com.poixson.commonjava.xLogger.xConsole;
+import com.poixson.commonjava.xLogger.xLevel;
 import com.poixson.commonjava.xLogger.xLog;
 import com.poixson.commonjava.xLogger.xNoConsole;
 import com.poixson.commonjava.xLogger.formatters.defaultLogFormatter_Color;
@@ -39,22 +37,16 @@ import com.poixson.commonjava.xLogger.handlers.logHandlerConsole;
  *   a. shutdown()     | internal
  *   b. shutdown(steps 8-1) | steps abstracted to app
  */
-public abstract class xApp implements xStartable {
+public abstract class xApp extends xAppAbstract {
 
-	private static volatile xApp appInstance = null;
-	private static final Object appLock = new Object();
+	private static final String ALREADY_STARTED_EXCEPTION = "Illegal app state; this shouldn't happen; cannot start in this state; possibly already started?";
+//	private static final String ILLEGAL_STATE_EXCEPTION   = "Illegal app state; cannot continue; this shouldn't happen; Current state: ";
 
-	// just to prevent gc
-	@SuppressWarnings("unused")
-	private static final Keeper keeper = Keeper.get();
-
-	private volatile long startTime = -1;
+	private static volatile xApp instance = null;
+	private static final Object instanceLock = new Object();
 
 	// mvn properties
 	protected final mvnProps mvnprops;
-
-	protected static final String ALREADY_STARTED_EXCEPTION = "Illegal app state; this shouldn't happen; cannot start in this state; possibly already started?";
-	protected static final String ILLEGAL_STATE_EXCEPTION   = "Illegal app state; cannot continue; this shouldn't happen; Current state: ";
 
 
 
@@ -62,36 +54,42 @@ public abstract class xApp implements xStartable {
 	 * Get the app class instance.
 	 */
 	public static xApp get() {
-		return appInstance;
+		return instance;
 	}
 	public static xApp peak() {
-		return appInstance;
+		return instance;
 	}
 
 
 
 	// call this from main(args)
-	protected static void initMain(final String[] args, final Class<? extends xApp> appClass) {
+	protected static void initMain(final String[] args,
+			final Class<? extends xApp> appClass) {
 		if(appClass == null) throw new NullPointerException("appClass argument is required!");
 		// single instance
-		if(appInstance != null) {
-			log().trace(new RuntimeException(ALREADY_STARTED_EXCEPTION));
+		if(instance != null) {
+			get().log().trace(new RuntimeException(ALREADY_STARTED_EXCEPTION));
 			Failure.fail(ALREADY_STARTED_EXCEPTION);
 		}
-		xVars.init();
-		synchronized(appLock) {
-			if(appInstance != null) {
-				log().trace(new RuntimeException(ALREADY_STARTED_EXCEPTION));
+		synchronized(instanceLock) {
+			if(instance != null) {
+				get().log().trace(new RuntimeException(ALREADY_STARTED_EXCEPTION));
 				Failure.fail(ALREADY_STARTED_EXCEPTION);
 				return;
 			}
 			try {
-				appInstance = appClass.newInstance();
+				instance = appClass.newInstance();
 			} catch (ReflectiveOperationException e) {
-				log().trace(e);
+				get().log().trace(e);
 				Failure.fail(e.getMessage());
 				return;
 			}
+		}
+		// init logger
+		xLog.getRoot().setLevel(xLevel.ALL);
+		if(Failure.hasFailed()) {
+			System.out.println("Failure, pre-init!");
+			System.exit(1);
 		}
 		// no console
 		if(System.console() == null)
@@ -99,13 +97,13 @@ public abstract class xApp implements xStartable {
 		// initialize console and enable colors
 		initConsole();
 		// process command line arguments
-		appInstance.processArgs(args);
+		instance.processArgs(args);
 		// handle command-line arguments
-		appInstance.displayStartupVars();
+		instance.displayStartupVars();
 		// app startup
-		appInstance.Start();
+		instance.Start();
 		// pass main thread to thread pool
-		appInstance.run();
+		instance.run();
 		// main thread ended
 		Failure.fail("@|FG_RED Main process ended! (this shouldn't happen)|@");
 		System.exit(1);
@@ -115,6 +113,7 @@ public abstract class xApp implements xStartable {
 
 	// new instance
 	protected xApp() {
+		super();
 		// mvn properties
 		this.mvnprops = mvnProps.get(this.getClass());
 	}
@@ -125,27 +124,17 @@ public abstract class xApp implements xStartable {
 
 
 
-	@Override
-	public void Start() {
-		xAppManager.get()
-			.Start();
-	}
-	@Override
-	public void Stop() {
-		xAppManager.get()
-			.Stop();
-	}
-	// Start the main thread queue
-	@Override
-	public void run() {
-		xAppManager.get()
-			.run();
-	}
-
-
-
 	// ------------------------------------------------------------------------------- //
 	// startup
+
+
+
+	@Override
+	public void run() {
+		// pass main thread to thread pool
+		xThreadPool.getMainPool()
+			.run();
+	}
 
 
 
@@ -161,27 +150,6 @@ public abstract class xApp implements xStartable {
 
 
 
-	// ensure not root
-	@xAppStep(type=StepType.STARTUP, title="RootCheck", priority=5)
-	public void __STARTUP_rootcheck() {
-		final String user = System.getProperty("user.name");
-		if("root".equals(user))
-			log().warning("It is recommended to run as a non-root user");
-		else
-		if("administrator".equalsIgnoreCase(user) || "admin".equalsIgnoreCase(user))
-			log().warning("It is recommended to run as a non-administrator user");
-	}
-
-
-
-	// clock
-	@xAppStep(type=StepType.STARTUP, title="Clock", priority=11)
-	public void __STARTUP_clock() {
-		this.startTime = xClock.get(true).millis();
-	}
-
-
-
 	// scheduler
 	@xAppStep(type=StepType.STARTUP, title="Scheduler", priority=75)
 	public void __STARTUP_scheduler() {
@@ -193,14 +161,6 @@ public abstract class xApp implements xStartable {
 
 	// ------------------------------------------------------------------------------- //
 	// shutdown
-
-
-
-	// total time running
-	@xAppStep(type=StepType.SHUTDOWN, title="UptimeStats", priority=100)
-	public void __SHUTDOWN_uptimestats() {
-//TODO: display total time running
-	}
 
 
 
@@ -234,30 +194,11 @@ public abstract class xApp implements xStartable {
 
 
 
-	@Override
-	public boolean isRunning() {
-		return xAppManager.get()
-				.isRunning();
-	}
-
-
-
-	public long getUptime() {
-		if(this.startTime == -1)
-			return 0;
-		return xClock.get(true).millis() - this.startTime;
-	}
-	public String getUptimeString() {
-//TODO:
-		return "<UPTIME>";
-	}
-
-
-
 	// mvn properties
 	public String getName() {
 		return this.mvnprops.name;
 	}
+	@Override
 	public String getTitle() {
 		return this.mvnprops.title;
 	}
@@ -295,7 +236,7 @@ public abstract class xApp implements xStartable {
 			xLog.setConsole(console);
 		}
 		// enable console color
-		log().setFormatter(
+		get().log().setFormatter(
 			new defaultLogFormatter_Color(),
 			logHandlerConsole.class
 		);
@@ -341,6 +282,7 @@ public abstract class xApp implements xStartable {
 		out.println();
 		out.flush();
 	}
+	@Override
 	protected void displayLogo() {
 		final PrintStream out = AnsiConsole.out;
 		final Ansi.Color bgcolor = Ansi.Color.BLACK;
@@ -443,16 +385,6 @@ public abstract class xApp implements xStartable {
 //11 | ///////////////////////////////////////////////////////////////// |
 //   0 2 4 6 8 0 2 4 6 8 0 2 4 6 8 0 2 4 6 8 0 2 4 6 8 0 2 4 6 8 0 2 4 6 8
 //   0         1         2         3         4         5         6
-
-
-
-	// logger
-	private static volatile xLog log = null;
-	public static xLog log() {
-		if(log == null)
-			log = xLog.getRoot();
-		return log;
-	}
 
 
 
