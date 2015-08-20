@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.poixson.commonjava.Utils.CoolDown;
 import com.poixson.commonjava.Utils.Keeper;
@@ -57,9 +58,9 @@ public class xThreadPool implements xStartable {
 	protected final BlockingQueue<xRunnable> queue = new ArrayBlockingQueue<xRunnable>(10, true);
 
 	// run now
-	protected final Object runNowLock    = new Object();
-	protected final Object runNowLockSet = new Object();
-	protected volatile xRunnable runTaskNow = null;
+	protected final Object runNowWaiter    = new Object();
+	protected final AtomicReference<xRunnable> runNow =
+			new AtomicReference<xRunnable>();
 
 	protected volatile int priority = Thread.NORM_PRIORITY;
 	protected volatile boolean stopping = false;
@@ -295,24 +296,31 @@ public class xThreadPool implements xStartable {
 				}
 			}
 			// run task now
-			if(this.runTaskNow != null) {
+			if(this.runNow.get() != null) {
 				this.active.incrementAndGet();
-				synchronized(this.runNowLock) {
-					if(this.runTaskNow == null)
-						continue;
-					final xRunnable task = this.runTaskNow;
-					this.runTaskNow = null;
-					this.runCount++;
-					currentThread.setName(threadName+":"+task.getTaskName());
+				final xRunnable task = this.runNow.get();
+				if(task != null) {
+					final int runIndex = this.runCount.incrementAndGet();
+					currentThread.setName(
+							(new StringBuilder())
+							.append(runIndex)
+							.append(":")
+							.append(threadName)
+							.append(":")
+							.append(task.getTaskName())
+							.toString()
+					);
 					try {
 						task.run();
 					} catch (Exception e) {
 						log.trace(e);
 					}
 					currentThread.setName(threadName);
+					this.runNow.set(null);
 				}
-				this.runNowLock.notifyAll();
-				this.runNowLockSet.notifyAll();
+				try {
+					this.runNowWaiter.notifyAll();
+				} catch (Exception ignore) {}
 				this.active.decrementAndGet();
 				inactive.resetRun();
 				continue;
@@ -387,14 +395,12 @@ public class xThreadPool implements xStartable {
 		}
 		// queue to run next
 		while(true) {
-			synchronized(this.runNowLockSet) {
-				if(this.runTaskNow == null) {
-					this.runTaskNow = task;
+			if(this.runNow.get() == null) {
+				if(this.runNow.compareAndSet(null, task))
 					break;
-				}
 			}
 			try {
-				this.runNowLockSet.wait(threadSleepTime.getMS());
+				this.runNowWaiter.wait(threadSleepTime.getMS());
 			} catch (InterruptedException e) {
 				this.log().trace(e);
 				return;
@@ -419,10 +425,11 @@ public class xThreadPool implements xStartable {
 		}
 		// wait until task finishes
 		try {
-			this.runNowLock.wait();
+			synchronized(this.runNowWaiter) {
+				this.runNowWaiter.wait();
+			}
 		} catch (InterruptedException e) {
 			this.log().trace(e);
-			return;
 		}
 	}
 	// queue a task
