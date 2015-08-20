@@ -85,8 +85,7 @@ public final class utilsProc {
 			Runtime.getRuntime().addShutdownHook(
 					new LockFileReleaseThread(
 							file,
-							access,
-							lock
+							access
 					)
 			);
 			return true;
@@ -109,21 +108,17 @@ public final class utilsProc {
 
 		private final File file;
 		private final RandomAccessFile access;
-		private final FileLock lock;
 
 		public LockFileReleaseThread(final File file,
-				final RandomAccessFile access,
-				final FileLock lock) {
+				final RandomAccessFile access) {
 			this.file   = file;
 			this.access = access;
-			this.lock   = lock;
 			this.setName("LockFileRelease");
 		}
 
 		@Override
 		public void run() {
 			try {
-				this.lock.release();
 				utils.safeClose(this.access);
 				this.file.delete();
 			} catch (Exception e) {
