@@ -33,8 +33,9 @@ public class xThreadPool implements xStartable {
 	public static final int GLOBAL_LIMIT = 50;
 
 	// pool timing
-	private static final xTime threadSleepTime       = xTime.get("200n");
-	private static final xTime threadInactiveTimeout = xTime.get("10s");
+	private static final xTime ThreadSleepTime       = xTime.get("200n");
+	private static final xTime ThreadInactiveTimeout = xTime.get("10s");
+	private static final xTime MaxTaskTime           = xTime.get("5s");
 	// warning cool-down
 	private final CoolDown coolMaxReached = CoolDown.get("5s");
 
@@ -58,7 +59,7 @@ public class xThreadPool implements xStartable {
 	protected final BlockingQueue<xRunnable> queue = new ArrayBlockingQueue<xRunnable>(10, true);
 
 	// run now
-	protected final Object runNowWaiter    = new Object();
+	protected final Object runNowWaiter = new Object();
 	protected final AtomicReference<xRunnable> runNow =
 			new AtomicReference<xRunnable>();
 
@@ -279,7 +280,7 @@ public class xThreadPool implements xStartable {
 			mainThread.setName("Main");
 		}
 		// thread loop
-		final CoolDown inactive = CoolDown.get(threadInactiveTimeout);
+		final CoolDown inactive = CoolDown.get(ThreadInactiveTimeout);
 		inactive.resetRun();
 		while(true) {
 			// stopping thread pool
@@ -318,9 +319,9 @@ public class xThreadPool implements xStartable {
 					currentThread.setName(threadName);
 					this.runNow.set(null);
 				}
-				try {
+				synchronized(this.runNowWaiter) {
 					this.runNowWaiter.notifyAll();
-				} catch (Exception ignore) {}
+				}
 				this.active.decrementAndGet();
 				inactive.resetRun();
 				continue;
@@ -328,7 +329,7 @@ public class xThreadPool implements xStartable {
 			// pull from queue
 			final xRunnable task;
 			try {
-				task = this.queue.poll(threadSleepTime.getMS(), xTimeU.MS);
+				task = this.queue.poll(ThreadSleepTime.getMS(), xTimeU.MS);
 			} catch (InterruptedException ignore) {
 				continue;
 			}
@@ -416,7 +417,9 @@ public class xThreadPool implements xStartable {
 					break;
 			}
 			try {
-				this.runNowWaiter.wait(threadSleepTime.getMS());
+				synchronized(this.runNowWaiter) {
+					this.runNowWaiter.wait(ThreadSleepTime.getMS());
+				}
 			} catch (InterruptedException e) {
 				this.log().trace(e);
 				return;
@@ -442,7 +445,7 @@ public class xThreadPool implements xStartable {
 		// wait until task finishes
 		try {
 			synchronized(this.runNowWaiter) {
-				this.runNowWaiter.wait();
+				this.runNowWaiter.wait(MaxTaskTime.getMS());
 			}
 		} catch (InterruptedException e) {
 			this.log().trace(e);

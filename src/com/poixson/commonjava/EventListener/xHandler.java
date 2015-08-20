@@ -129,7 +129,11 @@ public class xHandler {
 	}
 	public void triggerNow(final xThreadPool pool, final xEventData event, final Priority onlyPriority) {
 		if(event == null) throw new NullPointerException("event argument is required!");
-		final xThreadPool p = (pool == null ? xThreadPool.getMainPool() : pool);
+		final xThreadPool p = (
+				pool == null
+				? xThreadPool.getMainPool()
+				: pool
+		);
 		p.runNow(
 			this.getRunnable(event, onlyPriority)
 		);
