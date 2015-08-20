@@ -64,8 +64,8 @@ public class xThreadPool implements xStartable {
 
 	protected volatile int priority = Thread.NORM_PRIORITY;
 	protected volatile boolean stopping = false;
-	protected final AtomicInteger active = new AtomicInteger(0);
-	protected volatile int runCount = 0;
+	protected final    AtomicInteger active   = new AtomicInteger(0);
+	protected volatile AtomicInteger runCount = new AtomicInteger(0);
 
 
 
@@ -334,9 +334,17 @@ public class xThreadPool implements xStartable {
 			}
 			// run task
 			if(task != null) {
-				this.runCount++;
+				final int runIndex = this.runCount.incrementAndGet();
 				this.active.incrementAndGet();
-				currentThread.setName(threadName+":"+task.getTaskName());
+				currentThread.setName(
+						(new StringBuilder())
+						.append(runIndex)
+						.append(":")
+						.append(threadName)
+						.append(":")
+						.append(task.getTaskName())
+						.toString()
+				);
 				try {
 					task.run();
 				} catch (Exception e) {
@@ -374,9 +382,17 @@ public class xThreadPool implements xStartable {
 			final Thread currentThread = Thread.currentThread();
 			if(currentThread.equals(mainThread)) {
 				final String threadName = currentThread.getName();
-				this.runCount++;
+				final int runIndex = this.runCount.incrementAndGet();
 				this.active.incrementAndGet();
-				currentThread.setName(threadName+":"+task.getTaskName());
+				currentThread.setName(
+						(new StringBuilder())
+						.append(runIndex)
+						.append(":")
+						.append(threadName)
+						.append(":")
+						.append(task.getTaskName())
+						.toString()
+				);
 				try {
 					task.run();
 				} catch (Exception e) {
