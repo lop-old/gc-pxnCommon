@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.RandomAccessFile;
 import java.lang.management.ManagementFactory;
 import java.nio.channels.FileLock;
+import java.nio.channels.OverlappingFileLockException;
 
+import com.poixson.commonapp.app.xApp;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -54,50 +56,82 @@ public final class utilsProc {
 
 
 	// single instance lock
-	public static boolean lockInstance(final String fileStr) {
+	public static boolean lockInstance(final String filepath) {
+		String path = filepath;
+		if(utils.isEmpty(path)) {
+			final xApp app = xApp.peak();
+			if(app != null) {
+				final String appName = app.getName();
+				path = appName+".lock";
+			}
+		}
+		if(utils.isEmpty(path))
+			throw new NullPointerException("filepath argument is required!");
+		final File file = new File(path);
+		RandomAccessFile access = null;
 		try {
-			final File lockFile = new File(fileStr);
-			final RandomAccessFile randomAccessFile = new RandomAccessFile(lockFile, "rw");
-			final FileLock fileLock = randomAccessFile.getChannel().tryLock();
+			access = new RandomAccessFile(file, "rw");
+			final FileLock lock = access.getChannel().tryLock();
 			final int pid = getPid();
 			if(pid > 0)
-				randomAccessFile.write(Integer.toString(pid).getBytes());
-			if(fileLock == null) {
-				utils.safeClose(randomAccessFile);
+				access.write(Integer.toString(pid).getBytes());
+			else
+				access.writeUTF("<PID>");
+			if(lock == null) {
+				utils.safeClose(access);
 				return false;
 			}
 			// register shutdown hook
-			Runtime.getRuntime().addShutdownHook(new Thread() {
-				private volatile File fle = null;
-				private volatile RandomAccessFile acc = null;
-				private volatile FileLock lck = null;
-				public Thread init(final File file, final RandomAccessFile access, final FileLock lock) {
-					this.fle = file;
-					this.acc = access;
-					this.lck = lock;
-					this.setName("LockFileRelease");
-					return this;
-				}
-				@Override
-				public void run() {
-					try {
-						this.lck.release();
-						utils.safeClose(this.acc);
-						this.fle.delete();
-					} catch (Exception e) {
-						xLog.getRoot().trace(e);
-//						pxnLog.get().severe("Unable to remove lock file: "+lockFile);
-//						pxnLog.get().exception(e);
-					}
-				}
-			}.init(lockFile, randomAccessFile, fileLock));
+			Runtime.getRuntime().addShutdownHook(
+					new LockFileReleaseThread(
+							file,
+							access,
+							lock
+					)
+			);
 			return true;
+		} catch (OverlappingFileLockException e) {
+			xLog.getRoot().severe("Unable to create or lock file: "+file.toString());
+			xLog.getRoot().severe("File may already be locked!");
+			return false;
 		} catch (Exception e) {
+			xLog.getRoot().severe("Unable to create or lock file: "+file.toString());
 			xLog.getRoot().trace(e);
-//			pxnLog.get().severe("Unable to create and/or lock file: "+lockFile);
-//			pxnLog.get().exception(e);
+		} finally {
+			utils.safeClose(access);
 		}
 		return false;
+	}
+
+
+
+	static class LockFileReleaseThread extends Thread {
+
+		private final File file;
+		private final RandomAccessFile access;
+		private final FileLock lock;
+
+		public LockFileReleaseThread(final File file,
+				final RandomAccessFile access,
+				final FileLock lock) {
+			this.file   = file;
+			this.access = access;
+			this.lock   = lock;
+			this.setName("LockFileRelease");
+		}
+
+		@Override
+		public void run() {
+			try {
+				this.lock.release();
+				utils.safeClose(this.access);
+				this.file.delete();
+			} catch (Exception e) {
+				xLog.getRoot().severe("Unable to release lock file: "+this.file.toString());
+				xLog.getRoot().trace(e);
+			}
+		}
+
 	}
 
 
