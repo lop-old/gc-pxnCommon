@@ -197,8 +197,8 @@ public abstract class xApp implements xStartable {
 
 
 	// total time running
-	@xAppStep(type=StepType.SHUTDOWN, title="TimeRunning", priority=100)
-	public void __SHUTDOWN_timerunning() {
+	@xAppStep(type=StepType.SHUTDOWN, title="UptimeStats", priority=100)
+	public void __SHUTDOWN_uptimestats() {
 //TODO: display total time running
 	}
 
