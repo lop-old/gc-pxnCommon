@@ -22,9 +22,6 @@ import com.poixson.commonjava.xLogger.xLog;
 
 public abstract class xAppAbstract implements xStartable, FailureAction {
 
-//	protected static final String ALREADY_STARTED_EXCEPTION = "Illegal app state; this shouldn't happen; cannot start in this state; possibly already started?";
-//	protected static final String ILLEGAL_STATE_EXCEPTION   = "Illegal app state; cannot continue; this shouldn't happen; Current state: ";
-
 	protected final AtomicBoolean running = new AtomicBoolean(false);
 	protected final AtomicBoolean stopped = new AtomicBoolean(false);
 
