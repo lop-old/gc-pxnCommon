@@ -7,7 +7,6 @@ import java.lang.reflect.Method;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 
-import com.poixson.commonapp.app.xApp;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.xLogger.xLog;
 
@@ -86,7 +85,7 @@ public final class guiUtils {
 				throw new IllegalArgumentException("Too many arguments");
 			}
 		} catch (NoSuchMethodException e) {
-			xLog.getRoot().trace(e);
+			log().trace(e);
 			throw new IllegalArgumentException("Method not found");
 		}
 		// pass to dispatch thread
@@ -153,7 +152,7 @@ public final class guiUtils {
 
 	// logger
 	public static xLog log() {
-		return xApp.log();
+		return xLog.getRoot("GUI");
 	}
 
 

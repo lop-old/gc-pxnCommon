@@ -9,11 +9,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JFrame;
 
-import com.poixson.commonapp.app.xApp;
 import com.poixson.commonapp.gui.annotations.xWindowProperties;
 import com.poixson.commonapp.gui.remapped.RemappedWindowAdapter;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsString;
+import com.poixson.commonjava.xLogger.xLog;
 
 
 public abstract class xWindow extends JFrame implements Closeable {
@@ -42,7 +42,7 @@ public abstract class xWindow extends JFrame implements Closeable {
 				);
 			windows.put(this.windowName, this);
 		}
-		xApp.log().finer("New window created: "+this.windowName);
+		log().finer("New window created: "+this.windowName);
 		// annotations
 		final xWindowProperties props = this.getClass().getAnnotation(xWindowProperties.class);
 		if(props != null) {
@@ -102,8 +102,15 @@ public abstract class xWindow extends JFrame implements Closeable {
 		if(guiUtils.forceDispatchThread(this, "close")) return;
 		if(!this.closing.compareAndSet(false, true)) return;
 		// close window
-		xApp.log().fine("Closing window: "+this.windowName);
+		log().fine("Closing window: "+this.windowName);
 		this.dispose();
+	}
+
+
+
+	// logger
+	public static xLog log() {
+		return xLog.getRoot("GUI");
 	}
 
 
