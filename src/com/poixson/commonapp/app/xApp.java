@@ -64,6 +64,9 @@ public abstract class xApp implements xStartable {
 	public static xApp get() {
 		return appInstance;
 	}
+	public static xApp peak() {
+		return appInstance;
+	}
 
 
 
