@@ -17,6 +17,7 @@ import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xRunnable;
 import com.poixson.commonjava.Utils.xStartable;
+import com.poixson.commonjava.Utils.threads.HangCatcher;
 import com.poixson.commonjava.Utils.threads.xThreadPool;
 import com.poixson.commonjava.xLogger.xLevel;
 import com.poixson.commonjava.xLogger.xLog;
@@ -254,11 +255,15 @@ public class xAppManager implements xStartable, FailureAction {
 		public final xAppManager manager;
 		private int nestedCalls = 0;
 
+		private final HangCatcher hangCatcher;
+
 		public ShutdownTask(final xAppManager manager) {
 			super("Shutdown");
 			this.manager = manager;
 			if(manager.nextStep == null)
 				manager.nextStep = new AtomicInteger(manager.maxPriority);
+			this.hangCatcher = HangCatcher.get();
+			this.hangCatcher.Start();
 		}
 
 		@Override
@@ -299,6 +304,7 @@ public class xAppManager implements xStartable, FailureAction {
 				}
 			}
 			this.nestedCalls = 0;
+			this.hangCatcher.resetTimeout();
 			// queue next step
 			xThreadPool.getMainPool()
 				.runLater(this);
