@@ -12,6 +12,7 @@ import com.poixson.commonjava.xLogger.xLog;
 
 
 public class xScheduler implements xStartable {
+	private static final String LOG_NAME = "SCHED";
 
 	private static volatile xScheduler instance = null;
 	private static final Object instanceLock = new Object();
@@ -80,7 +81,7 @@ public class xScheduler implements xStartable {
 			if(this.running)  throw new RuntimeException("Scheduler already running");
 			this.running = true;
 		}
-		xLog.getRoot().fine("Starting xScheduler Manager..");
+		log().fine("Starting xScheduler Manager..");
 		final Set<xScheduledTask> finished = new HashSet<xScheduledTask>();
 		while(!this.stopping) {
 			long sleep = this.threadSleepTime.getMS();
@@ -106,17 +107,17 @@ public class xScheduler implements xStartable {
 			// remove finished
 			if(!finished.isEmpty()) {
 				for(final xScheduledTask task : finished) {
-					xLog.getRoot().finest("Finished scheduled task: "+task.getTaskName());
+					log().finest("Finished scheduled task: "+task.getTaskName());
 					this.tasks.remove(task);
 				}
 				finished.clear();
 			}
 			// sleep thread
-			//xLog.getRoot().finest("SLEEPING: "+Long.toString(sleep));
+			//log().finest("SLEEPING: "+Long.toString(sleep));
 			if(sleep > 0)
 				utilsThread.Sleep(sleep);
 		}
-		xLog.getRoot().finer("Stopped xScheduler thread");
+		log().finer("Stopped xScheduler thread");
 		this.stopping = true;
 		this.running = false;
 	}
@@ -153,6 +154,13 @@ public class xScheduler implements xStartable {
 	public boolean cancel(final xScheduledTask task) {
 		if(task == null) return false;
 		return this.tasks.remove(task);
+	}
+
+
+
+	// logger
+	public static xLog log() {
+		return xLog.getRoot(LOG_NAME);
 	}
 
 

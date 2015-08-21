@@ -19,8 +19,8 @@ import com.poixson.commonjava.xLogger.xLog;
 
 
 public final class xConfigLoader {
-
 	private xConfigLoader() {}
+	private static final String LOG_NAME = "CONFIG";
 
 
 
@@ -138,7 +138,7 @@ public final class xConfigLoader {
 
 	// logger
 	public static xLog log() {
-		return xLog.getRoot();
+		return xLog.getRoot(LOG_NAME);
 	}
 
 

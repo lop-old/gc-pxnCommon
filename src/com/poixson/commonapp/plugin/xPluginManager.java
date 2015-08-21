@@ -18,6 +18,7 @@ import com.poixson.commonjava.xLogger.xLog;
 
 
 public class xPluginManager {
+	private static final String LOG_NAME = "PluginManager";
 
 	private static volatile xPluginManager manager = null;
 	private static final Object lock = new Object();
@@ -314,7 +315,7 @@ public class xPluginManager {
 	private volatile xLog _log = null;
 	public xLog log() {
 		if(this._log == null)
-			this._log = xLog.getRoot("PluginManager");
+			this._log = xLog.getRoot(LOG_NAME);
 		return this._log;
 	}
 

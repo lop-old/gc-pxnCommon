@@ -13,6 +13,7 @@ import com.poixson.commonjava.xLogger.xLog;
 
 public final class guiUtils {
 	private guiUtils() {}
+	private static final String LOG_NAME = "GUI";
 
 
 
@@ -152,7 +153,7 @@ public final class guiUtils {
 
 	// logger
 	public static xLog log() {
-		return xLog.getRoot("GUI");
+		return xLog.getRoot(LOG_NAME);
 	}
 
 

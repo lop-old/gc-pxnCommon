@@ -18,6 +18,7 @@ import com.poixson.commonjava.xLogger.xLog;
 
 public abstract class xWindow extends JFrame implements Closeable {
 	private static final long serialVersionUID = 1L;
+	private static final String LOG_NAME = "GUI";
 
 	private static final ConcurrentMap<String, xWindow> windows =
 			new ConcurrentHashMap<String, xWindow>();
@@ -110,7 +111,7 @@ public abstract class xWindow extends JFrame implements Closeable {
 
 	// logger
 	public static xLog log() {
-		return xLog.getRoot("GUI");
+		return xLog.getRoot(LOG_NAME);
 	}
 
 

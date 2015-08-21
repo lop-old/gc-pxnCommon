@@ -8,6 +8,7 @@ import com.poixson.commonjava.xLogger.xLog;
 
 
 public class NetFirewall {
+	private static final String LOG_NAME = "FW";
 
 	protected final CopyOnWriteArraySet<NetFirewallRule> rules =
 			new CopyOnWriteArraySet<NetFirewallRule>();
@@ -48,7 +49,7 @@ public class NetFirewall {
 
 	// logger
 	public static xLog log() {
-		return xLog.getRoot("FIREWALL");
+		return xLog.getRoot(LOG_NAME);
 	}
 
 

@@ -9,6 +9,7 @@ import com.poixson.commonjava.xLogger.xLog;
 
 
 public final class dbManager {
+	private static final String LOG_NAME = "DB";
 
 	// db configs
 	private static final Map<String, dbConfig> configs = new HashMap<String, dbConfig>();
@@ -113,7 +114,7 @@ public final class dbManager {
 	private static volatile xLog _log = null;
 	public static xLog log() {
 		if(_log == null)
-			_log = xLog.getRoot("db");
+			_log = xLog.getRoot(LOG_NAME);
 		return _log;
 	}
 
