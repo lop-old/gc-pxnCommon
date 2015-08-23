@@ -47,6 +47,8 @@ public class StreamBridge implements xStartable {
 
 
 	public StreamBridge(final InputStream in, final OutputStream out) {
+		if(in  == null) throw new NullPointerException("in argument is required!");
+		if(out == null) throw new NullPointerException("out argument is required!");
 		synchronized(instances) {
 			instances.add(this);
 		}
@@ -77,7 +79,8 @@ public class StreamBridge implements xStartable {
 			try {
 				b = this.in.read();
 			} catch (IOException e) {
-				e.printStackTrace();
+				if(!this.stopping && !Thread.interrupted())
+					e.printStackTrace();
 				break;
 			}
 			if(b == -1)
@@ -92,6 +95,7 @@ public class StreamBridge implements xStartable {
 		}
 		utils.safeClose(this.out);
 		utils.safeClose(this.in);
+		this.stopping = true;
 		this.running = false;
 		this.remove();
 	}
