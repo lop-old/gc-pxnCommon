@@ -89,9 +89,9 @@ public class StreamBridge implements xStartable {
 					e.printStackTrace();
 				break;
 			}
-			utils.safeClose(this.out);
-			utils.safeClose(this.in);
 		}
+		utils.safeClose(this.out);
+		utils.safeClose(this.in);
 		this.running = false;
 		this.remove();
 	}
