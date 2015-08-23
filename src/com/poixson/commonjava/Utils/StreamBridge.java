@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class StreamBridge implements xStartable {
 
 	protected static final Set<StreamBridge> instances = new HashSet<StreamBridge>();
-	protected static final AtomicInteger count = new AtomicInteger(0);
+	protected static final AtomicInteger nextIndex = new AtomicInteger(0);
 
 	protected final Thread thread;
 	protected volatile boolean running  = false;
@@ -53,7 +53,7 @@ public class StreamBridge implements xStartable {
 		this.in  = in;
 		this.out = out;
 		this.thread = new Thread(this);
-		this.thread.setName("StreamBridge"+Integer.toString(count.incrementAndGet()));
+		this.thread.setName("StreamBridge"+Integer.toString(nextIndex.incrementAndGet()));
 	}
 	protected void remove() {
 		synchronized(instances) {
