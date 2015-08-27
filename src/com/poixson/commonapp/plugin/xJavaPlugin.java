@@ -98,6 +98,7 @@ public abstract class xJavaPlugin {
 	protected abstract void onDisable();
 
 	public abstract void register(final xListener listener);
+	public abstract void unregister(final Class<? extends xListener> listenerClass);
 
 
 
