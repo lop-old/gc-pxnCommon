@@ -23,16 +23,16 @@
 		<cobertura-version>2.7</cobertura-version>
 	</properties>
 	<scm>
-		<url>https://github.com/PoiXson/pxnCommon</url>
-		<connection>scm:git:https://github.com/PoiXson/pxnCommon.git</connection>
-		<developerConnection>scm:git:https://github.com/PoiXson/pxnCommon.git</developerConnection>
+		<url>https://github.com/GrowControl/pxnCommon</url>
+		<connection>scm:git:https://github.com/GrowControl/pxnCommon.git</connection>
+		<developerConnection>scm:git:https://github.com/GrowControl/pxnCommon.git</developerConnection>
 	</scm>
 	<organization>
 		<name>PoiXson</name>
 		<url>http://poixson.com</url>
 	</organization>
 	<issueManagement>
-		<url>https://github.com/PoiXson/pxnCommon/issues</url>
+		<url>https://github.com/GrowControl/pxnCommon/issues</url>
 		<system>github</system>
 	</issueManagement>
 	<ciManagement>
