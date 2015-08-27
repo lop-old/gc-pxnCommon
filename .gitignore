@@ -1,19 +1,21 @@
-resources/
+# resources/
 bin/
 target/
 rpmbuild-root/
 out/
 build/
 
+.classpath
+.project
 .git/
 .settings/
-.project
-.classpath
+/plugins
 
 *.class
 *.iml
 *.idea
 *.jar
+*.rpm
 *.war
 *.ear
 *.zip
