@@ -58,22 +58,26 @@ public final class xConfigLoader {
 		// load file.yml
 		{
 			final String fileStr = (utils.isEmpty(path) ? "" : utilsString.ensureEnds(File.separator, path))+file;
-			final File ff = new File(fileStr);
 			log().fine("Loading config file: "+fileStr);
-			final InputStream in = utilsDirFile.OpenFile(ff);
+			final InputStream in = utilsDirFile.OpenFile(
+					new File(fileStr)
+			);
 			if(in != null)
 				return Load(in, clss);
 		}
 		// try loading as resource
 		if(checkInJar) {
-			final File f = new File(file);
 			final InputStream in = utilsDirFile.OpenResource(file);
 			if(in != null) {
 				log().fine("Loaded config from jar: "+file);
 				final xConfig config = Load(in, clss);
 				if(config != null) {
 					config.loadedFromResource = true;
-					Save(f, config.datamap);
+					Save(
+							(utils.isEmpty(path) ? null : new File(path)),
+							new File(file),
+							config.datamap
+					);
 					return config;
 				}
 			}
@@ -123,12 +127,32 @@ public final class xConfigLoader {
 		}
 		return null;
 	}
-	public static boolean Save(final File file, final Map<String, Object> datamap) {
+
+
+
+	public static boolean Save(final File file,
+			final Map<String, Object> datamap) {
+		return Save(
+				(File) null,
+				file,
+				datamap
+		);
+	}
+	public static boolean Save(final File path, final File file,
+			final Map<String, Object> datamap) {
 		if(file == null)           throw new NullPointerException("file argument is required!");
 		if(utils.isEmpty(datamap)) throw new NullPointerException("datamap argument is required!");
-		final Yaml yml = new Yaml();
+		if(path != null && !path.isDirectory()) {
+			if(path.mkdirs()) {
+				log().info("Created directory: "+path.toString());
+			} else {
+				log().severe("Failed to create directory: "+path.toString());
+				return false;
+			}
+		}
 		PrintWriter out = null;
 		try {
+			final Yaml yml = new Yaml();
 			out = new PrintWriter(file);
 			out.print(
 				yml.dumpAs(datamap, Tag.MAP, FlowStyle.BLOCK)
