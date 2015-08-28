@@ -200,14 +200,19 @@ public final class utilsDirFile {
 			if(path.equals("."))
 				path = cwd();
 			else
-			if(path.startsWith("/") || path.startsWith("\\"))
+			while( path.startsWith("/") || path.startsWith("\\") || path.endsWith(" ") )
 				path = path.substring(1);
-			if(path.endsWith("/") || path.endsWith("\\"))
+			while( path.endsWith("/") || path.endsWith("\\") || path.endsWith(" ") )
 				path = path.substring(0, -1);
-			if(merged.length() > 0)
-				merged.append(File.separatorChar);
-			merged.append(path);
+			if(path.length() == 0)
+				continue;
+//			if(merged.length() > 0)
+//				merged.append(File.separatorChar);
+			merged.append(path)
+					.append(File.separatorChar);
 		}
+		if(merged.length() == 0)
+			return null;
 		return merged.toString();
 	}
 
