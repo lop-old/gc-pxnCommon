@@ -123,6 +123,13 @@ public final class utilsDirFile {
 		} catch(Exception ignore) {}
 		return null;
 	}
+	// load yml from jar reference
+	public static InputStream OpenResource(final Class<? extends Object> clss, final String fileName) {
+		if(clss == null)            throw new NullPointerException("clss argument is required!");
+		if(utils.isEmpty(fileName)) throw new NullPointerException("fileName argument is required!");
+		final InputStream in = clss.getResourceAsStream(fileName);
+		return in;
+	}
 	// load yml from jar
 	public static InputJar OpenJarResource(final File jarFile, final String fileName) {
 		if(jarFile == null)         throw new NullPointerException("jarFile argument is required!");

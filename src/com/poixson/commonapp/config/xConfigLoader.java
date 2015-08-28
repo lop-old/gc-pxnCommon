@@ -37,12 +37,13 @@ public final class xConfigLoader {
 		return Load(
 				file,
 				clss,
-				false
+				(Class<? extends Object>) null
 		);
 	}
 	// file, class, injar
 	public static xConfig Load(final String file,
-			final Class<? extends xConfig> clss, boolean checkInJar) {
+			final Class<? extends xConfig> clss,
+			final Class<? extends Object>  checkInJar) {
 		return Load(
 				(String) null,
 				file,
@@ -52,25 +53,37 @@ public final class xConfigLoader {
 	}
 	// path, file, class, injar
 	public static xConfig Load(final String path, final String file,
-			final Class<? extends xConfig> clss, boolean checkInJar) {
+			final Class<? extends xConfig> clss,
+			final Class<? extends Object> checkInJar) {
 		if(utils.isEmpty(file)) throw new NullPointerException("file argument is required!");
 		if(clss == null)        throw new NullPointerException("clss argument is required!");
 		// load file.yml
 		{
-			final String fileStr = (utils.isEmpty(path) ? "" : utilsString.ensureEnds(File.separator, path))+file;
-			log().fine("Loading config file: "+fileStr);
+			final String fullpath = (utils.isEmpty(path) ? "" : utilsString.ensureEnds(File.separator, path))+file;
+			log().fine("Loading config file: "+fullpath);
 			final InputStream in = utilsDirFile.OpenFile(
-					new File(fileStr)
+					new File(fullpath)
 			);
-			if(in != null)
-				return Load(in, clss);
+			if(in != null) {
+				return LoadStream(
+						in,
+						clss
+				);
+			}
 		}
 		// try loading as resource
-		if(checkInJar) {
-			final InputStream in = utilsDirFile.OpenResource(file);
+		if(checkInJar != null) {
+			log().fine("Looking in jar for file: "+file);
+			final InputStream in = utilsDirFile.OpenResource(
+					checkInJar,
+					file
+			);
 			if(in != null) {
 				log().fine("Loaded config from jar: "+file);
-				final xConfig config = Load(in, clss);
+				final xConfig config = LoadStream(
+						in,
+						clss
+				);
 				if(config != null) {
 					config.loadedFromResource = true;
 					Save(
@@ -98,7 +111,10 @@ public final class xConfigLoader {
 		final utilsDirFile.InputJar in = utilsDirFile.OpenJarResource(jarFile, ymlFile);
 		if(in == null) return null;
 		try {
-			return Load(in.fileInput, clss);
+			return LoadStream(
+					in.fileInput,
+					clss
+			);
 		} finally {
 			utils.safeClose(in);
 		}
@@ -106,7 +122,7 @@ public final class xConfigLoader {
 
 
 
-	public static <T> xConfig Load(final InputStream in, final Class<? extends xConfig> clss) {
+	public static <T> xConfig LoadStream(final InputStream in, final Class<? extends xConfig> clss) {
 		if(in   == null) throw new NullPointerException("in argument is required!");
 		if(clss == null) throw new NullPointerException("clss argument is required!");
 		try {
