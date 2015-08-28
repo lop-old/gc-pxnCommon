@@ -107,8 +107,8 @@ public class jlineConsole implements xConsole {
 						public void write(final int b) throws IOException {
 							if(b == '\r') return;
 							if(b == '\n') {
-								xLog.getRoot("STDOUT")
-									.info(this.buf.toString());
+								xLog.getRoot()
+									.stdout(this.buf.toString());
 								this.buf.setLength(0);
 								return;
 							}
@@ -127,8 +127,8 @@ public class jlineConsole implements xConsole {
 						public void write(final int b) throws IOException {
 							if(b == '\r') return;
 							if(b == '\n') {
-								xLog.getRoot("STDERR")
-									.warning(this.buf.toString());
+								xLog.getRoot()
+									.stderr(this.buf.toString());
 								this.buf.setLength(0);
 								return;
 							}

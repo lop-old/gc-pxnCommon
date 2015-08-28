@@ -32,6 +32,12 @@ public class defaultLogFormatter_Color extends defaultLogFormatter {
 		// fatal
 		else if(level.isLoggable(xLevel.FATAL))
 			color = "FG_RED,BOLD,UNDERLINE";
+		// stdout
+		else if(level.isLoggable(xLevel.STDOUT))
+			color = "FG_GREEN";
+		// stderr
+		else if(level.isLoggable(xLevel.STDERR))
+			color = "FG_YELLOW";
 		// off
 		else
 			color = "FG_BLACK,BOLD";

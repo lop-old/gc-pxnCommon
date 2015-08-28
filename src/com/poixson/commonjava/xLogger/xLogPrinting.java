@@ -73,6 +73,17 @@ public abstract class xLogPrinting {
 
 
 
+	// stdout
+	public void stdout(final String msg) {
+		this.publish(xLevel.STDOUT, msg);
+	}
+	// stderr
+	public void stderr(final String msg) {
+		this.publish(xLevel.STDERR, msg);
+	}
+
+
+
 	// finest
 	public void finest(final String msg) {
 		this.publish(xLevel.FINEST, msg);
