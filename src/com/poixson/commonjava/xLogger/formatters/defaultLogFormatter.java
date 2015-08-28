@@ -1,6 +1,7 @@
 package com.poixson.commonjava.xLogger.formatters;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.xLogger.xLogFormatter;
@@ -52,14 +53,22 @@ public class defaultLogFormatter implements xLogFormatter {
 	// [logger] [crumbs]
 	protected String partCrumbs(final xLogRecord record) {
 		if(record == null) throw new NullPointerException("record argument is required!");
+		final List<String> tree = record.getNameTree();
+		if(tree.isEmpty())
+			return "";
 		final StringBuilder crumbs = new StringBuilder();
-		for(String name : record.getNameTree()) {
+		boolean first = true;
+		crumbs.append("@|FG_BLACK,BOLD ");
+		for(String name : tree) {
 			if(name == null || name.isEmpty())
 				continue;
-			if(crumbs.length() > 0)
-				crumbs.append(" ");
+			if(first)
+				first = false;
+			else
+				crumbs.append(' ');
 			crumbs.append("[").append(name).append("]");
 		}
+		crumbs.append("|@");
 		return crumbs.toString();
 	}
 	// raw message
