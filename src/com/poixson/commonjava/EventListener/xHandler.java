@@ -102,8 +102,10 @@ public class xHandler {
 			final Iterator<ListenerHolder> it = this.listeners.iterator();
 			while(it.hasNext()) {
 				final ListenerHolder listener = it.next();
-				if(clss.isInstance(listener.listener))
+				if(clss.isInstance(listener.listener)) {
 					it.remove();
+					log().finest("Unregistered listener: "+clss.getName());
+				}
 			}
 		}
 	}
