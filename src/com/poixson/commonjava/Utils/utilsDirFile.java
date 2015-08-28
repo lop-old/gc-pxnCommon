@@ -141,12 +141,12 @@ public final class utilsDirFile {
 				utils.safeClose(jar);
 				return null;
 			}
-			final InputStream fileInput = jar.getInputStream(entry);
-			if(fileInput == null) {
+			final InputStream in = jar.getInputStream(entry);
+			if(in == null) {
 				utils.safeClose(jar);
 				return null;
 			}
-			return new InputJar(jar, fileInput);
+			return new InputJar(jar, in);
 		} catch (IOException ignore) {}
 		return null;
 	}
@@ -154,7 +154,7 @@ public final class utilsDirFile {
 		public final JarFile jar;
 		public final InputStream fileInput;
 		public InputJar(final JarFile jar, final InputStream fileInput) {
-			this.jar = jar;
+			this.jar       = jar;
 			this.fileInput = fileInput;
 		}
 		@Override
