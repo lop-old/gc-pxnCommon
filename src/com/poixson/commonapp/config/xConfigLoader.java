@@ -15,6 +15,7 @@ import org.yaml.snakeyaml.nodes.Tag;
 
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsDirFile;
+import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -24,47 +25,55 @@ public final class xConfigLoader {
 
 
 
-	// load generic yml file
+	// file
 	public static xConfig Load(final String file) {
-		return Load(file, xConfig.class);
+		return Load(
+				file,
+				xConfig.class
+		);
 	}
-	public static xConfig Load(final File file) {
-		return Load(file, xConfig.class);
-	}
-
-
-
-	// load extended xConfig
+	// file, class
 	public static xConfig Load(final String file, final Class<? extends xConfig> clss) {
-		return Load(file, clss, false);
+		return Load(
+				file,
+				clss,
+				false
+		);
 	}
-	public static xConfig Load(final String file, final Class<? extends xConfig> clss, boolean checkInJar) {
+	// file, class, injar
+	public static xConfig Load(final String file,
+			final Class<? extends xConfig> clss, boolean checkInJar) {
+		return Load(
+				(String) null,
+				file,
+				clss,
+				checkInJar
+		);
+	}
+	// path, file, class, injar
+	public static xConfig Load(final String path, final String file,
+			final Class<? extends xConfig> clss, boolean checkInJar) {
 		if(utils.isEmpty(file)) throw new NullPointerException("file argument is required!");
-		return Load(new File(file), clss, checkInJar);
-	}
-	public static xConfig Load(final File file, final Class<? extends xConfig> clss) {
-		return Load(file, clss, false);
-	}
-	public static xConfig Load(final File file, final Class<? extends xConfig> clss, boolean checkInJar) {
-		if(file == null) throw new NullPointerException("file argument is required!");
-		if(clss == null) throw new NullPointerException("clss argument is required!");
-		final String fileName = file.toString();
+		if(clss == null)        throw new NullPointerException("clss argument is required!");
 		// load file.yml
 		{
-			log().fine("Loading config file: "+fileName);
-			final InputStream in = utilsDirFile.OpenFile(file);
+			final String fileStr = (utils.isEmpty(path) ? "" : utilsString.ensureEnds(File.separator, path))+file;
+			final File ff = new File(fileStr);
+			log().fine("Loading config file: "+fileStr);
+			final InputStream in = utilsDirFile.OpenFile(ff);
 			if(in != null)
 				return Load(in, clss);
 		}
 		// try loading as resource
 		if(checkInJar) {
-			final InputStream in = utilsDirFile.OpenResource(fileName);
+			final File f = new File(file);
+			final InputStream in = utilsDirFile.OpenResource(file);
 			if(in != null) {
-				log().fine("Loaded config from jar: "+fileName);
+				log().fine("Loaded config from jar: "+file);
 				final xConfig config = Load(in, clss);
 				if(config != null) {
 					config.loadedFromResource = true;
-					Save(file, config.datamap);
+					Save(f, config.datamap);
 					return config;
 				}
 			}
