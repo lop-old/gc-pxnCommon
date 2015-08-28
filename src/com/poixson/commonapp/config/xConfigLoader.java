@@ -73,13 +73,14 @@ public final class xConfigLoader {
 		}
 		// try loading as resource
 		if(checkInJar != null) {
-			log().fine("Looking in jar for file: "+file);
+			final String filepath = utilsString.ensureStarts(File.separator, file);
+			log().fine("Looking in jar for file: "+filepath+"  "+checkInJar.getName());
 			final InputStream in = utilsDirFile.OpenResource(
 					checkInJar,
-					file
+					filepath
 			);
 			if(in != null) {
-				log().fine("Loaded config from jar: "+file);
+				log().fine("Loaded config from jar: "+filepath);
 				final xConfig config = LoadStream(
 						in,
 						clss
@@ -95,6 +96,7 @@ public final class xConfigLoader {
 				}
 			}
 		}
+		log().fine("Config file not found! "+file);
 		return null;
 	}
 
