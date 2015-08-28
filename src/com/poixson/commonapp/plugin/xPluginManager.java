@@ -111,7 +111,11 @@ public class xPluginManager {
 			return null;
 		}
 		// load plugin.yml from jar
-		final xPluginYML yml = (xPluginYML) xConfigLoader.LoadJar(file, "plugin.yml", xPluginYML.class);
+		final xPluginYML yml = (xPluginYML) xConfigLoader.LoadJar(
+				file,
+				"plugin.yml",
+				xPluginYML.class
+		);
 		if(yml == null) {
 			this.log().warning("plugin.yml not found in plugin: "+file.toString());
 			return null;

@@ -26,11 +26,6 @@ public class xLog extends xLogPrinting {
 	public static xLog log() {
 		return xLog.getRoot();
 	}
-== or ==
-	// logger
-	public static xLog log() {
-		return xApp.log();
-	}
 */
 
 
@@ -41,7 +36,7 @@ public class xLog extends xLogPrinting {
 	private static volatile xLog _log = null;
 	public static xLog log() {
 		if(_log == null)
-			_log = xApp.log();
+			_log = xLog.log();
 		return _log;
 	}
 */

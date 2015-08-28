@@ -25,7 +25,8 @@ import com.poixson.commonjava.xLogger.xLog;
 
 
 public class xThreadPool implements xStartable {
-
+	private static final String LOG_NAME = "tPool";
+//	private static final String LOG_NAME = "xThreadPool";
 	public static final boolean DETAILED_LOGGING = false;
 
 	// max threads
@@ -660,7 +661,7 @@ public class xThreadPool implements xStartable {
 	public xLog log() {
 		if(this._log == null)
 			this._log = xLog.getRoot()
-				.get("xThreadPool|"+this.poolName);
+				.get(LOG_NAME+"|"+this.poolName);
 		return this._log;
 	}
 
