@@ -318,6 +318,15 @@ public final class utilsString {
 			.append(text)
 			.toString();
 	}
+	public static String padEnd(final int width, final String text, final char padding) {
+		if(width < 1) return null;
+		final int count = width - text.length();
+		if(count < 1) return text;
+		return (new StringBuilder(width))
+			.append(text)
+			.append(repeat(count, padding))
+			.toString();
+	}
 	public static String padCenter(final int width, final String text, final char padding) {
 		if(width < 1) return null;
 		if(utils.isEmpty(text))
