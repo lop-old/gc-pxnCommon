@@ -342,6 +342,21 @@ public final class utilsString {
 
 
 
+	public static String pad(final int width, final int value) {
+		return pad(width, Integer.toString(value), '0');
+	}
+	public static String padFront(final int width, final int value) {
+		return padFront(width, Integer.toString(value), '0');
+	}
+	public static String padEnd(final int width, final int value) {
+		return padEnd(width, Integer.toString(value), '0');
+	}
+	public static String padCenter(final int width, final int value) {
+		return padCenter(width, Integer.toString(value), '0');
+	}
+
+
+
 	public static String wildcardToRegex(String wildcard) {
 		final StringBuffer str = new StringBuffer(wildcard.length());
 		str.append('^');
