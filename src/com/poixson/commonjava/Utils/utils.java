@@ -93,6 +93,158 @@ public final class utils {
 
 
 	/**
+	 * Is byte array empty.
+	 * @param byte[]
+	 * @return True if array is null or empty.
+	 */
+	public static boolean isEmpty(final byte[] bytes) {
+		return (bytes == null || bytes.length == 0);
+	}
+	/**
+	 * Is byte array populated.
+	 * @param byte[]
+	 * @return True if array is not null and contains data.
+	 */
+	public static boolean notEmpty(final byte[] bytes) {
+		return (bytes != null && bytes.length != 0);
+	}
+
+
+
+	/**
+	 * Is char array empty.
+	 * @param char[]
+	 * @return True if array is null or empty.
+	 */
+	public static boolean isEmpty(final char[] chars) {
+		return (chars == null || chars.length == 0);
+	}
+	/**
+	 * Is char array populated.
+	 * @param char[]
+	 * @return True if array is not null and contains data.
+	 */
+	public static boolean notEmpty(final char[] chars) {
+		return (chars != null && chars.length != 0);
+	}
+
+
+
+	/**
+	 * Is short array empty.
+	 * @param short[]
+	 * @return True if array is null or empty.
+	 */
+	public static boolean isEmpty(final short[] shorts) {
+		return (shorts == null || shorts.length == 0);
+	}
+	/**
+	 * Is short array populated.
+	 * @param short[]
+	 * @return True if array is not null and contains data.
+	 */
+	public static boolean notEmpty(final short[] shorts) {
+		return (shorts != null && shorts.length != 0);
+	}
+
+
+
+	/**
+	 * Is int array empty.
+	 * @param int[]
+	 * @return True if array is null or empty.
+	 */
+	public static boolean isEmpty(final int[] ints) {
+		return (ints == null || ints.length == 0);
+	}
+	/**
+	 * Is int array populated.
+	 * @param int[]
+	 * @return True if array is not null and contains data.
+	 */
+	public static boolean notEmpty(final int[] ints) {
+		return (ints != null && ints.length != 0);
+	}
+
+
+
+	/**
+	 * Is long array empty.
+	 * @param long[]
+	 * @return True if array is null or empty.
+	 */
+	public static boolean isEmpty(final long[] longs) {
+		return (longs == null || longs.length == 0);
+	}
+	/**
+	 * Is long array populated.
+	 * @param long[]
+	 * @return True if array is not null and contains data.
+	 */
+	public static boolean notEmpty(final long[] longs) {
+		return (longs != null && longs.length != 0);
+	}
+
+
+
+	/**
+	 * Is double array empty.
+	 * @param double[]
+	 * @return True if array is null or empty.
+	 */
+	public static boolean isEmpty(final double[] doubles) {
+		return (doubles == null || doubles.length == 0);
+	}
+	/**
+	 * Is double array populated.
+	 * @param double[]
+	 * @return True if array is not null and contains data.
+	 */
+	public static boolean notEmpty(final double[] doubles) {
+		return (doubles != null && doubles.length != 0);
+	}
+
+
+
+	/**
+	 * Is float array empty.
+	 * @param float[]
+	 * @return True if array is null or empty.
+	 */
+	public static boolean isEmpty(final float[] floats) {
+		return (floats == null || floats.length == 0);
+	}
+	/**
+	 * Is float array populated.
+	 * @param float[]
+	 * @return True if array is not null and contains data.
+	 */
+	public static boolean notEmpty(final float[] floats) {
+		return (floats != null && floats.length != 0);
+	}
+
+
+
+	/**
+	 * Is boolean array empty.
+	 * @param boolean[]
+	 * @return True if array is null or empty.
+	 */
+	public static boolean isEmpty(final boolean[] bools) {
+		return (bools == null || bools.length == 0);
+	}
+	/**
+	 * Is boolean array populated.
+	 * @param boolean[]
+	 * @return True if array is not null and contains data.
+	 */
+	public static boolean notEmpty(final boolean[] bools) {
+		return (bools != null && bools.length != 0);
+	}
+
+
+
+	/**
 	 * Close safely, ignoring errors.
 	 */
 	public static void safeClose(Closeable obj) {
