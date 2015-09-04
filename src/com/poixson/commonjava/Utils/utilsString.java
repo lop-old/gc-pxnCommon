@@ -199,6 +199,62 @@ public final class utilsString {
 
 
 
+	// get first part
+	public static String getFirstPart(final char[] delims, final String data) {
+		int pos = Integer.MAX_VALUE;
+		for(final char c : delims) {
+			final int p = data.indexOf(c);
+			if(p == -1)
+				continue;
+			if(pos > p) pos = p;
+			if(pos == 0)
+				break;
+		}
+		if(pos == Integer.MAX_VALUE)
+			return data;
+		return data.substring(0, pos);
+	}
+	// get next part
+	public static String getNextPart(final char[] delims, final StringRef data) {
+		int pos = Integer.MAX_VALUE;
+		for(final char c : delims) {
+			final int p = data.value.indexOf(c);
+			if(p == -1)
+				continue;
+			if(pos > p) pos = p;
+			if(pos == 0)
+				break;
+		}
+		final String part;
+		if(pos == Integer.MAX_VALUE) {
+			return null;
+//			part       = data.value;
+//			data.value = "";
+		} else {
+			part       = data.value.substring(0, pos);
+			data.value = data.value.substring(pos + 1);
+		}
+		return part;
+	}
+	// get last part
+	public static String getLastPart(final char[] delims, final String data) {
+		int pos = 0;
+		final int len = data.length();
+		for(final char c : delims) {
+			final int p = data.indexOf(c);
+			if(p == -1)
+				continue;
+			if(pos < p) pos = p;
+			if(pos == len)
+				break;
+		}
+		if(pos == len)
+			return data;
+		return data.substring(pos + 1);
+	}
+
+
+
 	// replace with array
 	public static String replaceWith(final String replaceWhat, final String[] withWhat, final String data) {
 		if(utils.isEmpty(replaceWhat)) return data;
