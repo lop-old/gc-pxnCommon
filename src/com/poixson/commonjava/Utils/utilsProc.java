@@ -1,13 +1,6 @@
 package com.poixson.commonjava.Utils;
 
-import java.io.File;
-import java.io.RandomAccessFile;
 import java.lang.management.ManagementFactory;
-import java.nio.channels.FileLock;
-import java.nio.channels.OverlappingFileLockException;
-
-import com.poixson.commonapp.app.xApp;
-import com.poixson.commonjava.xLogger.xLog;
 
 
 public final class utilsProc {
@@ -55,6 +48,7 @@ public final class utilsProc {
 
 
 
+/*
 	// single instance lock
 	public static boolean lockInstance(final String filepath) {
 		String path = filepath;
@@ -128,6 +122,7 @@ public final class utilsProc {
 		}
 
 	}
+*/
 
 
 
