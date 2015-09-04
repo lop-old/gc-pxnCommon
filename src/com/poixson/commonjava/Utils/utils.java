@@ -27,7 +27,7 @@ public final class utils {
 	/**
 	 * Is string populated.
 	 * @param String
-	 * @return True if string is not null or contains data.
+	 * @return True if string is not null and contains data.
 	 */
 	public static boolean notEmpty(final String value) {
 		return (value != null && value.length() > 0);
@@ -46,7 +46,7 @@ public final class utils {
 	/**
 	 * Is array populated.
 	 * @param Object[]
-	 * @return True if array is not null or contains data.
+	 * @return True if array is not null and contains data.
 	 */
 	public static boolean notEmpty(final Object[] array) {
 		return (array != null && array.length > 0);
@@ -65,7 +65,7 @@ public final class utils {
 	/**
 	 * Is collection/set/list populated.
 	 * @param Collection or Set or List
-	 * @return True if collection is not null or contains data.
+	 * @return True if collection is not null and contains data.
 	 */
 	public static boolean notEmpty(final Collection<?> collect) {
 		return (collect != null && !collect.isEmpty());
@@ -84,7 +84,7 @@ public final class utils {
 	/**
 	 * Is map populated.
 	 * @param Map
-	 * @return True if map is not null or contains data.
+	 * @return True if map is not null and contains data.
 	 */
 	public static boolean notEmpty(final Map<?, ?> map) {
 		return (map != null && !map.isEmpty());
