@@ -10,6 +10,7 @@ import com.poixson.commonapp.app.annotations.xAppStep.StepType;
 import com.poixson.commonapp.xLogger.jlineConsole;
 import com.poixson.commonjava.Failure;
 import com.poixson.commonjava.xVars;
+import com.poixson.commonjava.Utils.LockFile;
 import com.poixson.commonjava.Utils.mvnProps;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsProc;
@@ -142,7 +143,7 @@ public abstract class xApp extends xAppAbstract {
 	@xAppStep(type=StepType.STARTUP, title="LockFile", priority=3)
 	public void __STARTUP_lockfile() {
 		final String filename = this.getName()+".lock";
-		if(!utilsProc.lockInstance(filename)) {
+		if(LockFile.get(filename) == null) {
 			Failure.fail("Failed to get lock on file: "+filename);
 			return;
 		}
