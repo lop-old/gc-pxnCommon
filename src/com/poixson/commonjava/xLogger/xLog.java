@@ -316,11 +316,11 @@ public class xLog extends xLogPrinting {
 
 
 	// set command handler
-	public static void setCommandHandler(final xCommandsHandler handler) {
-		if(handler        == null) throw new NullPointerException("handler argument is required!");
-		if(consoleHandler == null) throw new RuntimeException("Console handler not set; command handler not supported.");
-		commandHandler = handler;
-		consoleHandler.setCommandHandler(handler);
+	public static void setCommandHandler(final xCommandsHandler commandsHandler) {
+		if(commandsHandler == null) throw new NullPointerException("commandsHandler argument is required!");
+		if(consoleHandler  == null) throw new RuntimeException("consoleHandler not set; command handler not supported.");
+		commandHandler = commandsHandler;
+		consoleHandler.setCommandHandler(commandsHandler);
 	}
 
 
