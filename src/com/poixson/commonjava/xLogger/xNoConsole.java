@@ -1,6 +1,7 @@
 package com.poixson.commonjava.xLogger;
 
 import com.poixson.commonjava.xEvents.xHandler;
+import com.poixson.commonjava.xLogger.commands.xCommandListener;
 
 
 public class xNoConsole implements xConsole {
@@ -84,7 +85,7 @@ public class xNoConsole implements xConsole {
 
 
 	@Override
-	public void setCommandHandler(final xHandler handler) {
+	public void setCommandHandler(final xHandler<xCommandListener> handler) {
 	}
 
 

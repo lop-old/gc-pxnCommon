@@ -9,9 +9,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.Utils.Keeper;
 import com.poixson.commonjava.Utils.utils;
+import com.poixson.commonjava.scheduler.ticker.xTickHandler;
 import com.poixson.commonjava.scheduler.ticker.xTickPrompt;
-import com.poixson.commonjava.scheduler.ticker.xTicker;
-import com.poixson.commonjava.xEvents.xHandler;
+import com.poixson.commonjava.xLogger.commands.xCommandsHandler;
 import com.poixson.commonjava.xLogger.formatters.defaultLogFormatter;
 
 
@@ -73,7 +73,7 @@ public class xLog extends xLogPrinting {
 	private final String name;
 	private final xLog parent;
 	private volatile xLevel level = null;
-	private static volatile xHandler commandHandler = null;
+	private static volatile xCommandsHandler commandHandler = null;
 
 	// sub-loggers
 	private final ConcurrentMap<String, xLog> loggers = new ConcurrentHashMap<String, xLog>();
@@ -305,7 +305,7 @@ public class xLog extends xLogPrinting {
 	}
 	public static void shutdown() {
 		// stop prompt ticker
-		xTicker.get()
+		xTickHandler.get()
 			.unregister(xTickPrompt.class);
 		// stop console input
 		final xConsole console = peekConsole();
@@ -316,7 +316,7 @@ public class xLog extends xLogPrinting {
 
 
 	// set command handler
-	public static void setCommandHandler(final xHandler handler) {
+	public static void setCommandHandler(final xCommandsHandler handler) {
 		if(handler        == null) throw new NullPointerException("handler argument is required!");
 		if(consoleHandler == null) throw new RuntimeException("Console handler not set; command handler not supported.");
 		commandHandler = handler;

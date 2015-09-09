@@ -23,7 +23,7 @@ public class xTickPrompt implements xTickListener {
 
 
 	public xTickPrompt() {
-		xTicker.get()
+		xTickHandler.get()
 			.register(this);
 	}
 

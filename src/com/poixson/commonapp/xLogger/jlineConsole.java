@@ -18,6 +18,7 @@ import com.poixson.commonjava.xEvents.xHandler;
 import com.poixson.commonjava.xLogger.xConsole;
 import com.poixson.commonjava.xLogger.xLog;
 import com.poixson.commonjava.xLogger.commands.xCommandEvent;
+import com.poixson.commonjava.xLogger.commands.xCommandListener;
 
 
 public class jlineConsole implements xConsole {
@@ -29,8 +30,8 @@ public class jlineConsole implements xConsole {
 	private static volatile ConsoleReader reader = null;
 	private static volatile Boolean jlineEnabled = null;
 
-	private volatile String   prompt = null;
-	private volatile xHandler handler = null;
+	private volatile String prompt = null;
+	private volatile xHandler<xCommandListener> handler = null;
 
 	private static volatile PrintStream originalOut = null;
 	private static volatile PrintStream originalErr = null;
@@ -219,7 +220,7 @@ public class jlineConsole implements xConsole {
 			if(this.stopping) break;
 			if(utils.notEmpty(line)) {
 				// pass event to command handler
-				final xHandler hand = this.handler;
+				final xHandler<xCommandListener> hand = this.handler;
 				if(hand == null) {
 					log().severe("Command handler not set!");
 				} else {
@@ -340,7 +341,7 @@ public class jlineConsole implements xConsole {
 
 
 	@Override
-	public void setCommandHandler(final xHandler handler) {
+	public void setCommandHandler(final xHandler<xCommandListener> handler) {
 		this.handler = handler;
 	}
 

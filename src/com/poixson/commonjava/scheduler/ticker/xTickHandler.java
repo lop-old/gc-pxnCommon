@@ -15,11 +15,11 @@ import com.poixson.commonjava.xEvents.xListenerDAO;
 import com.poixson.commonjava.xLogger.xLog;
 
 
-public class xTicker extends xHandler implements xStartable {
+public class xTickHandler extends xHandler<xTickListener> implements xStartable {
 
 	public static final String SCHEDULER_NAME = "xTicker";
 
-	protected static volatile xTicker instance = null;
+	protected static volatile xTickHandler instance = null;
 	protected static final Object instanceLock = new Object();
 
 	protected final xTime interval = xTime.get("1s");
@@ -29,16 +29,16 @@ public class xTicker extends xHandler implements xStartable {
 
 
 
-	public static xTicker get() {
+	public static xTickHandler get() {
 		if(instance == null) {
 			synchronized(instanceLock) {
 				if(instance == null)
-					instance = new xTicker();
+					instance = new xTickHandler();
 			}
 		}
 		return instance;
 	}
-	protected xTicker() {
+	protected xTickHandler() {
 		super();
 		Keeper.add(this);
 	}

@@ -16,8 +16,8 @@ import com.poixson.commonjava.xLogger.xLog;
 
 public abstract class xHandler<T extends xEventListener> {
 
-	protected final CopyOnWriteArraySet<ListenerHolder> listeners =
-			new CopyOnWriteArraySet<ListenerHolder>();
+	protected final Set<xListenerDAO> listeners =
+			new CopyOnWriteArraySet<xListenerDAO>();
 
 
 
