@@ -1,4 +1,4 @@
-package com.poixson.commonjava.xLogger.handlers;
+package com.poixson.commonjava.xLogger.commands;
 
 import com.poixson.commonjava.xEvents.xEventListener;
 

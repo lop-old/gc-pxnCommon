@@ -17,12 +17,12 @@ import com.poixson.commonjava.Utils.utilsProc;
 import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.threads.xThreadPool;
 import com.poixson.commonjava.scheduler.xScheduler;
+import com.poixson.commonjava.xLogger.logHandlerConsole;
 import com.poixson.commonjava.xLogger.xConsole;
 import com.poixson.commonjava.xLogger.xLevel;
 import com.poixson.commonjava.xLogger.xLog;
 import com.poixson.commonjava.xLogger.xNoConsole;
 import com.poixson.commonjava.xLogger.formatters.defaultLogFormatter_Color;
-import com.poixson.commonjava.xLogger.handlers.logHandlerConsole;
 
 
 /**

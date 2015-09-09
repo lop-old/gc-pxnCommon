@@ -17,7 +17,7 @@ import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.xEvents.xHandler;
 import com.poixson.commonjava.xLogger.xConsole;
 import com.poixson.commonjava.xLogger.xLog;
-import com.poixson.commonjava.xLogger.handlers.xCommandEvent;
+import com.poixson.commonjava.xLogger.commands.xCommandEvent;
 
 
 public class jlineConsole implements xConsole {
