@@ -2,7 +2,7 @@ package com.poixson.commonapp.plugin;
 
 import com.poixson.commonjava.Failure;
 import com.poixson.commonjava.Utils.utils;
-import com.poixson.commonjava.xEvents.xListener;
+import com.poixson.commonjava.xEvents.xEventListener;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -97,8 +97,8 @@ public abstract class xJavaPlugin {
 	protected abstract void onEnable();
 	protected abstract void onDisable();
 
-	public abstract void register(final xListener listener);
-	public abstract void unregister(final Class<? extends xListener> listenerClass);
+	public abstract void register(final xEventListener listener);
+	public abstract void unregister(final Class<? extends xEventListener> listenerClass);
 
 
 

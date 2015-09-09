@@ -1,9 +1,9 @@
 package com.poixson.commonjava.scheduler.ticker;
 
-import com.poixson.commonjava.xEvents.xListener;
+import com.poixson.commonjava.xEvents.xEventListener;
 
 
-public interface xTickListener extends xListener {
+public interface xTickListener extends xEventListener {
 
 
 	public void onTick(final xTickEvent event);
