@@ -14,10 +14,15 @@ import com.poixson.commonjava.xEvents.annotations.xEvent;
 import com.poixson.commonjava.xLogger.xLog;
 
 
-public class xHandler {
+public abstract class xHandler<T extends xEventListener> {
 
 	protected final CopyOnWriteArraySet<ListenerHolder> listeners =
 			new CopyOnWriteArraySet<ListenerHolder>();
+
+
+
+	public xHandler() {
+	}
 
 
 
