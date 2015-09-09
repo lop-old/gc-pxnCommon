@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.atomic.AtomicLong;
 
 import com.poixson.commonjava.Utils.xRunnable;
 import com.poixson.commonjava.Utils.threads.xThreadPool;
@@ -19,39 +18,6 @@ public class xHandler {
 
 	protected final CopyOnWriteArraySet<ListenerHolder> listeners =
 			new CopyOnWriteArraySet<ListenerHolder>();
-
-
-
-	/**
-	 * Listener data holder.
-	 */
-	public static class ListenerHolder {
-		private static final AtomicLong nextId = new AtomicLong(1);
-		public final long id;
-		public final xEventListener listener;
-		public final Method method;
-		public final ListenerPriority priority;
-//TODO: these annotations aren't used yet
-//		public final boolean async;
-		public final boolean filterHandled;
-		public final boolean filterCancelled;
-		public ListenerHolder(final xEventListener listener, final Method method,
-				final ListenerPriority priority,
-//				final boolean async,
-				final boolean filterHandled, final boolean filterCancelled) {
-			if(listener == null) throw new NullPointerException("listener argument is required!");
-			if(method   == null) throw new NullPointerException("method argument is required!");
-			if(priority == null) throw new NullPointerException("priority argument is required!");
-			this.id = nextId.getAndIncrement();
-			this.listener        = listener;
-			this.method          = method;
-			this.priority        = priority;
-//TODO: these annotations aren't used yet
-//			this.async           = async;
-			this.filterHandled   = filterHandled;
-			this.filterCancelled = filterCancelled;
-		}
-	}
 
 
 
