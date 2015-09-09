@@ -1,4 +1,4 @@
-package com.poixson.commonjava.EventListener;
+package com.poixson.commonjava.xEvents;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

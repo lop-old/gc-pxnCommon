@@ -1,6 +1,6 @@
 package com.poixson.commonjava.xLogger;
 
-import com.poixson.commonjava.EventListener.xHandler;
+import com.poixson.commonjava.xEvents.xHandler;
 
 
 public class xNoConsole implements xConsole {

@@ -1,7 +1,7 @@
 package com.poixson.commonjava.xLogger.handlers;
 
-import com.poixson.commonjava.EventListener.xEventData;
 import com.poixson.commonjava.Utils.utils;
+import com.poixson.commonjava.xEvents.xEventData;
 
 
 public class xCommandEvent extends xEventData {

@@ -1,7 +1,7 @@
 package com.poixson.commonjava.scheduler.ticker;
 
-import com.poixson.commonjava.EventListener.xEventData;
 import com.poixson.commonjava.Utils.utils;
+import com.poixson.commonjava.xEvents.xEventData;
 
 
 public class xTickEvent extends xEventData {

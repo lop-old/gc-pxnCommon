@@ -1,7 +1,6 @@
 package com.poixson.commonjava.xLogger.handlers;
 
-import com.poixson.commonjava.EventListener.xListener;
-import com.poixson.commonjava.xLogger.handlers.xCommandEvent;
+import com.poixson.commonjava.xEvents.xListener;
 
 
 public interface xCommandListener extends xListener {

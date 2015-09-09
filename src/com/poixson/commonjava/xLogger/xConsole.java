@@ -1,7 +1,7 @@
 package com.poixson.commonjava.xLogger;
 
-import com.poixson.commonjava.EventListener.xHandler;
 import com.poixson.commonjava.Utils.xStartable;
+import com.poixson.commonjava.xEvents.xHandler;
 
 
 public interface xConsole extends Runnable, xStartable {
