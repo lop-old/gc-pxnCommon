@@ -13,7 +13,6 @@ import com.poixson.commonjava.scheduler.ticker.xTickPrompt;
 import com.poixson.commonjava.scheduler.ticker.xTicker;
 import com.poixson.commonjava.xEvents.xHandler;
 import com.poixson.commonjava.xLogger.formatters.defaultLogFormatter;
-import com.poixson.commonjava.xLogger.handlers.logHandlerConsole;
 
 
 public class xLog extends xLogPrinting {

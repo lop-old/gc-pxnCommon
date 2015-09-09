@@ -1,4 +1,4 @@
-package com.poixson.commonjava.xLogger.handlers;
+package com.poixson.commonjava.xLogger;
 
 import com.poixson.commonjava.xLogger.xConsole;
 import com.poixson.commonjava.xLogger.xLog;
