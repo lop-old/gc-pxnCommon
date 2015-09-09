@@ -27,7 +27,7 @@ public class xHandler {
 	 */
 	public void register(final xEventListener listener) {
 		if(listener == null) throw new NullPointerException("listener argument is required!");
-		final Set<ListenerHolder> toadd = new HashSet<ListenerHolder>();
+		final Set<xListenerDAO> toadd = new HashSet<xListenerDAO>();
 		// find annotated listener methods
 		for(final Method method : listener.getClass().getMethods()) {
 			if(method == null) continue;
@@ -35,7 +35,7 @@ public class xHandler {
 			final xEvent annotate = method.getAnnotation(xEvent.class);
 			if(annotate == null) continue;
 			// register listener
-			final ListenerHolder holder = new ListenerHolder(
+			final xListenerDAO holder = new xListenerDAO(
 				listener,
 				method,
 				annotate.priority(),
@@ -67,9 +67,9 @@ public class xHandler {
 	public void unregister(final Class<? extends xEventListener> clss) {
 		if(this.listeners.isEmpty()) return;
 		synchronized(this.listeners){
-			final Iterator<ListenerHolder> it = this.listeners.iterator();
+			final Iterator<xListenerDAO> it = this.listeners.iterator();
 			while(it.hasNext()) {
-				final ListenerHolder listener = it.next();
+				final xListenerDAO listener = it.next();
 				if(clss.isInstance(listener.listener)) {
 					it.remove();
 					log().finest("Unregistered listener: "+clss.getName());
@@ -166,9 +166,9 @@ public class xHandler {
 //				(event.isCancelled() ? " <CANCELLED>" : "" )+
 //				" )"
 //		);
-		final Iterator<ListenerHolder> it = this.listeners.iterator();
+		final Iterator<xListenerDAO> it = this.listeners.iterator();
 		while(it.hasNext()) {
-			final ListenerHolder holder = it.next();
+			final xListenerDAO holder = it.next();
 			if(!priority.equals(holder.priority))             continue;
 			if(holder.filterHandled && event.isHandled())     continue;
 			if(holder.filterCancelled && event.isCancelled()) continue;

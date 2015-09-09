@@ -11,6 +11,7 @@ import com.poixson.commonjava.scheduler.xScheduler;
 import com.poixson.commonjava.scheduler.triggers.triggerInterval;
 import com.poixson.commonjava.xEvents.xEventListener.ListenerPriority;
 import com.poixson.commonjava.xEvents.xHandler;
+import com.poixson.commonjava.xEvents.xListenerDAO;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -80,7 +81,7 @@ public class xTicker extends xHandler implements xStartable {
 			return;
 		}
 		if(method == null) throw new NullPointerException("onTick method is missing!");
-		final ListenerHolder holder = new xHandler.ListenerHolder(
+		final xListenerDAO holder = new xListenerDAO(
 			listener,
 			method,
 			ListenerPriority.NORMAL,
