@@ -63,7 +63,7 @@ public abstract class xHandler {
 		while(it.hasNext()) {
 			final xListenerDAO dao = it.next();
 			if(listenerClass.equals(dao.listener.getClass())) {
-				it.remove();
+				this.listeners.remove(dao);
 				count++;
 			}
 		}
