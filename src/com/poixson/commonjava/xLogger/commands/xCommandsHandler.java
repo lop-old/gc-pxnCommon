@@ -7,7 +7,11 @@ public class xCommandsHandler extends xHandler<xCommandListener> {
 
 
 
-	public xCommandsHandler() {
+	public static xCommandsHandler get() {
+		return new xCommandsHandler();
+	}
+	protected xCommandsHandler() {
+		super();
 	}
 
 

@@ -8,7 +8,11 @@ public class xPluginsHandler extends xHandler<xPluginEventListener> {
 
 
 
-	public xPluginsHandler() {
+	public static xPluginsHandler get() {
+		return new xPluginsHandler();
+	}
+	protected xPluginsHandler() {
+		super();
 	}
 
 

@@ -21,7 +21,7 @@ public abstract class xHandler<T extends xEventListener> {
 
 
 
-	public xHandler() {
+	protected xHandler() {
 	}
 
 
