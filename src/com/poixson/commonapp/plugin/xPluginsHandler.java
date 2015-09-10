@@ -1,10 +1,11 @@
 package com.poixson.commonapp.plugin;
 
 import com.poixson.commonjava.xEvents.xEventData;
-import com.poixson.commonjava.xEvents.xHandler;
+import com.poixson.commonjava.xEvents.xEventListener;
+import com.poixson.commonjava.xEvents.xHandlerGeneric;
 
 
-public class xPluginsHandler extends xHandler<xPluginEventListener> {
+public class xPluginsHandler extends xHandlerGeneric {
 
 
 
@@ -17,6 +18,11 @@ public class xPluginsHandler extends xHandler<xPluginEventListener> {
 
 
 
+	// listener type
+	@Override
+	protected Class<? extends xEventListener> getEventListenerType() {
+		return xPluginEventListener.class;
+	}
 	// event type
 	@Override
 	protected Class<? extends xEventData> getEventDataType() {

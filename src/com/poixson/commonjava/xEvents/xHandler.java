@@ -1,18 +1,14 @@
 package com.poixson.commonjava.xEvents;
 
-import java.lang.reflect.Method;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.xEvents.xEventListener.ListenerPriority;
-import com.poixson.commonjava.xEvents.annotations.xEvent;
 import com.poixson.commonjava.xLogger.xLog;
 
 
-public abstract class xHandler<L extends xEventListener> {
+public abstract class xHandler {
 
 	protected final Set<xListenerDAO> listeners =
 			new CopyOnWriteArraySet<xListenerDAO>();
@@ -24,6 +20,8 @@ public abstract class xHandler<L extends xEventListener> {
 
 
 
+	// listener type
+	protected abstract Class<? extends xEventListener> getEventListenerType();
 	// event type
 	protected abstract Class<? extends xEventData> getEventDataType();
 
@@ -33,66 +31,10 @@ public abstract class xHandler<L extends xEventListener> {
 	 * Register an event listener.
 	 * @param xEventListener event listener instance
 	 */
-	public void register(final L listener) {
-		if(listener == null) throw new NullPointerException("listener argument is required!");
-		final Class<? extends xEventData> eventType = this.getEventDataType();
-		// find listener methods
-		final Set<Method> methodsFound = new HashSet<Method>();
-		{
-			final Method[] methods = listener.getClass().getMethods();
-			for(final Method m : methods) {
-				if(m.getParameterCount() != 1)
-					continue;
-				final Class<?>[] params = m.getParameterTypes();
-				if(eventType.equals(params[0]))
-					methodsFound.add(m);
-			}
-		}
-		if(utils.isEmpty(methodsFound)) {
-			throw new RuntimeException("No event listener methods found in class: "+
-					listener.getClass().getName());
-		}
-		// load annotations
-		final Set<xListenerDAO> listeners = new HashSet<xListenerDAO>();
-		for(final Method method : methodsFound) {
-			final xEvent anno = method.getAnnotation(xEvent.class);
-			if(anno == null) {
-				throw new RuntimeException("Event listener method is missing @xEvent annotation: "+
-						listener.getClass().getName()+" -> "+method.getName());
-			}
-			// get properties
-			final ListenerPriority priority = anno.priority();
-//			final boolean async             = anno.async();
-			final boolean filterHandled     = anno.filterHandled();
-			final boolean filterCancelled   = anno.filterCancelled();
-			final xListenerDAO dao = new xListenerDAO(
-					listener,
-					method,
-					priority,
-//					async,          // run asynchronous
-					filterHandled,  // filter handled
-					filterCancelled // filter cancelled
-			);
-			listeners.add(dao);
-		}
-		if(utils.isEmpty(listeners)) {
-			throw new RuntimeException("No event listener methods found in class: "+
-					listener.getClass().getName());
-		}
-		// log results
-		{
-			final int size = listeners.size();
-			if(size == 1) {
-				this.log().finest("Registered listener in class: "+listener.getClass().getName());
-			} else {
-				this.log().finest("Registered [ "+Long.toString(size)+" ] listeners in class: "+
-						listener.getClass().getName());
-			}
-		}
-		synchronized(this.listeners) {
-			this.listeners.addAll(listeners);
-		}
-	}
+	public abstract void register(final xEventListener listener);
+
+
+
 	/**
 	 * Unregister an event listener.
 	 * @param listener

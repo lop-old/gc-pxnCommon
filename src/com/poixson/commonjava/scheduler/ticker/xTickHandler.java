@@ -1,6 +1,5 @@
 package com.poixson.commonjava.scheduler.ticker;
 
-import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.poixson.commonjava.Utils.Keeper;
@@ -10,15 +9,13 @@ import com.poixson.commonjava.scheduler.xScheduledTask;
 import com.poixson.commonjava.scheduler.xScheduler;
 import com.poixson.commonjava.scheduler.triggers.triggerInterval;
 import com.poixson.commonjava.xEvents.xEventData;
-import com.poixson.commonjava.xEvents.xEventListener.ListenerPriority;
-import com.poixson.commonjava.xEvents.xHandler;
-import com.poixson.commonjava.xEvents.xListenerDAO;
-import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.commonjava.xEvents.xEventListener;
+import com.poixson.commonjava.xEvents.xHandlerSimple;
 
 
-public class xTickHandler extends xHandler<xTickListener> implements xStartable {
-
-	public static final String SCHEDULER_NAME = "xTicker";
+public class xTickHandler extends xHandlerSimple implements xStartable {
+	private static final String LISTENER_METHOD_NAME = "onTick";
+	public  static final String SCHEDULER_NAME = "xTicker";
 
 	protected static volatile xTickHandler instance = null;
 	protected static final Object instanceLock = new Object();
@@ -47,40 +44,20 @@ public class xTickHandler extends xHandler<xTickListener> implements xStartable 
 
 
 
+	// listener type
+	@Override
+	protected Class<? extends xEventListener> getEventListenerType() {
+		return xTickListener.class;
+	}
 	// event type
 	@Override
 	protected Class<? extends xEventData> getEventDataType() {
 		return xTickEvent.class;
 	}
-
-
-
+	// fixed method name
 	@Override
-	public void register(final xTickListener listener) {
-		if(listener == null) throw new NullPointerException("listener argument is required!");
-		final Method method;
-		try {
-			method = listener.getClass().getMethod("onTick", xTickEvent.class);
-		} catch (NoSuchMethodException e) {
-			log().severe("onTick method is missing!");
-			log().trace(e);
-			return;
-		} catch (SecurityException e) {
-			log().trace(e);
-			return;
-		}
-		if(method == null) throw new NullPointerException("onTick method is missing!");
-		final xListenerDAO holder = new xListenerDAO(
-			listener,
-			method,
-			ListenerPriority.NORMAL,
-//			false, // async
-			false, // filter handled
-			true   // filter cancelled
-		);
-		log().finest("Registered listener ["+Long.toString(holder.id)+"] "+
-				listener.toString()+" "+method.getName());
-		this.listeners.add(holder);
+	protected String getMethodName() {
+		return LISTENER_METHOD_NAME;
 	}
 
 
