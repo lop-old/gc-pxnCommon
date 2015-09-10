@@ -24,7 +24,7 @@ public class xTickHandler extends xHandler<xTickListener> implements xStartable 
 	protected static final Object instanceLock = new Object();
 
 	protected final xTime interval = xTime.get("1s");
-	protected final AtomicLong nextId = new AtomicLong(0);
+	protected final AtomicLong tickCounter = new AtomicLong(0);
 
 	protected volatile xScheduledTask schedTask = null;
 
@@ -107,12 +107,19 @@ public class xTickHandler extends xHandler<xTickListener> implements xStartable 
 
 	@Override
 	public void run() {
-		synchronized(this.nextId) {
-			final long id = this.nextId.incrementAndGet();
+		synchronized(this.tickCounter) {
+			final long id = getNextTickId();
+			log().finest("TICK [ "+Long.toString(id)+" ]");
+			// trigger tick event
 			final xTickEvent event = new xTickEvent(id);
-			xLog.getRoot().finest("TICK [ "+Long.toString(id)+" ]");
 			this.triggerLater(event);
 		}
+	}
+
+
+
+	protected long getNextTickId() {
+		return this.tickCounter.incrementAndGet();
 	}
 
 
