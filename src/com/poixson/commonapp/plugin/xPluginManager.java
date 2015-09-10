@@ -19,9 +19,12 @@ import com.poixson.commonjava.xLogger.xLog;
 
 public class xPluginManager {
 	private static final String LOG_NAME = "PluginManager";
+	private static final boolean INDEPENDENT_CLASS_LOADERS = false;
 
 	private static volatile xPluginManager manager = null;
 	private static final Object lock = new Object();
+
+	private final JarClassLoader jcl;
 
 
 
@@ -35,6 +38,10 @@ public class xPluginManager {
 		return manager;
 	}
 	protected xPluginManager() {
+		this.jcl =
+				INDEPENDENT_CLASS_LOADERS
+				? null
+				: new JarClassLoader();
 	}
 
 
@@ -60,6 +67,14 @@ public class xPluginManager {
 			this.log  = log().getWeak(name);
 		}
 
+	}
+
+
+
+	protected JarClassLoader getJarClassLoader() {
+		if(INDEPENDENT_CLASS_LOADERS)
+			return new JarClassLoader();
+		return this.jcl;
 	}
 
 
@@ -191,16 +206,16 @@ public class xPluginManager {
 			return null;
 		}
 		// java class loader
-		final JarClassLoader jcl = new JarClassLoader();
+		final JarClassLoader jcl = this.getJarClassLoader();
 		jcl.add(url);
-		final String clssName =
+		final String clssNam =
 			className.endsWith(".class")
 			? className.substring(0, className.length() - 6)
 			: className;
 		// load class
 		final Class<?> clss;
 		try {
-			clss = jcl.loadClass(clssName);
+			clss = jcl.loadClass(clssNam);
 		} catch (ClassNotFoundException e) {
 			log.trace(e);
 			return null;
