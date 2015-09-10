@@ -40,7 +40,7 @@ public class xRunnableEvent extends xRunnable {
 					this.event
 			);
 		} catch (IllegalAccessException e) {
-			this.event.setCancelled();
+			//this.event.setCancelled();
 			this.log().trace(e);
 		} catch (IllegalArgumentException e) {
 			this.event.setCancelled();
