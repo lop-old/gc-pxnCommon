@@ -74,7 +74,7 @@ public abstract class xHandler<T extends xEventListener> {
 	 * Unregister an event listener by class type.
 	 * @param clss
 	 */
-	public void unregister(final Class<? extends xEventListener> clss) {
+	public void unregisterType(final Class<? extends xEventListener> clss) {
 		if(this.listeners.isEmpty()) return;
 		synchronized(this.listeners){
 			final Iterator<xListenerDAO> it = this.listeners.iterator();

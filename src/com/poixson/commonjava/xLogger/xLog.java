@@ -306,7 +306,7 @@ public class xLog extends xLogPrinting {
 	public static void shutdown() {
 		// stop prompt ticker
 		xTickHandler.get()
-			.unregister(xTickPrompt.class);
+			.unregisterType(xTickPrompt.class);
 		// stop console input
 		final xConsole console = peekConsole();
 		if(console != null)
