@@ -14,11 +14,10 @@ import org.fusesource.jansi.AnsiConsole;
 
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsString;
-import com.poixson.commonjava.xEvents.xHandler;
 import com.poixson.commonjava.xLogger.xConsole;
 import com.poixson.commonjava.xLogger.xLog;
 import com.poixson.commonjava.xLogger.commands.xCommandEvent;
-import com.poixson.commonjava.xLogger.commands.xCommandListener;
+import com.poixson.commonjava.xLogger.commands.xCommandsHandler;
 
 
 public class jlineConsole implements xConsole {
@@ -31,7 +30,7 @@ public class jlineConsole implements xConsole {
 	private static volatile Boolean jlineEnabled = null;
 
 	private volatile String prompt = null;
-	private volatile xHandler<xCommandListener> handler = null;
+	private volatile xCommandsHandler handler = null;
 
 	private static volatile PrintStream originalOut = null;
 	private static volatile PrintStream originalErr = null;
@@ -220,12 +219,12 @@ public class jlineConsole implements xConsole {
 			if(this.stopping) break;
 			if(utils.notEmpty(line)) {
 				// pass event to command handler
-				final xHandler<xCommandListener> hand = this.handler;
-				if(hand == null) {
+				final xCommandsHandler handler = this.handler;
+				if(handler == null) {
 					log().severe("Command handler not set!");
 				} else {
 					final xCommandEvent event = new xCommandEvent(line);
-					hand.triggerNow(event);
+					handler.trigger(event);
 					if(!event.isHandled())
 						log().publish("Unknown command: "+event.getArg(0));
 				}
@@ -341,7 +340,7 @@ public class jlineConsole implements xConsole {
 
 
 	@Override
-	public void setCommandHandler(final xHandler<xCommandListener> handler) {
+	public void setCommandHandler(final xCommandsHandler handler) {
 		this.handler = handler;
 	}
 
