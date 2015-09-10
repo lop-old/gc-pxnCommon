@@ -5,14 +5,14 @@ import com.poixson.commonjava.xEvents.xEventListener;
 import com.poixson.commonjava.xEvents.xHandlerGeneric;
 
 
-public class xPluginsHandler extends xHandlerGeneric {
+public class xPluginsEventHandler extends xHandlerGeneric {
 
 
 
-	public static xPluginsHandler get() {
-		return new xPluginsHandler();
+	public static xPluginsEventHandler get() {
+		return new xPluginsEventHandler();
 	}
-	protected xPluginsHandler() {
+	protected xPluginsEventHandler() {
 		super();
 	}
 
