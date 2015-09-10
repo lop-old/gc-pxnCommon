@@ -30,13 +30,13 @@ public abstract class xHandlerSimple extends xHandler {
 	@Override
 	public void register(final xEventListener listener) {
 		if(listener == null) throw new NullPointerException("listener argument is required!");
-		{
-			final Class<? extends xEventListener> expected = this.getEventListenerType();
-			if(!expected.equals(listener.getClass())) {
-				throw new IllegalArgumentException("Invalid event listener type:  "+
-						listener.getClass().getName()+"  expected: "+expected.getName());
-			}
-		}
+//		{
+//			final Class<? extends xEventListener> expected = this.getEventListenerType();
+//			if(!expected.equals(listener.getClass())) {
+//				throw new IllegalArgumentException("Invalid event listener type:  "+
+//						listener.getClass().getName()+"  expected: "+expected.getName());
+//			}
+//		}
 		final String methodName = this.getMethodName();
 		// find listener methods
 		final Method methodFound;
