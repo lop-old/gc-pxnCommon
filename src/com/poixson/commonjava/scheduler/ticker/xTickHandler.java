@@ -64,14 +64,16 @@ public class xTickHandler extends xHandlerSimple implements xStartable {
 
 	@Override
 	public void Start() {
-		if(this.isRunning()) throw new RuntimeException("xTicker already running");
-		this.schedTask = xScheduledTask.get()
-			.setRepeating(true)
-			.setRunnable(this)
-			.setTrigger(
-				triggerInterval.get(this.interval)
-			);
-		xScheduler.get().schedule(this.schedTask);
+		synchronized(instanceLock) {
+			if(this.isRunning()) throw new RuntimeException("xTicker already running");
+			this.schedTask = xScheduledTask.get()
+					.setRepeating(true)
+					.setRunnable(this)
+					.setTrigger(
+							triggerInterval.get(this.interval)
+					);
+			xScheduler.get().schedule(this.schedTask);
+		}
 	}
 	@Override
 	public void Stop() {
@@ -97,7 +99,7 @@ public class xTickHandler extends xHandlerSimple implements xStartable {
 
 
 
-	protected long getNextTickId() {
+	private long getNextTickId() {
 		return this.tickCounter.incrementAndGet();
 	}
 
@@ -108,7 +110,7 @@ public class xTickHandler extends xHandlerSimple implements xStartable {
 	}
 	public void setInterval(final xTime value) {
 		this.interval.set(value);
-		xLog.getRoot().info("Tick interval: "+value.getString());
+		this.log().info("Tick interval: "+value.getString());
 	}
 
 
