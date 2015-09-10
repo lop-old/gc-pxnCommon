@@ -33,8 +33,10 @@ public class xTickHandler extends xHandler<xTickListener> implements xStartable 
 	public static xTickHandler get() {
 		if(instance == null) {
 			synchronized(instanceLock) {
-				if(instance == null)
+				if(instance == null) {
 					instance = new xTickHandler();
+					Keeper.add(instance);
+				}
 			}
 		}
 		return instance;
@@ -49,7 +51,6 @@ public class xTickHandler extends xHandler<xTickListener> implements xStartable 
 	@Override
 	protected Class<? extends xEventData> getEventDataType() {
 		return xTickEvent.class;
-		Keeper.add(this);
 	}
 
 

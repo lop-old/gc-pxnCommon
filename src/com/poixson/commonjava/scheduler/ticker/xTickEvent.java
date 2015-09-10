@@ -15,6 +15,7 @@ public class xTickEvent extends xEventData {
 		super();
 		this.id = id;
 		this.time = utils.getSystemMillis();
+		this.setHandled();
 	}
 
 

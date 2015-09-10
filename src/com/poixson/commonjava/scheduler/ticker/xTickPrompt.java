@@ -30,7 +30,7 @@ public class xTickPrompt implements xTickListener {
 
 
 	@Override
-	public void onTick(xTickEvent event) {
+	public void onTick(final xTickEvent event) {
 		final xConsole console = xLog.getConsole();
 		{
 			final String old = console.getPrompt();

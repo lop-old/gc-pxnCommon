@@ -5,4 +5,12 @@ import com.poixson.commonjava.xEvents.xEventData;
 
 public class xPluginEvent extends xEventData {
 
+
+
+	public xPluginEvent() {
+		super();
+	}
+
+
+
 }

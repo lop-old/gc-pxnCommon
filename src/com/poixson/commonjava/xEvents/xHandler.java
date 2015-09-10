@@ -26,6 +26,11 @@ public abstract class xHandler<T extends xEventListener> {
 
 
 
+	// event type
+	protected abstract Class<? extends xEventData> getEventDataType();
+
+
+
 	/**
 	 * Register an event listener.
 	 * @param listener
