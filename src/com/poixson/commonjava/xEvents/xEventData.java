@@ -1,8 +1,12 @@
 package com.poixson.commonjava.xEvents;
 
 
-public class xEventData {
+public abstract class xEventData {
 
+
+
+	public xEventData() {
+	}
 
 
 	// event handled
