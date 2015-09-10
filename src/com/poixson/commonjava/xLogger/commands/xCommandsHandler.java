@@ -12,4 +12,12 @@ public class xCommandsHandler extends xHandler<xCommandListener> {
 
 
 
+	// event type
+	@Override
+	protected Class<? extends xEventData> getEventDataType() {
+		return xCommandEvent.class;
+	}
+
+
+
 }

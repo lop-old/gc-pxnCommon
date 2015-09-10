@@ -9,6 +9,7 @@ import com.poixson.commonjava.Utils.xTime;
 import com.poixson.commonjava.scheduler.xScheduledTask;
 import com.poixson.commonjava.scheduler.xScheduler;
 import com.poixson.commonjava.scheduler.triggers.triggerInterval;
+import com.poixson.commonjava.xEvents.xEventData;
 import com.poixson.commonjava.xEvents.xEventListener.ListenerPriority;
 import com.poixson.commonjava.xEvents.xHandler;
 import com.poixson.commonjava.xEvents.xListenerDAO;
@@ -40,6 +41,14 @@ public class xTickHandler extends xHandler<xTickListener> implements xStartable 
 	}
 	protected xTickHandler() {
 		super();
+	}
+
+
+
+	// event type
+	@Override
+	protected Class<? extends xEventData> getEventDataType() {
+		return xTickEvent.class;
 		Keeper.add(this);
 	}
 
