@@ -42,7 +42,7 @@ public class xCommandEvent extends xEventData {
 
 
 
-	public String arg(final int index) {
+	public String getArg(final int index) {
 		if(index < 0) throw new ArrayIndexOutOfBoundsException("index cannot be less than 0");
 		if(index > this.args.length-1) return null;
 		return this.args[index];
