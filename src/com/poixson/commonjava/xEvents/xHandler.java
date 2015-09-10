@@ -37,7 +37,7 @@ public abstract class xHandler<L extends xEventListener> {
 		if(listener == null) throw new NullPointerException("listener argument is required!");
 		final Class<? extends xEventData> eventType = this.getEventDataType();
 		// find listener methods
-		final Set<Method> found = new HashSet<Method>();
+		final Set<Method> methodsFound = new HashSet<Method>();
 		{
 			final Method[] methods = listener.getClass().getMethods();
 			for(final Method m : methods) {
@@ -45,20 +45,20 @@ public abstract class xHandler<L extends xEventListener> {
 					continue;
 				final Class<?>[] params = m.getParameterTypes();
 				if(eventType.equals(params[0]))
-					found.add(m);
+					methodsFound.add(m);
 			}
 		}
-		if(utils.isEmpty(found)) {
+		if(utils.isEmpty(methodsFound)) {
 			throw new RuntimeException("No event listener methods found in class: "+
 					listener.getClass().getName());
 		}
 		// load annotations
 		final Set<xListenerDAO> listeners = new HashSet<xListenerDAO>();
-		for(final Method m : found) {
-			final xEvent anno = m.getAnnotation(xEvent.class);
+		for(final Method method : methodsFound) {
+			final xEvent anno = method.getAnnotation(xEvent.class);
 			if(anno == null) {
 				throw new RuntimeException("Event listener method is missing @xEvent annotation: "+
-						listener.getClass().getName()+" -> "+m.getName());
+						listener.getClass().getName()+" -> "+method.getName());
 			}
 			// get properties
 			final ListenerPriority priority = anno.priority();
@@ -67,7 +67,7 @@ public abstract class xHandler<L extends xEventListener> {
 			final boolean filterCancelled   = anno.filterCancelled();
 			final xListenerDAO dao = new xListenerDAO(
 					listener,
-					m,
+					method,
 					priority,
 //					async,          // run asynchronous
 					filterHandled,  // filter handled
