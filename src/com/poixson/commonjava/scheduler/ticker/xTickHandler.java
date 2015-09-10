@@ -56,28 +56,6 @@ public class xTickHandler extends xHandler<xTickListener> implements xStartable 
 
 
 	@Override
-	public void Start() {
-		if(this.isRunning()) throw new RuntimeException("xTicker already running");
-		this.schedTask = xScheduledTask.get()
-			.setRepeating(true)
-			.setRunnable(this)
-			.setTrigger(
-				triggerInterval.get(this.interval)
-			);
-		xScheduler.get().schedule(this.schedTask);
-	}
-	@Override
-	public void Stop() {
-		xScheduler.get().cancel(this.schedTask);
-	}
-	@Override
-	public boolean isRunning() {
-		return xScheduler.get().hasTask(SCHEDULER_NAME);
-	}
-
-
-
-	@Override
 	public void register(final xTickListener listener) {
 		if(listener == null) throw new NullPointerException("listener argument is required!");
 		final Method method;
@@ -103,6 +81,28 @@ public class xTickHandler extends xHandler<xTickListener> implements xStartable 
 		log().finest("Registered listener ["+Long.toString(holder.id)+"] "+
 				listener.toString()+" "+method.getName());
 		this.listeners.add(holder);
+	}
+
+
+
+	@Override
+	public void Start() {
+		if(this.isRunning()) throw new RuntimeException("xTicker already running");
+		this.schedTask = xScheduledTask.get()
+			.setRepeating(true)
+			.setRunnable(this)
+			.setTrigger(
+				triggerInterval.get(this.interval)
+			);
+		xScheduler.get().schedule(this.schedTask);
+	}
+	@Override
+	public void Stop() {
+		xScheduler.get().cancel(this.schedTask);
+	}
+	@Override
+	public boolean isRunning() {
+		return xScheduler.get().hasTask(SCHEDULER_NAME);
 	}
 
 
