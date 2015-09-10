@@ -13,6 +13,7 @@ public class xCommandEvent extends xEventData {
 
 
 	public xCommandEvent(final String line) {
+		super();
 		if(utils.isEmpty(line)) throw new NullPointerException("line argument is required!");
 		String str = line.trim();
 		boolean ishelp = false;

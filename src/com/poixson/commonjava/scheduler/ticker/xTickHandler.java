@@ -77,6 +77,7 @@ public class xTickHandler extends xHandler<xTickListener> implements xStartable 
 
 
 
+	@Override
 	public void register(final xTickListener listener) {
 		if(listener == null) throw new NullPointerException("listener argument is required!");
 		final Method method;
@@ -113,7 +114,7 @@ public class xTickHandler extends xHandler<xTickListener> implements xStartable 
 			log().finest("TICK [ "+Long.toString(id)+" ]");
 			// trigger tick event
 			final xTickEvent event = new xTickEvent(id);
-			this.triggerLater(event);
+			this.trigger(event);
 		}
 	}
 
