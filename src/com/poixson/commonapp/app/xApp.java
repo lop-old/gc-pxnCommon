@@ -133,8 +133,13 @@ public abstract class xApp extends xAppAbstract {
 	@Override
 	public void run() {
 		// pass main thread to thread pool
-		xThreadPool.getMainPool()
-			.run();
+		try {
+			xThreadPool.getMainPool()
+				.run();
+		} catch (Exception e) {
+			this.log().trace(e);
+			Failure.fail("Problem running main thread pool!");
+		}
 	}
 
 
