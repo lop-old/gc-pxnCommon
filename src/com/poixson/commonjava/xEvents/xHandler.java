@@ -137,30 +137,6 @@ public abstract class xHandler<T extends xEventListener> {
 
 
 
-	// xRunnableEvent
-	protected xRunnable getRunnable(final xEventData event, final ListenerPriority onlyPriority) {
-		return new xRunnable("Event-"+event.toString()) {
-			private volatile xEventData event;
-			private volatile ListenerPriority priority;
-			public xRunnable init(final xEventData event, final ListenerPriority onlyPriority) {
-				this.event = event;
-				this.priority = onlyPriority;
-				return this;
-			}
-			@Override
-			public void run() {
-				if(this.event == null) throw new NullPointerException("event argument is required!");
-				if(this.priority == null) {
-					for(final ListenerPriority p : ListenerPriority.values())
-						doTrigger(this.event, p);
-				} else {
-					doTrigger(this.event, this.priority);
-				}
-			}
-		}.init(event, onlyPriority);
-	}
-
-
 
 	/**
 	 * Run an event in the current thread.
