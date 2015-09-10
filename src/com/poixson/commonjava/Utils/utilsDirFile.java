@@ -14,6 +14,12 @@ import com.poixson.commonjava.xLogger.xLog;
 
 
 public final class utilsDirFile {
+
+
+
+	public static void init() {
+		Keeper.add(new utilsDirFile());
+	}
 	private utilsDirFile() {}
 
 

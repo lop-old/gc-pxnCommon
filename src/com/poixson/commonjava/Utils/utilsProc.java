@@ -4,6 +4,12 @@ import java.lang.management.ManagementFactory;
 
 
 public final class utilsProc {
+
+
+
+	public static void init() {
+		Keeper.add(new utilsProc());
+	}
 	private utilsProc() {}
 
 

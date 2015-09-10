@@ -12,6 +12,22 @@ import com.poixson.commonjava.xLogger.xLog;
 
 
 public final class utils {
+
+
+
+	public static void init() {
+		Keeper.add(new utils());
+		utilsCrypt.init();
+		utilsDirFile.init();
+		utilsNumbers.init();
+		utilsObject.init();
+		utilsProc.init();
+		utilsReflect.init();
+		utilsSan.init();
+		utilsString.init();
+		utilsThread.init();
+
+	}
 	private utils() {}
 
 

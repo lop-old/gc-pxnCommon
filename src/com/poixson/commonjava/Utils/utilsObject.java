@@ -11,6 +11,12 @@ import java.util.Set;
 
 
 public final class utilsObject {
+
+
+
+	public static void init() {
+		Keeper.add(new utilsObject());
+	}
 	private utilsObject() {}
 
 

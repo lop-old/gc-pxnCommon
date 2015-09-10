@@ -10,6 +10,12 @@ import com.poixson.commonjava.xLogger.xLog;
 
 
 public final class utilsString {
+
+
+
+	public static void init() {
+		Keeper.add(new utilsString());
+	}
 	private utilsString() {}
 
 

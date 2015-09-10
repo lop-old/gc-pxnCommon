@@ -8,9 +8,6 @@ import com.poixson.commonjava.xLogger.xLog;
 
 
 public final class utilsThread {
-	private utilsThread() {}
-
-
 
 //	public static final String[] ignoreThreadNames = new String[] {
 //		"Main-Server-Thread",
@@ -25,6 +22,13 @@ public final class utilsThread {
 //		"Finalizer",
 //		"Exit"
 //	};
+
+
+
+	public static void init() {
+		Keeper.add(new utilsThread());
+	}
+	private utilsThread() {}
 
 
 

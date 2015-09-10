@@ -8,6 +8,12 @@ import com.poixson.commonjava.xLogger.xLog;
 
 
 public final class utilsReflect {
+
+
+
+	public static void init() {
+		Keeper.add(new utilsReflect());
+	}
 	private utilsReflect() {}
 
 

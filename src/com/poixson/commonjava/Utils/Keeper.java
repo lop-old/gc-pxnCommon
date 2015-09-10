@@ -24,6 +24,7 @@ public class Keeper {
 				if(instance == null)
 					instance = new Keeper();
 			}
+			utils.init();
 		}
 		return instance;
 	}

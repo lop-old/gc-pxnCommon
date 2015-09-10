@@ -13,7 +13,6 @@ import com.poixson.commonjava.xLogger.xLog;
 
 
 public final class utilsCrypt {
-	private utilsCrypt() {}
 
 	public static final String CRYPT_MD5    = "MD5";
 	public static final String CRYPT_SHA1   = "SHA1";
@@ -23,6 +22,13 @@ public final class utilsCrypt {
 	public static final String Hmac_MD5     = "Hmac"+CRYPT_MD5;
 	public static final String Hmac_SHA1    = "Hmac"+CRYPT_SHA1;
 	public static final String Hmac_SHA256  = "Hmac"+CRYPT_SHA256;
+
+
+
+	public static void init() {
+		Keeper.add(new utilsCrypt());
+	}
+	private utilsCrypt() {}
 
 
 

@@ -2,6 +2,12 @@ package com.poixson.commonjava.Utils;
 
 
 public final class utilsSan {
+
+
+
+	public static void init() {
+		Keeper.add(new utilsSan());
+	}
 	private utilsSan() {}
 
 
