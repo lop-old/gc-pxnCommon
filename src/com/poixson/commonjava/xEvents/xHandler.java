@@ -10,7 +10,7 @@ import com.poixson.commonjava.xLogger.xLog;
 
 public abstract class xHandler {
 
-	protected final Set<xListenerDAO> listeners;
+	protected volatile Set<xListenerDAO> listeners = null;
 
 
 
