@@ -65,6 +65,7 @@ public abstract class xHandler {
 			if(listenerClass.equals(dao.listener.getClass())) {
 				this.listeners.remove(dao);
 				count++;
+				this.log().finest("Removed listener: "+dao.listener.getClass().getName());
 			}
 		}
 		if(count == 0) {
@@ -93,7 +94,8 @@ public abstract class xHandler {
 //TODO: how did I do this before?
 
 
-
+//TODO:
+//this.log().warning("xHandler->trigger() function is unfinished!");
 
 
 		if(event == null) throw new NullPointerException("event argument is required!");

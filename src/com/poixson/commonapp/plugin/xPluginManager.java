@@ -194,7 +194,7 @@ public class xPluginManager {
 		}
 		// plugin main class
 		final String className = dao.yml.getString(this.classFieldName);
-//		log.finer("Init: "+this.classFieldName+": "+className);
+		log.finest("Init Plugin: "+this.classFieldName+": "+className);
 		if(utils.isEmpty(className)) {
 			log.severe("Plugin doesn't contain a "+this.classFieldName+" field");
 			dao.plugin = null;

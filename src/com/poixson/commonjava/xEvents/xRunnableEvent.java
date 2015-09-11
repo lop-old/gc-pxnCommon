@@ -41,7 +41,12 @@ public class xRunnableEvent extends xRunnable {
 			);
 		} catch (IllegalAccessException e) {
 			//this.event.setCancelled();
+//System.out.println("Class:  "+this.dao.listener.getClass().getName());
+//System.out.println("Method: "+this.dao.method.getName());
+//System.out.println("Event:  "+this.event.toString());
 			this.log().trace(e);
+			this.log().severe("This may be caused by using an anonymous xEventListener class. ");
+			this.log().severe("Try extending with a new class file.");
 		} catch (IllegalArgumentException e) {
 			this.event.setCancelled();
 			this.log().trace(e);
