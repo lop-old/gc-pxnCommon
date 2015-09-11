@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.xeustechnologies.jcl.JarClassLoader;
+import org.xeustechnologies.jcl.context.DefaultContextLoader;
 
 import com.poixson.commonapp.config.xConfigLoader;
 import com.poixson.commonjava.Utils.utils;
@@ -24,7 +25,8 @@ public class xPluginManager {
 	private static volatile xPluginManager manager = null;
 	private static final Object lock = new Object();
 
-	private final JarClassLoader jcl;
+	private volatile JarClassLoader jcl = null;
+	private final Object jclLock = new Object();
 
 
 
@@ -38,10 +40,6 @@ public class xPluginManager {
 		return manager;
 	}
 	protected xPluginManager() {
-		this.jcl =
-				INDEPENDENT_CLASS_LOADERS
-				? null
-				: new JarClassLoader();
 	}
 
 
@@ -71,9 +69,21 @@ public class xPluginManager {
 
 
 
+	// get jar class loader
 	protected JarClassLoader getJarClassLoader() {
+		// independent
 		if(INDEPENDENT_CLASS_LOADERS)
 			return new JarClassLoader();
+		// shared context
+		if(this.jcl == null) {
+			synchronized(this.jclLock) {
+				if(this.jcl == null) {
+					this.jcl = new JarClassLoader();
+					final DefaultContextLoader context = new DefaultContextLoader(this.jcl);
+					context.loadContext();
+				}
+			}
+		}
 		return this.jcl;
 	}
 
