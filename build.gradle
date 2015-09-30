@@ -6,7 +6,6 @@ plugins {
 }
 
 version = '3.6.1'
-
 group = 'com.poixson'
 defaultTasks 'clean build shadowJar'
 
@@ -27,11 +26,11 @@ sourceSets {
 }
 
 jar {
-	archiveName = "pxnCommon-${project.version}-sparse.jar"
+	archiveName = "${project.name}-${project.version}-sparse.jar"
 }
 
 shadowJar {
-	archiveName = "pxnCommon-${project.version}.jar"
+	archiveName = "${project.name}-${project.version}.jar"
 //	append('README')
 //	dependencies {
 //		exclude(dependency('asm:asm:3.3.1'))
@@ -59,6 +58,7 @@ configurations.all {
 }
 
 task sourceJar(type: Jar, dependsOn: classes) {
+	archiveName = "${project.name}-${project.version}-sources.jar"
 	classifier = 'sources'
 	from sourceSets.main.allSource
 }
