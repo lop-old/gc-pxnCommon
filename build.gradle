@@ -1,0 +1,53 @@
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+version = '3.6.1'
+
+group = 'com.poixson'
+defaultTasks 'eclipse build'
+
+[ compileJava, compileTestJava ]*.options*.encoding = 'UTF-8'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+sourceSets {
+	main {
+		java {
+			srcDir 'src'
+		}
+		resources {
+			srcDir 'resources'
+		}
+	}
+}
+
+repositories {
+	jcenter()
+	//mavenCentral()
+}
+
+dependencies {
+	compile 'jline:jline:2.13'
+	compile 'org.yaml:snakeyaml:1.16'
+	compile 'org.xeustechnologies:jcl-core:2.6'
+	testCompile 'junit:junit:4.12'
+}
+
+configurations.all {
+	resolutionStrategy {
+		failOnVersionConflict()
+		cacheDynamicVersionsFor 5*60, 'seconds'
+		cacheChangingModulesFor 0, 'seconds'
+	}
+}
+
+task sourceJar(type: Jar, dependsOn: classes) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+artifacts {
+	archives sourceJar
+}
