@@ -1,3 +1,4 @@
+// pxnCommon
 
 plugins {
 	id 'java'
@@ -7,7 +8,7 @@ plugins {
 
 version = '3.6.1'
 group = 'com.poixson'
-defaultTasks 'clean build shadowJar'
+defaultTasks 'clean', 'build', 'shadow'
 
 [ compileJava, compileTestJava ]*.options*.encoding = 'UTF-8'
 
