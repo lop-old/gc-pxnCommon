@@ -10,6 +10,11 @@ version = '3.6.1'
 group = 'com.poixson'
 defaultTasks 'clean', 'build', 'shadow'
 
+def jlineVersion     = '2.13'
+def snakeyamlVersion = '1.16'
+def jclVersion       = '2.6'
+def junitVersion     = '4.12'
+
 [ compileJava, compileTestJava ]*.options*.encoding = 'UTF-8'
 
 sourceCompatibility = 1.8
@@ -44,10 +49,10 @@ repositories {
 }
 
 dependencies {
-	compile 'jline:jline:2.13'
-	compile 'org.yaml:snakeyaml:1.16'
-	compile 'org.xeustechnologies:jcl-core:2.6'
-	testCompile 'junit:junit:4.12'
+	compile "jline:jline:${jlineVersion}"
+	compile "org.yaml:snakeyaml:${snakeyamlVersion}"
+	compile "org.xeustechnologies:jcl-core:${jclVersion}"
+	testCompile "junit:junit:${junitVersion}"
 }
 
 configurations.all {
