@@ -55,6 +55,10 @@ jar {
 	props.setProperty('issue_url',  'https://github.com/GrowControl/pxnCommon/issues')
 	props.store(propsFile.newWriter(), null)
 }
+jar.doLast {
+	def result = 'git checkout resources/app.properties'.execute()
+	println "Restore: ${result}"
+}
 shadowJar {
 	archiveName = "${project.name}-${project.version}.jar"
 }
