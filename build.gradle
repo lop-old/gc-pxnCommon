@@ -19,8 +19,8 @@ def junitVersion     = '4.12'
 
 
 
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 [ compileJava, compileTestJava ]*.options*.encoding = 'UTF-8'
 
@@ -32,7 +32,7 @@ sourceSets {
 			srcDir 'src'
 		}
 		resources {
-			srcDir 'resources'
+			srcDir 'resources/'
 		}
 	}
 }
@@ -57,17 +57,12 @@ jar {
 }
 shadowJar {
 	archiveName = "${project.name}-${project.version}.jar"
-//	append('README')
-//	dependencies {
-//		exclude(dependency('asm:asm:3.3.1'))
-//	}
 }
 
 
 
 repositories {
 	jcenter()
-	//mavenCentral()
 }
 dependencies {
 	compile "jline:jline:${jlineVersion}"
