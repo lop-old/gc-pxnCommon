@@ -6,8 +6,10 @@ plugins {
 	id 'com.github.johnrengelman.shadow' version '1.2.2'
 }
 
+
+
 version = '3.6.1'
-group = 'com.poixson'
+group   = 'com.poixson'
 defaultTasks 'clean', 'build', 'shadow'
 
 def jlineVersion     = '2.13'
@@ -15,10 +17,14 @@ def snakeyamlVersion = '1.16'
 def jclVersion       = '2.6'
 def junitVersion     = '4.12'
 
+
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
 [ compileJava, compileTestJava ]*.options*.encoding = 'UTF-8'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+
 
 sourceSets {
 	main {
@@ -30,6 +36,8 @@ sourceSets {
 		}
 	}
 }
+
+
 
 jar {
 	archiveName = "${project.name}-${project.version}-sparse.jar"
@@ -47,7 +55,6 @@ jar {
 	props.setProperty('issue_url',  'https://github.com/GrowControl/pxnCommon/issues')
 	props.store(propsFile.newWriter(), null)
 }
-
 shadowJar {
 	archiveName = "${project.name}-${project.version}.jar"
 //	append('README')
@@ -56,11 +63,12 @@ shadowJar {
 //	}
 }
 
+
+
 repositories {
 	jcenter()
 	//mavenCentral()
 }
-
 dependencies {
 	compile "jline:jline:${jlineVersion}"
 	compile "org.yaml:snakeyaml:${snakeyamlVersion}"
@@ -68,23 +76,28 @@ dependencies {
 	testCompile "junit:junit:${junitVersion}"
 }
 
+
+
 configurations.all {
 	resolutionStrategy {
 		failOnVersionConflict()
 		cacheDynamicVersionsFor 5*60, 'seconds'
-		cacheChangingModulesFor 0, 'seconds'
+		cacheChangingModulesFor 0,    'seconds'
 	}
 }
 
+
+
 task sourceJar(type: Jar, dependsOn: classes) {
 	archiveName = "${project.name}-${project.version}-sources.jar"
-	classifier = 'sources'
+	classifier  = 'sources'
 	from sourceSets.main.allSource
 }
-
 artifacts {
 	archives sourceJar
 }
+
+
 
 task copy (type: Copy) {
 	def path = new File('../output/')
