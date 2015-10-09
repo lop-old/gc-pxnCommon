@@ -10,7 +10,7 @@ plugins {
 
 version = '3.6.1'
 group   = 'com.poixson'
-defaultTasks 'clean', 'build', 'shadow'
+defaultTasks 'clean', 'build', 'shadow', 'install'
 
 def jlineVersion     = '2.13'
 def snakeyamlVersion = '1.16'
@@ -98,7 +98,7 @@ artifacts {
 
 
 
-task copy (type: Copy) {
+task install << {
 	def path = new File('../output/')
 	path.mkdirs()
 	copy {
