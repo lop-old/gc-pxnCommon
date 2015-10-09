@@ -22,6 +22,7 @@ import com.poixson.commonjava.xLogger.xConsole;
 import com.poixson.commonjava.xLogger.xLevel;
 import com.poixson.commonjava.xLogger.xLog;
 import com.poixson.commonjava.xLogger.xNoConsole;
+import com.poixson.commonjava.xLogger.commands.xCommandsHandler;
 import com.poixson.commonjava.xLogger.formatters.defaultLogFormatter_Color;
 
 
@@ -122,6 +123,12 @@ public abstract class xApp extends xAppAbstract {
 
 
 	protected abstract void processArgs(final String[] args);
+
+
+
+	public xCommandsHandler getCommandsHandler() {
+		return null;
+	}
 
 
 
