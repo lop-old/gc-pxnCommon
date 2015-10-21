@@ -176,11 +176,6 @@ public class jlineConsole implements xConsole {
 					log().trace(e);
 				}
 			}
-			// close input
-			utils.safeClose(System.in);
-			try {
-				AnsiConsole.systemUninstall();
-			} catch (Exception ignore) {}
 			this.setPrompt("");
 		}
 	}
@@ -237,6 +232,9 @@ public class jlineConsole implements xConsole {
 		flush();
 		reader.shutdown();
 		reader = null;
+		try {
+			AnsiConsole.systemUninstall();
+		} catch (Exception ignore) {}
 	}
 
 
