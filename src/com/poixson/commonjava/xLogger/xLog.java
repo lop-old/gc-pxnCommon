@@ -306,12 +306,17 @@ public class xLog extends xLogPrinting {
 	}
 	public static void shutdown() {
 		// stop prompt ticker
-		xTickHandler.get()
-			.unregisterType(xTickPrompt.class);
+		{
+			final xTickHandler handler = xTickHandler.peak();
+			if(handler != null)
+				handler.unregisterType(xTickPrompt.class);
+		}
 		// stop console input
-		final xConsole console = peekConsole();
-		if(console != null)
-			console.Stop();
+		{
+			final xConsole console = peekConsole();
+			if(console != null)
+				console.Stop();
+		}
 	}
 
 
