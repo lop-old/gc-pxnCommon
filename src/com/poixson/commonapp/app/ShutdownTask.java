@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.poixson.commonapp.app.annotations.xAppStep.StepType;
 import com.poixson.commonjava.Failure;
+import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xRunnable;
 import com.poixson.commonjava.Utils.threads.HangCatcher;
@@ -47,6 +48,8 @@ public class ShutdownTask extends xRunnable {
 	public void run() {
 		if(this.currentStep.get() == Integer.MIN_VALUE)
 			return;
+		if(xVars.debug())
+			utilsThread.Sleep(100L);
 		final int step = this.currentStep.getAndDecrement();
 		// finished
 		if(step < this.minStep) {
