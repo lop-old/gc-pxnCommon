@@ -91,16 +91,9 @@ public abstract class xHandler {
 	// trigger event
 	public void trigger(final xEventData event) {
 		// ensure main thread
-//TODO: how did I do this before?
-
-
-//TODO:
-//this.log().warning("xHandler->trigger() function is unfinished!");
-
-
 		if(event == null) throw new NullPointerException("event argument is required!");
-		this.log().finest("Triggering event: "+event.toString());
 //		final Set<xRunnableEvent> waitFor = new HashSet<xRunnableEvent>();
+		boolean isFirst = true;
 		// LOOP_PRIORITIES:
 		for(final ListenerPriority p : ListenerPriority.values()) {
 			final Iterator<xListenerDAO> it = this.listeners.iterator();
@@ -113,6 +106,10 @@ public abstract class xHandler {
 					continue LOOP_LISTENERS;
 				if(event.isHandled() && dao.filterHandled)
 					continue LOOP_LISTENERS;
+				if(isFirst) {
+					isFirst = false;
+					this.log().finest("Triggering events: "+event.toString());
+				}
 				// run event
 				final xRunnableEvent run = new xRunnableEvent(
 						dao,
@@ -126,6 +123,9 @@ public abstract class xHandler {
 				run.run();
 			} // listeners loop
 		} // priorities loop
+		if(isFirst) {
+			this.log().finest("Event ignored: "+event.toString());
+		}
 //TODO:
 //		// wait for event tasks to complete
 //		for(final xRunnableEvent run : waitFor) {
