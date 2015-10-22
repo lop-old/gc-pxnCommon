@@ -203,6 +203,17 @@ public abstract class xApp extends xAppAbstract {
 
 
 
+	// lock file
+	@xAppStep(type=StepType.SHUTDOWN, title="LockFile", priority=3)
+	public void __SHUTDOWN_lockfile() {
+		final String filename = this.getName()+".lock";
+		final LockFile lock = LockFile.peak(filename);
+		if(lock != null)
+			lock.release();
+	}
+
+
+
 	// ------------------------------------------------------------------------------- //
 
 
