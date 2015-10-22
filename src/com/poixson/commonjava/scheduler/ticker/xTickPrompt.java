@@ -8,6 +8,7 @@ import com.poixson.commonjava.xLogger.xLog;
 
 
 public class xTickPrompt implements xTickListener {
+	private static final String LISTENER_NAME = "TickPrompt";
 
 	protected final String[] frames = new String[] {
 			" [|]>",
@@ -28,7 +29,7 @@ public class xTickPrompt implements xTickListener {
 	}
 	@Override
 	public String getName() {
-		return "TickPrompt";
+		return LISTENER_NAME;
 	}
 	@Override
 	public String toString() {
