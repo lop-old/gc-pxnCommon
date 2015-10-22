@@ -63,6 +63,10 @@ public class LockFile {
 			return lock;
 		}
 	}
+	public static LockFile peak(final String filename) {
+		if(utils.isEmpty(filename)) throw new NullPointerException("filename argument is required!");
+		return instances.get(filename);
+	}
 	public static void releaseLock(final String filename) {
 		final LockFile lock = get(filename);
 		if(lock == null)
