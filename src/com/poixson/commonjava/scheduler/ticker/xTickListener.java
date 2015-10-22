@@ -8,5 +8,10 @@ public interface xTickListener extends xEventListener {
 
 	public void onTick(final xTickEvent event);
 
+	@Override
+	public String getName();
+	@Override
+	public String toString();
+
 
 }

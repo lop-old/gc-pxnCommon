@@ -26,6 +26,14 @@ public class xTickPrompt implements xTickListener {
 		xTickHandler.get()
 			.register(this);
 	}
+	@Override
+	public String getName() {
+		return "TickPrompt";
+	}
+	@Override
+	public String toString() {
+		return this.getName();
+	}
 
 
 

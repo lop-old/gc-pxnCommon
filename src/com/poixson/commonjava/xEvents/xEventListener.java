@@ -12,5 +12,8 @@ public interface xEventListener {
 		LOWEST
 	}
 
+	public String getName();
+	public String toString();
+
 
 }
