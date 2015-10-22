@@ -168,14 +168,15 @@ public final class xConfigLoader {
 				return false;
 			}
 		}
+		final String filePath = utilsDirFile.buildFilePath(path, file);
 		PrintWriter out = null;
 		try {
 			final Yaml yml = new Yaml();
-			out = new PrintWriter(file);
+			out = new PrintWriter(filePath);
 			out.print(
-				yml.dumpAs(datamap, Tag.MAP, FlowStyle.BLOCK)
+					yml.dumpAs(datamap, Tag.MAP, FlowStyle.BLOCK)
 			);
-			log().fine("Saved config file: "+file.toString());
+			log().fine("Saved config file: "+filePath);
 			return true;
 		} catch (FileNotFoundException e) {
 			log().trace(e);
