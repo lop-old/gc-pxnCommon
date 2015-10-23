@@ -56,7 +56,7 @@ public abstract class xJavaPlugin {
 				this.enabled = false;
 				return;
 			}
-			this.log().finer("Enabled");
+			this.log().finer("Plugin is Ready");
 			this.enabled = true;
 		}
 	}
