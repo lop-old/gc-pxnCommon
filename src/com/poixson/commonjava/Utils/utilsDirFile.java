@@ -204,10 +204,11 @@ public final class utilsDirFile {
 		return filePath + File.separator + fileStr;
 	}
 	public static String buildFilePath(final File path, final File file) {
-		if(path == null) throw new NullPointerException("path argument is required!");
 		if(file == null) throw new NullPointerException("file argument is required!");
-		final String pathStr = path.getPath();
 		final String fileStr = file.getPath();
+		if(path == null)
+			return fileStr;
+		final String pathStr = path.getPath();
 		return (new StringBuilder())
 				.append(pathStr)
 				.append(pathStr.endsWith("/") ? "" : "/")
