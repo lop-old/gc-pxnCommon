@@ -8,9 +8,11 @@ import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsObject;
 import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.byRef.StringRef;
+import com.poixson.commonjava.xLogger.xLog;
 
 
 public class xConfig {
+	public static final String LOG_NAME = "CONFIG";
 
 	protected final Map<String, Object> datamap;
 
@@ -39,7 +41,9 @@ public class xConfig {
 			return null;
 		try {
 			return this.datamap.get(path);
-		} catch (Exception ignore) {}
+		} catch (Exception e) {
+			this.log().trace(e);
+		}
 		return null;
 	}
 	// get path
@@ -53,14 +57,17 @@ public class xConfig {
 					final String part = utilsString.getNextPart(".", str);
 					try {
 						map = (Map<String, Object>) map.get(part);
-					} catch (Exception ignore) {
+					} catch (Exception e) {
+						this.log().trace(e);
 						return null;
 					}
 				}
 				return map;
 			}
 			return (Map<String, Object>) this.get(path);
-		} catch (Exception ignore) {}
+		} catch (Exception e) {
+			this.log().trace(e);
+		}
 		return null;
 	}
 
@@ -76,7 +83,9 @@ public class xConfig {
 	public String getString(final String path) {
 		try {
 			return (String) this.get(path);
-		} catch (Exception ignore) {}
+		} catch (Exception e) {
+			this.log().trace(e);
+		}
 		return null;
 	}
 	public String getStr(final String path, final String def) {
@@ -89,7 +98,9 @@ public class xConfig {
 	public Boolean getBoolean(final String path) {
 		try {
 			return (Boolean) this.get(path);
-		} catch (Exception ignore) {}
+		} catch (Exception e) {
+			this.log().trace(e);
+		}
 		return null;
 	}
 	public boolean getBool(final String path, final boolean def) {
@@ -102,7 +113,9 @@ public class xConfig {
 	public Integer getInteger(final String path) {
 		try {
 			return (Integer) this.get(path);
-		} catch (Exception ignore) {}
+		} catch (Exception e) {
+			this.log().trace(e);
+		}
 		return null;
 	}
 	public int getInt(final String path, final int def) {
@@ -115,7 +128,9 @@ public class xConfig {
 	public Long getLong(final String path) {
 		try {
 			return (Long) this.get(path);
-		} catch (Exception ignore) {}
+		} catch (Exception e) {
+			this.log().trace(e);
+		}
 		return null;
 	}
 	public long getLng(final String path, final long def) {
@@ -128,7 +143,9 @@ public class xConfig {
 	public Double getDouble(final String path) {
 		try {
 			return (Double) this.get(path);
-		} catch (Exception ignore) {}
+		} catch (Exception e) {
+			this.log().trace(e);
+		}
 		return null;
 	}
 	public double getDbl(final String path, final double def) {
@@ -141,7 +158,9 @@ public class xConfig {
 	public Float getFloat(final String path) {
 		try {
 			return (Float) this.get(path);
-		} catch (Exception ignore) {}
+		} catch (Exception e) {
+			this.log().trace(e);
+		}
 		return null;
 	}
 	public float getFlt(final String path, final float def) {
@@ -160,7 +179,9 @@ public class xConfig {
 				clss,
 				this.get(path)
 			);
-		} catch (Exception ignore) {}
+		} catch (Exception e) {
+			this.log().trace(e);
+		}
 		return null;
 	}
 	// get string list
@@ -170,7 +191,9 @@ public class xConfig {
 				String.class,
 				path
 			);
-		} catch (Exception ignore) {}
+		} catch (Exception e) {
+			this.log().trace(e);
+		}
 		return null;
 	}
 
@@ -183,7 +206,9 @@ public class xConfig {
 				clss,
 				this.get(path)
 			);
-		} catch (Exception ignore) {}
+		} catch (Exception e) {
+			this.log().trace(e);
+		}
 		return null;
 	}
 	// get string list
@@ -193,7 +218,9 @@ public class xConfig {
 				String.class,
 				path
 			);
-		} catch (Exception ignore) {}
+		} catch (Exception e) {
+			this.log().trace(e);
+		}
 		return null;
 	}
 
@@ -208,7 +235,9 @@ public class xConfig {
 				clssV,
 				this.getPath(path)
 			);
-		} catch (Exception ignore) {}
+		} catch (Exception e) {
+			this.log().trace(e);
+		}
 		return null;
 	}
 	// get string:object map
@@ -219,7 +248,9 @@ public class xConfig {
 				Object.class,
 				path
 			);
-		} catch (Exception ignore) {}
+		} catch (Exception e) {
+			this.log().trace(e);
+		}
 		return null;
 	}
 	// get string:string map
@@ -230,7 +261,9 @@ public class xConfig {
 				String.class,
 				path
 			);
-		} catch (Exception ignore) {}
+		} catch (Exception e) {
+			this.log().trace(e);
+		}
 		return null;
 	}
 
@@ -241,7 +274,9 @@ public class xConfig {
 //			@SuppressWarnings("unchecked")
 //			List<HashMap<String, Object>> list = (List<HashMap<String, Object>>) get(path);
 //			return list;
-//		} catch (Exception ignore) {}
+//		} catch (Exception e) {
+//			this.log().trace(e);
+//		}
 //		return null;
 //	}
 //	public List<pxnConfig> getConfigList(String path) {
@@ -252,6 +287,23 @@ public class xConfig {
 //			list.add(new pxnConfig(d));
 //		return list;
 //	}
+
+
+
+	// logger
+	private volatile xLog _log = null;
+	private xLog _log_default  = null;
+	public xLog log() {
+		final xLog log = this._log;
+		if(log != null)
+			return log;
+		if(this._log_default == null)
+			this._log_default = xLog.getRoot(LOG_NAME);
+		return this._log_default;
+	}
+	public void setLog(final xLog log) {
+		this._log = log;
+	}
 
 
 

@@ -21,7 +21,7 @@ import com.poixson.commonjava.xLogger.xLog;
 
 public final class xConfigLoader {
 	private xConfigLoader() {}
-	private static final String LOG_NAME = "CONFIG";
+	private static final String LOG_NAME = xConfig.LOG_NAME;
 
 
 
@@ -72,7 +72,7 @@ public final class xConfigLoader {
 		// load file.yml
 		{
 			final String fullpath = (utils.isEmpty(path) ? "" : utilsString.ensureEnds(File.separator, path))+file;
-			log.fine("Loading config file: "+fullpath);
+			log(log).fine("Loading config file: "+fullpath);
 			final InputStream in = utilsDirFile.OpenFile(
 					new File(fullpath)
 			);
@@ -86,13 +86,13 @@ public final class xConfigLoader {
 		// try loading as resource
 		if(checkInJar != null) {
 			final String filepath = utilsString.ensureStarts(File.separator, file);
-			log.fine("Looking in jar for file: "+filepath+"  "+checkInJar.getName());
+			log(log).fine("Looking in jar for file: "+filepath+"  "+checkInJar.getName());
 			final InputStream in = utilsDirFile.OpenResource(
 					checkInJar,
 					filepath
 			);
 			if(in != null) {
-				log.fine("Loaded config from jar: "+filepath);
+				log(log).fine("Loaded config from jar: "+filepath);
 				final xConfig config = LoadStream(
 						in,
 						clss
@@ -108,7 +108,7 @@ public final class xConfigLoader {
 				}
 			}
 		}
-		log.fine("Config file not found! "+file);
+		log(log).fine("Config file not found! "+file);
 		return null;
 	}
 
@@ -203,6 +203,12 @@ public final class xConfigLoader {
 	// logger
 	public static xLog log() {
 		return xLog.getRoot(LOG_NAME);
+	}
+	public static xLog log(final xLog _log) {
+		if(_log == null)
+			return log();
+		else
+			return _log;
 	}
 
 
