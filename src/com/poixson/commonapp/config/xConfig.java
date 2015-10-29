@@ -1,5 +1,9 @@
 package com.poixson.commonapp.config;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,7 +35,7 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 	 * @return xConfig instance
 	 */
 	@Override
-	public Object clone() {
+	public xConfig clone() {
 		return new xConfig(this.datamap);
 	}
 
@@ -44,6 +48,14 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 	@Override
 	public boolean exists(final String path) {
 		return this.datamap.containsKey(path);
+	}
+	/**
+	 * @return true if config data was loaded from a jar resource,
+	 *         false if config file found in filesystem
+	 */
+	@Override
+	public boolean isFromResource() {
+		return this.loadedFromResource;
 	}
 
 
@@ -116,9 +128,6 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 
 	// ------------------------------------------------------------------------------- //
 	// primitive types
-	public boolean isFromResource() {
-		return this.loadedFromResource;
-	}
 
 
 
