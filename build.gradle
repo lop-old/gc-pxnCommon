@@ -10,7 +10,7 @@ plugins {
 
 version = '3.6.1'
 group   = 'com.poixson'
-defaultTasks 'clean', 'build', 'shadow', 'install'
+defaultTasks 'clean', 'test', 'build', 'shadow', 'install'
 
 def jlineVersion     = '2.13'
 def snakeyamlVersion = '1.16'
@@ -33,6 +33,11 @@ sourceSets {
 		}
 		resources {
 			srcDir 'resources/'
+		}
+	}
+	test {
+		java {
+			srcDir 'test/'
 		}
 	}
 }
