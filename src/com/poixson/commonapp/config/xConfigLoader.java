@@ -19,12 +19,12 @@ import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.xLogger.xLog;
 
 
-public final class xConfigLoader {
-	private xConfigLoader() {}
-	private static final String LOG_NAME = xConfig.LOG_NAME;
+class xConfigLoader {
+	public static final String LOG_NAME = "CONFIG";
 
 
 
+//TODO: these need to be updated
 //	// file
 //	public static xConfig Load(final String file) {
 //		return Load(

@@ -11,8 +11,7 @@ import com.poixson.commonjava.Utils.byRef.StringRef;
 import com.poixson.commonjava.xLogger.xLog;
 
 
-public class xConfig {
-	public static final String LOG_NAME = "CONFIG";
+public class xConfig extends xConfigLoader implements xConfigInterface {
 
 	protected final Map<String, Object> datamap;
 
