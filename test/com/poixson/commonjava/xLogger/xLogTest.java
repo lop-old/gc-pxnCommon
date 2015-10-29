@@ -1,9 +1,9 @@
-package com.poixson.commonjava;
+package com.poixson.commonjava.xLogger;
 
 import org.junit.Assert;
 
-import com.poixson.commonjava.xLogger.xLevel;
-import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.commonjava.Failure;
+import com.poixson.commonjava.xVars;
 
 
 public class xLogTest {

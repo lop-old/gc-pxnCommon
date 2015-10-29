@@ -1,15 +1,13 @@
-package com.poixson.commonjava.net;
+package com.poixson.commonapp.net.firewall;
 
 import java.net.InetSocketAddress;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.poixson.commonapp.net.firewall.NetFirewall;
-import com.poixson.commonapp.net.firewall.RuleType;
 import com.poixson.commonapp.net.firewall.rules.ruleHostname;
-import com.poixson.commonjava.xLogTest;
 import com.poixson.commonjava.Utils.utilsNumbers;
+import com.poixson.commonjava.xLogger.xLogTest;
 
 
 public class NetFirewallTest {

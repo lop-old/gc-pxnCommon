@@ -3,9 +3,9 @@ package com.poixson.commonjava.utils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.poixson.commonjava.xLogTest;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsCrypt;
+import com.poixson.commonjava.xLogger.xLogTest;
 
 
 public class utilsCryptTest {
