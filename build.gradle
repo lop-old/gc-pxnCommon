@@ -39,6 +39,9 @@ sourceSets {
 		java {
 			srcDir 'test/'
 		}
+		resources {
+			srcDir 'resources/test/'
+		}
 	}
 }
 
