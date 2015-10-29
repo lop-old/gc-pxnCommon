@@ -454,6 +454,63 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 
 
 
+	/**
+	 * Get a list of config objects from the stored data.
+	 * @return List<xConfig>
+	 * @throws xConfigException
+	 */
+	@Override
+	public List<xConfig> getConfigList(final String path,
+			final Class<? extends xConfig> clss)
+			throws xConfigException {
+		try {
+			final List<Object> datalist = this.getList(
+					Object.class,
+					path
+			);
+			if(datalist == null) {
+				this.log().fine("Config list not found: "+path);
+				return null;
+			}
+			// get config class constructor
+			final Constructor<? extends xConfig> construct;
+			try {
+				construct = clss.getConstructor(Map.class);
+			} catch (NoSuchMethodException e) {
+				throw new xConfigException(path, e);
+			} catch (SecurityException e) {
+				throw new xConfigException(path, e);
+			}
+			if(construct == null)
+				throw new xConfigException("Failed to get <Map> constructor for class: "+clss.getName());
+			final List<xConfig> configList = new ArrayList<xConfig>();
+			final Iterator<Object> it = datalist.iterator();
+			while(it.hasNext()) {
+				final Map<String, Object> datamap = utilsObject.castMap(
+						String.class,
+						Object.class,
+						it.next()
+				);
+				if(datamap == null)
+					throw new xConfigException("Failed to load config entry: "+path);
+				final xConfig cfg;
+				try {
+					cfg = (xConfig) construct.newInstance(datamap);
+				} catch (InstantiationException e) {
+					throw new xConfigException(path, e);
+				} catch (IllegalAccessException e) {
+					throw new xConfigException(path, e);
+				} catch (IllegalArgumentException e) {
+					throw new xConfigException(path, e);
+				} catch (InvocationTargetException e) {
+					throw new xConfigException(path, e);
+				}
+				configList.add(cfg);
+			}
+			return configList;
+		} catch (Exception e) {
+			throw new xConfigException(path, e);
+		}
 	}
 
 
