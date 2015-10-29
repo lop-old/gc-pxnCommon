@@ -31,6 +31,7 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 
 
 	// path exists
+	@Override
 	public boolean exists(final String path) {
 		return this.datamap.containsKey(path);
 	}
@@ -47,6 +48,7 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 	}
 	// get path
 	@SuppressWarnings("unchecked")
+	@Override
 	public Map<String, Object> getPath(final String path) {
 		try {
 			if(path.contains(".")) {
@@ -87,6 +89,7 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 		}
 		return null;
 	}
+	@Override
 	public String getStr(final String path, final String def) {
 		final String value = this.getString(path);
 		if(utils.isEmpty(value))
@@ -102,6 +105,7 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 		}
 		return null;
 	}
+	@Override
 	public boolean getBool(final String path, final boolean def) {
 		final Boolean value = this.getBoolean(path);
 		if(value == null)
@@ -117,6 +121,7 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 		}
 		return null;
 	}
+	@Override
 	public int getInt(final String path, final int def) {
 		final Integer value = this.getInteger(path);
 		if(value == null)
@@ -132,6 +137,7 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 		}
 		return null;
 	}
+	@Override
 	public long getLng(final String path, final long def) {
 		final Long value = this.getLong(path);
 		if(value == null)
@@ -147,6 +153,7 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 		}
 		return null;
 	}
+	@Override
 	public double getDbl(final String path, final double def) {
 		final Double value = this.getDouble(path);
 		if(value == null)
@@ -162,6 +169,7 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 		}
 		return null;
 	}
+	@Override
 	public float getFlt(final String path, final float def) {
 		final Float value = this.getFloat(path);
 		if(value == null)
@@ -226,6 +234,7 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 
 
 	// get map
+	@Override
 	public <K, V> Map<K, V> getMap(final Class<? extends K> clssK,
 			final Class<? extends V> clssV, final String path) {
 		try {
