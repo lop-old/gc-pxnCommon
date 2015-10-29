@@ -8,7 +8,6 @@ import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsObject;
 import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.byRef.StringRef;
-import com.poixson.commonjava.xLogger.xLog;
 
 
 public class xConfig extends xConfigLoader implements xConfigInterface {
@@ -339,19 +338,6 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 
 
 
-	// logger
-	private volatile xLog _log = null;
-	private xLog _log_default  = null;
-	public xLog log() {
-		final xLog log = this._log;
-		if(log != null)
-			return log;
-		if(this._log_default == null)
-			this._log_default = xLog.getRoot(LOG_NAME);
-		return this._log_default;
-	}
-	public void setLog(final xLog log) {
-		this._log = log;
 	}
 
 

@@ -72,7 +72,8 @@ class xConfigLoader {
 		// load file.yml
 		{
 			final String fullpath = (utils.isEmpty(path) ? "" : utilsString.ensureEnds(File.separator, path))+file;
-			log(log).fine("Loading config file: "+fullpath);
+			(log == null ? logger() : log)
+				.fine("Loading config file: "+fullpath);
 			final InputStream in = utilsDirFile.OpenFile(
 					new File(fullpath)
 			);
@@ -86,13 +87,15 @@ class xConfigLoader {
 		// try loading as resource
 		if(checkInJar != null) {
 			final String filepath = utilsString.ensureStarts(File.separator, file);
-			log(log).fine("Looking in jar for file: "+filepath+"  "+checkInJar.getName());
+			(log == null ? logger() : log)
+				.fine("Looking in jar for file: "+filepath+"  "+checkInJar.getName());
 			final InputStream in = utilsDirFile.OpenResource(
 					checkInJar,
 					filepath
 			);
 			if(in != null) {
-				log(log).fine("Loaded config from jar: "+filepath);
+				(log == null ? logger() : log)
+					.fine("Loaded config from jar: "+filepath);
 				final xConfig config = LoadStream(
 						in,
 						clss
@@ -108,7 +111,8 @@ class xConfigLoader {
 				}
 			}
 		}
-		log(log).fine("Config file not found! "+file);
+		(log == null ? logger() : log)
+			.fine("Config file not found! "+file);
 		return null;
 	}
 
@@ -151,7 +155,7 @@ class xConfigLoader {
 			return (xConfig) construct.newInstance(datamap);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
 				InvocationTargetException | NoSuchMethodException | SecurityException e) {
-			log().trace(e);
+			logger().trace(e);
 		} finally {
 			utils.safeClose(in);
 		}
@@ -174,9 +178,9 @@ class xConfigLoader {
 		if(utils.isEmpty(datamap)) throw new NullPointerException("datamap argument is required!");
 		if(path != null && !path.isDirectory()) {
 			if(path.mkdirs()) {
-				log().info("Created directory: "+path.toString());
+				logger().info("Created directory: "+path.toString());
 			} else {
-				log().severe("Failed to create directory: "+path.toString());
+				logger().severe("Failed to create directory: "+path.toString());
 				return false;
 			}
 		}
@@ -188,10 +192,10 @@ class xConfigLoader {
 			out.print(
 					yml.dumpAs(datamap, Tag.MAP, FlowStyle.BLOCK)
 			);
-			log().fine("Saved config file: "+filePath);
+			logger().fine("Saved config file: "+filePath);
 			return true;
 		} catch (FileNotFoundException e) {
-			log().trace(e);
+			logger().trace(e);
 			return false;
 		} finally {
 			utils.safeClose(out);
@@ -201,14 +205,21 @@ class xConfigLoader {
 
 
 	// logger
-	public static xLog log() {
-		return xLog.getRoot(LOG_NAME);
+	private volatile xLog _log         = null;
+	private static   xLog _log_default = null;
+	public xLog log() {
+		final xLog local = this._log;
+		if(local != null)
+			return local;
+		return logger();
 	}
-	public static xLog log(final xLog _log) {
-		if(_log == null)
-			return log();
-		else
-			return _log;
+	public void setLog(final xLog log) {
+		this._log = log;
+	}
+	public static xLog logger() {
+		if(_log_default == null)
+			_log_default = xLog.getRoot(LOG_NAME);
+		return _log_default;
 	}
 
 
