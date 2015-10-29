@@ -12,7 +12,8 @@ import java.util.Map;
 import org.xeustechnologies.jcl.JarClassLoader;
 import org.xeustechnologies.jcl.context.DefaultContextLoader;
 
-import com.poixson.commonapp.config.xConfigLoader;
+import com.poixson.commonapp.config.xConfig;
+import com.poixson.commonapp.config.xConfigException;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsDirFile;
 import com.poixson.commonjava.xLogger.xLog;
@@ -137,7 +138,7 @@ public class xPluginManager {
 			return null;
 		}
 		// load plugin.yml from jar
-		final xPluginYML yml = (xPluginYML) xConfigLoader.LoadJar(
+		final xPluginYML yml = (xPluginYML) xConfig.LoadJar(
 				file,
 				"plugin.yml",
 				xPluginYML.class
@@ -152,7 +153,13 @@ public class xPluginManager {
 			return null;
 		}
 		// check required libraries
-		final List<String> required = yml.getStringList("Requires");
+		final List<String> required;
+		try {
+			required = yml.getStringList("Requires");
+		} catch (xConfigException e) {
+			log().trace(e);
+			return null;
+		}
 		if(utils.notEmpty(required)) {
 			for(final String libPath : required) {
 				if(!utils.isLibAvailable(libPath)) {
@@ -194,7 +201,7 @@ public class xPluginManager {
 			return;
 		}
 		// plugin main class
-		final String className = dao.yml.getString(this.classFieldName);
+		final String className = dao.yml.getStr(this.classFieldName, null);
 //		log.finest("Init Plugin: "+this.classFieldName+": "+className);
 		if(utils.isEmpty(className)) {
 			log.severe("Plugin doesn't contain a "+this.classFieldName+" field");
