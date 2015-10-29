@@ -36,39 +36,47 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 		return this.datamap.containsKey(path);
 	}
 	// get object
-	public Object get(final String path) {
+	@Override
+	public Object get(final String path) throws xConfigException {
 		if(utils.isEmpty(path))
 			return null;
 		try {
 			return this.datamap.get(path);
 		} catch (Exception e) {
-			this.log().trace(e);
+			throw new xConfigException(e, path);
 		}
+	}
+	public Object gt(final String path) {
+		try {
+			return this.get(path);
+		} catch (xConfigException ignore) {}
 		return null;
 	}
 	// get path
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, Object> getPath(final String path) {
+	public Map<String, Object> getDataPath(final String path)
+			throws xConfigException {
 		try {
 			if(path.contains(".")) {
 				Map<String, Object> map = this.datamap;
 				final StringRef str = new StringRef(path);
 				while(str.notEmpty()) {
 					final String part = utilsString.getNextPart(".", str);
-					try {
-						map = (Map<String, Object>) map.get(part);
-					} catch (Exception e) {
-						this.log().trace(e);
-						return null;
-					}
+					map = (Map<String, Object>) map.get(part);
 				}
 				return map;
 			}
 			return (Map<String, Object>) this.get(path);
 		} catch (Exception e) {
-			this.log().trace(e);
+			throw new xConfigException(e, path);
 		}
+	}
+	@Override
+	public Map<String, Object> getPath(final String path) {
+		try {
+			return this.getDataPath(path);
+		} catch (xConfigException ignoire) {}
 		return null;
 	}
 
@@ -81,154 +89,185 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 
 
 	// get string
-	public String getString(final String path) {
+	@Override
+	public String getString(final String path) throws xConfigException {
 		try {
 			return (String) this.get(path);
 		} catch (Exception e) {
-			this.log().trace(e);
+			throw new xConfigException(e, path);
 		}
-		return null;
 	}
 	@Override
 	public String getStr(final String path, final String def) {
-		final String value = this.getString(path);
-		if(utils.isEmpty(value))
-			return def;
-		return value;
+		try {
+			final String value = this.getString(path);
+			if(utils.notEmpty(value))
+				return value;
+		} catch (xConfigException ignore) {}
+		return def;
 	}
 	// get boolean
-	public Boolean getBoolean(final String path) {
+
+
+
+	@Override
+	public Boolean getBoolean(final String path) throws xConfigException {
 		try {
 			return (Boolean) this.get(path);
 		} catch (Exception e) {
-			this.log().trace(e);
+			throw new xConfigException(e, path);
 		}
-		return null;
 	}
 	@Override
 	public boolean getBool(final String path, final boolean def) {
-		final Boolean value = this.getBoolean(path);
-		if(value == null)
-			return def;
-		return value.booleanValue();
+		try {
+			final Boolean value = this.getBoolean(path);
+			if(value != null)
+				return value.booleanValue();
+		} catch (xConfigException ignore) {}
+		return def;
 	}
 	// get integer
-	public Integer getInteger(final String path) {
+
+
+
+	@Override
+	public Integer getInteger(final String path) throws xConfigException {
 		try {
 			return (Integer) this.get(path);
 		} catch (Exception e) {
-			this.log().trace(e);
+			throw new xConfigException(e, path);
 		}
-		return null;
 	}
 	@Override
 	public int getInt(final String path, final int def) {
-		final Integer value = this.getInteger(path);
-		if(value == null)
-			return def;
-		return value.intValue();
+		try {
+			final Integer value = this.getInteger(path);
+			if(value != null)
+				return value.intValue();
+		} catch (xConfigException ignore) {}
+		return def;
 	}
 	// get long
-	public Long getLong(final String path) {
+
+
+
+	@Override
+	public Long getLong(final String path) throws xConfigException {
 		try {
 			return (Long) this.get(path);
 		} catch (Exception e) {
-			this.log().trace(e);
+			throw new xConfigException(e, path);
 		}
-		return null;
 	}
 	@Override
 	public long getLng(final String path, final long def) {
-		final Long value = this.getLong(path);
-		if(value == null)
-			return def;
-		return value.longValue();
+		try {
+			final Long value = this.getLong(path);
+			if(value != null)
+				return value.longValue();
+		} catch (xConfigException ignore) {}
+		return def;
 	}
 	// get double
-	public Double getDouble(final String path) {
+
+
+
+	@Override
+	public Double getDouble(final String path) throws xConfigException {
 		try {
 			return (Double) this.get(path);
 		} catch (Exception e) {
-			this.log().trace(e);
+			throw new xConfigException(e, path);
 		}
-		return null;
 	}
 	@Override
 	public double getDbl(final String path, final double def) {
-		final Double value = this.getDouble(path);
-		if(value == null)
-			return def;
-		return value.doubleValue();
+		try {
+			final Double value = this.getDouble(path);
+			if(value != null)
+				return value.doubleValue();
+		} catch (xConfigException ignore) {}
+		return def;
 	}
 	// get float
-	public Float getFloat(final String path) {
+
+
+
+	@Override
+	public Float getFloat(final String path) throws xConfigException {
 		try {
 			return (Float) this.get(path);
 		} catch (Exception e) {
-			this.log().trace(e);
+			throw new xConfigException(e, path);
 		}
-		return null;
 	}
 	@Override
 	public float getFlt(final String path, final float def) {
-		final Float value = this.getFloat(path);
-		if(value == null)
-			return def;
-		return value.floatValue();
+		try {
+			final Float value = this.getFloat(path);
+			if(value != null)
+				return value.floatValue();
+		} catch (xConfigException ignore) {}
+		return def;
 	}
 
 
 
 	// get list
-	public <T> List<T> getList(final Class<? extends T> clss, final String path) {
-		try {
-			return utilsObject.castList(
-				clss,
-				this.get(path)
-			);
-		} catch (Exception e) {
-			this.log().trace(e);
-		}
-		return null;
-	}
-	// get string list
-	public List<String> getStringList(final String path) {
-		try {
-			return this.getList(
-				String.class,
-				path
-			);
-		} catch (Exception e) {
-			this.log().trace(e);
-		}
-		return null;
-	}
-
-
-
-	// get set
-	public <T> Set<T> getSet(final Class<? extends T> clss, final String path) {
+	@Override
+	public <C> Set<C> getSet(final Class<? extends C> clss,
+			final String path) throws xConfigException {
 		try {
 			return utilsObject.castSet(
 				clss,
 				this.get(path)
 			);
 		} catch (Exception e) {
-			this.log().trace(e);
+			throw new xConfigException(e, path);
 		}
-		return null;
 	}
 	// get string list
-	public Set<String> getStringSet(final String path) {
+	@Override
+	public Set<String> getStringSet(final String path)
+			throws xConfigException {
 		try {
 			return this.getSet(
 				String.class,
 				path
 			);
 		} catch (Exception e) {
-			this.log().trace(e);
+			throw new xConfigException(e, path);
 		}
-		return null;
+	}
+
+
+
+	// get set
+	@Override
+	public <C> List<C> getList(final Class<? extends C> clss,
+			final String path) throws xConfigException {
+		try {
+			return utilsObject.castList(
+				clss,
+				this.get(path)
+			);
+		} catch (Exception e) {
+			throw new xConfigException(e, path);
+		}
+	}
+	// get string list
+	@Override
+	public List<String> getStringList(final String path)
+			throws xConfigException {
+		try {
+			return this.getList(
+				String.class,
+				path
+			);
+		} catch (Exception e) {
+			throw new xConfigException(e, path);
+		}
 	}
 
 
@@ -236,7 +275,8 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 	// get map
 	@Override
 	public <K, V> Map<K, V> getMap(final Class<? extends K> clssK,
-			final Class<? extends V> clssV, final String path) {
+			final Class<? extends V> clssV, final String path)
+			throws xConfigException {
 		try {
 			return utilsObject.castMap(
 				clssK,
@@ -244,12 +284,13 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 				this.getPath(path)
 			);
 		} catch (Exception e) {
-			this.log().trace(e);
+			throw new xConfigException(e, path);
 		}
-		return null;
 	}
 	// get string:object map
-	public Map<String, Object> getStringObjectMap(final String path) {
+	@Override
+	public Map<String, Object> getStringObjectMap(final String path)
+			throws xConfigException {
 		try {
 			return this.getMap(
 				String.class,
@@ -257,12 +298,13 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 				path
 			);
 		} catch (Exception e) {
-			this.log().trace(e);
+			throw new xConfigException(e, path);
 		}
-		return null;
 	}
 	// get string:string map
-	public Map<String, String> getStringMap(final String path) {
+	@Override
+	public Map<String, String> getStringMap(final String path)
+			throws xConfigException {
 		try {
 			return this.getMap(
 				String.class,
@@ -270,9 +312,8 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 				path
 			);
 		} catch (Exception e) {
-			this.log().trace(e);
+			throw new xConfigException(e, path);
 		}
-		return null;
 	}
 
 
