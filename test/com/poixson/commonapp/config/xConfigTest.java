@@ -20,7 +20,7 @@ public class xConfigTest {
 		final TestFileConfig config =
 			(TestFileConfig) xConfig.Load(
 				xLogTest.get(),
-				"resources/test/",
+				"testresources/",
 				"TestFile.yml",
 				TestFileConfig.class,
 				null
