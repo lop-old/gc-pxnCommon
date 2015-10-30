@@ -77,6 +77,9 @@ public class xTime {
 	public xTime clone() {
 		return get(this);
 	}
+	public xTimeUnmodifiable unmodifiable() {
+		return new xTimeUnmodifiable(this);
+	}
 
 
 
