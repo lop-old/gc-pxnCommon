@@ -130,7 +130,7 @@ public class DualKeyMap<K, J, V> {
 
 
 
-	public Collection values() {
+	public Collection<V> values() {
 		return this.kMap.values();
 	}
 
