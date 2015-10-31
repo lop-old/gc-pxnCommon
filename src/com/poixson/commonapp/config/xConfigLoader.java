@@ -66,7 +66,8 @@ class xConfigLoader {
 	public static xConfig Load(final xLog log,
 			final String path, final String file,
 			final Class<? extends xConfig> clss,
-			final Class<? extends Object> checkInJar) {
+			final Class<? extends Object> checkInJar)
+			throws xConfigException {
 		if(utils.isEmpty(file)) throw new NullPointerException("file argument is required!");
 		if(clss == null)        throw new NullPointerException("clss argument is required!");
 		// load file.yml

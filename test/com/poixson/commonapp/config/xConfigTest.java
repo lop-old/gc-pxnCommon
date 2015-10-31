@@ -16,7 +16,7 @@ public class xConfigTest {
 
 
 	@Test
-	public void testLoad() {
+	public void testLoad() throws xConfigException {
 		final TestFileConfig config =
 			(TestFileConfig) xConfig.Load(
 				xLogTest.get(),

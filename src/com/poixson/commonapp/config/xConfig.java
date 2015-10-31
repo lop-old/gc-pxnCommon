@@ -26,7 +26,8 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 	 * Stores the datamap Map object for this xConfig instance.
 	 * @param datamap The Map instance to use
 	 */
-	public xConfig(final Map<String, Object> datamap) {
+	public xConfig(final Map<String, Object> datamap)
+			throws xConfigException {
 		if(datamap == null) throw new NullPointerException("datamap argument is required!");
 		this.datamap = datamap;
 	}
@@ -36,7 +37,10 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 	 */
 	@Override
 	public xConfig clone() {
-		return new xConfig(this.datamap);
+		try {
+			return new xConfig(this.datamap);
+		} catch (xConfigException ignore) {}
+		return null;
 	}
 
 

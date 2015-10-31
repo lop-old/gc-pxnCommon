@@ -12,7 +12,8 @@ public class TestFileConfig extends xConfig {
 
 
 
-	public TestFileConfig(final Map<String, Object> datamap) {
+	public TestFileConfig(final Map<String, Object> datamap)
+			throws xConfigException {
 		super(datamap);
 		this.something = this.getStr("something", "somethingDefault");
 		this.bool      = this.getBool("bool",     false);
