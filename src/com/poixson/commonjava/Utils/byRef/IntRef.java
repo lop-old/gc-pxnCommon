@@ -17,12 +17,12 @@ public class IntRef {
 
 
 
-	public void value(final int val) {
-		this.value = val;
+	public void value(final int value) {
+		this.value = value;
 	}
-	public void value(final Integer val) {
-		this.value = val.intValue();
+	public void value(final Integer value) {
 		if(value == null) throw new RequiredArgumentException("value");
+		this.value = value.intValue();
 	}
 	public int value() {
 		return this.value;

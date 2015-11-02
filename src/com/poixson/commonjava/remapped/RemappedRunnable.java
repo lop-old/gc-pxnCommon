@@ -28,7 +28,7 @@ public class RemappedRunnable extends xRunnable {
 					methodName
 			);
 		} catch (Exception e) {
-			xLog.getRoot().trace(e);
+			log().trace(e);
 		}
 		return null;
 	}
@@ -64,14 +64,21 @@ public class RemappedRunnable extends xRunnable {
 		try {
 			this.method.invoke(this.obj);
 		} catch (IllegalAccessException e) {
-			xLog.getRoot().trace(e);
+			log().trace(e);
 		} catch (IllegalArgumentException e) {
-			xLog.getRoot().trace(e);
+			log().trace(e);
 		} catch (InvocationTargetException e) {
-			xLog.getRoot().trace(e);
+			log().trace(e);
 		} catch (Exception e) {
-			xLog.getRoot().trace(e);
+			log().trace(e);
 		}
+	}
+
+
+
+	// logger
+	public static xLog log() {
+		return xLog.getRoot();
 	}
 
 

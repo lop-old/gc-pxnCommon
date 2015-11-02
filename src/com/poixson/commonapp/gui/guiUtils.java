@@ -131,21 +131,21 @@ public final class guiUtils {
 								throw new IllegalArgumentException("Too many arguments");
 							}
 						} catch (IllegalAccessException e) {
-							e.printStackTrace();
+							log().trace(e);
 						} catch (IllegalArgumentException e) {
-							e.printStackTrace();
+							log().trace(e);
 						} catch (InvocationTargetException e) {
-							e.printStackTrace();
+							log().trace(e);
 						} catch (Exception e) {
-							e.printStackTrace();
+							log().trace(e);
 						}
 					}
 				}.init(callingFrom, method, args)
 			);
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			log().trace(e);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			log().trace(e);
 		}
 		return true;
 	}

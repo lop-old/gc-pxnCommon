@@ -26,6 +26,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
+import com.poixson.commonjava.xLogger.xLog;
+
 
 /**
  * A package-reserved utility class. It spawns a secondary thread in which the
@@ -81,7 +83,7 @@ public class StreamBridge implements xStartable {
 				b = this.in.read();
 			} catch (IOException e) {
 				if(!this.stopping && !Thread.interrupted())
-					e.printStackTrace();
+					xLog.getRoot().trace(e);
 				break;
 			}
 			if(b == -1)
@@ -90,7 +92,7 @@ public class StreamBridge implements xStartable {
 				this.out.write(b);
 			} catch (IOException e) {
 				if(!this.stopping && !Thread.interrupted())
-					e.printStackTrace();
+					xLog.getRoot().trace(e);
 				break;
 			}
 		}
@@ -156,7 +158,8 @@ public class StreamBridge implements xStartable {
 	 *             interrupted status of the current thread is cleared when this
 	 *             exception is thrown.
 	 */
-	public void join(final long millis, final int nanos) throws IllegalArgumentException, InterruptedException {
+	public void join(final long millis, final int nanos)
+			throws IllegalArgumentException, InterruptedException {
 		this.thread.join(millis, nanos);
 	}
 

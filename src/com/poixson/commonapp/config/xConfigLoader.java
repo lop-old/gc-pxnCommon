@@ -74,7 +74,7 @@ class xConfigLoader {
 		// load file.yml
 		{
 			final String fullpath = (utils.isEmpty(path) ? "" : utilsString.ensureEnds(File.separator, path))+file;
-			(log == null ? logger() : log)
+			(log == null ? getLogger() : log)
 				.fine("Loading config file: "+fullpath);
 			final InputStream in = utilsDirFile.OpenFile(
 					new File(fullpath)
@@ -89,14 +89,14 @@ class xConfigLoader {
 		// try loading as resource
 		if(checkInJar != null) {
 			final String filepath = utilsString.ensureStarts(File.separator, file);
-			(log == null ? logger() : log)
+			(log == null ? getLogger() : log)
 				.fine("Looking in jar for file: "+filepath+"  "+checkInJar.getName());
 			final InputStream in = utilsDirFile.OpenResource(
 					checkInJar,
 					filepath
 			);
 			if(in != null) {
-				(log == null ? logger() : log)
+				(log == null ? getLogger() : log)
 					.fine("Loaded config from jar: "+filepath);
 				final xConfig config = LoadStream(
 						in,
@@ -113,7 +113,7 @@ class xConfigLoader {
 				}
 			}
 		}
-		(log == null ? logger() : log)
+		(log == null ? getLogger() : log)
 			.fine("Config file not found! "+file);
 		return null;
 	}
@@ -155,9 +155,18 @@ class xConfigLoader {
 			final Constructor<? extends Map<String, Object>> construct =
 				(Constructor<? extends Map<String, Object>>) clss.getDeclaredConstructor(Map.class);
 			return (xConfig) construct.newInstance(datamap);
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
-				InvocationTargetException | NoSuchMethodException | SecurityException e) {
-			logger().trace(e);
+		} catch (InstantiationException e) {
+			getLogger().trace(e);
+		} catch (IllegalAccessException e) {
+			getLogger().trace(e);
+		} catch (IllegalArgumentException e) {
+			getLogger().trace(e);
+		} catch (InvocationTargetException e) {
+			getLogger().trace(e);
+		} catch (NoSuchMethodException e) {
+			getLogger().trace(e);
+		} catch (SecurityException e) {
+			getLogger().trace(e);
 		} finally {
 			utils.safeClose(in);
 		}
@@ -180,9 +189,9 @@ class xConfigLoader {
 		if(utils.isEmpty(datamap)) throw new RequiredArgumentException("datamap");
 		if(path != null && !path.isDirectory()) {
 			if(path.mkdirs()) {
-				logger().info("Created directory: "+path.toString());
+				getLogger().info("Created directory: "+path.toString());
 			} else {
-				logger().severe("Failed to create directory: "+path.toString());
+				getLogger().severe("Failed to create directory: "+path.toString());
 				return false;
 			}
 		}
@@ -194,10 +203,10 @@ class xConfigLoader {
 			out.print(
 					yml.dumpAs(datamap, Tag.MAP, FlowStyle.BLOCK)
 			);
-			logger().fine("Saved config file: "+filePath);
+			getLogger().fine("Saved config file: "+filePath);
 			return true;
 		} catch (FileNotFoundException e) {
-			logger().trace(e);
+			getLogger().trace(e);
 			return false;
 		} finally {
 			utils.safeClose(out);
@@ -213,12 +222,12 @@ class xConfigLoader {
 		final xLog local = this._log;
 		if(local != null)
 			return local;
-		return logger();
+		return getLogger();
 	}
 	public void setLog(final xLog log) {
 		this._log = log;
 	}
-	public static xLog logger() {
+	public static xLog getLogger() {
 		if(_log_default == null)
 			_log_default = xLog.getRoot(LOG_NAME);
 		return _log_default;

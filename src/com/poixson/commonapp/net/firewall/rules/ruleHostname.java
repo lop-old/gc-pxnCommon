@@ -24,10 +24,10 @@ public class ruleHostname extends NetFirewallRule {
 
 	@Override
 	public Boolean check(final InetSocketAddress local, final InetSocketAddress remote) {
-		if(!this.type.isLocal() && !this.type.isRemote())
+		if(!this.ruleType.isLocal() && !this.ruleType.isRemote())
 			throw new RuntimeException("Not local or remote type!");
 		if(utils.isEmpty(this.pattern)) return null;
-		if("*".equals(this.pattern))    return Boolean.valueOf(this.type.isAllow());
+		if("*".equals(this.pattern))    return Boolean.valueOf(this.ruleType.isAllow());
 		// split pattern by :
 		final StringRef hostPattern = new StringRef();
 		final StringRef portPattern = new StringRef();
@@ -42,16 +42,16 @@ public class ruleHostname extends NetFirewallRule {
 			if(match != null) {
 				if(match.booleanValue()) {
 					if(utils.isEmpty(hostPattern.value))
-						return Boolean.valueOf(this.type.isAllow());
+						return Boolean.valueOf(this.ruleType.isAllow());
 				} else {
 					return null;
 				}
 			}
 		}
 		// check hostname
-		final String host = (this.type.isLocal() ? local.getHostName() : remote.getHostName());
+		final String host = (this.ruleType.isLocal() ? local.getHostName() : remote.getHostName());
 		if(host.matches(utilsString.wildcardToRegex(hostPattern.value)))
-			return Boolean.valueOf(this.type.isAllow());
+			return Boolean.valueOf(this.ruleType.isAllow());
 		return null;
 	}
 
@@ -60,7 +60,7 @@ public class ruleHostname extends NetFirewallRule {
 	@Override
 	public String toString() {
 		final StringBuilder str = new StringBuilder();
-		str.append("<").append(this.type.toString()).append(">");
+		str.append("<").append(this.ruleType.toString()).append(">");
 		str.append(this.pattern);
 		return str.toString();
 	}

@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import com.poixson.commonjava.Failure;
+import com.poixson.commonjava.xLogger.xLog;
 
 
 public class mvnProps {
@@ -62,7 +63,7 @@ public class mvnProps {
 			}
 			props.load(in);
 		} catch (IOException e) {
-			e.printStackTrace();
+			xLog.getRoot().trace(e);
 		} finally {
 			utils.safeClose(in);
 		}

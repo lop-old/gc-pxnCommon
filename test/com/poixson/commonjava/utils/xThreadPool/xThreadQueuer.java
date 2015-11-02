@@ -17,7 +17,7 @@ class xThreadQueuer {
 
 	public xThreadQueuer(final xThreadPool pool, final int taskCount) {
 		if(pool == null)  throw new RequiredArgumentException("pool");
-		if(taskCount < 1) throw new IllegalArgumentException();
+		if(taskCount < 1) throw new IllegalArgumentException("taskCount cannot be less than 1!");
 		assertHasntFailed();
 		// start thread pool
 		pool.Start();

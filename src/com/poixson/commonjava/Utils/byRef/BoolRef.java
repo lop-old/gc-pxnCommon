@@ -17,12 +17,12 @@ public class BoolRef {
 
 
 
-	public void value(final boolean val) {
-		this.value = val;
+	public void value(final boolean value) {
+		this.value = value;
 	}
-	public void value(final Boolean val) {
-		this.value = val.booleanValue();
+	public void value(final Boolean value) {
 		if(value == null) throw new RequiredArgumentException("value");
+		this.value = value.booleanValue();
 	}
 	public boolean value() {
 		return this.value;

@@ -10,13 +10,13 @@ import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 
 public abstract class NetFirewallRule {
 
-	protected final RuleType type;
+	protected final RuleType ruleType;
 
 
 
-	public NetFirewallRule(final RuleType type) {
-		this.type = type;
+	public NetFirewallRule(final RuleType ruleType) {
 		if(ruleType == null) throw new RequiredArgumentException("ruleType");
+		this.ruleType = ruleType;
 	}
 
 
@@ -25,7 +25,8 @@ public abstract class NetFirewallRule {
 
 
 
-	protected void SplitPattern(final String pattern, final StringRef hostPattern, final StringRef portPattern) {
+	protected void SplitPattern(final String pattern,
+			final StringRef hostPattern, final StringRef portPattern) {
 		if(utils.isEmpty(pattern)) throw new RequiredArgumentException("pattern");
 		final String[] parts = pattern.split(":", 2);
 		if(parts.length > 1) {
@@ -40,11 +41,11 @@ public abstract class NetFirewallRule {
 
 
 	public Boolean checkPort(final int localPort, final int remotePort, final String portPattern) {
-		if(!this.type.isLocal() && !this.type.isRemote())
+		if(!this.ruleType.isLocal() && !this.ruleType.isRemote())
 			throw new RuntimeException("Not local or remote type!");
 		if(utils.isEmpty(portPattern)) return null;
 		if("*".equals(portPattern))    return Boolean.TRUE;
-		final int port = (this.type.isLocal() ? localPort : remotePort);
+		final int port = (this.ruleType.isLocal() ? localPort : remotePort);
 		final String[] parts = portPattern.split("-", 2);
 		// port range
 		if(parts.length > 1) {
