@@ -1,6 +1,7 @@
 package com.poixson.commonjava.xLogger.commands;
 
 import com.poixson.commonjava.Utils.utils;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xEvents.xEventData;
 
 
@@ -14,7 +15,7 @@ public class xCommandEvent extends xEventData {
 
 	public xCommandEvent(final String line) {
 		super();
-		if(utils.isEmpty(line)) throw new NullPointerException("line argument is required!");
+		if(utils.isEmpty(line)) throw new RequiredArgumentException("line");
 		String str = line.trim();
 		boolean ishelp = false;
 		// starts with ?

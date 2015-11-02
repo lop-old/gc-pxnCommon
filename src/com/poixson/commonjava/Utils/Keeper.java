@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -32,13 +33,13 @@ public class Keeper {
 
 
 	public static void add(final Object obj) {
-		if(obj == null) throw new NullPointerException("obj argument is required!");
+		if(obj == null) throw new RequiredArgumentException("obj");
 		holder.add(obj);
 		if(DEBUG)
 			finest("Added: "+obj.getClass().getName());
 	}
 	public static void remove(final Object obj) {
-		if(obj == null) throw new NullPointerException("obj argument is required!");
+		if(obj == null) throw new RequiredArgumentException("obj");
 		holder.remove(obj);
 		if(DEBUG)
 			finest("Removed: "+obj.getClass().getName());

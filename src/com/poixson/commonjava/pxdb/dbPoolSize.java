@@ -3,6 +3,7 @@ package com.poixson.commonjava.pxdb;
 import com.poixson.commonjava.Utils.CoolDown;
 import com.poixson.commonjava.Utils.utilsNumbers;
 import com.poixson.commonjava.Utils.utilsThread;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -25,7 +26,7 @@ public class dbPoolSize extends Thread {
 
 	// hard/soft pool size limits
 	protected dbPoolSize(final dbPool pool) {
-		if(pool == null) throw new NullPointerException("pool argument is required!");
+		if(pool == null) throw new RequiredArgumentException("pool");
 		this.pool = pool;
 		this.setName(pool.dbKey()+" Warning Thread");
 	}

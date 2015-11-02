@@ -1,5 +1,7 @@
 package com.poixson.commonjava.Utils.byRef;
 
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
+
 
 public class BoolRef {
 
@@ -19,8 +21,8 @@ public class BoolRef {
 		this.value = val;
 	}
 	public void value(final Boolean val) {
-		if(val == null) throw new NullPointerException("val argument is required!");
 		this.value = val.booleanValue();
+		if(value == null) throw new RequiredArgumentException("value");
 	}
 	public boolean value() {
 		return this.value;

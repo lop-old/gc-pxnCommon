@@ -6,6 +6,7 @@ import java.io.File;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -16,7 +17,7 @@ public final class utilsSwing {
 
 	// change font size
 	public static void changeFontSize(final JComponent component, final int size) {
-		if(component == null) throw new NullPointerException("component argument is required!");
+		if(component == null) throw new RequiredArgumentException("component");
 		final Font font = component.getFont();
 		component.setFont(new Font(
 			font.getFontName(),

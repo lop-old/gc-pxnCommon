@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLevel;
 import com.poixson.commonjava.xLogger.xLog;
 
@@ -362,8 +363,8 @@ public final class utils {
 
 	// compare versions
 	public static String compareVersions(final String versionA, final String versionB) {
-		if(utils.isEmpty(versionA)) throw new NullPointerException("versionA argument is required!");
-		if(utils.isEmpty(versionB)) throw new NullPointerException("versionB argument is required!");
+		if(utils.isEmpty(versionA)) throw new RequiredArgumentException("versionA");
+		if(utils.isEmpty(versionB)) throw new RequiredArgumentException("versionB");
 		final String[] norms = normalisedVersions(versionA, versionB);
 		final int cmp = norms[0].compareTo(norms[1]);
 		if(cmp < 0)
@@ -373,8 +374,8 @@ public final class utils {
 		return "=";
 	}
 	private static String[] normalisedVersions(final String versionA, final String versionB) {
-		if(utils.isEmpty(versionA)) throw new NullPointerException();
-		if(utils.isEmpty(versionB)) throw new NullPointerException();
+		if(utils.isEmpty(versionA)) throw new RequiredArgumentException("versionA");
+		if(utils.isEmpty(versionB)) throw new RequiredArgumentException("versionB");
 		// split string by .
 		final String[] splitA = Pattern.compile(".", Pattern.LITERAL).split(versionA);
 		final String[] splitB = Pattern.compile(".", Pattern.LITERAL).split(versionB);
@@ -409,7 +410,7 @@ public final class utils {
 		final String javaVersion;
 		{
 			final String vers = System.getProperty("java.version");
-			if(vers == null || vers.isEmpty()) throw new NullPointerException("Failed to get java version");
+			if(vers == null || vers.isEmpty()) throw new RuntimeException("Failed to get java version");
 			javaVersion = vers.replace('_', '.');
 		}
 		return !(compareVersions(javaVersion, requiredVersion).equals("<"));

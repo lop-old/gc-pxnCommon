@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
+
 
 public final class utilsObject {
 
@@ -23,7 +25,7 @@ public final class utilsObject {
 
 	@SuppressWarnings("unchecked")
 	public static <T> T cast(final Class<? extends T> clss, final Object object) {
-		if(clss == null) throw new NullPointerException("clss argument is required!");
+		if(clss   == null) throw new RequiredArgumentException("clss");
 		if(object == null) return null;
 		try {
 			if( String.class.equals(clss) && !(object instanceof String) )
@@ -42,7 +44,7 @@ public final class utilsObject {
 	 * @return
 	 */
 	public static <T> List<T> castList(final Class<? extends T> clss, final Collection<?> c) {
-		if(clss == null) throw new NullPointerException("clss argument is required!");
+		if(clss == null) throw new RequiredArgumentException("clss");
 		if(c    == null) return null;
 		try {
 			final List<T> result = new ArrayList<T>(c.size());
@@ -63,7 +65,7 @@ public final class utilsObject {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> castList(final Class<? extends T> clss, final Object object) {
-		if(clss   == null) throw new NullPointerException("clss argument is required!");
+		if(clss   == null) throw new RequiredArgumentException("clss");
 		if(object == null) return null;
 		try {
 			return castList(clss, (Collection<T>) object);
@@ -80,7 +82,7 @@ public final class utilsObject {
 	 * @return
 	 */
 	public static <T> Set<T> castSet(final Class<? extends T> clss, final Collection<?> c) {
-		if(clss == null) throw new NullPointerException("clss argument is required!");
+		if(clss == null) throw new RequiredArgumentException("clss");
 		if(c    == null) return null;
 		try {
 			final Set<T> result = new HashSet<T>(c.size());
@@ -101,7 +103,7 @@ public final class utilsObject {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> Set<T> castSet(final Class<? extends T> clss, final Object object) {
-		if(clss   == null) throw new NullPointerException("clss argument is required!");
+		if(clss   == null) throw new RequiredArgumentException("clss");
 		if(object == null) return null;
 		try {
 			return castSet(clss, (Collection<T>) object);
@@ -120,8 +122,8 @@ public final class utilsObject {
 	 */
 	public static <K, V> Map<K, V> castMap(final Class<? extends K> keyClss,
 			final Class<? extends V> valClss, final Map<?, ?> m) {
-		if(keyClss == null) throw new NullPointerException("key argument is required!");
-		if(valClss == null) throw new NullPointerException("val argument is required!");
+		if(keyClss == null) throw new RequiredArgumentException("keyClss");
+		if(valClss == null) throw new RequiredArgumentException("valClss");
 		if(m       == null) return null;
 		try {
 			final Map<K, V> result = new HashMap<K, V>(m.size());
@@ -147,9 +149,9 @@ public final class utilsObject {
 	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> castMap(final Class<? extends K> keyClss,
 			final Class<? extends V> valClss, final Object object) {
-		if(keyClss == null) throw new NullPointerException("key argument is required!");
-		if(valClss == null) throw new NullPointerException("val argument is required!");
-		if(object == null) return null;
+		if(keyClss == null) throw new RequiredArgumentException("keyClss");
+		if(valClss == null) throw new RequiredArgumentException("valClss");
+		if(object  == null) return null;
 		try {
 			return castMap(keyClss, valClss, (Map<K, V>) object);
 		} catch (Exception ignore) {}

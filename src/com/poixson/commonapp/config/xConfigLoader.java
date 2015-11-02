@@ -16,6 +16,7 @@ import org.yaml.snakeyaml.nodes.Tag;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsDirFile;
 import com.poixson.commonjava.Utils.utilsString;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -68,8 +69,8 @@ class xConfigLoader {
 			final Class<? extends xConfig> clss,
 			final Class<? extends Object> checkInJar)
 			throws xConfigException {
-		if(utils.isEmpty(file)) throw new NullPointerException("file argument is required!");
-		if(clss == null)        throw new NullPointerException("clss argument is required!");
+		if(utils.isEmpty(file)) throw new RequiredArgumentException("file");
+		if(clss == null)        throw new RequiredArgumentException("clss");
 		// load file.yml
 		{
 			final String fullpath = (utils.isEmpty(path) ? "" : utilsString.ensureEnds(File.separator, path))+file;
@@ -124,9 +125,9 @@ class xConfigLoader {
 		return LoadJar(jarFile, ymlFile, xConfig.class);
 	}
 	public static xConfig LoadJar(final File jarFile, final String ymlFile, final Class<? extends xConfig> clss) {
-		if(jarFile == null)        throw new NullPointerException("jarFile argument is required!");
-		if(utils.isEmpty(ymlFile)) throw new NullPointerException("yamlFile argument is required!");
-		if(clss == null)           throw new NullPointerException("clss argument is required!");
+		if(jarFile == null)        throw new RequiredArgumentException("jarFile");
+		if(utils.isEmpty(ymlFile)) throw new RequiredArgumentException("yamlFile");
+		if(clss == null)           throw new RequiredArgumentException("clss");
 		final utilsDirFile.InputJar in = utilsDirFile.OpenJarResource(jarFile, ymlFile);
 		if(in == null) return null;
 		try {
@@ -142,8 +143,8 @@ class xConfigLoader {
 
 
 	public static <T> xConfig LoadStream(final InputStream in, final Class<? extends xConfig> clss) {
-		if(in   == null) throw new NullPointerException("in argument is required!");
-		if(clss == null) throw new NullPointerException("clss argument is required!");
+		if(in   == null) throw new RequiredArgumentException("in");
+		if(clss == null) throw new RequiredArgumentException("clss");
 		try {
 			final Yaml yml = new Yaml();
 			@SuppressWarnings("unchecked")
@@ -175,8 +176,8 @@ class xConfigLoader {
 	}
 	public static boolean Save(final File path, final File file,
 			final Map<String, Object> datamap) {
-		if(file == null)           throw new NullPointerException("file argument is required!");
-		if(utils.isEmpty(datamap)) throw new NullPointerException("datamap argument is required!");
+		if(file == null)           throw new RequiredArgumentException("file");
+		if(utils.isEmpty(datamap)) throw new RequiredArgumentException("datamap");
 		if(path != null && !path.isDirectory()) {
 			if(path.mkdirs()) {
 				logger().info("Created directory: "+path.toString());

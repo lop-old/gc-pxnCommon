@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.poixson.commonjava.Utils.utils;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xEvents.annotations.xEvent;
 import com.poixson.commonjava.xEvents.xEventListener.ListenerPriority;
 
@@ -32,7 +33,7 @@ public abstract class xHandlerGeneric extends xHandler {
 	// register all xEvent listeners
 	@Override
 	public void register(final xEventListener listener) {
-		if(listener == null) throw new NullPointerException("listener argument is required!");
+		if(listener == null) throw new RequiredArgumentException("listener");
 		final Class<? extends xEventData> eventType = this.getEventDataType();
 		// find listener methods
 		final Set<Method> methodsFound = new HashSet<Method>();

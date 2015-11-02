@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -42,7 +43,7 @@ public final class utilsDirFile {
 	 * @return
 	 */
 	public static File[] listContents(final File dir, final String[] extensions) {
-		if(dir == null) throw new NullPointerException("dir argument is required!");
+		if(dir == null) throw new RequiredArgumentException("dir");
 		if(!dir.isDirectory()) return null;
 		return dir.listFiles(new FileFilter() {
 			private String[] exts;
@@ -75,7 +76,7 @@ public final class utilsDirFile {
 //TODO: does this work?
 	// add lib to paths
 	public static void addLibraryPath(final String libDir) {
-		if(utils.isEmpty(libDir)) throw new NullPointerException("libDir cannot be null/empty");
+		if(utils.isEmpty(libDir)) throw new RequiredArgumentException("libDir");
 		// get lib path
 		final File file = new File(libDir);
 		if(!file.exists() || !file.isDirectory()) {
@@ -131,15 +132,15 @@ public final class utilsDirFile {
 	}
 	// load yml from jar reference
 	public static InputStream OpenResource(final Class<? extends Object> clss, final String fileName) {
-		if(clss == null)            throw new NullPointerException("clss argument is required!");
-		if(utils.isEmpty(fileName)) throw new NullPointerException("fileName argument is required!");
+		if(clss == null)            throw new RequiredArgumentException("clss");
+		if(utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
 		final InputStream in = clss.getResourceAsStream(fileName);
 		return in;
 	}
 	// load yml from jar
 	public static InputJar OpenJarResource(final File jarFile, final String fileName) {
-		if(jarFile == null)         throw new NullPointerException("jarFile argument is required!");
-		if(utils.isEmpty(fileName)) throw new NullPointerException("fileName argument is required!");
+		if(jarFile == null)         throw new RequiredArgumentException("jarFile");
+		if(utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
 		try {
 			final JarFile jar = new JarFile(jarFile);
 			final JarEntry entry = jar.getJarEntry(fileName);
@@ -181,7 +182,7 @@ public final class utilsDirFile {
 	// build path+file
 	public static String buildFilePath(final String filePath,
 			final String fileName, final String extension) {
-		if(utils.isEmpty(fileName)) throw new NullPointerException("fileName argument is required!");
+		if(utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
 		// file extension
 		final String ext;
 		if(utils.isEmpty(extension))
@@ -204,7 +205,7 @@ public final class utilsDirFile {
 		return filePath + File.separator + fileStr;
 	}
 	public static String buildFilePath(final File path, final File file) {
-		if(file == null) throw new NullPointerException("file argument is required!");
+		if(file == null) throw new RequiredArgumentException("file");
 		final String fileStr = file.getPath();
 		if(path == null)
 			return fileStr;

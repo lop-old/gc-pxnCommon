@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.poixson.commonjava.Utils.byRef.StringRef;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -159,8 +160,8 @@ public final class utilsString {
 
 
 	public static String ensureUnique(final String match, final Set<String> existing) {
-		if(utils.isEmpty(match)) throw new NullPointerException("match argument is required!");
-		if(existing == null)     throw new NullPointerException("existing argument is required!");
+		if(utils.isEmpty(match)) throw new RequiredArgumentException("match");
+		if(existing == null)     throw new RequiredArgumentException("existing");
 		// already unique
 		if(existing.isEmpty() || !existing.contains(match))
 			return match;
@@ -289,7 +290,7 @@ public final class utilsString {
 		return repeat(count, str, null);
 	}
 	public static String repeat(final int count, final String str, final String delim) {
-		if(utils.isEmpty(str)) throw new NullPointerException("str argument is required!");
+		if(utils.isEmpty(str)) throw new RequiredArgumentException("str");
 		if(count < 1) return "";
 		final StringBuilder out = new StringBuilder();
 		// repeat string
@@ -328,7 +329,7 @@ public final class utilsString {
 		final StringBuilder buf = new StringBuilder(length);
 		while(buf.length() < length) {
 			final String str = UUID.randomUUID().toString();
-			if(str == null) throw new NullPointerException("str argument is required!");
+			if(str == null) throw new RequiredArgumentException("str");
 			buf.append(str);
 		}
 		return buf.toString()

@@ -15,6 +15,7 @@ import com.poixson.commonjava.Utils.mvnProps;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsProc;
 import com.poixson.commonjava.Utils.utilsString;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.Utils.threads.xThreadPool;
 import com.poixson.commonjava.scheduler.xScheduler;
 import com.poixson.commonjava.xLogger.logHandlerConsole;
@@ -67,7 +68,7 @@ public abstract class xApp extends xAppAbstract {
 	// call this from main(args)
 	protected static void initMain(final String[] args,
 			final Class<? extends xApp> appClass) {
-		if(appClass == null) throw new NullPointerException("appClass argument is required!");
+		if(appClass == null) throw new RequiredArgumentException("appClass");
 		// single instance
 		if(instance != null) {
 			get().log().trace(new RuntimeException(ALREADY_STARTED_EXCEPTION));

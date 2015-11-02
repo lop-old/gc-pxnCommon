@@ -6,6 +6,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsNumbers;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 
 
 public class xLevel implements Serializable {
@@ -34,7 +35,7 @@ public class xLevel implements Serializable {
 
 
 	private xLevel(final String name, final int value) {
-		if(utils.isEmpty(name)) throw new NullPointerException("name argument is required!");
+		if(utils.isEmpty(name)) throw new RequiredArgumentException("name");
 		this.name = name.toUpperCase();
 		this.value = value;
 		if(value != Integer.MIN_VALUE && value < minValue) minValue = value;

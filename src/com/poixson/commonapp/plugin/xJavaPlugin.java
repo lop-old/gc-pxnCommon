@@ -2,6 +2,7 @@ package com.poixson.commonapp.plugin;
 
 import com.poixson.commonjava.Failure;
 import com.poixson.commonjava.Utils.utils;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xEvents.xEventListener;
 import com.poixson.commonjava.xLogger.xLog;
 
@@ -19,8 +20,8 @@ public abstract class xJavaPlugin {
 
 
 	protected void doInit(final xPluginManager pluginManager, final xPluginYML yaml) {
-		if(pluginManager == null) throw new NullPointerException("pluginManager argument is required!");
-		if(yaml          == null) throw new NullPointerException("yaml argument is required!");
+		if(pluginManager == null) throw new RequiredArgumentException("pluginManager");
+		if(yaml          == null) throw new RequiredArgumentException("yaml");
 		if(this.inited.equals(INIT_STATE.INITED))   throw new IllegalStateException("Plugin already inited!");
 		if(this.inited.equals(INIT_STATE.UNLOADED)) throw new IllegalStateException("Cannot init plugin, already unloaded!");
 		synchronized(this.inited) {

@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.poixson.commonjava.Utils.xRunnable;
 import com.poixson.commonjava.Utils.byRef.BoolRef;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xEvents.xEventListener.ListenerPriority;
 import com.poixson.commonjava.xLogger.xLog;
 
@@ -20,9 +21,9 @@ public class xRunnableEvent extends xRunnable {
 
 	public xRunnableEvent(final xListenerDAO dao,
 			final xEventData event, final ListenerPriority priority) {
-		if(dao      == null) throw new NullPointerException("dao argument is required!");
-		if(event    == null) throw new NullPointerException("event argument is required!");
-		if(priority == null) throw new NullPointerException("priority argument is required!");
+		if(dao      == null) throw new RequiredArgumentException("dao");
+		if(event    == null) throw new RequiredArgumentException("event");
+		if(priority == null) throw new RequiredArgumentException("priority");
 		this.dao   = dao;
 		this.event = event;
 		this.priority = priority;

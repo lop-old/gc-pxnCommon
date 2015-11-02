@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.xRunnable;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -41,8 +42,8 @@ public class RemappedRunnable extends xRunnable {
 	public RemappedRunnable(final String taskName,
 			final Object targetClass, final String methodName)
 			throws NoSuchMethodException, SecurityException {
-		if(targetClass == null)       throw new NullPointerException("targetClass argument is required!");
-		if(utils.isEmpty(methodName)) throw new NullPointerException("methodName argument is required!");
+		if(targetClass == null)       throw new RequiredArgumentException("targetClass");
+		if(utils.isEmpty(methodName)) throw new RequiredArgumentException("methodName");
 		this.setTaskName( utils.isEmpty(taskName) ? methodName : taskName );
 		this.obj = targetClass;
 		// static or instance class

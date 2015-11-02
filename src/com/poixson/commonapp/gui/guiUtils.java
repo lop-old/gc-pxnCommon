@@ -8,6 +8,7 @@ import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 
 import com.poixson.commonjava.Utils.utils;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -52,8 +53,8 @@ public final class guiUtils {
 	 */
 	public static boolean forceDispatchThread(final Object callingFrom,
 			final String callingMethod, final Object...args) {
-		if(callingFrom == null)          throw new NullPointerException("callingFrom argument is required!");
-		if(utils.isEmpty(callingMethod)) throw new NullPointerException("callingMethod argument is required!");
+		if(callingFrom == null)          throw new RequiredArgumentException("callingFrom");
+		if(utils.isEmpty(callingMethod)) throw new RequiredArgumentException("callingMethod");
 		// already running from event dispatch thread
 		if(SwingUtilities.isEventDispatchThread())
 			return false;

@@ -2,6 +2,7 @@ package com.poixson.commonjava.xEvents;
 
 import java.lang.reflect.Method;
 
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xEvents.xEventListener.ListenerPriority;
 
 
@@ -29,7 +30,7 @@ public abstract class xHandlerSimple extends xHandler {
 	// register fixed named method
 	@Override
 	public void register(final xEventListener listener) {
-		if(listener == null) throw new NullPointerException("listener argument is required!");
+		if(listener == null) throw new RequiredArgumentException("listener");
 //		{
 //			final Class<? extends xEventListener> expected = this.getEventListenerType();
 //			if(!expected.equals(listener.getClass())) {

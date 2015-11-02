@@ -7,6 +7,7 @@ import com.poixson.commonjava.Failure;
 import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xRunnable;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.Utils.threads.xThreadPool;
 import com.poixson.commonjava.xLogger.xLog;
 
@@ -28,7 +29,7 @@ public class StartupTask extends xRunnable {
 
 	public StartupTask(final xAppAbstract app) {
 		super("Startup");
-		if(app == null) throw new NullPointerException("app argument is required!");
+		if(app == null) throw new RequiredArgumentException("app");
 		this.app = app;
 		this.minStep = app.minStep;
 		this.maxStep = app.maxStep;

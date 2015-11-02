@@ -1,5 +1,7 @@
 package com.poixson.commonjava.Utils;
 
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
+
 
 public class xRunnable implements Runnable {
 
@@ -33,7 +35,7 @@ public class xRunnable implements Runnable {
 		return cast(null, run);
 	}
 	public static xRunnable cast(final String name, final Runnable run) {
-		if(run == null) throw new NullPointerException("run argument is required!");
+		if(run == null) throw new RequiredArgumentException("run");
 		if(run instanceof xRunnable) {
 			final xRunnable xrun = (xRunnable) run;
 			if(utils.notEmpty(name))
@@ -50,7 +52,7 @@ public class xRunnable implements Runnable {
 
 	@Override
 	public void run() {
-		if(this.task == null) throw new NullPointerException("task variable cannot be null!");
+		if(this.task == null) throw new RequiredArgumentException("task");
 		this.task.run();
 	}
 

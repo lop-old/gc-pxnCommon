@@ -4,6 +4,7 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.poixson.commonjava.Utils.utils;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -16,7 +17,7 @@ public class NetFirewall {
 
 
 	public void addRule(final NetFirewallRule rule) {
-		if(rule == null) throw new NullPointerException("rule argument is required!");
+		if(rule == null) throw new RequiredArgumentException("rule");
 		this.rules.add(rule);
 	}
 

@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xEvents.xEventListener.ListenerPriority;
 import com.poixson.commonjava.xLogger.xLog;
 
@@ -40,7 +41,7 @@ public abstract class xHandler {
 	 * @param listener
 	 */
 	public void unregister(final xEventListener listener) {
-		if(listener == null) throw new NullPointerException("listener argument is required!");
+		if(listener == null) throw new RequiredArgumentException("listener");
 		final Iterator<xListenerDAO> it = this.listeners.iterator();
 		while(it.hasNext()) {
 			final xListenerDAO dao = it.next();
@@ -57,7 +58,7 @@ public abstract class xHandler {
 	 * @param clss
 	 */
 	public void unregisterType(final Class<?> listenerClass) {
-		if(listenerClass == null) throw new NullPointerException("listener argument is required!");
+		if(listenerClass == null) throw new RequiredArgumentException("listenerClass");
 		final Iterator<xListenerDAO> it = this.listeners.iterator();
 		int count = 0;
 		while(it.hasNext()) {
@@ -91,7 +92,7 @@ public abstract class xHandler {
 	// trigger event
 	public void trigger(final xEventData event) {
 		// ensure main thread
-		if(event == null) throw new NullPointerException("event argument is required!");
+		if(event == null) throw new RequiredArgumentException("event");
 //		final Set<xRunnableEvent> waitFor = new HashSet<xRunnableEvent>();
 		boolean isFirst = true;
 		// LOOP_PRIORITIES:

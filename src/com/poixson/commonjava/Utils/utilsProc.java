@@ -66,7 +66,7 @@ public final class utilsProc {
 			}
 		}
 		if(utils.isEmpty(path))
-			throw new NullPointerException("filepath argument is required!");
+			throw new RequiredArgumentException("filepath");
 		final File file = new File(path);
 		RandomAccessFile access = null;
 		try {

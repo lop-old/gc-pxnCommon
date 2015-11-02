@@ -9,6 +9,7 @@ import java.nio.channels.OverlappingFileLockException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -27,7 +28,7 @@ public class LockFile {
 
 
 	public static LockFile get(final String filename) {
-		if(utils.isEmpty(filename)) throw new NullPointerException("filename argument is required!");
+		if(utils.isEmpty(filename)) throw new RequiredArgumentException("filename");
 		synchronized(instanceLock) {
 			// existing lock
 			if(instances.containsKey(filename))
@@ -64,7 +65,7 @@ public class LockFile {
 		}
 	}
 	public static LockFile peak(final String filename) {
-		if(utils.isEmpty(filename)) throw new NullPointerException("filename argument is required!");
+		if(utils.isEmpty(filename)) throw new RequiredArgumentException("filename");
 		return instances.get(filename);
 	}
 	public static void releaseLock(final String filename) {
@@ -77,7 +78,7 @@ public class LockFile {
 
 
 	private LockFile(final String filename) throws LockFileException, IOException {
-		if(utils.isEmpty(filename)) throw new NullPointerException("filename argument is required!");
+		if(utils.isEmpty(filename)) throw new RequiredArgumentException("filename");
 		this.filename = filename;
 		// get lock on file
 		this.file = new File(filename);

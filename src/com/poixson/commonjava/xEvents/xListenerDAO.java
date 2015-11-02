@@ -3,6 +3,7 @@ package com.poixson.commonjava.xEvents;
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xEvents.xEventListener.ListenerPriority;
 
 
@@ -28,9 +29,9 @@ public class xListenerDAO {
 			final ListenerPriority priority,
 //			final boolean async,
 			final boolean filterHandled, final boolean filterCancelled) {
-		if(listener == null) throw new NullPointerException("listener argument is required!");
-		if(method   == null) throw new NullPointerException("method argument is required!");
-		if(priority == null) throw new NullPointerException("priority argument is required!");
+		if(listener == null) throw new RequiredArgumentException("listener");
+		if(method   == null) throw new RequiredArgumentException("method");
+		if(priority == null) throw new RequiredArgumentException("priority");
 		this.id = getNextId();
 		this.listener        = listener;
 		this.method          = method;

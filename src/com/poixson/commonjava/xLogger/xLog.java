@@ -9,6 +9,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.Utils.Keeper;
 import com.poixson.commonjava.Utils.utils;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.scheduler.ticker.xTickHandler;
 import com.poixson.commonjava.scheduler.ticker.xTickPrompt;
 import com.poixson.commonjava.xLogger.commands.xCommandsHandler;
@@ -154,7 +155,7 @@ public class xLog extends xLogPrinting {
 	// new logger instance
 	protected xLog(final String logName, final xLog parentLogger) {
 		if(utils.isEmpty(logName) && parentLogger != null)
-			throw new NullPointerException("name argument is required!");
+			throw new RequiredArgumentException("name");
 		this.name = logName;
 		this.parent = parentLogger;
 		// new root logger
@@ -213,7 +214,7 @@ public class xLog extends xLogPrinting {
 
 	// formatter
 	public void setFormatter(final xLogFormatter formatter, final Class<?> type) {
-		if(formatter == null) throw new NullPointerException("formatter argument is required!");
+		if(formatter == null) throw new RequiredArgumentException("formatter");
 		for(final xLogHandler handler : this.handlers)
 			if(type == null || type.equals(handler.getClass()))
 				handler.setFormatter(formatter);
@@ -323,7 +324,7 @@ public class xLog extends xLogPrinting {
 
 	// set command handler
 	public static void setCommandHandler(final xCommandsHandler commandsHandler) {
-		if(commandsHandler == null) throw new NullPointerException("commandsHandler argument is required!");
+		if(commandsHandler == null) throw new RequiredArgumentException("commandsHandler");
 		if(consoleHandler  == null) throw new RuntimeException("consoleHandler not set; command handler not supported.");
 		commandHandler = commandsHandler;
 		consoleHandler.setCommandHandler(commandsHandler);

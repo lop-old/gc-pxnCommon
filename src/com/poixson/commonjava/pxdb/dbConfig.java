@@ -9,6 +9,7 @@ import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xTime;
 import com.poixson.commonjava.Utils.xTimeU;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -32,9 +33,9 @@ public class dbConfig {
 
 	public static dbConfig load(final String host, final int port,
 			final String db, final String user, final String pass, final String prefix) {
-		if(utils.isEmpty(user)) throw new IllegalArgumentException("Database username not set");
-		if(utils.isEmpty(pass)) throw new IllegalArgumentException("Database password not set");
-		if(utils.isEmpty(db)  ) throw new IllegalArgumentException("Database name not set");
+		if(utils.isEmpty(user)) throw new RequiredArgumentException("database username");
+		if(utils.isEmpty(pass)) throw new RequiredArgumentException("database password");
+		if(utils.isEmpty(db)  ) throw new RequiredArgumentException("database name");
 		final String hostStr = utils.isEmpty(host) ? "127.0.0.1" : host;
 		final int portInt = ((port < 1 || port > 65536) ? 3306 : port);
 		final String key = BuildKey(hostStr, portInt, db, user, prefix);

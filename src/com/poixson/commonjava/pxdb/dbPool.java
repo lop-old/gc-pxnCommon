@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.poixson.commonjava.Utils.CoolDown;
 import com.poixson.commonjava.Utils.utilsThread;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -28,7 +29,7 @@ public class dbPool {
 
 
 	protected dbPool(final dbConfig config) {
-		if(config == null) throw new NullPointerException("config argument is required!");
+		if(config == null) throw new RequiredArgumentException("config");
 		this.config = config;
 		this.poolSize = new dbPoolSize(this);
 		this.poolSize.setSoft(config.getPoolSizeWarn());
@@ -46,7 +47,7 @@ public class dbPool {
 
 	// get db key
 	public String dbKey() {
-		if(this.config == null) throw new NullPointerException("config argument is required!");
+		if(this.config == null) throw new RequiredArgumentException("config");
 		return this.config.dbKey();
 	}
 

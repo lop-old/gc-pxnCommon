@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 
 /**
  * A package-reserved utility class. It spawns a secondary thread in which the
@@ -47,8 +48,8 @@ public class StreamBridge implements xStartable {
 
 
 	public StreamBridge(final InputStream in, final OutputStream out) {
-		if(in  == null) throw new NullPointerException("in argument is required!");
-		if(out == null) throw new NullPointerException("out argument is required!");
+		if(in  == null) throw new RequiredArgumentException("in");
+		if(out == null) throw new RequiredArgumentException("out");
 		synchronized(instances) {
 			instances.add(this);
 		}

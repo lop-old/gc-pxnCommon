@@ -14,6 +14,7 @@ import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsObject;
 import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.byRef.StringRef;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 
 
 public class xConfig extends xConfigLoader implements xConfigInterface {
@@ -30,7 +31,7 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 	 */
 	public xConfig(final Map<String, Object> datamap)
 			throws xConfigException {
-		if(datamap == null) throw new NullPointerException("datamap argument is required!");
+		if(datamap == null) throw new RequiredArgumentException("datamap");
 		this.datamap = datamap;
 	}
 	/**

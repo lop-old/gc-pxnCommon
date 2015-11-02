@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.poixson.commonjava.Utils.Keeper;
 import com.poixson.commonjava.Utils.utils;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -74,9 +75,9 @@ public final class dbManager {
 
 	// new db connection pool and initial connection
 	protected static boolean register(final dbConfig config) {
-		if(config == null) throw new NullPointerException("config argument is required!");
+		if(config == null) throw new RequiredArgumentException("config");
 		if(utils.isEmpty(config.dbKey()))
-			throw new NullPointerException("dbKey returned from dbConfig is empty!");
+			throw new RuntimeException("dbKey returned from dbConfig is empty!");
 		synchronized(pools) {
 			if(!configs.containsKey(config.dbKey()))
 				configs.put(config.dbKey(), config);

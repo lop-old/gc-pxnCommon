@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import com.poixson.commonjava.Utils.utilsString;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLogFormatter;
 import com.poixson.commonjava.xLogger.xLogRecord;
 
@@ -14,7 +15,7 @@ public class defaultLogFormatter implements xLogFormatter {
 
 	@Override
 	public String formatMsg(final xLogRecord record) {
-		if(record == null) throw new NullPointerException("record argument is required!");
+		if(record == null) throw new RequiredArgumentException("record");
 		if(record.level() == null)
 			return record.msg();
 		String[] parts = new String[4];
@@ -33,13 +34,13 @@ public class defaultLogFormatter implements xLogFormatter {
 
 	// timestamp
 	protected String partTimestamp(final xLogRecord record) {
-		if(record == null) throw new NullPointerException("record argument is required!");
+		if(record == null) throw new RequiredArgumentException("record");
 		SimpleDateFormat dateFormat = new SimpleDateFormat("D yyyy-MM-dd HH:mm:ss");
 		return dateFormat.format(new Long(record.timestamp()));
 	}
 	// level
 	protected String partLevel(final xLogRecord record) {
-		if(record == null) throw new NullPointerException("record argument is required!");
+		if(record == null) throw new RequiredArgumentException("record");
 		return (new StringBuilder())
 			.append("[")
 			.append(utilsString.padCenter(
@@ -52,7 +53,7 @@ public class defaultLogFormatter implements xLogFormatter {
 	}
 	// [logger] [crumbs]
 	protected String partCrumbs(final xLogRecord record) {
-		if(record == null) throw new NullPointerException("record argument is required!");
+		if(record == null) throw new RequiredArgumentException("record");
 		final List<String> tree = record.getNameTree();
 		if(tree.isEmpty())
 			return "";

@@ -1,6 +1,7 @@
 package com.poixson.commonjava.xLogger.formatters;
 
 import com.poixson.commonjava.Utils.utilsString;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLevel;
 import com.poixson.commonjava.xLogger.xLogRecord;
 
@@ -12,7 +13,7 @@ public class defaultLogFormatter_Color extends defaultLogFormatter {
 	// level
 	@Override
 	protected String partLevel(final xLogRecord record) {
-		if(record == null) throw new NullPointerException("record argument is required!");
+		if(record == null) throw new RequiredArgumentException("record");
 		final xLevel level = record.level();
 		final String color;
 		// all, finest, finer, fine

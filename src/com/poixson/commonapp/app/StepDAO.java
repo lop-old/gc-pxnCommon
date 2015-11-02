@@ -6,6 +6,7 @@ import com.poixson.commonapp.app.annotations.xAppStep;
 import com.poixson.commonapp.app.annotations.xAppStep.StepType;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsString;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 
 
 public class StepDAO {
@@ -19,8 +20,8 @@ public class StepDAO {
 
 
 	public StepDAO(final xAppStep annotation, final Method method) {
-		if(annotation == null) throw new NullPointerException("annotation argument is required!");
-		if(method     == null) throw new NullPointerException("method argument is required!");
+		if(annotation == null) throw new RequiredArgumentException("annotation");
+		if(method     == null) throw new RequiredArgumentException("method");
 		this.type = annotation.type();
 		this.step = annotation.priority();
 		// strip method down to name

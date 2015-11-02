@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsNumbers;
 import com.poixson.commonjava.Utils.byRef.StringRef;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 
 
 public abstract class NetFirewallRule {
@@ -14,8 +15,8 @@ public abstract class NetFirewallRule {
 
 
 	public NetFirewallRule(final RuleType type) {
-		if(type == null) throw new NullPointerException("type argument is required!");
 		this.type = type;
+		if(ruleType == null) throw new RequiredArgumentException("ruleType");
 	}
 
 
@@ -25,7 +26,7 @@ public abstract class NetFirewallRule {
 
 
 	protected void SplitPattern(final String pattern, final StringRef hostPattern, final StringRef portPattern) {
-		if(utils.isEmpty(pattern)) throw new NullPointerException("pattern argument is required!");
+		if(utils.isEmpty(pattern)) throw new RequiredArgumentException("pattern");
 		final String[] parts = pattern.split(":", 2);
 		if(parts.length > 1) {
 			hostPattern.value(parts[0]);

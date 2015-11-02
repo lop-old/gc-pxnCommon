@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import com.poixson.commonjava.Utils.utils;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -26,8 +27,8 @@ xLog.getRoot().trace(e);
 	}
 	public RemappedItemListener(final Object listenerClass, final String methodName)
 			throws NoSuchMethodException {
-		if(listenerClass == null)     throw new NullPointerException("listenerClass argument is required!");
-		if(utils.isEmpty(methodName)) throw new NullPointerException("methodName argument is required!");
+		if(listenerClass == null)     throw new RequiredArgumentException("listenerClass");
+		if(utils.isEmpty(methodName)) throw new RequiredArgumentException("methodName");
 		this.obj = listenerClass;
 		final Class<?> clss = listenerClass.getClass();
 		this.method = clss.getMethod(methodName, ItemEvent.class);

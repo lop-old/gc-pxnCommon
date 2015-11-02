@@ -16,6 +16,7 @@ import com.poixson.commonapp.config.xConfig;
 import com.poixson.commonapp.config.xConfigException;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsDirFile;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -101,13 +102,13 @@ public class xPluginManager {
 		));
 	}
 	public void loadAll(final File dir) {
-		if(dir == null) throw new NullPointerException("dir argument is required!");
+		if(dir == null) throw new RequiredArgumentException("dir");
 		// create plugins dir if needed
 		if(!dir.isDirectory())
 			dir.mkdir();
 		// list dir contents
 		final File[] files = utilsDirFile.listContents(dir, ".jar");
-		if(files == null) throw new NullPointerException();
+		if(files == null) throw new RuntimeException("Failed to load jar file contents!");
 		// no plugins found
 		if(files.length == 0) {
 			log().warning("No plugins found to load.");
@@ -132,7 +133,7 @@ public class xPluginManager {
 		log().info("Found [ "+Integer.toString(count)+" ] plugins.");
 	}
 	public PluginDAO load(final File file) {
-		if(file == null) throw new NullPointerException("file argument is required!");
+		if(file == null) throw new RequiredArgumentException("file");
 		if(!file.exists()) {
 			log().warning("Plugin file not found: "+file.toString());
 			return null;
@@ -183,7 +184,7 @@ public class xPluginManager {
 		this.initAll("Main Class");
 	}
 	public void initAll(final String classField) {
-		if(utils.isEmpty(classField)) throw new NullPointerException("classField argument is required!");
+		if(utils.isEmpty(classField)) throw new RequiredArgumentException("classField");
 		// init plugins
 		synchronized(this.plugins) {
 			for(final PluginDAO dao : this.plugins.values()) {
@@ -193,7 +194,7 @@ public class xPluginManager {
 		}
 	}
 	public void init(final PluginDAO dao) {
-		if(dao == null) throw new NullPointerException("dao argument is required!");
+		if(dao == null) throw new RequiredArgumentException("dao");
 		final xLog log = dao.log;
 		// already inited
 		if(dao.plugin != null) {
@@ -312,13 +313,13 @@ public class xPluginManager {
 
 
 	public void addPlugin(final PluginDAO plugin) {
-		if(plugin == null) throw new NullPointerException("plugin argument is required!");
+		if(plugin == null) throw new RequiredArgumentException("plugin");
 		synchronized(this.plugins) {
 			this.plugins.put(plugin.name, plugin);
 		}
 	}
 	public void removePlugin(final String name) {
-		if(utils.isEmpty(name)) throw new NullPointerException("name argument is required!");
+		if(utils.isEmpty(name)) throw new RequiredArgumentException("name");
 		synchronized(this.plugins) {
 			final PluginDAO dao = this.plugins.get(name);
 			if(dao.plugin != null) {

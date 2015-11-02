@@ -1,5 +1,7 @@
 package com.poixson.commonjava.Utils.byRef;
 
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
+
 
 public class IntRef {
 
@@ -19,8 +21,8 @@ public class IntRef {
 		this.value = val;
 	}
 	public void value(final Integer val) {
-		if(val == null) throw new NullPointerException("val argument is required!");
 		this.value = val.intValue();
+		if(value == null) throw new RequiredArgumentException("value");
 	}
 	public int value() {
 		return this.value;

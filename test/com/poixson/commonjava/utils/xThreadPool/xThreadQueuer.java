@@ -6,6 +6,7 @@ import com.poixson.commonjava.Failure;
 import com.poixson.commonjava.Utils.CoolDown;
 import com.poixson.commonjava.Utils.utilsNumbers;
 import com.poixson.commonjava.Utils.utilsThread;
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.Utils.threads.xThreadPool;
 import com.poixson.commonjava.xLogger.xLogTest;
 
@@ -15,7 +16,7 @@ class xThreadQueuer {
 
 
 	public xThreadQueuer(final xThreadPool pool, final int taskCount) {
-		if(pool == null)  throw new NullPointerException();
+		if(pool == null)  throw new RequiredArgumentException("pool");
 		if(taskCount < 1) throw new IllegalArgumentException();
 		assertHasntFailed();
 		// start thread pool

@@ -5,6 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
+import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
+
 
 public class xTime {
 
@@ -104,7 +106,7 @@ public class xTime {
 
 	// get value
 	public long get(final TimeUnit unit) {
-		if(unit == null) throw new NullPointerException("unit argument is required!");
+		if(unit == null) throw new RequiredArgumentException("unit");
 		return unit.convert(this.value, xTimeU.MS);
 	}
 	public String getString() {
@@ -118,7 +120,7 @@ public class xTime {
 	}
 	// set value
 	public xTime set(final long value, final TimeUnit unit) {
-		if(unit == null) throw new NullPointerException("unit argument is required!");
+		if(unit == null) throw new RequiredArgumentException("unit");
 		if(this.isFinal) return null;
 		this.value = xTimeU.MS.convert(value, unit);
 		return this;
@@ -140,7 +142,7 @@ public class xTime {
 
 	// add time
 	public void add(final long val, final TimeUnit unit) {
-		if(unit == null) throw new NullPointerException("unit argument is required!");
+		if(unit == null) throw new RequiredArgumentException("unit");
 		if(this.isFinal) return;
 		this.value += xTimeU.MS.convert(val, unit);
 	}
@@ -150,7 +152,7 @@ public class xTime {
 			this.value += parseLong(val).longValue();
 	}
 	public void add(final xTime time) {
-		if(time == null) throw new NullPointerException("time argument is required!");
+		if(time == null) throw new RequiredArgumentException("time");
 		if(this.isFinal) return;
 		this.value += time.value;
 	}
