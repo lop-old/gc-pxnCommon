@@ -64,6 +64,17 @@ class xConfigLoader {
 //				checkInJar
 //		);
 //	}
+	/**
+	 * Loads a .yml config file from the file system or a jar resource.
+	 * @param log The logger to use, or default to null
+	 * @param path File system path to the config file
+	 * @param file Name of the config file to load
+	 * @param clss xConfig class to create to handle loading the config
+	 * @param checkInJar A class contained in the jar in which to look
+	 *        for a default config file
+	 * @return xConfig instance containing the loaded yaml data
+	 * @throws xConfigException
+	 */
 	public static xConfig Load(final xLog log,
 			final String path, final String file,
 			final Class<? extends xConfig> clss,

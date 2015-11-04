@@ -27,8 +27,7 @@ import com.poixson.commonjava.xLogger.xLog;
 
 
 public class xThreadPool implements xStartable {
-	private static final String LOG_NAME = "tPool";
-//	private static final String LOG_NAME = "xThreadPool";
+	private static final String LOG_NAME = "xThreadPool";
 	public static final boolean DETAILED_LOGGING = false;
 
 	// max threads
@@ -334,7 +333,7 @@ public class xThreadPool implements xStartable {
 		log.finer("Started thread..");
 		// main thread
 		if(this.isMainPool()) {
-			if(mainThread != null) throw new IllegalStateException("Main thread already running!");
+			if(mainThread != null) throw new IllegalStateException("Main thread already running?!");
 			mainThread = currentThread;
 			mainThread.setName("Main");
 		}
@@ -363,13 +362,16 @@ public class xThreadPool implements xStartable {
 					final int runIndex = this.runCount.incrementAndGet();
 					currentThread.setName(
 							(new StringBuilder())
-							.append(runIndex)
-							.append(":")
-							.append(threadName)
-							.append(":")
-							.append(task.getTaskName())
+							.append("run:").append(runIndex).append(" ")
+							.append("name:").append(threadName).append(" ")
+							.append("task:").append(task.getTaskName())
 							.toString()
 					);
+//.append(runIndex)
+//.append(":")
+//.append(threadName)
+//.append(":")
+//.append(task.getTaskName())
 					try {
 						task.run();
 					} catch (Exception e) {

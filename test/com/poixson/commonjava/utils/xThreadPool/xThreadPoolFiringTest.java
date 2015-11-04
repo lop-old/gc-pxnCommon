@@ -12,7 +12,7 @@ import com.poixson.commonjava.xLogger.xLogTest;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class xThreadPoolFiringTest {
-	static final String TEST_NAME = "xThreadPool";
+	static final String TEST_NAME = "xThreadPoolFiring";
 	static final String TEST_NAME_MAIN  = "xThreadPool Main";
 	static final String TEST_NAME_SHORT = "xThreadPool Short";
 	static final String TEST_NAME_LONG  = "xThreadPool Long";
