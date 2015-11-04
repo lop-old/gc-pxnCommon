@@ -171,7 +171,12 @@ public class xThreadPool implements xStartable {
 			}
 			return;
 		}
-		this.newThread();
+		// sleep if new thread created
+		final Boolean newThreadResult =
+				this.newThread();
+		if(newThreadResult != null)
+			if(newThreadResult.booleanValue() == true)
+				utilsThread.Sleep(100L);
 	}
 	@Override
 	public void Stop() {
@@ -202,14 +207,16 @@ public class xThreadPool implements xStartable {
 
 	/**
 	 * Create a new thread if needed, skip if queue is empty.
+	 * @return true if new thread has been created; false if
+	 *         using existing; null if failed
 	 */
-	protected void newThread() {
+	protected Boolean newThread() {
 		if(this.isMainPool() || this.poolSize < 1)
-			return;
+			return Boolean.FALSE;
 		if(this.stopping) {
 			if(DETAILED_LOGGING)
 				this.log().warning("thread pool is stopping; cannot start new thread as requested");
-			return;
+			return null;
 		}
 		// thread stats
 		{
@@ -218,29 +225,30 @@ public class xThreadPool implements xStartable {
 				this.displayStats();
 			// use existing thread
 			if(stats.inactiveThreads > 0)
-				return;
+				return Boolean.FALSE;
 			// check max threads (global)
 			if(stats.globalThreadsFree < 1) {
 				if(this.coolMaxReached.runAgain() || DETAILED_LOGGING)
 					this.log().warning("Global max threads limit [ "+Integer.toString(GLOBAL_LIMIT)+" ] reached!");
 				utilsThread.Sleep(1L);
-				return;
+				return null;
 			}
 			// check max threads (this pool)
 			if(stats.currentThreads >= stats.maxThreads) {
 				if(this.coolMaxReached.runAgain() || DETAILED_LOGGING)
 					this.log().warning("Max threads limit [ "+Integer.toString(stats.maxThreads)+" ] reached!");
 				utilsThread.Sleep(1L);
-				return;
+				return null;
 			}
 		}
+//TODO: find a way to do this without sync-ing
 		synchronized(this.threadCount) {
 			// check max threads
 			if(this.getThreadCount() >= this.getMaxThreads()) {
 				if(this.coolMaxReached.runAgain() || DETAILED_LOGGING)
 					this.log().warning("Max threads limit [ "+Integer.toString(this.getMaxThreads())+" ] reached!");
 				utilsThread.Sleep(1L);
-				return;
+				return null;
 			}
 			this.threadCount.incrementAndGet();
 		}
@@ -250,6 +258,7 @@ public class xThreadPool implements xStartable {
 			this.threads.add(thread);
 			thread.start();
 		}
+		return Boolean.TRUE;
 	}
 
 
