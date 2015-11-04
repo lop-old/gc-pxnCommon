@@ -14,6 +14,7 @@ import com.poixson.commonjava.Utils.CoolDown;
 import com.poixson.commonjava.Utils.Keeper;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsNumbers;
+import com.poixson.commonjava.Utils.utilsReflect;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.xRunnable;
 import com.poixson.commonjava.Utils.xStartable;
@@ -201,6 +202,53 @@ public class xThreadPool implements xStartable {
 	}
 	public boolean isMainPool() {
 		return this.isMainPool;
+	}
+
+
+
+	// warning: checking pools of more than 1 thread can hurt performance.
+	public boolean isPoolThread() {
+		if(this.threadCount.get() == 0)
+			return false;
+		final Thread thread = Thread.currentThread();
+		// main pool
+		if(this.isMainPool())
+			return thread.equals(mainPool);
+		// check threads in this pool
+		for(final Thread t : this.threads) {
+			if(thread.equals(t))
+				return true;
+		}
+		return false;
+	}
+	public boolean forcePoolThread(final Object targetClass, final String targetFunc) {
+		if(targetClass == null)       throw new RequiredArgumentException("targetClass");
+		if(utils.isEmpty(targetFunc)) throw new RequiredArgumentException("targetFunc");
+		if(this.isPoolThread())
+			return false;
+		final String taskName = (new StringBuilder())
+				.append("Force: ")
+				.append(targetClass.getClass().getName())
+				.append("->"+targetFunc).append("()")
+				.toString();
+		final xRunnable run = new xRunnable(taskName) {
+			private volatile Object targetClass = null;
+			private volatile String targetFunc  = null;
+			public xRunnable init(final Object targetClass, final String targetFunc) {
+				this.targetClass = targetClass;
+				this.targetFunc  = targetFunc;
+				return this;
+			}
+			@Override
+			public void run() {
+				utilsReflect.invoke(
+						this.targetClass,
+						this.targetFunc
+				);
+			}
+		}.init(targetClass, targetFunc);
+		this.runLater(run);
+		return true;
 	}
 
 
