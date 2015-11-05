@@ -7,24 +7,16 @@ import org.fusesource.jansi.AnsiConsole;
 
 import com.poixson.commonapp.app.annotations.xAppStep;
 import com.poixson.commonapp.app.annotations.xAppStep.StepType;
-import com.poixson.commonapp.xLogger.jlineConsole;
 import com.poixson.commonjava.Failure;
-import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.Utils.LockFile;
 import com.poixson.commonjava.Utils.mvnProps;
-import com.poixson.commonjava.Utils.utils;
-import com.poixson.commonjava.Utils.utilsProc;
 import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.Utils.threads.xThreadPool;
 import com.poixson.commonjava.scheduler.xScheduler;
-import com.poixson.commonjava.xLogger.logHandlerConsole;
-import com.poixson.commonjava.xLogger.xConsole;
 import com.poixson.commonjava.xLogger.xLevel;
 import com.poixson.commonjava.xLogger.xLog;
-import com.poixson.commonjava.xLogger.xNoConsole;
 import com.poixson.commonjava.xLogger.commands.xCommandsHandler;
-import com.poixson.commonjava.xLogger.formatters.defaultLogFormatter_Color;
 
 
 /**
@@ -45,22 +37,19 @@ public abstract class xApp extends xAppAbstract {
 	private static final String ALREADY_STARTED_EXCEPTION = "Illegal app state; this shouldn't happen; cannot start in this state; possibly already started?";
 //	private static final String ILLEGAL_STATE_EXCEPTION   = "Illegal app state; cannot continue; this shouldn't happen; Current state: ";
 
-	private static volatile xApp instance = null;
-	private static final Object instanceLock = new Object();
-
 	// mvn properties
 	protected final mvnProps mvnprops;
 
 
 
 	/**
-	 * Get the app class instance.
+	 * Get a single instance of the app.
 	 */
 	public static xApp get() {
-		return instance;
+		return (xApp) xAppAbstract.get();
 	}
 	public static xApp peak() {
-		return instance;
+		return (xApp) xAppAbstract.peak();
 	}
 
 
@@ -120,10 +109,6 @@ public abstract class xApp extends xAppAbstract {
 		// mvn properties
 		this.mvnprops = mvnProps.get(this.getClass());
 	}
-
-
-
-	protected abstract void processArgs(final String[] args);
 
 
 
@@ -220,6 +205,7 @@ public abstract class xApp extends xAppAbstract {
 
 
 	// mvn properties
+	@Override
 	public String getName() {
 		return this.mvnprops.name;
 	}
@@ -227,86 +213,42 @@ public abstract class xApp extends xAppAbstract {
 	public String getTitle() {
 		return this.mvnprops.title;
 	}
+	@Override
 	public String getFullTitle() {
 		return this.mvnprops.full_title;
 	}
+	@Override
 	public String getVersion() {
 		return this.mvnprops.version;
 	}
+	@Override
 	public String getURL() {
 		return this.mvnprops.url;
 	}
+	@Override
 	public String getOrgName() {
 		return this.mvnprops.org_name;
 	}
+	@Override
 	public String getOrgURL() {
 		return this.mvnprops.org_url;
 	}
+	@Override
 	public String getIssueName() {
 		return this.mvnprops.issue_name;
 	}
+	@Override
 	public String getIssueURL() {
 		return this.mvnprops.issue_url;
 	}
 
 
 
-	// initialize console and enable colors
-	protected static void initConsole() {
-		xConsole console = xLog.peekConsole();
-		if(console == null || console instanceof xNoConsole) {
-			if(!utils.isJLineAvailable())
-				Failure.fail("jline library not found");
-			console = new jlineConsole();
-			xLog.setConsole(console);
-		}
-		// enable console color
-		get().log().setFormatter(
-			new defaultLogFormatter_Color(),
-			logHandlerConsole.class
-		);
-	}
+	// ------------------------------------------------------------------------------- //
 
 
 
 	// ascii header
-	protected void displayColors() {
-		final PrintStream out = AnsiConsole.out;
-		out.println(Ansi.ansi().reset());
-		for(final Ansi.Color color : Ansi.Color.values()) {
-			final String name = utilsString.padCenter(7, color.name(), ' ');
-			out.println(Ansi.ansi()
-				.a("   ")
-				.fg(color).a(name)
-				.a("   ")
-				.bold().a("BOLD-"+name)
-				.a("   ")
-				.boldOff().fg(Ansi.Color.WHITE).bg(color).a(name)
-				.reset()
-			);
-		}
-		out.println(Ansi.ansi().reset());
-		out.println();
-		out.flush();
-	}
-	public void displayStartupVars() {
-		final PrintStream out = AnsiConsole.out;
-		out.println();
-		out.println(" "+this.mvnprops.full_title);
-		out.println(" Running as:  "+System.getProperty("user.name"));
-		out.println(" Current dir: "+System.getProperty("user.dir"));
-		out.println(" java home:   "+System.getProperty("java.home"));
-//		out.println(" Terminal:    "+System.getProperty("jline.terminal"));
-		out.println(" Pid: "+utilsProc.getPid());
-		if(xVars.debug())
-			out.println(" Forcing Debug: true");
-//		if(utils.notEmpty(args)) {
-//			out.println();
-//			out.println(utilsString.addStrings(" ", args));
-//		}
-		out.println();
-		out.flush();
-	}
 	@Override
 	protected void displayLogo() {
 		final PrintStream out = AnsiConsole.out;

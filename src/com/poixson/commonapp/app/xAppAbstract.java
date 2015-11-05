@@ -1,5 +1,6 @@
 package com.poixson.commonapp.app;
 
+import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,20 +8,37 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
+
 import com.poixson.commonapp.app.annotations.xAppStep;
 import com.poixson.commonapp.app.annotations.xAppStep.StepType;
+import com.poixson.commonapp.xLogger.jlineConsole;
 import com.poixson.commonjava.Failure;
 import com.poixson.commonjava.Failure.FailureAction;
 import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.Utils.Keeper;
 import com.poixson.commonjava.Utils.utils;
+import com.poixson.commonjava.Utils.utilsProc;
+import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.xClock;
 import com.poixson.commonjava.Utils.xStartable;
 import com.poixson.commonjava.Utils.threads.xThreadPool;
+import com.poixson.commonjava.xLogger.logHandlerConsole;
+import com.poixson.commonjava.xLogger.xConsole;
 import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.commonjava.xLogger.xNoConsole;
+import com.poixson.commonjava.xLogger.formatters.defaultLogFormatter_Color;
 
 
 public abstract class xAppAbstract implements xStartable, FailureAction {
+
+	// app instance
+	protected static volatile xAppAbstract instance = null;
+	protected static final Object instanceLock = new Object();
+	// just to prevent gc
+	@SuppressWarnings("unused")
+	private static final Keeper keeper = Keeper.get();
 
 	protected final AtomicBoolean running = new AtomicBoolean(false);
 	protected final AtomicBoolean stopped = new AtomicBoolean(false);
@@ -32,9 +50,17 @@ public abstract class xAppAbstract implements xStartable, FailureAction {
 
 	private volatile long startTime = -1;
 
-	// just to prevent gc
-	@SuppressWarnings("unused")
-	private static final Keeper keeper = Keeper.get();
+
+
+	/**
+	 * Get a single instance of the app.
+	 */
+	public static xAppAbstract get() {
+		return instance;
+	}
+	public static xAppAbstract peak() {
+		return instance;
+	}
 
 
 
@@ -79,7 +105,25 @@ public abstract class xAppAbstract implements xStartable, FailureAction {
 
 
 
-	public abstract String getTitle();
+	protected abstract void processArgs(final String[] args);
+
+
+
+	// initialize console and enable colors
+	protected static void initConsole() {
+		xConsole console = xLog.peekConsole();
+		if(console == null || console instanceof xNoConsole) {
+			if(!utils.isJLineAvailable())
+				Failure.fail("jline library not found");
+			console = new jlineConsole();
+			xLog.setConsole(console);
+		}
+		// enable console color
+		get().log().setFormatter(
+			new defaultLogFormatter_Color(),
+			logHandlerConsole.class
+		);
+	}
 
 
 
@@ -202,7 +246,62 @@ public abstract class xAppAbstract implements xStartable, FailureAction {
 
 
 
+	public abstract String getName();
+	public abstract String getTitle();
+	public abstract String getFullTitle();
+	public abstract String getVersion();
+	public abstract String getURL();
+	public abstract String getOrgName();
+	public abstract String getOrgURL();
+	public abstract String getIssueName();
+	public abstract String getIssueURL();
+
+
+
+	// ------------------------------------------------------------------------------- //
+
+
+
+	// ascii header
 	protected abstract void displayLogo();
+
+	protected void displayColors() {
+		final PrintStream out = AnsiConsole.out;
+		out.println(Ansi.ansi().reset());
+		for(final Ansi.Color color : Ansi.Color.values()) {
+			final String name = utilsString.padCenter(7, color.name(), ' ');
+			out.println(Ansi.ansi()
+				.a("   ")
+				.fg(color).a(name)
+				.a("   ")
+				.bold().a("BOLD-"+name)
+				.a("   ")
+				.boldOff().fg(Ansi.Color.WHITE).bg(color).a(name)
+				.reset()
+			);
+		}
+		out.println(Ansi.ansi().reset());
+		out.println();
+		out.flush();
+	}
+	public void displayStartupVars() {
+		final PrintStream out = AnsiConsole.out;
+		out.println();
+		out.println(" "+this.getVersion());
+		out.println(" Running as:  "+System.getProperty("user.name"));
+		out.println(" Current dir: "+System.getProperty("user.dir"));
+		out.println(" java home:   "+System.getProperty("java.home"));
+//		out.println(" Terminal:    "+System.getProperty("jline.terminal"));
+		out.println(" Pid: "+utilsProc.getPid());
+		if(xVars.debug())
+			out.println(" Forcing Debug: true");
+//		if(utils.notEmpty(args)) {
+//			out.println();
+//			out.println(utilsString.addStrings(" ", args));
+//		}
+		out.println();
+		out.flush();
+	}
 
 
 
