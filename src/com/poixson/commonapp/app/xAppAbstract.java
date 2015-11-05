@@ -319,15 +319,23 @@ public abstract class xAppAbstract implements xStartable, FailureAction {
 			final int pos = posInt.intValue() - 1;
 			if(pos > last)
 				str.append(line.substring(last, pos));
+			last = pos;
 			if(hasColor)
-				str.append("@|");
-			str.append("|@");
-			out.println(
-					Ansi.ansi().a(" ")
-					.render(str.toString())
-					.reset().a(" ")
-			);
+				str.append("|@");
+			hasColor = true;
+			str.append("@|");
+			str.append(entry.getValue());
+			str.append(" ");
 		}
+		if(last < line.length())
+			str.append(line.substring(last));
+		if(hasColor)
+			str.append("|@");
+		out.println(
+				Ansi.ansi().a(" ")
+				.render(str.toString())
+				.reset().a(" ")
+		);
 	}
 
 
