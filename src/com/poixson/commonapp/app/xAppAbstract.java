@@ -5,6 +5,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -265,6 +267,8 @@ public abstract class xAppAbstract implements xStartable, FailureAction {
 	// ascii header
 	protected abstract void displayLogo();
 
+
+
 	protected void displayColors() {
 		final PrintStream out = AnsiConsole.out;
 		out.println(Ansi.ansi().reset());
@@ -301,6 +305,29 @@ public abstract class xAppAbstract implements xStartable, FailureAction {
 //		}
 		out.println();
 		out.flush();
+	}
+
+
+
+	protected void displayLogoLine(final PrintStream out,
+			final Map<Integer, String> colors, final String line) {
+		final StringBuilder str = new StringBuilder();
+		int last = 0;
+		boolean hasColor = false;
+		for(final Entry<Integer, String> entry : colors.entrySet()) {
+			final Integer posInt = entry.getKey();
+			final int pos = posInt.intValue() - 1;
+			if(pos > last)
+				str.append(line.substring(last, pos));
+			if(hasColor)
+				str.append("@|");
+			str.append("|@");
+			out.println(
+					Ansi.ansi().a(" ")
+					.render(str.toString())
+					.reset().a(" ")
+			);
+		}
 	}
 
 
