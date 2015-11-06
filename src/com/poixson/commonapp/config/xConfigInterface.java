@@ -55,8 +55,10 @@ public interface xConfigInterface {
 	public Map<String, String> getStringMap(final String path) throws xConfigException;
 
 	// config list
-	public List<xConfig> getConfigList(final String path,
+	public List<? extends xConfig> getConfigList(final String path,
 			final Class<? extends xConfig> clss) throws xConfigException;
+//	public List<xConfig> getConfigList(final String path,
+//			final Class<? extends xConfig> clss) throws xConfigException;
 
 
 }

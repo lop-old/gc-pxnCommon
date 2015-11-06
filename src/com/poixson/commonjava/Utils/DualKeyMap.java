@@ -43,6 +43,7 @@ public class DualKeyMap<K, J, V> {
 
 
 
+	// get one map
 	public Map<K, V> getMapK() {
 		return this.kMap;
 	}
@@ -54,6 +55,9 @@ public class DualKeyMap<K, J, V> {
 
 	public int size() {
 		return this.kMap.size();
+	}
+	public boolean isEmpty() {
+		return this.kMap.isEmpty();
 	}
 
 
@@ -74,6 +78,7 @@ public class DualKeyMap<K, J, V> {
 
 
 
+	// contains key/value
 	public boolean containsKeyK(final K kKey) {
 		return this.kMap.containsKey(kKey);
 	}
@@ -86,6 +91,7 @@ public class DualKeyMap<K, J, V> {
 
 
 
+	// get entry set
 	public Set<Entry<K, V>> entrySetK() {
 		return this.kMap.entrySet();
 	}
@@ -95,21 +101,7 @@ public class DualKeyMap<K, J, V> {
 
 
 
-	public V getK(final K kKey) {
-		return this.kMap.get(kKey);
-	}
-	public V getJ(final J jKey) {
-		return this.jMap.get(jKey);
-	}
-
-
-
-	public boolean isEmpty() {
-		return this.kMap.isEmpty();
-	}
-
-
-
+	// get key set
 	public Set<K> keySetK() {
 		return this.kMap.keySet();
 	}
@@ -119,6 +111,24 @@ public class DualKeyMap<K, J, V> {
 
 
 
+	// get value set
+	public Collection<V> values() {
+		return this.kMap.values();
+	}
+
+
+
+	// get value from key
+	public V getK(final K kKey) {
+		return this.kMap.get(kKey);
+	}
+	public V getJ(final J jKey) {
+		return this.jMap.get(jKey);
+	}
+
+
+
+	// put a key,key,value
 	public V put(final K kKey, final J jKey, final V value) {
 		if(this.isFinal) UnmodifiableObjectException.get();
 		this.kMap.put(kKey, value);
@@ -144,12 +154,6 @@ public class DualKeyMap<K, J, V> {
 				entryK.getValue()
 			);
 		}
-	}
-
-
-
-	public Collection<V> values() {
-		return this.kMap.values();
 	}
 
 

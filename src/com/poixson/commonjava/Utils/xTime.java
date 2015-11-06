@@ -16,7 +16,6 @@ public class xTime {
 	// write lock
 	private volatile boolean isFinal = false;
 
-
 	// static values
 	public static final long MS    = 1L;
 	public static final long SEC   = MS * 1000L;
@@ -79,9 +78,6 @@ public class xTime {
 	@Override
 	public xTime clone() {
 		return get(this);
-	}
-	public xTimeUnmodifiable unmodifiable() {
-		return new xTimeUnmodifiable(this);
 	}
 
 

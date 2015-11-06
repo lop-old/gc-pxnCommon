@@ -86,6 +86,7 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 	 * Get an object from the stored data.
 	 * @return Object or null on failure
 	 */
+	@Override
 	public Object gt(final String path) {
 		try {
 			return this.get(path);

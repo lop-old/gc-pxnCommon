@@ -1,8 +1,6 @@
 package com.poixson.commonjava.utils.xThreadPool;
 
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
 import com.poixson.commonjava.Utils.Keeper;
 import com.poixson.commonjava.Utils.xTime;
@@ -10,7 +8,7 @@ import com.poixson.commonjava.Utils.threads.xThreadPool;
 import com.poixson.commonjava.xLogger.xLogTest;
 
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+//@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class xThreadPoolFiringTest {
 	static final String TEST_NAME = "xThreadPoolFiring";
 	static final String TEST_NAME_MAIN  = "xThreadPool Main";
