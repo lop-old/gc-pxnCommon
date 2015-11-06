@@ -248,7 +248,7 @@ public final class utilsString {
 		int pos = 0;
 		final int len = data.length();
 		for(final char c : delims) {
-			final int p = data.indexOf(c);
+			final int p = data.lastIndexOf(c);
 			if(p == -1)
 				continue;
 			if(pos < p) pos = p;
