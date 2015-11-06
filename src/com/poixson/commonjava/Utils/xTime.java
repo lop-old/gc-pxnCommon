@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
+import com.poixson.commonjava.Utils.exceptions.UnmodifiableObjectException;
 
 
 public class xTime {
@@ -98,7 +99,7 @@ public class xTime {
 
 	// reset value to 0
 	public void reset() {
-		if(this.isFinal) return;
+		if(this.isFinal) throw UnmodifiableObjectException.get();
 		this.value = 0;
 	}
 
@@ -121,18 +122,18 @@ public class xTime {
 	// set value
 	public xTime set(final long value, final TimeUnit unit) {
 		if(unit == null) throw new RequiredArgumentException("unit");
-		if(this.isFinal) return null;
+		if(this.isFinal) throw UnmodifiableObjectException.get();
 		this.value = xTimeU.MS.convert(value, unit);
 		return this;
 	}
 	public xTime set(final String val) {
-		if(this.isFinal) return null;
+		if(this.isFinal) throw UnmodifiableObjectException.get();
 		if(utils.notEmpty(val))
 			this.value = parseLong(val).longValue();
 		return this;
 	}
 	public xTime set(final xTime time) {
-		if(this.isFinal) return null;
+		if(this.isFinal) throw UnmodifiableObjectException.get();
 		if(time != null)
 			this.value = time.getMS();
 		return this;
@@ -143,17 +144,17 @@ public class xTime {
 	// add time
 	public void add(final long val, final TimeUnit unit) {
 		if(unit == null) throw new RequiredArgumentException("unit");
-		if(this.isFinal) return;
+		if(this.isFinal) throw UnmodifiableObjectException.get();
 		this.value += xTimeU.MS.convert(val, unit);
 	}
 	public void add(final String val) {
-		if(this.isFinal) return;
+		if(this.isFinal) throw UnmodifiableObjectException.get();
 		if(utils.notEmpty(val))
 			this.value += parseLong(val).longValue();
 	}
 	public void add(final xTime time) {
 		if(time == null) throw new RequiredArgumentException("time");
-		if(this.isFinal) return;
+		if(this.isFinal) throw UnmodifiableObjectException.get();
 		this.value += time.value;
 	}
 

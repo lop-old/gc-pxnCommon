@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.poixson.commonjava.Utils.exceptions.UnmodifiableObjectException;
 import com.poixson.commonjava.xLogger.xLog;
 
 
@@ -14,6 +15,8 @@ public class DualKeyMap<K, J, V> {
 
 	protected final Map<K, V> kMap;
 	protected final Map<J, V> jMap;
+	// write lock
+	private volatile boolean isFinal = false;
 
 
 
@@ -25,6 +28,17 @@ public class DualKeyMap<K, J, V> {
 	public DualKeyMap(final Map<K, V> kMap, final Map<J, V> jMap) {
 		this.kMap = kMap;
 		this.jMap = jMap;
+	}
+
+
+
+	// final value
+	public DualKeyMap<K, J, V> setFinal() {
+		this.isFinal = true;
+		return this;
+	}
+	public boolean isFinal() {
+		return this.isFinal;
 	}
 
 
@@ -45,10 +59,12 @@ public class DualKeyMap<K, J, V> {
 
 
 	public void clear() {
+		if(this.isFinal) throw UnmodifiableObjectException.get();
 		this.kMap.clear();
 		this.jMap.clear();
 	}
 	public V remove(final K kKey, final J jKey) {
+		if(this.isFinal) throw UnmodifiableObjectException.get();
 		final V resultK = this.kMap.remove(kKey);
 		final V resultJ = this.jMap.remove(jKey);
 		if(resultK != null)
@@ -104,11 +120,13 @@ public class DualKeyMap<K, J, V> {
 
 
 	public V put(final K kKey, final J jKey, final V value) {
+		if(this.isFinal) UnmodifiableObjectException.get();
 		this.kMap.put(kKey, value);
 		this.jMap.put(jKey, value);
 		return value;
 	}
 	public void putAll(final DualKeyMap<K, J, V> map) {
+		if(this.isFinal) throw UnmodifiableObjectException.get();
 		final Iterator<Entry<K, V>> itK = this.kMap.entrySet().iterator();
 		final Iterator<Entry<J, V>> itJ = this.jMap.entrySet().iterator();
 		while(itK.hasNext() && itJ.hasNext()) {
