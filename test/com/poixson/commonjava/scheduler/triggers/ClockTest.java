@@ -24,7 +24,7 @@ public class ClockTest extends xRunnable {
 		this.task = xScheduledTask.get();
 		this.task.setRunnable(this);
 		this.task.setRepeating(false);
-		this.task.setTrigger(triggerClock.get("1:00"));
+		this.task.setTrigger(TriggerClock.get("1:00"));
 	}
 
 

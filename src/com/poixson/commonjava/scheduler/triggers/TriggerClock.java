@@ -2,17 +2,17 @@
 package com.poixson.commonjava.scheduler.triggers;
 
 
-public class triggerClock implements TriggerType {
+public class TriggerClock implements TriggerType {
 
 
 
-	public static triggerClock get(final String time) {
-		return new triggerClock(time);
+	public static TriggerClock get(final String time) {
+		return new TriggerClock(time);
 	}
 
 
 
-	public triggerClock(final String time) {
+	public TriggerClock(final String time) {
 	}
 
 

@@ -4,7 +4,7 @@ import com.poixson.commonjava.Utils.xClock;
 import com.poixson.commonjava.Utils.xTime;
 
 
-public class triggerInterval implements TriggerType {
+public class TriggerTick implements TriggerType {
 
 	protected final xTime delay    = xTime.get();
 	protected final xTime interval = xTime.get();
@@ -12,26 +12,26 @@ public class triggerInterval implements TriggerType {
 
 
 
-	public static triggerInterval get(final String delay, final String interval) {
-		return new triggerInterval(delay, interval);
+	public static TriggerTick get(final String delay, final String interval) {
+		return new TriggerTick(delay, interval);
 	}
-	public static triggerInterval get(final xTime delay, final xTime interval) {
-		return new triggerInterval(delay, interval);
+	public static TriggerTick get(final xTime delay, final xTime interval) {
+		return new TriggerTick(delay, interval);
 	}
-	public static triggerInterval get(final String interval) {
-		return new triggerInterval(interval, interval);
+	public static TriggerTick get(final String interval) {
+		return new TriggerTick(interval, interval);
 	}
-	public static triggerInterval get(final xTime interval) {
-		return new triggerInterval(interval, interval);
+	public static TriggerTick get(final xTime interval) {
+		return new TriggerTick(interval, interval);
 	}
 
 
 
-	public triggerInterval(final String delay, final String interval) {
+	public TriggerTick(final String delay, final String interval) {
 		this.delay.set(delay);
 		this.interval.set(interval);
 	}
-	public triggerInterval(final xTime delay, final xTime interval) {
+	public TriggerTick(final xTime delay, final xTime interval) {
 		this.delay.set(delay);
 		this.interval.set(interval);
 	}

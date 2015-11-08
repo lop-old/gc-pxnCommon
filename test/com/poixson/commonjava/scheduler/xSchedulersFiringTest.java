@@ -11,7 +11,7 @@ import com.poixson.commonjava.Utils.xTime;
 import com.poixson.commonjava.Utils.threads.xThreadPool;
 import com.poixson.commonjava.scheduler.cron.CronPredictor;
 import com.poixson.commonjava.scheduler.triggers.CronTest;
-import com.poixson.commonjava.scheduler.triggers.IntervalTest;
+import com.poixson.commonjava.scheduler.triggers.TickTest;
 import com.poixson.commonjava.xLogger.xLogTest;
 
 
@@ -24,8 +24,9 @@ public class xSchedulersFiringTest {
 	private final xScheduler sched;
 
 	// trigger tests
-	private final CronTest     test_cron;
-	private final IntervalTest test_interval;
+	private final ClockTest test_clock;
+	private final CronTest  test_cron;
+	private final TickTest  test_tick;
 
 	private static final CoolDown maxRunTime = CoolDown.get("20s");
 	private static final xTime wait_sleep = xTime.get("1s");

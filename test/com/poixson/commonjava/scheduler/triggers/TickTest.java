@@ -6,19 +6,19 @@ import com.poixson.commonjava.scheduler.xScheduler;
 import com.poixson.commonjava.xLogger.xLogTest;
 
 
-public class IntervalTest extends xRunnable {
+public class TickTest extends xRunnable {
 
 	public final xScheduledTask task;
 
 
 
-	public IntervalTest(final xScheduler sched) {
+	public TickTest(final xScheduler sched) {
 		this();
 		if(sched != null)
 			sched.schedule(this.task);
 	}
-	public IntervalTest() {
-		super("IntervalTest");
+	public TickTest() {
+		super("TickTest");
 		try {
 			this.task = xScheduledTask.get();
 			this.task.setRunnable(this);
