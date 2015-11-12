@@ -12,6 +12,7 @@ import com.poixson.commonjava.Failure;
 import com.poixson.commonjava.Utils.LockFile;
 import com.poixson.commonjava.Utils.mvnProps;
 import com.poixson.commonjava.Utils.utilsString;
+import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.Utils.threads.xThreadPool;
 import com.poixson.commonjava.scheduler.xScheduler;
@@ -197,6 +198,22 @@ public abstract class xApp extends xAppAbstract {
 		final LockFile lock = LockFile.peak(filename);
 		if(lock != null)
 			lock.release();
+	}
+
+
+
+	// garbage collect
+	@xAppStep(type=StepType.SHUTDOWN,title="GarbageCollect", priority=1)
+	public void __SHUTDOWN_gc() {
+		utilsThread.Sleep(500L);
+		xScheduler.clearInstance();
+		System.gc();
+		final xLog log = this.log();
+		if(xScheduler.hasLoaded())
+			log.warning("xScheduler hasn't fully unloaded!");
+		else
+			log.finest("xScheduler has been unloaded");
+
 	}
 
 

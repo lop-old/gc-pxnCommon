@@ -1,5 +1,6 @@
 package com.poixson.commonjava.scheduler;
 
+import com.poixson.commonjava.Utils.Keeper;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -37,10 +38,23 @@ public class xScheduler implements xStartable {
 		}
 		return instance;
 	}
+	public static boolean hasLoaded() {
+		return (instance != null);
+	}
+	public static void clearInstance() {
+		if(instance == null) return;
+		Keeper.remove(instance);
+		synchronized(instanceLock) {
+			if(instance == null) return;
+			if(instance.isRunning()) throw new IllegalStateException();
+			instance = null;
+		}
+	}
 	protected xScheduler() {
 		this.thread = new Thread(this);
 		this.thread.setDaemon(true);
 		this.thread.setName("xScheduler");
+		Keeper.add(this);
 	}
 	@Override
 	public Object clone() throws CloneNotSupportedException {
