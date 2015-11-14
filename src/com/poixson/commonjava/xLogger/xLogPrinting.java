@@ -54,7 +54,7 @@ public abstract class xLogPrinting {
 				len = line.length();
 		// print lines
 		for(final String line : msgs)
-			this.publish(" [[ "+line+utilsString.repeat(len - line.length(), " ")+" ]]");
+			this.title( line+utilsString.repeat(len - line.length(), " ") );
 	}
 	public void title(final List<String> list) {
 		if(list == null) return;
