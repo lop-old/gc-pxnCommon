@@ -43,8 +43,6 @@ public class StartupTask extends xRunnable {
 	public void run() {
 		if(this.currentStep.get() == Integer.MAX_VALUE)
 			return;
-		if(xVars.debug())
-			utilsThread.Sleep(100L);
 		final int step = this.currentStep.getAndIncrement();
 		// finished
 		if(step > this.maxStep) {
@@ -78,6 +76,8 @@ public class StartupTask extends xRunnable {
 			}
 			// sleep a moment
 			utilsThread.Sleep(STEP_SLEEP);
+			if(xVars.debug())
+				utilsThread.Sleep(100L);
 		}
 		// something failed
 		if(Failure.hasFailed() || this.app.stopped.get()) {

@@ -312,12 +312,12 @@ public abstract class xAppAbstract implements xStartable, FailureAction {
 	public void displayStartupVars() {
 		final PrintStream out = AnsiConsole.out;
 		out.println();
-		out.println(" "+this.getVersion());
+		out.println(" Ver: "+this.getVersion());
+		out.println(" Pid: "+utilsProc.getPid());
 		out.println(" Running as:  "+System.getProperty("user.name"));
 		out.println(" Current dir: "+System.getProperty("user.dir"));
 		out.println(" java home:   "+System.getProperty("java.home"));
 //		out.println(" Terminal:    "+System.getProperty("jline.terminal"));
-		out.println(" Pid: "+utilsProc.getPid());
 		if(xVars.debug())
 			out.println(" Forcing Debug: true");
 //		if(utils.notEmpty(args)) {

@@ -49,8 +49,6 @@ public class ShutdownTask extends xRunnable {
 	public void run() {
 		if(this.currentStep.get() == Integer.MIN_VALUE)
 			return;
-		if(xVars.debug())
-			utilsThread.Sleep(100L);
 		final int step = this.currentStep.getAndDecrement();
 		// finished
 		if(step < this.minStep) {
@@ -83,6 +81,8 @@ public class ShutdownTask extends xRunnable {
 			}
 			// sleep a moment
 			utilsThread.Sleep(STEP_SLEEP);
+			if(xVars.debug())
+				utilsThread.Sleep(100L);
 		}
 		// nothing has run this step
 		if(!hasRunSomething) {

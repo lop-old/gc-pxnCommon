@@ -142,11 +142,6 @@ public abstract class xApp extends xAppAbstract {
 
 
 
-	// ------------------------------------------------------------------------------- //
-	// startup
-
-
-
 	@Override
 	public void run() {
 		// pass main thread to thread pool
@@ -158,6 +153,11 @@ public abstract class xApp extends xAppAbstract {
 			Failure.fail("Problem running main thread pool!");
 		}
 	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// startup
 
 
 
@@ -227,7 +227,7 @@ public abstract class xApp extends xAppAbstract {
 	// garbage collect
 	@xAppStep(type=StepType.SHUTDOWN,title="GarbageCollect", priority=1)
 	public void __SHUTDOWN_gc() {
-		utilsThread.Sleep(500L);
+		utilsThread.Sleep(250L);
 		xScheduler.clearInstance();
 		System.gc();
 		final xLog log = this.log();
