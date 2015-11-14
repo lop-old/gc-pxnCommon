@@ -11,19 +11,31 @@ public class xRunnable implements Runnable {
 
 
 	public xRunnable() {
-		this.task = null;
+		this.taskName = null;
+		this.task     = null;
 	}
 	public xRunnable(final String taskName) {
-		this(taskName, null);
+		this(
+			taskName,
+			(Runnable) null
+		);
+	}
+	public xRunnable(final xRunnable run) {
+		this(
+			run.getTaskName(),
+			(Runnable) run
+		);
 	}
 	public xRunnable(final Runnable run) {
-		this(null, run);
+		this(
+			(String) null,
+			run
+		);
 	}
 	public xRunnable(final String taskName, final Runnable run) {
 		if(utils.notEmpty(taskName))
 			this.taskName = taskName;
 		else
-		// clone existing xRunnable
 		if(run instanceof xRunnable)
 			this.taskName = ((xRunnable) run).getTaskName();
 		this.task = run;
