@@ -26,6 +26,7 @@ import com.poixson.commonjava.Utils.utilsProc;
 import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.xClock;
 import com.poixson.commonjava.Utils.xStartable;
+import com.poixson.commonjava.Utils.xTime;
 import com.poixson.commonjava.Utils.threads.xThreadPool;
 import com.poixson.commonjava.xLogger.logHandlerConsole;
 import com.poixson.commonjava.xLogger.xConsole;
@@ -201,11 +202,17 @@ public abstract class xAppAbstract implements xStartable, FailureAction {
 			return;
 		}
 		this.log().title(
-				(new StringBuilder())
-				.append("Stopping ")
-				.append(this.getTitle())
-				.append("..")
-				.toString()
+				new String[] {
+					(new StringBuilder())
+						.append("Stopping ")
+						.append(this.getTitle())
+						.append("..")
+						.toString(),
+					(new StringBuilder())
+						.append("Uptime: ")
+						.append(this.getUptimeString())
+						.toString()
+				}
 		);
 		// shutdown task
 		final ShutdownTask task = new ShutdownTask(this);
@@ -254,8 +261,10 @@ public abstract class xAppAbstract implements xStartable, FailureAction {
 		return xClock.get(true).millis() - this.startTime;
 	}
 	public String getUptimeString() {
-//TODO:
-		return "<UPTIME>";
+		final xTime time = xTime.get(this.getUptime());
+		if(time == null)
+			return null;
+		return time.toFullString();
 	}
 
 
