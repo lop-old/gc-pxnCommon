@@ -92,7 +92,7 @@ public class xClock {
 	protected void doUpdate() {
 		if(!this.enableNTP) return;
 		if(!this.running) return;
-		double time = getSystemTime();
+		long time = getSystemTime();
 		// checked in last 60 seconds
 		if(this.lastChecked != 0.0 && ((time - this.lastChecked) < 60.0)) return;
 		DatagramSocket socket = null;
@@ -166,15 +166,15 @@ public class xClock {
 	 * Get current time from system.
 	 * @return
 	 */
-	public static double getSystemTime() {
+	public static long getSystemTime() {
 		return System.currentTimeMillis();
 	}
 	/**
 	 * Get current time adjusted by NTP.
 	 * @return
 	 */
-	public double getCurrentTime() {
-		return getSystemTime() - this.localOffset;
+	public long getCurrentTime() {
+		return getSystemTime() - ((long) this.localOffset);
 	}
 
 
@@ -192,7 +192,7 @@ public class xClock {
 		return (timestamp / 1000.0) + 2208988800.0;
 	}
 	protected static double fromUnixTimestamp() {
-		return fromUnixTimestamp(getSystemTime());
+		return fromUnixTimestamp( (double) getSystemTime() );
 	}
 
 
