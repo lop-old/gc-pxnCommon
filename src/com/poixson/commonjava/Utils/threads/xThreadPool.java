@@ -92,15 +92,15 @@ public class xThreadPool implements xStartable {
 	public static xThreadPool get(final String name, final Integer size) {
 		final String poolName;
 		final int    poolSize;
-		if(utils.isEmpty(name) || MAIN_POOL_NAME.equalsIgnoreCase(name)) {
+		if(utils.isEmpty(name) || MAIN_POOL_NAME.equalsIgnoreCase(name) || size.intValue() == 0) {
 			if(mainPool != null)
 				return mainPool;
 			poolName = MAIN_POOL_NAME;
 			poolSize = 0;
 		} else {
-			if(size < 1) throw new IllegalArgumentException("Invalid pool size: "+Integer.toString(size));
 			poolName = name;
-			poolSize = size;
+			poolSize = size.intValue();
+			if(poolSize < 1) throw new IllegalArgumentException("Invalid pool size: "+size.toString());
 		}
 		// existing instance
 		{
