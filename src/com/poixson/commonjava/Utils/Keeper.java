@@ -4,13 +4,14 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLog;
 
 
 public class Keeper {
 	private static final String LOG_NAME = "KEEPER";
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG_EXTRA = false;
 
 	private static volatile Keeper instance = null;
 	private static final Object instanceLock = new Object();
@@ -35,13 +36,13 @@ public class Keeper {
 	public static void add(final Object obj) {
 		if(obj == null) throw new RequiredArgumentException("obj");
 		holder.add(obj);
-		if(DEBUG)
+		if(DEBUG_EXTRA())
 			finest("Added: "+obj.getClass().getName());
 	}
 	public static void remove(final Object obj) {
 		if(obj == null) throw new RequiredArgumentException("obj");
 		holder.remove(obj);
-		if(DEBUG)
+		if(DEBUG_EXTRA())
 			finest("Removed: "+obj.getClass().getName());
 	}
 	public static int removeAll(final Class<? extends Object> clss) {
@@ -66,7 +67,7 @@ public class Keeper {
 	// logger
 	private static volatile xLog _log = null;
 	private static xLog log() {
-		if(!DEBUG) return null;
+		if(!DEBUG_EXTRA()) return null;
 		if(_log == null)
 			_log = xLog.getRoot(LOG_NAME);
 		return _log;
@@ -84,6 +85,11 @@ public class Keeper {
 			}
 		}).finest(msg)
 		.start();
+	}
+	private static boolean DEBUG_EXTRA() {
+		if(DEBUG_EXTRA)
+			return xVars.debug();
+		return false;
 	}
 
 
