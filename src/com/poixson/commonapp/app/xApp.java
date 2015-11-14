@@ -1,7 +1,10 @@
 package com.poixson.commonapp.app;
 
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.fusesource.jansi.AnsiConsole;
@@ -11,6 +14,7 @@ import com.poixson.commonapp.app.annotations.xAppStep.StepType;
 import com.poixson.commonjava.Failure;
 import com.poixson.commonjava.Utils.LockFile;
 import com.poixson.commonjava.Utils.mvnProps;
+import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.utilsThread;
 import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
@@ -91,7 +95,25 @@ public abstract class xApp extends xAppAbstract {
 		// initialize console and enable colors
 		initConsole();
 		// process command line arguments
-		instance.processArgs(args);
+		final List<String> argsList = new LinkedList<String>();
+		argsList.addAll(Arrays.asList(args));
+		instance.processArgs(argsList);
+		instance.processDefaultArgs(argsList);
+		if(utils.notEmpty(argsList)) {
+			final StringBuilder str = new StringBuilder();
+			for(final String arg : argsList) {
+				if(utils.isEmpty(arg))
+					continue;
+				if(str.length() > 0)
+					str.append(" ");
+				str.append(arg);
+			}
+			if(str.length() > 0) {
+				System.out.println("Unknown arguments: "+str.toString());
+				System.exit(1);
+				return;
+			}
+		}
 		// handle command-line arguments
 		instance.displayStartupVars();
 		// app startup

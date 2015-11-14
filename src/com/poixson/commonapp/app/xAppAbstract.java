@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -107,7 +108,18 @@ public abstract class xAppAbstract implements xStartable, FailureAction {
 
 
 
-	protected abstract void processArgs(final String[] args);
+	protected abstract void processArgs(final List<String> args);
+	protected void processDefaultArgs(final List<String> args) {
+		final Iterator<String> it = args.iterator();
+		while(it.hasNext()) {
+			final String arg = it.next();
+			switch(arg) {
+			case "--debug":
+				xVars.debug(true);
+				it.remove();
+			}
+		}
+	}
 
 
 
