@@ -13,7 +13,7 @@ import com.poixson.commonapp.app.annotations.xAppStep;
 import com.poixson.commonapp.app.annotations.xAppStep.StepType;
 import com.poixson.commonjava.Failure;
 import com.poixson.commonjava.Utils.LockFile;
-import com.poixson.commonjava.Utils.mvnProps;
+import com.poixson.commonjava.Utils.appProps;
 import com.poixson.commonjava.Utils.utils;
 import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.utilsThread;
@@ -44,7 +44,7 @@ public abstract class xApp extends xAppAbstract {
 //	private static final String ILLEGAL_STATE_EXCEPTION   = "Illegal app state; cannot continue; this shouldn't happen; Current state: ";
 
 	// mvn properties
-	protected final mvnProps mvnprops;
+	protected final appProps props;
 
 
 
@@ -131,7 +131,7 @@ public abstract class xApp extends xAppAbstract {
 	protected xApp() {
 		super();
 		// mvn properties
-		this.mvnprops = mvnProps.get(this.getClass());
+		this.props = appProps.get(this.getClass());
 	}
 
 
@@ -247,39 +247,39 @@ public abstract class xApp extends xAppAbstract {
 	// mvn properties
 	@Override
 	public String getName() {
-		return this.mvnprops.name;
+		return this.props.name;
 	}
 	@Override
 	public String getTitle() {
-		return this.mvnprops.title;
+		return this.props.title;
 	}
 	@Override
 	public String getFullTitle() {
-		return this.mvnprops.full_title;
+		return this.props.full_title;
 	}
 	@Override
 	public String getVersion() {
-		return this.mvnprops.version;
+		return this.props.version;
 	}
 	@Override
 	public String getURL() {
-		return this.mvnprops.url;
+		return this.props.url;
 	}
 	@Override
 	public String getOrgName() {
-		return this.mvnprops.org_name;
+		return this.props.org_name;
 	}
 	@Override
 	public String getOrgURL() {
-		return this.mvnprops.org_url;
+		return this.props.org_url;
 	}
 	@Override
 	public String getIssueName() {
-		return this.mvnprops.issue_name;
+		return this.props.issue_name;
 	}
 	@Override
 	public String getIssueURL() {
-		return this.mvnprops.issue_url;
+		return this.props.issue_url;
 	}
 
 
@@ -393,7 +393,7 @@ public abstract class xApp extends xAppAbstract {
 		final Map<Integer, String> colors11 = new LinkedHashMap<Integer, String>();
 		colors11.put(new Integer(1),  COLOR_GRASS);
 		// build art
-		final String version = utilsString.padCenter(15, this.mvnprops.version, ' ');
+		final String version = utilsString.padCenter(15, this.props.version, ' ');
 		final PrintStream out = AnsiConsole.out;
 		out.println();
 		this.displayLogoLine(out, colors1, "                                     _/\\_                        "    );

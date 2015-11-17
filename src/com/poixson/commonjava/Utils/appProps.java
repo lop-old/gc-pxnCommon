@@ -10,12 +10,12 @@ import com.poixson.commonjava.Failure;
 import com.poixson.commonjava.xLogger.xLog;
 
 
-public class mvnProps {
+public class appProps {
 
 	private static final String PROPS_FILE = "/app.properties";
 
-	private static final ConcurrentMap<String, mvnProps> instances =
-			new ConcurrentHashMap<String, mvnProps>();
+	private static final ConcurrentMap<String, appProps> instances =
+			new ConcurrentHashMap<String, appProps>();
 
 	// properties
 	public final String name;
@@ -31,17 +31,17 @@ public class mvnProps {
 
 
 	// get instance
-	public static mvnProps get(final Class<?> clss) {
+	public static appProps get(final Class<?> clss) {
 		final String className = clss.getName();
 		{
-			final mvnProps props = instances.get(className);
+			final appProps props = instances.get(className);
 			if(props != null)
 				return props;
 		}
 		synchronized(instances) {
 			if(instances.containsKey(className))
 				return instances.get(className);
-			final mvnProps props = new mvnProps(clss);
+			final appProps props = new appProps(clss);
 			instances.put(className, props);
 			Keeper.add(props);
 			return props;
@@ -51,7 +51,7 @@ public class mvnProps {
 
 
 	// load app.properties file
-	public mvnProps(final Class<?> clss) {
+	public appProps(final Class<?> clss) {
 		Properties props = null;
 		InputStream in = null;
 		try {
