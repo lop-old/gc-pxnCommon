@@ -93,7 +93,7 @@ public abstract class xApp extends xAppAbstract {
 		if(System.console() == null)
 			System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
 		// initialize console and enable colors
-		initConsole();
+		instance.initConsole();
 		// process command line arguments
 		final List<String> argsList = new LinkedList<String>();
 		argsList.addAll(Arrays.asList(args));

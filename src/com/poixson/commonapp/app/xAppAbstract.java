@@ -125,7 +125,7 @@ public abstract class xAppAbstract implements xStartable, FailureAction {
 
 
 	// initialize console and enable colors
-	protected static void initConsole() {
+	protected void initConsole() {
 		xConsole console = xLog.peekConsole();
 		if(console == null || console instanceof xNoConsole) {
 			if(!utils.isJLineAvailable())
