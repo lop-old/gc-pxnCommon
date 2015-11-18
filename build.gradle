@@ -15,6 +15,7 @@ defaultTasks 'clean', 'test', 'build', 'shadow', 'install'
 def jlineVersion     = '2.13'
 def snakeyamlVersion = '1.16'
 def jclVersion       = '2.6'
+def cron4jVersion    = '2.2.5'
 def junitVersion     = '4.12'
 
 
@@ -83,6 +84,7 @@ dependencies {
 	compile "jline:jline:${jlineVersion}"
 	compile "org.yaml:snakeyaml:${snakeyamlVersion}"
 	compile "org.xeustechnologies:jcl-core:${jclVersion}"
+	compile "it.sauronsoftware.cron4j:cron4j:${cron4jVersion}"
 	testCompile "junit:junit:${junitVersion}"
 }
 
