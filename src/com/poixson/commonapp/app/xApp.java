@@ -262,6 +262,17 @@ public abstract class xApp extends xAppAbstract {
 		return this.props.version;
 	}
 	@Override
+	public String getCommitHash() {
+		final String hash = this.getCommitHashFull();
+		if(utils.isEmpty(hash))
+			return "N/A";
+		return hash.substring(0, 7);
+	}
+	@Override
+	public String getCommitHashFull() {
+		return this.props.commitHash;
+	}
+	@Override
 	public String getURL() {
 		return this.props.url;
 	}

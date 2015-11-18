@@ -22,6 +22,7 @@ public class appProps {
 	public final String title;
 	public final String full_title;
 	public final String version;
+	public final String commitHash;
 	public final String url;
 	public final String org_name;
 	public final String org_url;
@@ -70,6 +71,7 @@ public class appProps {
 		this.name       = props.getProperty("name");
 		this.title      = props.getProperty("title");
 		this.version    = props.getProperty("version");
+		this.commitHash = props.getProperty("commit");
 		this.full_title = this.title+" "+this.version;
 		this.url        = props.getProperty("url");
 		this.org_name   = props.getProperty("org_name");

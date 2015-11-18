@@ -273,6 +273,8 @@ public abstract class xAppAbstract implements xStartable, FailureAction {
 	public abstract String getTitle();
 	public abstract String getFullTitle();
 	public abstract String getVersion();
+	public abstract String getCommitHash();
+	public abstract String getCommitHashFull();
 	public abstract String getURL();
 	public abstract String getOrgName();
 	public abstract String getOrgURL();
@@ -311,9 +313,11 @@ public abstract class xAppAbstract implements xStartable, FailureAction {
 	}
 	public void displayStartupVars() {
 		final PrintStream out = AnsiConsole.out;
+		final String hash;
 		out.println();
-		out.println(" Ver: "+this.getVersion());
 		out.println(" Pid: "+utilsProc.getPid());
+		out.println(" Version: "+this.getVersion());
+		out.println(" Commit:  "+this.getCommitHash());
 		out.println(" Running as:  "+System.getProperty("user.name"));
 		out.println(" Current dir: "+System.getProperty("user.dir"));
 		out.println(" java home:   "+System.getProperty("java.home"));
