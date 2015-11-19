@@ -32,7 +32,7 @@ import com.poixson.commonjava.xLogger.logHandlerConsole;
 import com.poixson.commonjava.xLogger.xConsole;
 import com.poixson.commonjava.xLogger.xLog;
 import com.poixson.commonjava.xLogger.xNoConsole;
-import com.poixson.commonjava.xLogger.formatters.defaultLogFormatter_Color;
+import com.poixson.commonjava.xLogger.formatters.xLogFormatter_Color;
 
 
 public abstract class xAppAbstract implements xStartable, FailureAction {
@@ -135,7 +135,7 @@ public abstract class xAppAbstract implements xStartable, FailureAction {
 		}
 		// enable console color
 		get().log().setFormatter(
-			new defaultLogFormatter_Color(),
+			new xLogFormatter_Color(),
 			logHandlerConsole.class
 		);
 	}

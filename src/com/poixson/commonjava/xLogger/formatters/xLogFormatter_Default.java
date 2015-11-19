@@ -5,11 +5,11 @@ import java.util.List;
 
 import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
-import com.poixson.commonjava.xLogger.xLogFormatter;
+import com.poixson.commonjava.xLogger.xLogFormatterInterface;
 import com.poixson.commonjava.xLogger.xLogRecord;
 
 
-public class defaultLogFormatter implements xLogFormatter {
+public class xLogFormatter_Default implements xLogFormatterInterface {
 
 
 

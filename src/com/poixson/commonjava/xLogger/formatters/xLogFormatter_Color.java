@@ -6,7 +6,7 @@ import com.poixson.commonjava.xLogger.xLevel;
 import com.poixson.commonjava.xLogger.xLogRecord;
 
 
-public class defaultLogFormatter_Color extends defaultLogFormatter {
+public class xLogFormatter_Color extends xLogFormatter_Default {
 
 
 

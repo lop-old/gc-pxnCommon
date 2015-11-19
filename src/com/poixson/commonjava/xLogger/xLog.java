@@ -13,7 +13,7 @@ import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.scheduler.ticker.xTickHandler;
 import com.poixson.commonjava.scheduler.ticker.xTickPrompt;
 import com.poixson.commonjava.xLogger.commands.xCommandsHandler;
-import com.poixson.commonjava.xLogger.formatters.defaultLogFormatter;
+import com.poixson.commonjava.xLogger.formatters.xLogFormatter_Default;
 
 
 public class xLog extends xLogPrinting {
@@ -99,7 +99,7 @@ public class xLog extends xLogPrinting {
 	private static void initDefaultHandlers() {
 		// console handler
 		final xLogHandler handler = new logHandlerConsole();
-		handler.setFormatter(new defaultLogFormatter());
+		handler.setFormatter(new xLogFormatter_Default());
 		root.addHandler(handler);
 	}
 
@@ -213,13 +213,13 @@ public class xLog extends xLogPrinting {
 
 
 	// formatter
-	public void setFormatter(final xLogFormatter formatter, final Class<?> type) {
+	public void setFormatter(final xLogFormatterInterface formatter, final Class<?> type) {
 		if(formatter == null) throw new RequiredArgumentException("formatter");
 		for(final xLogHandler handler : this.handlers)
 			if(type == null || type.equals(handler.getClass()))
 				handler.setFormatter(formatter);
 	}
-	public void setFormatter(final xLogFormatter formatter) {
+	public void setFormatter(final xLogFormatterInterface formatter) {
 		this.setFormatter(formatter, null);
 	}
 

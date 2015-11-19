@@ -1,7 +1,7 @@
 package com.poixson.commonjava.xLogger;
 
 
-public interface xLogFormatter {
+public interface xLogFormatterInterface {
 
 
 	public String formatMsg(final xLogRecord record);

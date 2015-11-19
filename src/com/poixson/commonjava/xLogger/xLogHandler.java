@@ -1,11 +1,12 @@
 package com.poixson.commonjava.xLogger;
 
-import com.poixson.commonjava.xLogger.formatters.defaultLogFormatter;
+import com.poixson.commonjava.xLogger.formatters.xLogFormatter_Default;
+
 
 
 public abstract class xLogHandler {
 
-	private volatile xLogFormatter formatter = null;
+	private volatile xLogFormatterInterface formatter = null;
 	private volatile xLevel level = null;
 	private final Object formatLock = new Object();
 
@@ -20,16 +21,16 @@ public abstract class xLogHandler {
 
 
 	// formatter
-	public void setFormatter(final xLogFormatter formatter) {
+	public void setFormatter(final xLogFormatterInterface formatter) {
 		synchronized(this.formatLock) {
 			this.formatter = formatter;
 		}
 	}
-	protected xLogFormatter getFormatter() {
+	protected xLogFormatterInterface getFormatter() {
 		if(this.formatter == null) {
 			synchronized(this.formatLock) {
 				if(this.formatter == null)
-					this.formatter = new defaultLogFormatter();
+					this.formatter = new xLogFormatter_Default();
 			}
 		}
 		return this.formatter;
