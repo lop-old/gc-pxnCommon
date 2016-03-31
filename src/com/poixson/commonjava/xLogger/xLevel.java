@@ -21,9 +21,10 @@ public class xLevel implements Serializable {
 	public static final transient xLevel STDOUT  = new xLevel("OUT",     8000);
 	public static final transient xLevel FATAL   = new xLevel("FATAL",   2000);
 	public static final transient xLevel SEVERE  = new xLevel("SEVERE",  1000);
-	public static final transient xLevel WARNING = new xLevel("WARNING", 900);
-	public static final transient xLevel INFO    = new xLevel("INFO",    800);
-	public static final transient xLevel STATS   = new xLevel("STATS",   700);
+	public static final transient xLevel NOTICE  = new xLevel("NOTICE",  900);
+	public static final transient xLevel WARNING = new xLevel("WARNING", 800);
+	public static final transient xLevel INFO    = new xLevel("INFO",    700);
+	public static final transient xLevel STATS   = new xLevel("STATS",   600);
 	public static final transient xLevel FINE    = new xLevel("FINE",    500);
 	public static final transient xLevel FINER   = new xLevel("FINER",   400);
 	public static final transient xLevel FINEST  = new xLevel("FINEST",  300);
