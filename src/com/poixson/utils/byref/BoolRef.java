@@ -1,6 +1,6 @@
-package com.poixson.commonjava.Utils.byRef;
+package com.poixson.utils.byref;
 
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
 public class BoolRef {

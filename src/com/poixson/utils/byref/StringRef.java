@@ -1,6 +1,4 @@
-package com.poixson.commonjava.Utils.byRef;
-
-import com.poixson.commonjava.Utils.utils;
+package com.poixson.utils.byref;
 
 
 public class StringRef {
