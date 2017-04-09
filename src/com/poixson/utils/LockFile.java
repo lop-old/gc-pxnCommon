@@ -1,4 +1,4 @@
-package com.poixson.commonjava.Utils;
+package com.poixson.utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.nio.channels.OverlappingFileLockException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLog;
 
 

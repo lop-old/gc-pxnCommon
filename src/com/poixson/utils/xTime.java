@@ -1,12 +1,12 @@
-package com.poixson.commonjava.Utils;
+package com.poixson.utils;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
-import com.poixson.commonjava.Utils.exceptions.UnmodifiableObjectException;
+import com.poixson.utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.exceptions.UnmodifiableObjectException;
 
 
 public class xTime {

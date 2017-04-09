@@ -6,8 +6,8 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.poixson.commonjava.Utils.byRef.StringRef;
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
 public final class Strings {

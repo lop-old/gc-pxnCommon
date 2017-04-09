@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLevel;
 import com.poixson.commonjava.xLogger.xLog;
 

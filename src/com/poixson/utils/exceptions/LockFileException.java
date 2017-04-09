@@ -1,4 +1,4 @@
-package com.poixson.commonjava.Utils;
+package com.poixson.utils.exceptions;
 
 
 public class LockFileException extends RuntimeException {

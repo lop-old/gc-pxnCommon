@@ -1,6 +1,6 @@
-package com.poixson.commonjava.Utils.exceptions;
+package com.poixson.utils.exceptions;
 
-import com.poixson.commonjava.Utils.utilsString;
+import com.poixson.utils.Strings;
 
 
 public class UnmodifiableObjectException extends UnsupportedOperationException {
