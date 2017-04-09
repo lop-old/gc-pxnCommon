@@ -1,4 +1,4 @@
-package com.poixson.commonjava.Utils;
+package com.poixson.utils;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -12,7 +12,8 @@ import com.poixson.commonjava.xLogger.xLevel;
 import com.poixson.commonjava.xLogger.xLog;
 
 
-public final class utils {
+public final class Utils {
+	private Utils() {}
 
 
 
@@ -29,7 +30,6 @@ public final class utils {
 		utilsThread.init();
 
 	}
-	private utils() {}
 
 
 

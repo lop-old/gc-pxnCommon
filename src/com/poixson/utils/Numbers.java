@@ -1,11 +1,12 @@
-package com.poixson.commonjava.Utils;
+package com.poixson.utils;
 
 import java.text.DecimalFormat;
 import java.util.Random;
 import java.util.regex.Pattern;
 
 
-public final class utilsNumbers {
+public final class Numbers {
+	private Numbers() {}
 
 	/**
 	 * Max valid tcp/udp port number.
@@ -15,9 +16,8 @@ public final class utilsNumbers {
 
 
 	public static void init() {
-		Keeper.add(new utilsNumbers());
+		Keeper.add(new Numbers());
 	}
-	private utilsNumbers() {}
 
 
 

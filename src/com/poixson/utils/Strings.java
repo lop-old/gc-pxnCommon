@@ -1,4 +1,4 @@
-package com.poixson.commonjava.Utils;
+package com.poixson.utils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -10,14 +10,14 @@ import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLog;
 
 
-public final class utilsString {
+public final class Strings {
+	private Strings() {}
 
 
 
 	public static void init() {
-		Keeper.add(new utilsString());
+		Keeper.add(new Strings());
 	}
-	private utilsString() {}
 
 
 
