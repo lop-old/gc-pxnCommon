@@ -1,4 +1,4 @@
-package com.poixson.commonapp.app;
+package com.poixson.app;
 
 import java.io.PrintStream;
 import java.util.Arrays;
@@ -38,7 +38,7 @@ import com.poixson.commonjava.xLogger.commands.xCommandsHandler;
  *   a. shutdown()     | internal
  *   b. shutdown(steps 8-1) | steps abstracted to app
  */
-public abstract class xApp extends xAppAbstract {
+public abstract class xApp {
 
 	private static final String ALREADY_STARTED_EXCEPTION = "Illegal app state; this shouldn't happen; cannot start in this state; possibly already started?";
 //	private static final String ILLEGAL_STATE_EXCEPTION   = "Illegal app state; cannot continue; this shouldn't happen; Current state: ";

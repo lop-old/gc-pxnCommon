@@ -1,4 +1,4 @@
-package com.poixson.commonapp.app;
+package com.poixson.app.steps;
 
 import java.lang.reflect.Method;
 
@@ -9,7 +9,7 @@ import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 
 
-public class StepDAO {
+public class xAppStepDAO {
 
 	public final StepType type;
 	public final int      step;
@@ -19,7 +19,7 @@ public class StepDAO {
 
 
 
-	public StepDAO(final xAppStep annotation, final Method method) {
+	public xAppStepDAO(final xAppStep annotation, final Method method) {
 		if(annotation == null) throw new RequiredArgumentException("annotation");
 		if(method     == null) throw new RequiredArgumentException("method");
 		this.type = annotation.type();
