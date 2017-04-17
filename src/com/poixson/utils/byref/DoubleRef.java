@@ -21,7 +21,7 @@ public class DoubleRef {
 		this.value = value;
 	}
 	public void value(final Double value) {
-		if(value == null) throw new RequiredArgumentException("value");
+		if (value == null) throw new RequiredArgumentException("value");
 		this.value = value.doubleValue();
 	}
 	public double value() {

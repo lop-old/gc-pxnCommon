@@ -40,14 +40,17 @@ public class CoolDown {
 	public boolean runAgain() {
 		final long current = this.getCurrent();
 		// first run
-		if(this.last.compareAndSet(-1L, current))
+		if (this.last.compareAndSet(-1L, current)) {
 			return true;
+		}
 		// run again
 		final long expected = this.last.get();
-		if(expected == -1L)
+		if (expected == -1L) {
 			return false;
-		if(current - expected >= this.duration.getMS())
+		}
+		if (current - expected >= this.duration.getMS()) {
 			return this.last.compareAndSet(expected, current);
+		}
 		// cooling
 		return false;
 	}
@@ -65,13 +68,13 @@ public class CoolDown {
 
 	public long getTimeSince() {
 		final long last = this.last.get();
-		if(last == -1L)
+		if (last == -1L)
 			return -1L;
 		return this.getCurrent() - last;
 	}
 	public long getTimeUntil() {
 		final long last = this.last.get();
-		if(last == -1L)
+		if (last == -1L)
 			return -1L;
 		return (last + this.duration.getMS()) - this.getCurrent();
 	}

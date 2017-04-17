@@ -59,15 +59,18 @@ public class xTime {
 		return get(ms, xTimeU.MS);
 	}
 	public static xTime get(final long value, final TimeUnit unit) {
-		if(value < 0) return null;
+		if (value < 0)
+			return null;
 		return get().set(value, unit);
 	}
 	public static xTime get(final String value) {
-		if(Utils.isEmpty(value)) return null;
+		if (Utils.isEmpty(value))
+			return null;
 		return get().set(value);
 	}
 	public static xTime get(final xTime time) {
-		if(time == null) return null;
+		if (time == null)
+			return null;
 		return get().set(time);
 	}
 	// new object
@@ -95,7 +98,8 @@ public class xTime {
 
 	// reset value to 0
 	public void reset() {
-		if(this.isFinal) throw UnmodifiableObjectException.get();
+		if (this.isFinal)
+			throw UnmodifiableObjectException.get();
 		this.value = 0;
 	}
 
@@ -103,7 +107,8 @@ public class xTime {
 
 	// get value
 	public long get(final TimeUnit unit) {
-		if(unit == null) throw new RequiredArgumentException("unit");
+		if (unit == null)
+			throw new RequiredArgumentException("unit");
 		return unit.convert(this.value, xTimeU.MS);
 	}
 	public String getString() {
@@ -117,21 +122,23 @@ public class xTime {
 	}
 	// set value
 	public xTime set(final long value, final TimeUnit unit) {
-		if(unit == null) throw new RequiredArgumentException("unit");
-		if(this.isFinal) throw UnmodifiableObjectException.get();
+		if (unit == null) throw new RequiredArgumentException("unit");
+		if (this.isFinal) throw UnmodifiableObjectException.get();
 		this.value = xTimeU.MS.convert(value, unit);
 		return this;
 	}
 	public xTime set(final String val) {
-		if(this.isFinal) throw UnmodifiableObjectException.get();
-		if(Utils.notEmpty(val))
+		if (this.isFinal) throw UnmodifiableObjectException.get();
+		if (Utils.notEmpty(val)) {
 			this.value = parseLong(val).longValue();
+		}
 		return this;
 	}
 	public xTime set(final xTime time) {
-		if(this.isFinal) throw UnmodifiableObjectException.get();
-		if(time != null)
+		if (this.isFinal) throw UnmodifiableObjectException.get();
+		if (time != null) {
 			this.value = time.getMS();
+		}
 		return this;
 	}
 
@@ -139,18 +146,19 @@ public class xTime {
 
 	// add time
 	public void add(final long val, final TimeUnit unit) {
-		if(unit == null) throw new RequiredArgumentException("unit");
-		if(this.isFinal) throw UnmodifiableObjectException.get();
+		if (unit == null) throw new RequiredArgumentException("unit");
+		if (this.isFinal) throw UnmodifiableObjectException.get();
 		this.value += xTimeU.MS.convert(val, unit);
 	}
 	public void add(final String val) {
-		if(this.isFinal) throw UnmodifiableObjectException.get();
-		if(Utils.notEmpty(val))
+		if (this.isFinal) throw UnmodifiableObjectException.get();
+		if (Utils.notEmpty(val)) {
 			this.value += parseLong(val).longValue();
+		}
 	}
 	public void add(final xTime time) {
-		if(time == null) throw new RequiredArgumentException("time");
-		if(this.isFinal) throw UnmodifiableObjectException.get();
+		if (time == null) throw new RequiredArgumentException("time");
+		if (this.isFinal) throw UnmodifiableObjectException.get();
 		this.value += time.value;
 	}
 
@@ -158,27 +166,27 @@ public class xTime {
 
 	// parse time from string
 	public static xTime parse(final String value) {
-		if(Utils.isEmpty(value)) return null;
+		if (Utils.isEmpty(value)) return null;
 		final Long lng = parseLong(value);
-		if(lng == null)
+		if (lng == null)
 			return null;
 		return xTime.get(lng, xTimeU.MS);
 	}
 	public static Long parseLong(final String value) {
-		if(Utils.isEmpty(value)) return null;
+		if (Utils.isEmpty(value)) return null;
 		long time = 0;
 		StringBuilder tmp = new StringBuilder();
-		for(char c : value.toCharArray()) {
-			if(c == ' ') continue;
-			if(Character.isDigit(c) || c == '.' || c == ',') {
+		for (char c : value.toCharArray()) {
+			if (c == ' ') continue;
+			if (Character.isDigit(c) || c == '.' || c == ',') {
 				tmp.append(c);
 				continue;
 			}
-			if(Character.isLetter(c)) {
+			if (Character.isLetter(c)) {
 				final Character chr = new Character(
 					Character.toLowerCase(c)
 				);
-				if(timeValues.containsKey(chr)) {
+				if (timeValues.containsKey(chr)) {
 					final double u = timeValues.get(chr).doubleValue();
 					time += (NumberUtils.toDouble(tmp.toString()).doubleValue() * u);
 				}
@@ -197,7 +205,7 @@ public class xTime {
 		return toString(this);
 	}
 	public static String toString(final xTime time) {
-		if(time == null) return null;
+		if (time == null) return null;
 		return toString(time.getMS());
 	}
 	public static String toString(final long ms) {
@@ -211,26 +219,27 @@ public class xTime {
 		return buildString(time.getMS(), fullFormat);
 	}
 	public static String buildString(final long ms, final boolean fullFormat) {
-		if(ms < 1) return null;
+		if (ms < 1) return null;
 		long tmp = ms;
 		final StringBuilder out = new StringBuilder();
-		for(final Entry<Character, Long> entry : timeValues.entrySet()) {
+		for (final Entry<Character, Long> entry : timeValues.entrySet()) {
 			final char c = entry.getKey().charValue();
 			final long u = entry.getValue().longValue();
-			if(tmp < u) continue;
+			if (tmp < u) continue;
 			final long val = (long) Math.floor(
 				((double) tmp) / ((double) u)
 			);
 			// append to string
-			if(out.length() > 0)
+			if (out.length() > 0) {
 				out.append(' ');
+			}
 			out.append(Long.toString(val));
-			if(!fullFormat) {
+			if (!fullFormat) {
 				// minimal format
 				out.append(c);
 			} else {
 				// full format
-				switch(c) {
+				switch (c) {
 				case 'y':
 					out.append(" year");
 					break;
@@ -258,7 +267,7 @@ public class xTime {
 				default:
 					continue;
 				}
-				if(c != 'n' && val > 1)
+				if (c != 'n' && val > 1)
 					out.append('s');
 			}
 			tmp = tmp % u;

@@ -32,7 +32,8 @@ public class xRunnableMultiplier extends xRunnable {
 
 
 	public void add(final xRunnable run) {
-		if(run == null) throw new NullPointerException("run argument is required!");
+		if (run == null)
+			throw new NullPointerException("run argument is required!");
 		this.runs.add(run);
 	}
 
@@ -41,7 +42,7 @@ public class xRunnableMultiplier extends xRunnable {
 	@Override
 	public void run() {
 		final Iterator<xRunnable> it = this.runs.iterator();
-		while(it.hasNext()) {
+		while (it.hasNext()) {
 			final xRunnable run = it.next();
 			run.run();
 		}

@@ -71,7 +71,7 @@ public final class SystemHash {
 		desc.append(System.getProperty("user.name"));
 		desc.append("::");
 		final StringBuffer b = buildNetworkInterfaceDescriptor();
-		if(b != null) {
+		if (b != null) {
 			desc.append(b);
 		} else {
 			InetAddress addr = null;
@@ -95,20 +95,21 @@ public final class SystemHash {
 			return null;
 		}
 		final StringBuffer str = new StringBuffer();
-		while(e.hasMoreElements()) {
+		while (e.hasMoreElements()) {
 			NetworkInterface net = e.nextElement();
 			final StringBuffer str1 = getMACAddressDescriptor(net);
 			final StringBuffer str2 = getInetAddressDescriptor(net);
 			final StringBuffer str3 = new StringBuffer();
-			if(str1 != null)
+			if (str1 != null) {
 				str3.append(str1);
-			if(str2 != null) {
-				if(str3.length() > 0)
+			}
+			if (str2 != null) {
+				if (str3.length() > 0)
 					str3.append('=');
 				str3.append(str2);
 			}
-			if(str3.length() > 0) {
-				if(str.length() > 0)
+			if (str3.length() > 0) {
+				if (str.length() > 0)
 					str.append(';');
 				str.append(str3);
 			}
@@ -125,13 +126,15 @@ public final class SystemHash {
 			haddr = net.getHardwareAddress();
 		} catch (Throwable ignore) {}
 		final StringBuffer str = new StringBuffer();
-		if(haddr != null) {
-			for(int i = 0; i < haddr.length; i++) {
-				if(str.length() > 0)
+		if (haddr != null) {
+			for (int i = 0; i < haddr.length; i++) {
+				if (str.length() > 0) {
 					str.append("-");
+				}
 				final String hex = Integer.toHexString(0xff & haddr[i]);
-				if(hex.length() == 1)
+				if (hex.length() == 1) {
 					str.append('0');
+				}
 				str.append(hex);
 			}
 		}
@@ -144,10 +147,11 @@ public final class SystemHash {
 	private static StringBuffer getInetAddressDescriptor(NetworkInterface net) {
 		final StringBuffer str = new StringBuffer();
 		final Enumeration<InetAddress> e = net.getInetAddresses();
-		while(e.hasMoreElements()) {
+		while (e.hasMoreElements()) {
 			final InetAddress addr = e.nextElement();
-			if(str.length() > 0)
+			if (str.length() > 0) {
 				str.append(',');
+			}
 			str.append(addr.getHostAddress());
 		}
 		return str;
@@ -175,8 +179,9 @@ public final class SystemHash {
 	private static void encode(final StringBuffer str, final int value) {
 		final String hex = Integer.toHexString(value);
 		final int hexSize = hex.length();
-		for(int i = 8; i > hexSize; i--)
+		for (int i = 8; i > hexSize; i--) {
 			str.append('0');
+		}
 		str.append(hex);
 	}
 	/**
@@ -187,8 +192,9 @@ public final class SystemHash {
 	private static void encode(final StringBuffer str, final long value) {
 		final String hex = Long.toHexString(value);
 		final int hexSize = hex.length();
-		for(int i = 16; i > hexSize; i--)
+		for (int i = 16; i > hexSize; i--) {
 			str.append('0');
+		}
 		str.append(hex);
 	}
 

@@ -19,9 +19,9 @@ public class Keeper {
 
 
 	public static Keeper get() {
-		if(instance == null) {
+		if (instance == null) {
 			synchronized(instanceLock) {
-				if(instance == null)
+				if (instance == null)
 					instance = new Keeper();
 			}
 			Utils.init();
@@ -32,27 +32,27 @@ public class Keeper {
 
 
 	public static void add(final Object obj) {
-		if(obj == null) throw new RequiredArgumentException("obj");
+		if (obj == null) throw new RequiredArgumentException("obj");
 		holder.add(obj);
 		if(DEBUG_EXTRA())
 			finest("Added: "+obj.getClass().getName());
 	}
 	public static void remove(final Object obj) {
-		if(obj == null) throw new RequiredArgumentException("obj");
+		if (obj == null) throw new RequiredArgumentException("obj");
 		holder.remove(obj);
 		if(DEBUG_EXTRA())
 			finest("Removed: "+obj.getClass().getName());
 	}
 	public static int removeAll(final Class<? extends Object> clss) {
-		if(holder.isEmpty())
+		if (holder.isEmpty())
 			return 0;
 		int count = 0;
 		final String expect = clss.getName();
 		final Iterator<Object> it = holder.iterator();
-		while(it.hasNext()) {
+		while (it.hasNext()) {
 			final Object obj = it.next();
 			final String actual = obj.getClass().getName();
-			if(expect.equals(actual)) {
+			if (expect.equals(actual)) {
 				count++;
 				remove(obj);
 			}

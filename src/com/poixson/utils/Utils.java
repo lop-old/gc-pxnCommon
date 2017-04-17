@@ -264,7 +264,7 @@ public final class Utils {
 	 * Close safely, ignoring errors.
 	 */
 	public static void safeClose(Closeable obj) {
-		if(obj == null) return;
+		if (obj == null) return;
 		try {
 			obj.close();
 		} catch (IOException ignore) {}
@@ -340,7 +340,7 @@ public final class Utils {
 
 
 	public static boolean validBaud(final int baud) {
-		switch(baud) {
+		switch (baud) {
 		case 300:
 		case 1200:
 		case 2400:
@@ -362,42 +362,42 @@ public final class Utils {
 
 	// compare versions
 	public static String compareVersions(final String versionA, final String versionB) {
-		if(Utils.isEmpty(versionA)) throw new RequiredArgumentException("versionA");
-		if(Utils.isEmpty(versionB)) throw new RequiredArgumentException("versionB");
+		if (Utils.isEmpty(versionA)) throw new RequiredArgumentException("versionA");
+		if (Utils.isEmpty(versionB)) throw new RequiredArgumentException("versionB");
 		final String[] norms = normalisedVersions(versionA, versionB);
 		final int cmp = norms[0].compareTo(norms[1]);
-		if(cmp < 0)
-			return "<";
-		if(cmp > 0)
-			return ">";
+		if (cmp < 0) return "<";
+		if (cmp > 0) return ">";
 		return "=";
 	}
 	private static String[] normalisedVersions(final String versionA, final String versionB) {
-		if(Utils.isEmpty(versionA)) throw new RequiredArgumentException("versionA");
-		if(Utils.isEmpty(versionB)) throw new RequiredArgumentException("versionB");
+		if (Utils.isEmpty(versionA)) throw new RequiredArgumentException("versionA");
+		if (Utils.isEmpty(versionB)) throw new RequiredArgumentException("versionB");
 		// split string by .
 		final String[] splitA = Pattern.compile(".", Pattern.LITERAL).split(versionA);
 		final String[] splitB = Pattern.compile(".", Pattern.LITERAL).split(versionB);
-		if(Utils.isEmpty(splitA)) throw new NullPointerException();
-		if(Utils.isEmpty(splitB)) throw new NullPointerException();
+		if (Utils.isEmpty(splitA)) throw new NullPointerException();
+		if (Utils.isEmpty(splitB)) throw new NullPointerException();
 		// find longest part
 		int width = -1;
-		for(final String part : splitA) {
-			if(width == -1 || width < part.length())
+		for (final String part : splitA) {
+			if (width == -1 || width < part.length()) {
 				width = part.length();
+			}
 		}
-		for(final String part : splitB) {
-			if(width == -1 || width < part.length())
+		for (final String part : splitB) {
+			if (width == -1 || width < part.length()) {
 				width = part.length();
+			}
 		}
-		if(width == -1) throw new NullPointerException();
+		if (width == -1) throw new NullPointerException();
 		// build padded string
 		final StringBuilder outA = new StringBuilder();
-		for(final String part : splitA) {
+		for (final String part : splitA) {
 			outA.append( StringUtils.padFront(width, part, '0') );
 		}
 		final StringBuilder outB = new StringBuilder();
-		for(final String part : splitB) {
+		for (final String part : splitB) {
 			outB.append( StringUtils.padFront(width, part, '0') );
 		}
 		return new String[] {
@@ -409,7 +409,8 @@ public final class Utils {
 		final String javaVersion;
 		{
 			final String vers = System.getProperty("java.version");
-			if(vers == null || vers.isEmpty()) throw new RuntimeException("Failed to get java version");
+			if (vers == null || vers.isEmpty())
+				throw new RuntimeException("Failed to get java version");
 			javaVersion = vers.replace('_', '.');
 		}
 		return !(compareVersions(javaVersion, requiredVersion).equals("<"));

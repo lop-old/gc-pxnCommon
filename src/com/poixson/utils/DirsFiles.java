@@ -42,8 +42,8 @@ public final class DirsFiles {
 	 * @return
 	 */
 	public static File[] listContents(final File dir, final String[] extensions) {
-		if(dir == null) throw new RequiredArgumentException("dir");
-		if(!dir.isDirectory()) return null;
+		if (dir == null) throw new RequiredArgumentException("dir");
+		if (!dir.isDirectory()) return null;
 		return dir.listFiles(new FileFilter() {
 			private String[] exts;
 			public FileFilter init(final String[] extens) {
@@ -52,10 +52,10 @@ public final class DirsFiles {
 			}
 			@Override
 			public boolean accept(File path) {
-				if(this.exts == null) return true;
+				if (this.exts == null) return true;
 				final String pathStr = path.toString();
-				for(final String ext : this.exts) {
-					if(pathStr.endsWith(ext))
+				for (final String ext : this.exts) {
+					if (pathStr.endsWith(ext))
 						return true;
 				}
 				return false;
@@ -75,24 +75,24 @@ public final class DirsFiles {
 //TODO: does this work?
 	// add lib to paths
 	public static void addLibraryPath(final String libDir) {
-		if(utils.isEmpty(libDir)) throw new RequiredArgumentException("libDir");
+		if (utils.isEmpty(libDir)) throw new RequiredArgumentException("libDir");
 		// get lib path
 		final File file = new File(libDir);
-		if(!file.exists() || !file.isDirectory()) {
+		if (!file.exists() || !file.isDirectory()) {
 			log().warning("Library path not found: "+libDir);
 			return;
 		}
 		final String libPath = file.getAbsolutePath();
-		if(utils.isEmpty(libPath)) return;
+		if (utils.isEmpty(libPath)) return;
 		// get current paths
 		final String currentPaths = System.getProperty("java.library.path");
-		if(currentPaths == null) return;
+		if (currentPaths == null) return;
 //		pxnLog.get().debug("Adding lib path: "+libDir);
 		// set library paths
-		if(currentPaths.isEmpty()) {
+		if (currentPaths.isEmpty()) {
 			System.setProperty("java.library.path", libPath);
 		} else {
-			if(currentPaths.contains(libPath)) return;
+			if (currentPaths.contains(libPath)) return;
 			System.setProperty("java.library.path", currentPaths+( currentPaths.contains(";") ? ";" : ":" )+libPath);
 		}
 		// force library paths to refresh
@@ -112,8 +112,8 @@ public final class DirsFiles {
 
 	// open file
 	public static InputStream OpenFile(final File file) {
-		if(file == null)   return null;
-		if(!file.exists()) return null;
+		if (file == null)   return null;
+		if (!file.exists()) return null;
 		try {
 			return new FileInputStream(file);
 		} catch (FileNotFoundException ignore) {}
@@ -121,7 +121,7 @@ public final class DirsFiles {
 	}
 	// load resource
 	public static InputStream OpenResource(final String fileStr) {
-		if(Utils.isEmpty(fileStr)) return null;
+		if (Utils.isEmpty(fileStr)) return null;
 		try {
 			return DirsFiles.class.getResourceAsStream(
 				StringUtils.ensureStarts("/", fileStr)
@@ -131,24 +131,24 @@ public final class DirsFiles {
 	}
 	// load yml from jar reference
 	public static InputStream OpenResource(final Class<? extends Object> clss, final String fileName) {
-		if(clss == null)            throw new RequiredArgumentException("clss");
-		if(Utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
+		if (clss == null)            throw new RequiredArgumentException("clss");
+		if (Utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
 		final InputStream in = clss.getResourceAsStream(fileName);
 		return in;
 	}
 	// load yml from jar
 	public static InputJar OpenJarResource(final File jarFile, final String fileName) {
-		if(jarFile == null)         throw new RequiredArgumentException("jarFile");
-		if(Utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
+		if (jarFile == null)         throw new RequiredArgumentException("jarFile");
+		if (Utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
 		try {
 			final JarFile jar = new JarFile(jarFile);
 			final JarEntry entry = jar.getJarEntry(fileName);
-			if(entry == null) {
+			if (entry == null) {
 				Utils.safeClose(jar);
 				return null;
 			}
 			final InputStream in = jar.getInputStream(entry);
-			if(in == null) {
+			if (in == null) {
 				Utils.safeClose(jar);
 				return null;
 			}
@@ -181,33 +181,38 @@ public final class DirsFiles {
 	// build path+file
 	public static String buildFilePath(final String filePath,
 			final String fileName, final String extension) {
-		if(Utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
+		if (Utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
 		// file extension
 		final String ext;
-		if(Utils.isEmpty(extension))
+		if (Utils.isEmpty(extension)) {
 			ext = ".yml";
-		else if(!extension.startsWith("."))
+		} else
+		if (!extension.startsWith(".")) {
 			ext = "."+extension;
-		else
+		} else {
 			ext = extension;
+		}
 		final String fileStr;
-		if(!fileName.endsWith(ext))
+		if (!fileName.endsWith(ext)) {
 			fileStr = fileName + ext;
-		else
+		} else {
 			fileStr = fileName;
-		if(filePath == null || filePath.isEmpty())
+		}
+		if (filePath == null || filePath.isEmpty()) {
 			return fileStr;
+		}
 		final boolean a = (filePath.endsWith("/")  || filePath.endsWith("\\"));
 		final boolean b = (fileStr.startsWith("/") || fileStr.startsWith("\\"));
-		if(a && b) return filePath + fileStr.substring(1);
-		if(a || b) return filePath + fileStr;
+		if (a && b) return filePath + fileStr.substring(1);
+		if (a || b) return filePath + fileStr;
 		return filePath + File.separator + fileStr;
 	}
 	public static String buildFilePath(final File path, final File file) {
-		if(file == null) throw new RequiredArgumentException("file");
+		if (file == null) throw new RequiredArgumentException("file");
 		final String fileStr = file.getPath();
-		if(path == null)
+		if (path == null) {
 			return fileStr;
+		}
 		final String pathStr = path.getPath();
 		return (new StringBuilder())
 				.append(pathStr)
@@ -220,23 +225,27 @@ public final class DirsFiles {
 
 	public static String mergePaths(final String...strings) {
 		final StringBuilder merged = new StringBuilder();
-		for(String path : strings) {
-			if(Utils.isEmpty(path)) continue;
-			if(path.equals("."))
+		for (String path : strings) {
+			if (Utils.isEmpty(path)) continue;
+			if (path.equals(".")) {
 				path = cwd();
-			else
-			while( path.startsWith("/") || path.startsWith("\\") || path.endsWith(" ") )
+			} else {
+			while ( path.startsWith("/") || path.startsWith("\\") || path.endsWith(" ") ) {
 				path = path.substring(1);
-			while( path.endsWith("/") || path.endsWith("\\") || path.endsWith(" ") )
+			}
+			while ( path.endsWith("/") || path.endsWith("\\") || path.endsWith(" ") ) {
 				path = path.substring(0, -1);
-			if(path.length() == 0)
+			}
+			if (path.length() == 0)
 				continue;
-//			if(merged.length() > 0)
+//			if (merged.length() > 0) {
 //				merged.append(File.separatorChar);
-			merged.append(path)
-					.append(File.separatorChar);
+//			}
+			merged
+				.append(path)
+				.append(File.separatorChar);
 		}
-		if(merged.length() == 0)
+		if (merged.length() == 0)
 			return null;
 		return merged.toString();
 	}

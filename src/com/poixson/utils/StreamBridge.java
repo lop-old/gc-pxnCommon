@@ -49,8 +49,8 @@ public class StreamBridge implements xStartable {
 
 
 	public StreamBridge(final InputStream in, final OutputStream out) {
-		if(in  == null) throw new RequiredArgumentException("in");
-		if(out == null) throw new RequiredArgumentException("out");
+		if (in  == null) throw new RequiredArgumentException("in");
+		if (out == null) throw new RequiredArgumentException("out");
 		synchronized(instances) {
 			instances.add(this);
 		}
@@ -69,14 +69,14 @@ public class StreamBridge implements xStartable {
 
 	@Override
 	public void run() {
-		if(this.running)  throw new RuntimeException("StreamBridge already running");
-		if(this.stopping) throw new RuntimeException("StreamBridge already stopped");
+		if (this.running)  throw new RuntimeException("StreamBridge already running");
+		if (this.stopping) throw new RuntimeException("StreamBridge already stopped");
 		synchronized(this.thread) {
-			if(this.running)  throw new RuntimeException("StreamBridge already running");
-			if(this.stopping) throw new RuntimeException("StreamBridge already stopped");
+			if (this.running)  throw new RuntimeException("StreamBridge already running");
+			if (this.stopping) throw new RuntimeException("StreamBridge already stopped");
 			this.running = true;
 		}
-		while(!this.stopping) {
+		while (!this.stopping) {
 			final int b;
 			try {
 				b = this.in.read();

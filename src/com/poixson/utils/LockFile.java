@@ -28,10 +28,10 @@ public class LockFile {
 
 
 	public static LockFile get(final String filename) {
-		if(Utils.isEmpty(filename)) throw new RequiredArgumentException("filename");
+		if (Utils.isEmpty(filename)) throw new RequiredArgumentException("filename");
 		synchronized(instanceLock) {
 			// existing lock
-			if(instances.containsKey(filename))
+			if (instances.containsKey(filename))
 				throw new LockFileException(filename);
 			// new lock
 			final LockFile lock;
@@ -65,12 +65,13 @@ public class LockFile {
 		}
 	}
 	public static LockFile peak(final String filename) {
-		if(Utils.isEmpty(filename)) throw new RequiredArgumentException("filename");
+		if (Utils.isEmpty(filename))
+			throw new RequiredArgumentException("filename");
 		return instances.get(filename);
 	}
 	public static void releaseLock(final String filename) {
 		final LockFile lock = get(filename);
-		if(lock == null)
+		if (lock == null)
 			return;
 		lock.release();
 	}
@@ -78,11 +79,12 @@ public class LockFile {
 
 
 	private LockFile(final String filename) throws LockFileException, IOException {
-		if(Utils.isEmpty(filename)) throw new RequiredArgumentException("filename");
+		if (Utils.isEmpty(filename))
+			throw new RequiredArgumentException("filename");
 		this.filename = filename;
 		// get lock on file
 		this.file = new File(filename);
-		if(this.file.isFile())
+		if (this.file.isFile())
 			throw new LockFileException(filename);
 		this.randFile = new RandomAccessFile(this.file, "rw");
 		this.channel  = this.randFile.getChannel();

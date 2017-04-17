@@ -18,7 +18,8 @@ public class RunnableMultiplier implements Runnable {
 
 
 	public void add(final Runnable run) {
-		if(run == null) throw new NullPointerException("run argument is required!");
+		if (run == null)
+			throw new NullPointerException("run argument is required!");
 		this.runs.add(run);
 	}
 
@@ -27,7 +28,7 @@ public class RunnableMultiplier implements Runnable {
 	@Override
 	public void run() {
 		final Iterator<Runnable> it = this.runs.iterator();
-		while(it.hasNext()) {
+		while (it.hasNext()) {
 			final Runnable run = it.next();
 			run.run();
 		}

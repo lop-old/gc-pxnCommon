@@ -33,11 +33,12 @@ public class xRunnable implements Runnable {
 		);
 	}
 	public xRunnable(final String taskName, final Runnable run) {
-		if(Utils.notEmpty(taskName))
+		if (Utils.notEmpty(taskName)) {
 			this.taskName = taskName;
-		else
-		if(run instanceof xRunnable)
+		} else
+		if (run instanceof xRunnable) {
 			this.taskName = ((xRunnable) run).getTaskName();
+		}
 		this.task = run;
 	}
 
@@ -47,11 +48,12 @@ public class xRunnable implements Runnable {
 		return cast(null, run);
 	}
 	public static xRunnable cast(final String name, final Runnable run) {
-		if(run == null) throw new RequiredArgumentException("run");
-		if(run instanceof xRunnable) {
+		if (run == null) throw new RequiredArgumentException("run");
+		if (run instanceof xRunnable) {
 			final xRunnable xrun = (xRunnable) run;
-			if(Utils.notEmpty(name))
+			if (Utils.notEmpty(name)) {
 				xrun.setTaskName(name);
+			}
 			return xrun;
 		}
 		return new xRunnable(
@@ -64,7 +66,7 @@ public class xRunnable implements Runnable {
 
 	@Override
 	public void run() {
-		if(this.task == null) throw new RequiredArgumentException("task");
+		if (this.task == null) throw new RequiredArgumentException("task");
 		this.task.run();
 	}
 
@@ -77,7 +79,7 @@ public class xRunnable implements Runnable {
 		this.taskName = Utils.isEmpty(name) ? null : name;
 	}
 	public boolean taskNameEquals(final String name) {
-		if(Utils.isEmpty(name))
+		if (Utils.isEmpty(name))
 			return Utils.isEmpty(this.taskName);
 		return name.equals(this.taskName);
 	}

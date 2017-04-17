@@ -14,9 +14,9 @@ public class Dumper {
 
 
 	protected static Dumper get() {
-		if(instance == null) {
+		if (instance == null) {
 			synchronized(lock) {
-				if(instance == null)
+				if (instance == null)
 					instance = new Dumper();
 			}
 		}
@@ -45,11 +45,12 @@ public class Dumper {
 		final DumpContext ctx = Dumper.get().new DumpContext();
 		ctx.maxDepth = maxDepth;
 		ctx.maxArrayElements = maxArrayElements;
-		if(ignoreList != null) {
-			for(int i = 0; i < Array.getLength(ignoreList); i++) {
+		if (ignoreList != null) {
+			for (int i = 0; i < Array.getLength(ignoreList); i++) {
 				final int colonIdx = ignoreList[i].indexOf(':');
-				if(colonIdx == -1)
+				if (colonIdx == -1) {
 					ignoreList[i] = ignoreList[i] + ":";
+				}
 				ctx.ignoreList.put(ignoreList[i], ignoreList[i]);
 			}
 		}
@@ -59,27 +60,31 @@ public class Dumper {
 
 
 	protected static String dump(final Object obj, final DumpContext ctx) {
-		if(obj == null)
+		if (obj == null) {
 			return "<null>";
+		}
 		ctx.callCount++;
 		final StringBuffer tabs = new StringBuffer();
-		for(int k = 0; k < ctx.callCount; k++)
+		for (int k = 0; k < ctx.callCount; k++) {
 			tabs.append("\t");
+		}
 		final StringBuffer buffer = new StringBuffer();
 		Class<?> objClass = obj.getClass();
 		String objSimpleName = getSimpleNameWithoutArrayQualifier(objClass);
-		if(ctx.ignoreList.get(objSimpleName + ":") != null)
+		if (ctx.ignoreList.get(objSimpleName + ":") != null) {
 			return "<Ignored>";
-		if(objClass.isArray()) {
+		}
+		if (objClass.isArray()) {
 			buffer.append("\n");
 			buffer.append(tabs.toString().substring(1));
 			buffer.append("[\n");
 			final int rowCount;
-			if(ctx.maxArrayElements == 0)
+			if (ctx.maxArrayElements == 0) {
 				rowCount = Array.getLength(obj);
-			else
+			} else {
 				rowCount = Math.min(ctx.maxArrayElements, Array.getLength(obj));
-			for(int i = 0; i < rowCount; i++) {
+			}
+			for (int i = 0; i < rowCount; i++) {
 				buffer.append(tabs.toString());
 				try {
 					Object value = Array.get(obj, i);
@@ -87,11 +92,12 @@ public class Dumper {
 				} catch (Exception e) {
 					buffer.append(e.getMessage());
 				}
-				if(i < Array.getLength(obj) - 1)
+				if (i < Array.getLength(obj) - 1) {
 					buffer.append(",");
+				}
 				buffer.append("\n");
 			}
-			if(rowCount < Array.getLength(obj)) {
+			if (rowCount < Array.getLength(obj)) {
 				buffer.append(tabs.toString());
 				buffer.append(Array.getLength(obj) - rowCount + " more array elements...");
 				buffer.append("\n");
@@ -105,21 +111,21 @@ public class Dumper {
 			buffer.append(tabs.toString());
 			buffer.append("hashCode: " + obj.hashCode());
 			buffer.append("\n");
-			while(objClass != null && objClass != Object.class) {
+			while (objClass != null && objClass != Object.class) {
 				final Field[] fields = objClass.getDeclaredFields();
-				if(ctx.ignoreList.get(objClass.getSimpleName()) == null) {
-					if(objClass != obj.getClass()) {
+				if (ctx.ignoreList.get(objClass.getSimpleName()) == null) {
+					if (objClass != obj.getClass()) {
 						buffer.append(tabs.toString().substring(1));
 						buffer.append("  Inherited from superclass " + objSimpleName + ":\n");
 					}
-					for(int i = 0; i < fields.length; i++) {
+					for (int i = 0; i < fields.length; i++) {
 						final String fSimpleName = getSimpleNameWithoutArrayQualifier(fields[i].getType());
 						final String fName = fields[i].getName();
 						fields[i].setAccessible(true);
 						buffer.append(tabs.toString());
 						buffer.append(fName).append("(").append(fSimpleName).append(")");
 						buffer.append("=");
-						if(ctx.ignoreList.get(":" + fName) == null &&
+						if (ctx.ignoreList.get(":" + fName) == null &&
 								ctx.ignoreList.get(fSimpleName + ":" + fName) == null &&
 								ctx.ignoreList.get(fSimpleName + ":") == null) {
 							try {
@@ -151,9 +157,10 @@ public class Dumper {
 
 
 	protected static String dumpValue(final Object value, final DumpContext ctx) {
-		if(value == null)
+		if (value == null) {
 			return "<null>";
-		if(value.getClass().isPrimitive() ||
+		}
+		if (value.getClass().isPrimitive() ||
 				value.getClass() == java.lang.Short.class ||
 				value.getClass() == java.lang.Long.class ||
 				value.getClass() == java.lang.String.class ||
@@ -168,10 +175,11 @@ public class Dumper {
 			return value.toString();
 		}
 		final Integer visitedIndex = ctx.visited.get(value);
-		if(visitedIndex == null) {
+		if (visitedIndex == null) {
 			ctx.visited.put(value, Integer.valueOf(ctx.callCount));
-			if(ctx.maxDepth == 0 || ctx.callCount < ctx.maxDepth)
+			if (ctx.maxDepth == 0 || ctx.callCount < ctx.maxDepth) {
 				return dump(value, ctx);
+			}
 			return "<Reached max recursion depth>";
 		}
 		return "<Previously visited - see hashCode " + value.hashCode() + ">";
@@ -182,8 +190,9 @@ public class Dumper {
 	private static String getSimpleNameWithoutArrayQualifier(final Class<?> clazz) {
 		final String simpleName = clazz.getSimpleName();
 		final int indexOfBracket = simpleName.indexOf('[');
-		if(indexOfBracket != -1)
+		if (indexOfBracket != -1) {
 			return simpleName.substring(0, indexOfBracket);
+		}
 		return simpleName;
 	}
 
