@@ -66,7 +66,7 @@ public final class ThreadUtils {
 		msg.append("Threads still running:  ").append(threadNames.length);
 		for(final String name : threadNames)
 			msg.append("\n  ").append(name);
-		xLog.getRoot().publish(msg.toString());
+//		xLog.getRoot().publish(msg.toString());
 	}
 
 

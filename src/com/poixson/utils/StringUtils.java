@@ -473,10 +473,11 @@ public final class StringUtils {
 
 
 
-	// logger
-	public static xLog log() {
-		return utils.log();
-	}
+//TODO:
+//	// logger
+//	public static xLog log() {
+//		return Utils.log();
+//	}
 
 
 

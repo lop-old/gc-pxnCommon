@@ -8,8 +8,6 @@ import java.util.Properties;
 import java.util.regex.Pattern;
 
 import com.poixson.utils.exceptions.RequiredArgumentException;
-import com.poixson.commonjava.xLogger.xLevel;
-import com.poixson.commonjava.xLogger.xLog;
 
 
 public final class Utils {
@@ -282,27 +280,29 @@ public final class Utils {
 
 
 
-	public static void MemoryStats() {
-		MemoryStats(xLog.getRoot());
-	}
-	public static void MemoryStats(final xLog log) {
-		MemoryStats(null, log);
-	}
-	public static void MemoryStats(final xLevel level, final xLog log) {
-		final int[] stats = getMemoryStats();
-		final String[] str = new String[4];
-		int longest = 0;
-		for(int i=0; i<4; i++) {
-			str[i] = Integer.toString(stats[i]);
-			if(str[i].length() > longest)
-				longest = str[i].length();
-		}
-		log.publish(level, "##### Heap utilization statistics [MB] #####");
-		log.publish(level, "Used Memory:  "+utilsString.padFront(longest, str[0], ' ')+" MB");
-		log.publish(level, "Free Memory:  "+utilsString.padFront(longest, str[1], ' ')+" MB");
-		log.publish(level, "Total Memory: "+utilsString.padFront(longest, str[2], ' ')+" MB");
-		log.publish(level, "Max Memory:   "+utilsString.padFront(longest, str[3], ' ')+" MB");
-	}
+//TODO:
+//	public static void MemoryStats() {
+//		MemoryStats(xLog.getRoot());
+//	}
+//	public static void MemoryStats(final xLog log) {
+//		MemoryStats(null, log);
+//	}
+//	public static void MemoryStats(final xLevel level, final xLog log) {
+//		final int[] stats = getMemoryStats();
+//		final String[] str = new String[4];
+//		int longest = 0;
+//		for (int i=0; i<4; i++) {
+//			str[i] = Integer.toString(stats[i]);
+//			if (str[i].length() > longest) {
+//				longest = str[i].length();
+//			}
+//		}
+//		log.publish(level, "##### Heap utilization statistics [MB] #####");
+//		log.publish(level, "Used Memory:  "+StringUtils.padFront(longest, str[0], ' ')+" MB");
+//		log.publish(level, "Free Memory:  "+StringUtils.padFront(longest, str[1], ' ')+" MB");
+//		log.publish(level, "Total Memory: "+StringUtils.padFront(longest, str[2], ' ')+" MB");
+//		log.publish(level, "Max Memory:   "+StringUtils.padFront(longest, str[3], ' ')+" MB");
+//	}
 	public static int[] getMemoryStats() {
 		final int MB = 1024 * 1024;
 		final Runtime runtime = Runtime.getRuntime();
@@ -418,10 +418,11 @@ public final class Utils {
 
 
 
-	// logger
-	public static xLog log() {
-		return xLog.getRoot();
-	}
+//TODO:
+//	// logger
+//	public static xLog log() {
+//		return xLog.getRoot();
+//	}
 
 
 

@@ -14,7 +14,7 @@ import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
 public class LockFile {
-	private static final String LOG_NAME = "LockFile";
+//	private static final String LOG_NAME = "LockFile";
 
 	private static final Map<String, LockFile> instances = new HashMap<String, LockFile>();
 	private static final Object instanceLock = new Object();
@@ -38,10 +38,12 @@ public class LockFile {
 			try {
 				lock = new LockFile(filename);
 			} catch (LockFileException e) {
-				log().trace(e);
+//TODO:
+//				log().trace(e);
 				return null;
 			} catch (IOException e) {
-				log().trace(e);
+//TODO:
+//				log().trace(e);
 				return null;
 			}
 			// register shutdown hook
@@ -59,7 +61,8 @@ public class LockFile {
 					}.init(lock)
 			);
 			instances.put(filename, lock);
-			log().info("Locked file: "+filename);
+//TODO:
+//			log().info("Locked file: "+filename);
 			Keeper.add(lock);
 			return lock;
 		}
@@ -103,7 +106,8 @@ public class LockFile {
 		} catch (Exception ignore) {}
 		Utils.safeClose(this.channel);
 		Utils.safeClose(this.randFile);
-		log().info("Released file lock: "+this.filename);
+//TODO:
+//		log().info("Released file lock: "+this.filename);
 		Keeper.remove(this);
 		try {
 			this.file.delete();
@@ -112,10 +116,11 @@ public class LockFile {
 
 
 
-	// logger
-	public static xLog log() {
-		return xLog.getRoot(LOG_NAME);
-	}
+//TODO:
+//	// logger
+//	public static xLog log() {
+//		return xLog.getRoot(LOG_NAME);
+//	}
 
 
 

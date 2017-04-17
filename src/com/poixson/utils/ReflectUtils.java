@@ -4,8 +4,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import com.poixson.commonjava.xLogger.xLog;
-
 
 public final class ReflectUtils {
 	private ReflectUtils() {}
@@ -25,13 +23,14 @@ public final class ReflectUtils {
 			if(method == null) return null;
 			return method.invoke(clss, params);
 		} catch (NoSuchMethodException e) {
-			log().trace(e);
+//TODO:
+//			log().trace(e);
 		} catch (SecurityException e) {
-			log().trace(e);
+//			log().trace(e);
 		} catch (InvocationTargetException e) {
-			log().trace(e);
+//			log().trace(e);
 		} catch (IllegalAccessException e) {
-			log().trace(e);
+//			log().trace(e);
 		}
 		return null;
 	}
@@ -53,19 +52,23 @@ public final class ReflectUtils {
 		try {
 			field = clss.getField(name);
 		} catch (NoSuchFieldException e) {
-			log().trace(e);
+//TODO:
+//			log().trace(e);
 			return null;
 		} catch (SecurityException e) {
-			log().trace(e);
+//TODO:
+//			log().trace(e);
 			return null;
 		}
 		try {
 			value = (String) field.get(String.class);
 		} catch (IllegalArgumentException e) {
-			log().trace(e);
+//TODO:
+//			log().trace(e);
 			return null;
 		} catch (IllegalAccessException e) {
-			log().trace(e);
+//TODO:
+//			log().trace(e);
 			return null;
 		}
 		return value;
@@ -73,10 +76,11 @@ public final class ReflectUtils {
 
 
 
-	// logger
-	public static xLog log() {
-		return utils.log();
-	}
+//TODO:
+//	// logger
+//	public static xLog log() {
+//		return utils.log();
+//	}
 
 
 

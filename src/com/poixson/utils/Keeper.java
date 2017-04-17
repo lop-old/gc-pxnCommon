@@ -8,8 +8,8 @@ import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
 public class Keeper {
-	private static final String LOG_NAME = "KEEPER";
-	private static final boolean DEBUG_EXTRA = false;
+//	private static final String LOG_NAME = "KEEPER";
+//	private static final boolean DEBUG_EXTRA = false;
 
 	private static volatile Keeper instance = null;
 	private static final Object instanceLock = new Object();
@@ -34,14 +34,16 @@ public class Keeper {
 	public static void add(final Object obj) {
 		if (obj == null) throw new RequiredArgumentException("obj");
 		holder.add(obj);
-		if(DEBUG_EXTRA())
-			finest("Added: "+obj.getClass().getName());
+//TODO:
+//		if (DEBUG_EXTRA())
+//			finest("Added: "+obj.getClass().getName());
 	}
 	public static void remove(final Object obj) {
 		if (obj == null) throw new RequiredArgumentException("obj");
 		holder.remove(obj);
-		if(DEBUG_EXTRA())
-			finest("Removed: "+obj.getClass().getName());
+//TODO:
+//		if (DEBUG_EXTRA())
+//			finest("Removed: "+obj.getClass().getName());
 	}
 	public static int removeAll(final Class<? extends Object> clss) {
 		if (holder.isEmpty())
@@ -62,33 +64,35 @@ public class Keeper {
 
 
 
-	// logger
-	private static volatile xLog _log = null;
-	private static xLog log() {
-		if(!DEBUG_EXTRA()) return null;
-		if(_log == null)
-			_log = xLog.getRoot(LOG_NAME);
-		return _log;
-	}
-	private static void finest(final String msg) {
-		(new Thread() {
-			private volatile String msg = null;
-			public Thread finest(final String msg) {
-				this.msg = msg;
-				return this;
-			}
-			@Override
-			public void run() {
-				log().finest(this.msg);
-			}
-		}).finest(msg)
-		.start();
-	}
-	private static boolean DEBUG_EXTRA() {
-		if(DEBUG_EXTRA)
-			return xVars.debug();
-		return false;
-	}
+//TODO:
+//	// logger
+//	private static volatile xLog _log = null;
+//	private static xLog log() {
+//		if (!DEBUG_EXTRA()) return null;
+//		if (_log == null) {
+//			_log = xLog.getRoot(LOG_NAME);
+//		}
+//		return _log;
+//	}
+//	private static void finest(final String msg) {
+//		(new Thread() {
+//			private volatile String msg = null;
+//			public Thread finest(final String msg) {
+//				this.msg = msg;
+//				return this;
+//			}
+//			@Override
+//			public void run() {
+//				log().finest(this.msg);
+//			}
+//		}).finest(msg)
+//		.start();
+//	}
+//	private static boolean DEBUG_EXTRA() {
+//		if (DEBUG_EXTRA)
+//			return xVars.debug();
+//		return false;
+//	}
 
 
 

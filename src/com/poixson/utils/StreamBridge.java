@@ -81,8 +81,9 @@ public class StreamBridge implements xStartable {
 			try {
 				b = this.in.read();
 			} catch (IOException e) {
-				if(!this.stopping && !Thread.interrupted())
-					xLog.getRoot().trace(e);
+//TODO:
+//				if (!this.stopping && !Thread.interrupted())
+//					xLog.getRoot().trace(e);
 				break;
 			}
 			if(b == -1)
@@ -90,8 +91,9 @@ public class StreamBridge implements xStartable {
 			try {
 				this.out.write(b);
 			} catch (IOException e) {
-				if(!this.stopping && !Thread.interrupted())
-					xLog.getRoot().trace(e);
+//TODO:
+//				if (!this.stopping && !Thread.interrupted())
+//					xLog.getRoot().trace(e);
 				break;
 			}
 		}
