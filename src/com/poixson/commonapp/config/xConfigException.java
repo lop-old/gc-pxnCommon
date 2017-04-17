@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonapp.config;
 
 
@@ -22,3 +23,4 @@ public class xConfigException extends Exception {
 
 
 }
+*/

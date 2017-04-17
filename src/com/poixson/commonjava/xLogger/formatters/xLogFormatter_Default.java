@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonjava.xLogger.formatters;
 
 import java.text.SimpleDateFormat;
@@ -80,3 +81,4 @@ public class xLogFormatter_Default implements xLogFormatterInterface {
 
 
 }
+*/

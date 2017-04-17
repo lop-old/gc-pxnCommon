@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonjava.scheduler.triggers;
 
 import com.poixson.commonjava.Utils.xClock;
@@ -70,3 +71,4 @@ public class TriggerTick implements TriggerType {
 
 
 }
+*/

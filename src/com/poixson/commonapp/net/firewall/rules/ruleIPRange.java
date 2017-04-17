@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonapp.net.firewall.rules;
 
 import java.net.InetSocketAddress;
@@ -32,3 +33,4 @@ public class ruleIPRange extends NetFirewallRule {
 
 
 }
+*/

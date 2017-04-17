@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonjava.xLogger.commands;
 
 import com.poixson.commonjava.Utils.utils;
@@ -62,3 +63,4 @@ public class xCommandEvent extends xEventData {
 
 
 }
+*/

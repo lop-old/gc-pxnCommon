@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonjava.scheduler.ticker;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -82,3 +83,4 @@ public class xTickPrompt implements xTickListener {
 
 
 }
+*/

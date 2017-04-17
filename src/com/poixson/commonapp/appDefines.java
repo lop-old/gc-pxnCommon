@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonapp;
 
 import com.poixson.commonjava.Utils.xTime;
@@ -18,3 +19,4 @@ public final class appDefines {
 
 
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonjava.Utils;
 
 import java.lang.management.ManagementFactory;
@@ -14,10 +15,10 @@ public final class utilsProc {
 
 
 
-	/**
+	/ **
 	 * Get the pid for the jvm process.
 	 * @return process id number (pid)
-	 */
+	 * /
 	// @ SuppressWarnings("restriction")
 	public static int getPid() {
 		final String str = ManagementFactory.getRuntimeMXBean().getName();
@@ -54,7 +55,7 @@ public final class utilsProc {
 
 
 
-/*
+/ *
 	// single instance lock
 	public static boolean lockInstance(final String filepath) {
 		String path = filepath;
@@ -128,8 +129,9 @@ public final class utilsProc {
 		}
 
 	}
-*/
+* /
 
 
 
 }
+*/

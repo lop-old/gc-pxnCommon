@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonjava.xLogger;
 
 import com.poixson.commonjava.xLogger.commands.xCommandsHandler;
@@ -97,3 +98,4 @@ public class xNoConsole implements xConsole {
 
 
 }
+*/

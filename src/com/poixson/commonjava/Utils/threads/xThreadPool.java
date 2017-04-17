@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonjava.Utils.threads;
 
 import java.util.Iterator;
@@ -72,23 +73,23 @@ public class xThreadPool implements xStartable {
 
 
 
-	/**
+	/ **
 	 * Get main thread queue
-	 */
+	 * /
 	public static xThreadPool getMainPool() {
 		return get(null, null);
 	}
-	/**
+	/ **
 	 * Get thread queue by name
-	 */
+	 * /
 	public static xThreadPool get(final String name) {
 		return get(name, null);
 	}
-	/**
+	/ **
 	 * Get thread queue by name or create with x threads
 	 * @param name Thread queue name to get or create.
 	 * @param size Number of threads which can be created for this queue.
-	 */
+	 * /
 	public static xThreadPool get(final String name, final Integer size) {
 		final String poolName;
 		final int    poolSize;
@@ -252,11 +253,11 @@ public class xThreadPool implements xStartable {
 
 
 
-	/**
+	/ **
 	 * Create a new thread if needed, skip if queue is empty.
 	 * @return true if new thread has been created; false if
 	 *         using existing; null if failed
-	 */
+	 * /
 	protected Boolean newThread() {
 		if(this.isMainPool() || this.poolSize < 1)
 			return Boolean.FALSE;
@@ -536,9 +537,9 @@ public class xThreadPool implements xStartable {
 
 
 
-	/**
+	/ **
 	 * Stop all thread pools (except main)
-	 */
+	 * /
 	public static void ShutdownAll() {
 		// be sure to run in main thread
 		if(!Thread.currentThread().equals(mainThread)) {
@@ -601,19 +602,19 @@ public class xThreadPool implements xStartable {
 
 
 
-	/**
+	/ **
 	 * Get the current thread count, excluding main pool.
 	 * @return number of threads in the pool.
-	 */
+	 * /
 	public int getThreadCount() {
 		if(this.isMainPool())
 			return 0;
 		return this.threadCount.get();
 	}
-	/**
+	/ **
 	 * Get the thread count for all thread pools, excluding main pool.
 	 * @return number of active threads in the application.
-	 */
+	 * /
 	public static int getGlobalThreadCount() {
 		if(instances.isEmpty())
 			return 0;
@@ -628,17 +629,17 @@ public class xThreadPool implements xStartable {
 
 
 
-	/**
+	/ **
 	 * Get the maximum number of threads for this pool.
 	 * @return max number of threads allowed.
-	 */
+	 * /
 	public int getMaxThreads() {
 		return this.poolSize;
 	}
-	/**
+	/ **
 	 * Set the maximum number of threads for this pool.
 	 * @param size max number of threads allowed.
-	 */
+	 * /
 	public void setMaxThreads(final int size) {
 		if(size < 1) throw new IllegalArgumentException("Invalid pool size: "+Integer.toString(size));
 		if(size > POOL_LIMIT)
@@ -649,17 +650,17 @@ public class xThreadPool implements xStartable {
 
 
 
-	/**
+	/ **
 	 * Get the active thread count.
 	 * @return number of active threads in the pool.
-	 */
+	 * /
 	public int getActiveCount() {
 		return this.active.get();
 	}
-	/**
+	/ **
 	 * Returns true if pool is not currently in use and queue is empty.
 	 * @return true if inactive and empty.
-	 */
+	 * /
 	public boolean isEmpty() {
 		return (this.queue.size() == 0 && this.active.get() == 0);
 	}
@@ -728,3 +729,4 @@ public class xThreadPool implements xStartable {
 
 
 }
+*/

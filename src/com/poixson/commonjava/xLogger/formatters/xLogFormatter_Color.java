@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonjava.xLogger.formatters;
 
 import com.poixson.commonjava.Utils.utilsString;
@@ -56,3 +57,4 @@ public class xLogFormatter_Color extends xLogFormatter_Default {
 
 
 }
+*/

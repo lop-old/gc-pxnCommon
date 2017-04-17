@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonjava.xLogger;
 
 import com.poixson.commonjava.xLogger.xConsole;
@@ -32,3 +33,4 @@ public class logHandlerConsole extends xLogHandler {
 
 
 }
+*/

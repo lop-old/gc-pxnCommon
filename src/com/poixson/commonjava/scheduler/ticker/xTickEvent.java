@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonjava.scheduler.ticker;
 
 import com.poixson.commonjava.Utils.utils;
@@ -21,3 +22,4 @@ public class xTickEvent extends xEventData {
 
 
 }
+*/

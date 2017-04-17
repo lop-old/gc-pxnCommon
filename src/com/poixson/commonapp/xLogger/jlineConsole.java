@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonapp.xLogger;
 
 import java.io.File;
@@ -352,3 +353,4 @@ public class jlineConsole implements xConsole {
 
 
 }
+*/

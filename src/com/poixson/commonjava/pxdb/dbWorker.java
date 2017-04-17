@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonjava.pxdb;
 
 import java.sql.Connection;
@@ -88,10 +89,10 @@ public class dbWorker implements xCloseable {
 		log().finest("Released #"+Integer.toString(this.id));
 		this.inUse = false;
 	}
-//	/**
+//	/ **
 //	 * Get the time connection has been locked for
 //	 * @return time in milliseconds
-//	 */
+//	 * /
 //	@Override
 //	public long getLockTime() {
 //TODO: this isn't being used yet
@@ -137,3 +138,4 @@ public class dbWorker implements xCloseable {
 
 
 }
+*/

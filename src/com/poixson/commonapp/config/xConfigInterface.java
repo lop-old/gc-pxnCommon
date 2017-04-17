@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonapp.config;
 
 import java.util.List;
@@ -62,3 +63,4 @@ public interface xConfigInterface {
 
 
 }
+*/

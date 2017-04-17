@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonapp.config;
 
 import java.io.File;
@@ -64,7 +65,7 @@ class xConfigLoader {
 //				checkInJar
 //		);
 //	}
-	/**
+	/ **
 	 * Loads a .yml config file from the file system or a jar resource.
 	 * @param log The logger to use, or default to null
 	 * @param path File system path to the config file
@@ -74,7 +75,7 @@ class xConfigLoader {
 	 *        for a default config file
 	 * @return xConfig instance containing the loaded yaml data
 	 * @throws xConfigException
-	 */
+	 * /
 	public static xConfig Load(final xLog log,
 			final String path, final String file,
 			final Class<? extends xConfig> clss,
@@ -247,3 +248,4 @@ class xConfigLoader {
 
 
 }
+*/

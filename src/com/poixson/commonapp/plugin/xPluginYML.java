@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonapp.plugin;
 
 import java.util.Map;
@@ -47,3 +48,4 @@ public class xPluginYML extends xConfig {
 
 
 }
+*/

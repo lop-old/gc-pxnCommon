@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonapp.net.firewall;
 
 import java.net.InetSocketAddress;
@@ -66,3 +67,4 @@ public abstract class NetFirewallRule {
 
 
 }
+*/

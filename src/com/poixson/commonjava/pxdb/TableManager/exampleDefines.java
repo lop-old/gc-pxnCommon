@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonjava.pxdb.TableManager;
 
 import java.sql.SQLException;
@@ -43,3 +44,4 @@ public class exampleDefines extends dbTableManager {
 
 
 }
+*/

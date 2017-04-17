@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonjava.xLogger;
 
 import com.poixson.commonjava.Utils.xStartable;
@@ -22,3 +23,4 @@ public interface xConsole extends Runnable, xStartable {
 
 
 }
+*/

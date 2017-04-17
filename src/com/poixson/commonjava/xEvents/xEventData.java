@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonjava.xEvents;
 
 
@@ -37,9 +38,9 @@ public abstract class xEventData {
 
 
 
-	/**
+	/ **
 	 * Reset state for next listener.
-	 */
+	 * /
 	public void reset() {}
 
 
@@ -56,3 +57,4 @@ public abstract class xEventData {
 
 
 }
+*/

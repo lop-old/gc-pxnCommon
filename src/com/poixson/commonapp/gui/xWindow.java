@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonapp.gui;
 
 import java.awt.HeadlessException;
@@ -117,3 +118,4 @@ public abstract class xWindow extends JFrame implements Closeable {
 
 
 }
+*/

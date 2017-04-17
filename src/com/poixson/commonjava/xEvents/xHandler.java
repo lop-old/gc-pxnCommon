@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonjava.xEvents;
 
 import java.util.Iterator;
@@ -28,18 +29,18 @@ public abstract class xHandler {
 
 
 
-	/**
+	/ **
 	 * Register an event listener.
 	 * @param xEventListener event listener instance
-	 */
+	 * /
 	public abstract void register(final xEventListener listener);
 
 
 
-	/**
+	/ **
 	 * Unregister an event listener.
 	 * @param listener
-	 */
+	 * /
 	public void unregister(final xEventListener listener) {
 		if(listener == null) throw new RequiredArgumentException("listener");
 		final Iterator<xListenerDAO> it = this.listeners.iterator();
@@ -53,10 +54,10 @@ public abstract class xHandler {
 		}
 		this.log().finest("Listener not found to remove");
 	}
-	/**
+	/ **
 	 * Unregister an event listener by class type.
 	 * @param clss
-	 */
+	 * /
 	public void unregisterType(final Class<?> listenerClass) {
 		if(listenerClass == null) throw new RequiredArgumentException("listenerClass");
 		final Iterator<xListenerDAO> it = this.listeners.iterator();
@@ -76,9 +77,9 @@ public abstract class xHandler {
 					" ] listeners of type: "+listenerClass.getName());
 		}
 	}
-	/**
+	/ **
 	 * Unregister all listeners.
-	 */
+	 * /
 	public void unregisterAll() {
 		if(this.listeners.isEmpty())
 			return;
@@ -158,3 +159,4 @@ public abstract class xHandler {
 
 
 }
+*/

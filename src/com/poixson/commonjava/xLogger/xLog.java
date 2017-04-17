@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonjava.xLogger;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import com.poixson.commonjava.xLogger.formatters.xLogFormatter_Default;
 
 
 public class xLog extends xLogPrinting {
-
+*/
 
 
 // minimal
@@ -66,7 +67,7 @@ public class xLog extends xLogPrinting {
 	// ------------------------------------------------------------------------------- //
 
 
-
+/*
 	// root logger
 	protected static volatile xLog root = null;
 	protected static final Object lock = new Object();
@@ -333,3 +334,4 @@ public class xLog extends xLogPrinting {
 
 
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonapp.net.firewall;
 
 import java.net.InetSocketAddress;
@@ -23,11 +24,11 @@ public class NetFirewall {
 
 
 
-	/**
+	/ **
 	 * Check an accepted socket connection.
 	 * @param channel
 	 * @return true if ok to accept, false to deny, null if no match
-	 */
+	 * /
 	public Boolean check(final InetSocketAddress local, final InetSocketAddress remote) {
 		if(utils.isEmpty(this.rules))
 			return Boolean.TRUE;
@@ -56,3 +57,4 @@ public class NetFirewall {
 
 
 }
+*/

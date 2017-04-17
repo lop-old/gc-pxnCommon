@@ -1,3 +1,4 @@
+/*
 package com.poixson.app;
 
 import java.io.PrintStream;
@@ -25,7 +26,7 @@ import com.poixson.commonjava.xLogger.xLog;
 import com.poixson.commonjava.xLogger.commands.xCommandsHandler;
 
 
-/**
+/ **
  * Startup sequence
  *   a. initMain()     | internal
  *   b. processArgs()  | abstracted to app
@@ -37,7 +38,7 @@ import com.poixson.commonjava.xLogger.commands.xCommandsHandler;
  * Shutdown sequence
  *   a. shutdown()     | internal
  *   b. shutdown(steps 8-1) | steps abstracted to app
- */
+ * /
 public abstract class xApp {
 
 	private static final String ALREADY_STARTED_EXCEPTION = "Illegal app state; this shouldn't happen; cannot start in this state; possibly already started?";
@@ -48,9 +49,9 @@ public abstract class xApp {
 
 
 
-	/**
+	/ **
 	 * Get a single instance of the app.
-	 */
+	 * /
 	public static xApp get() {
 		return (xApp) xAppAbstract.get();
 	}
@@ -440,3 +441,4 @@ public abstract class xApp {
 
 
 }
+*/

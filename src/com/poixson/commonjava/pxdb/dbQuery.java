@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonjava.pxdb;
 
 import java.sql.PreparedStatement;
@@ -507,7 +508,7 @@ public class dbQuery {
 			final StringBuilder str = (new StringBuilder())
 				.append("LOCK TABLES `").append(tableName).append("` ")
 				.append(readable ? "READ" : "WRITE")
-				.append(" /* lock table */");
+				.append(" / * lock table * /");
 			if(!Prep(str.toString()) || !Exec()) {
 				log().severe("Failed to lock table "+tableName);
 				return false;
@@ -522,7 +523,7 @@ public class dbQuery {
 	// unlock table
 	public void unlockTables() {
 		synchronized(this.lock) {
-			final String sqlStr = "UNLOCK TABLES /* unlock table */";
+			final String sqlStr = "UNLOCK TABLES / * unlock table * /";
 			if(!Prep(sqlStr) || !Exec())
 				log().severe("Failed to unlock tables");
 		}
@@ -538,3 +539,4 @@ public class dbQuery {
 
 
 }
+*/

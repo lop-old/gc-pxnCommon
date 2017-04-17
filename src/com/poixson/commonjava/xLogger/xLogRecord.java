@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonjava.xLogger;
 
 import java.util.List;
@@ -61,3 +62,4 @@ public class xLogRecord {
 
 
 }
+*/

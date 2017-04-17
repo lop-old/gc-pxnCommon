@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonjava.Utils;
 
 import java.io.IOException;
@@ -83,3 +84,4 @@ public class appProps {
 
 
 }
+*/

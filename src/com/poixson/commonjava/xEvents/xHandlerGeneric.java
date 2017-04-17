@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonjava.xEvents;
 
 import java.lang.reflect.Method;
@@ -10,9 +11,9 @@ import com.poixson.commonjava.xEvents.xEventListener.ListenerPriority;
 import com.poixson.commonjava.xEvents.annotations.xEvent;
 
 
-/**
+/ **
  * Supports dynamicly named listener methods.
- */
+ * /
 public abstract class xHandlerGeneric extends xHandler {
 
 
@@ -96,3 +97,4 @@ public abstract class xHandlerGeneric extends xHandler {
 
 
 }
+*/

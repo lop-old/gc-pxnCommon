@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonapp.plugin.annotations;
 
 import java.lang.annotation.ElementType;
@@ -15,3 +16,4 @@ public @interface xPlugin {
 	String version() default "";
 
 }
+*/

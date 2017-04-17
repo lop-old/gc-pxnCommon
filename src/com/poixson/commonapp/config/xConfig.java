@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonapp.config;
 
 import java.lang.reflect.Constructor;
@@ -25,19 +26,19 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 
 
 
-	/**
+	/ **
 	 * Stores the datamap Map object for this xConfig instance.
 	 * @param datamap The Map instance to use
-	 */
+	 * /
 	public xConfig(final Map<String, Object> datamap)
 			throws xConfigException {
 		if(datamap == null) throw new RequiredArgumentException("datamap");
 		this.datamap = datamap;
 	}
-	/**
+	/ **
 	 * Clones a xConfig instance to a new instance.
 	 * @return xConfig instance
-	 */
+	 * /
 	@Override
 	public xConfig clone() {
 		try {
@@ -48,18 +49,18 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 
 
 
-	/**
+	/ **
 	 * Check if path exists in loaded config.
 	 * @return true if path exists, false if not found
-	 */
+	 * /
 	@Override
 	public boolean exists(final String path) {
 		return this.datamap.containsKey(path);
 	}
-	/**
+	/ **
 	 * @return true if config data was loaded from a jar resource,
 	 *         false if config file found in filesystem
-	 */
+	 * /
 	@Override
 	public boolean isFromResource() {
 		return this.loadedFromResource;
@@ -67,11 +68,11 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 
 
 
-	/**
+	/ **
 	 * Get an object from the stored data.
 	 * @return Object
 	 * @throws xConfigException
-	 */
+	 * /
 	@Override
 	public Object get(final String path) throws xConfigException {
 		if(utils.isEmpty(path))
@@ -82,10 +83,10 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 			throw new xConfigException(e, path);
 		}
 	}
-	/**
+	/ **
 	 * Get an object from the stored data.
 	 * @return Object or null on failure
-	 */
+	 * /
 	@Override
 	public Object gt(final String path) {
 		try {
@@ -96,11 +97,11 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 
 
 
-	/**
+	/ **
 	 * Get an object from the stored data by path.
 	 * @return Object
 	 * @throws xConfigException
-	 */
+	 * /
 	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, Object> getDataPath(final String path)
@@ -120,10 +121,10 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 			throw new xConfigException(e, path);
 		}
 	}
-	/**
+	/ **
 	 * Gets an object from the stored data by path.
 	 * @return Object or null on failure
-	 */
+	 * /
 	@Override
 	public Map<String, Object> getPath(final String path) {
 		try {
@@ -139,11 +140,11 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 
 
 
-	/**
+	/ **
 	 * Get a string value from the stored data.
 	 * @return String value from config
 	 * @throws xConfigException
-	 */
+	 * /
 	@Override
 	public String getString(final String path) throws xConfigException {
 		try {
@@ -152,10 +153,10 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 			throw new xConfigException(e, path);
 		}
 	}
-	/**
+	/ **
 	 * Get a string value from the stored data.
 	 * @return String value from config or null on failure
-	 */
+	 * /
 	@Override
 	public String getStr(final String path, final String def) {
 		try {
@@ -168,11 +169,11 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 
 
 
-	/**
+	/ **
 	 * Get a boolean value from the stored data.
 	 * @return Boolean value from config
 	 * @throws xConfigException
-	 */
+	 * /
 	@Override
 	public Boolean getBoolean(final String path) throws xConfigException {
 		try {
@@ -181,10 +182,10 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 			throw new xConfigException(e, path);
 		}
 	}
-	/**
+	/ **
 	 * Get a boolean value from the stored data.
 	 * @return boolean value from config or null on failure
-	 */
+	 * /
 	@Override
 	public boolean getBool(final String path, final boolean def) {
 		try {
@@ -197,11 +198,11 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 
 
 
-	/**
+	/ **
 	 * Get an integer value from the stored data.
 	 * @return Integer value from config
 	 * @throws xConfigException
-	 */
+	 * /
 	@Override
 	public Integer getInteger(final String path) throws xConfigException {
 		try {
@@ -210,10 +211,10 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 			throw new xConfigException(e, path);
 		}
 	}
-	/**
+	/ **
 	 * Get an int value from the stored data.
 	 * @return int value from config or null on failure
-	 */
+	 * /
 	@Override
 	public int getInt(final String path, final int def) {
 		try {
@@ -226,11 +227,11 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 
 
 
-	/**
+	/ **
 	 * Get a long value from the stored data.
 	 * @return Long value from config
 	 * @throws xConfigException
-	 */
+	 * /
 	@Override
 	public Long getLong(final String path) throws xConfigException {
 		try {
@@ -239,10 +240,10 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 			throw new xConfigException(e, path);
 		}
 	}
-	/**
+	/ **
 	 * Get a long value from the stored data.
 	 * @return long value from config or null on failure
-	 */
+	 * /
 	@Override
 	public long getLng(final String path, final long def) {
 		try {
@@ -255,11 +256,11 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 
 
 
-	/**
+	/ **
 	 * Get a double value from the stored data.
 	 * @return Double value from config
 	 * @throws xConfigException
-	 */
+	 * /
 	@Override
 	public Double getDouble(final String path) throws xConfigException {
 		try {
@@ -268,10 +269,10 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 			throw new xConfigException(e, path);
 		}
 	}
-	/**
+	/ **
 	 * Get a double value from the stored data.
 	 * @return double value from config or null on failure
-	 */
+	 * /
 	@Override
 	public double getDbl(final String path, final double def) {
 		try {
@@ -284,11 +285,11 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 
 
 
-	/**
+	/ **
 	 * Get a float value from the stored data.
 	 * @return Float value from config
 	 * @throws xConfigException
-	 */
+	 * /
 	@Override
 	public Float getFloat(final String path) throws xConfigException {
 		try {
@@ -297,10 +298,10 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 			throw new xConfigException(e, path);
 		}
 	}
-	/**
+	/ **
 	 * Get a float value from the stored data.
 	 * @return float value from config or null on failure
-	 */
+	 * /
 	@Override
 	public float getFlt(final String path, final float def) {
 		try {
@@ -318,11 +319,11 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 
 
 
-	/**
+	/ **
 	 * Get a set of data from the stored data.
 	 * @return Set<?>
 	 * @throws xConfigException
-	 */
+	 * /
 	@Override
 	public <C> Set<C> getSet(final Class<? extends C> clss,
 			final String path) throws xConfigException {
@@ -335,11 +336,11 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 			throw new xConfigException(e, path);
 		}
 	}
-	/**
+	/ **
 	 * Get string set from the stored data.
 	 * @return Set<String>
 	 * @throws xConfigException
-	 */
+	 * /
 	@Override
 	public Set<String> getStringSet(final String path)
 			throws xConfigException {
@@ -355,11 +356,11 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 
 
 
-	/**
+	/ **
 	 * Get a list of data from the stored data.
 	 * @return List<?>
 	 * @throws xConfigException
-	 */
+	 * /
 	@Override
 	public <C> List<C> getList(final Class<? extends C> clss,
 			final String path) throws xConfigException {
@@ -372,11 +373,11 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 			throw new xConfigException(e, path);
 		}
 	}
-	/**
+	/ **
 	 * Get a string list from the stored data.
 	 * @return List<String>
 	 * @throws xConfigException
-	 */
+	 * /
 	@Override
 	public List<String> getStringList(final String path)
 			throws xConfigException {
@@ -392,11 +393,11 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 
 
 
-	/**
+	/ **
 	 * Get a map of data from the stored data.
 	 * @return Map<?, ?>
 	 * @throws xConfigException
-	 */
+	 * /
 	@Override
 	public <K, V> Map<K, V> getMap(final Class<? extends K> clssK,
 			final Class<? extends V> clssV, final String path)
@@ -411,11 +412,11 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 			throw new xConfigException(e, path);
 		}
 	}
-	/**
+	/ **
 	 * Get a map of data from the stored data.
 	 * @return Map<String, Object>
 	 * @throws xConfigException
-	 */
+	 * /
 	@Override
 	public Map<String, Object> getStringObjectMap(final String path)
 			throws xConfigException {
@@ -429,11 +430,11 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 			throw new xConfigException(e, path);
 		}
 	}
-	/**
+	/ **
 	 * Get a map of strings from the stored data.
 	 * @return Map<String, String>
 	 * @throws xConfigException
-	 */
+	 * /
 	@Override
 	public Map<String, String> getStringMap(final String path)
 			throws xConfigException {
@@ -471,11 +472,11 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 
 
 
-	/**
+	/ **
 	 * Get a list of config objects from the stored data.
 	 * @return List<xConfig>
 	 * @throws xConfigException
-	 */
+	 * /
 	@Override
 	public List<xConfig> getConfigList(final String path,
 			final Class<? extends xConfig> clss)
@@ -602,3 +603,4 @@ public class xConfig extends xConfigLoader implements xConfigInterface {
 
 
 }
+*/

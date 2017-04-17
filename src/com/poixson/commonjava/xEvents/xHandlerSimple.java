@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonjava.xEvents;
 
 import java.lang.reflect.Method;
@@ -6,9 +7,9 @@ import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xEvents.xEventListener.ListenerPriority;
 
 
-/**
+/ **
  * Supports fixed named listener method.
- */
+ * /
 public abstract class xHandlerSimple extends xHandler {
 
 
@@ -78,3 +79,4 @@ public abstract class xHandlerSimple extends xHandler {
 
 
 }
+*/

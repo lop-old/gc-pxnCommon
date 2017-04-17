@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonapp.plugin;
 
 import com.poixson.commonjava.Failure;
@@ -137,3 +138,4 @@ public abstract class xJavaPlugin {
 
 
 }
+*/

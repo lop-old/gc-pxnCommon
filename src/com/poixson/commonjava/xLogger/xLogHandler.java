@@ -1,3 +1,4 @@
+/*
 package com.poixson.commonjava.xLogger;
 
 import com.poixson.commonjava.xLogger.formatters.xLogFormatter_Default;
@@ -55,3 +56,4 @@ public abstract class xLogHandler {
 
 
 }
+*/
