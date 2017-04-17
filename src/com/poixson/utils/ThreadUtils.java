@@ -1,5 +1,4 @@
-/*
-package com.poixson.commonjava.Utils;
+package com.poixson.utils;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -8,7 +7,8 @@ import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.xLogger.xLog;
 
 
-public final class utilsThread {
+public final class ThreadUtils {
+	private ThreadUtils() {}
 
 //	public static final String[] ignoreThreadNames = new String[] {
 //		"Main-Server-Thread",
@@ -27,9 +27,8 @@ public final class utilsThread {
 
 
 	public static void init() {
-		Keeper.add(new utilsThread());
+		Keeper.add(new ThreadUtils());
 	}
-	private utilsThread() {}
 
 
 

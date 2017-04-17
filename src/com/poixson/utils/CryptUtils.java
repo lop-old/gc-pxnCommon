@@ -1,5 +1,4 @@
-/*
-package com.poixson.commonjava.Utils;
+package com.poixson.utils;
 
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
@@ -12,8 +11,8 @@ import javax.crypto.spec.SecretKeySpec;
 
 import com.poixson.commonjava.xLogger.xLog;
 
-
-public final class utilsCrypt {
+public final class CryptUtils {
+	private CryptUtils() {}
 
 	public static final String CRYPT_MD5    = "MD5";
 	public static final String CRYPT_SHA1   = "SHA1";
@@ -27,9 +26,8 @@ public final class utilsCrypt {
 
 
 	public static void init() {
-		Keeper.add(new utilsCrypt());
+		Keeper.add(new CryptUtils());
 	}
-	private utilsCrypt() {}
 
 
 

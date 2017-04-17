@@ -1,17 +1,17 @@
-/*
-package com.poixson.commonjava.Utils;
+package com.poixson.utils;
 
 import java.lang.management.ManagementFactory;
 
 
-public final class utilsProc {
+
+public final class ProcUtils {
+	private ProcUtils() {}
 
 
 
 	public static void init() {
-		Keeper.add(new utilsProc());
+		Keeper.add(new ProcUtils());
 	}
-	private utilsProc() {}
 
 
 
