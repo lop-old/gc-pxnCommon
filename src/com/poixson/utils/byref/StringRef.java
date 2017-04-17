@@ -1,5 +1,7 @@
 package com.poixson.utils.byref;
 
+import com.poixson.utils.Utils;
+
 
 public class StringRef {
 
@@ -25,10 +27,10 @@ public class StringRef {
 
 
 	public boolean isEmpty() {
-		return utils.isEmpty(this.value);
+		return Utils.isEmpty(this.value);
 	}
 	public boolean notEmpty() {
-		return utils.notEmpty(this.value);
+		return Utils.notEmpty(this.value);
 	}
 
 

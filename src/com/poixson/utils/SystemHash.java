@@ -40,7 +40,7 @@ public final class SystemHash {
 	 * @return The generated GUID.
 	 */
 	public static String generate() {
-		final int rnd = utilsNumbers.getRandom(0, Integer.MAX_VALUE);
+		final int rnd = NumberUtils.getRandom(0, Integer.MAX_VALUE);
 		final StringBuffer str = new StringBuffer();
 		encode(str, DESCRIPTOR);
 		encode(str, Runtime.getRuntime());

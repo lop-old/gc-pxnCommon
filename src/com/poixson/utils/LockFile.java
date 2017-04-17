@@ -9,8 +9,8 @@ import java.nio.channels.OverlappingFileLockException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.poixson.utils.exceptions.LockFileException;
 import com.poixson.utils.exceptions.RequiredArgumentException;
-import com.poixson.commonjava.xLogger.xLog;
 
 
 public class LockFile {
@@ -28,7 +28,7 @@ public class LockFile {
 
 
 	public static LockFile get(final String filename) {
-		if(utils.isEmpty(filename)) throw new RequiredArgumentException("filename");
+		if(Utils.isEmpty(filename)) throw new RequiredArgumentException("filename");
 		synchronized(instanceLock) {
 			// existing lock
 			if(instances.containsKey(filename))
@@ -65,7 +65,7 @@ public class LockFile {
 		}
 	}
 	public static LockFile peak(final String filename) {
-		if(utils.isEmpty(filename)) throw new RequiredArgumentException("filename");
+		if(Utils.isEmpty(filename)) throw new RequiredArgumentException("filename");
 		return instances.get(filename);
 	}
 	public static void releaseLock(final String filename) {
@@ -78,7 +78,7 @@ public class LockFile {
 
 
 	private LockFile(final String filename) throws LockFileException, IOException {
-		if(utils.isEmpty(filename)) throw new RequiredArgumentException("filename");
+		if(Utils.isEmpty(filename)) throw new RequiredArgumentException("filename");
 		this.filename = filename;
 		// get lock on file
 		this.file = new File(filename);
@@ -99,8 +99,8 @@ public class LockFile {
 		try {
 			this.fileLock.close();
 		} catch (Exception ignore) {}
-		utils.safeClose(this.channel);
-		utils.safeClose(this.randFile);
+		Utils.safeClose(this.channel);
+		Utils.safeClose(this.randFile);
 		log().info("Released file lock: "+this.filename);
 		Keeper.remove(this);
 		try {

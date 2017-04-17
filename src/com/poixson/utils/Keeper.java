@@ -4,9 +4,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import com.poixson.commonjava.xVars;
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
-import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
 public class Keeper {
@@ -26,7 +24,7 @@ public class Keeper {
 				if(instance == null)
 					instance = new Keeper();
 			}
-			utils.init();
+			Utils.init();
 		}
 		return instance;
 	}

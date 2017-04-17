@@ -52,7 +52,7 @@ public final class NumberUtils {
 
 	// parse number
 	public static Integer toInteger(final String value) {
-		if(utils.isEmpty(value)) return null;
+		if(Utils.isEmpty(value)) return null;
 		try {
 			return new Integer(Integer.parseInt(value));
 		} catch (NumberFormatException ignore) {}
@@ -67,7 +67,7 @@ public final class NumberUtils {
 
 	// parse byte
 	public static Byte toByte(final String value) {
-		if(utils.isEmpty(value)) return null;
+		if(Utils.isEmpty(value)) return null;
 		try {
 			return new Byte(Byte.parseByte(value));
 		} catch (NumberFormatException ignore) {}
@@ -82,7 +82,7 @@ public final class NumberUtils {
 
 	// parse short
 	public static Short toShort(final String value) {
-		if(utils.isEmpty(value)) return null;
+		if(Utils.isEmpty(value)) return null;
 		try {
 			return new Short(Short.parseShort(value));
 		} catch (NumberFormatException ignore) {}
@@ -97,7 +97,7 @@ public final class NumberUtils {
 
 	// parse long
 	public static Long toLong(final String value) {
-		if(utils.isEmpty(value)) return null;
+		if(Utils.isEmpty(value)) return null;
 		try {
 			return new Long(Long.parseLong(value));
 		} catch (NumberFormatException ignore) {}
@@ -112,7 +112,7 @@ public final class NumberUtils {
 
 	// parse double
 	public static Double toDouble(final String value) {
-		if(utils.isEmpty(value)) return null;
+		if(Utils.isEmpty(value)) return null;
 		try {
 			return new Double(Double.parseDouble(value));
 		} catch (NumberFormatException ignore) {}
@@ -127,7 +127,7 @@ public final class NumberUtils {
 
 	// parse float
 	public static Float toFloat(final String value) {
-		if(utils.isEmpty(value)) return null;
+		if(Utils.isEmpty(value)) return null;
 		try {
 			return new Float(Float.parseFloat(value));
 		} catch (NumberFormatException ignore) {}
@@ -142,7 +142,7 @@ public final class NumberUtils {
 
 	// parse boolean
 	public static Boolean toBoolean(final String value) {
-		if(utils.isEmpty(value)) return null;
+		if(Utils.isEmpty(value)) return null;
 		final String val = value.trim().toLowerCase();
 		for(final String v : TRUE_VALUES)
 			if(val.equals(v))
@@ -170,7 +170,7 @@ public final class NumberUtils {
 
 	// is number
 	public static boolean isNumeric(final String value) {
-		if(utils.isEmpty(value)) return false;
+		if(Utils.isEmpty(value)) return false;
 		return (toLong(value) != null);
 	}
 	// is boolean
@@ -312,8 +312,8 @@ public final class NumberUtils {
 
 	// compare version numbers
 	public static String compareVersions(final String oldVersion, final String newVersion) {
-		if(utils.isEmpty(oldVersion)) return null;
-		if(utils.isEmpty(newVersion)) return null;
+		if(Utils.isEmpty(oldVersion)) return null;
+		if(Utils.isEmpty(newVersion)) return null;
 		final int cmp = normalisedVersion(oldVersion).compareTo(normalisedVersion(newVersion));
 		if(cmp < 0) return "<";
 		if(cmp > 0) return ">";
@@ -334,7 +334,7 @@ public final class NumberUtils {
 
 	// random number
 	public static int getRandom(final int minNumber, final int maxNumber) {
-		final Random gen = new Random(utils.getSystemMillis());
+		final Random gen = new Random(Utils.getSystemMillis());
 		return gen.nextInt(maxNumber - minNumber) + minNumber;
 	}
 	// random number (not last)

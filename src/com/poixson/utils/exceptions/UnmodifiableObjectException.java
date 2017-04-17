@@ -1,6 +1,6 @@
 package com.poixson.utils.exceptions;
 
-import com.poixson.utils.Strings;
+import com.poixson.utils.StringUtils;
 
 
 public class UnmodifiableObjectException extends UnsupportedOperationException {
@@ -12,7 +12,7 @@ public class UnmodifiableObjectException extends UnsupportedOperationException {
 		final int index = 1;
 		final Exception eTemp = new Exception();
 		final StackTraceElement[] trace = eTemp.getStackTrace();
-		final String parentClassName = utilsString.getLastPart(
+		final String parentClassName = StringUtils.getLastPart(
 				new char[] {'.'},
 				trace[index].getClassName()
 		);

@@ -1,6 +1,6 @@
 package com.poixson.utils;
 
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
 public class xRunnable implements Runnable {
@@ -33,7 +33,7 @@ public class xRunnable implements Runnable {
 		);
 	}
 	public xRunnable(final String taskName, final Runnable run) {
-		if(utils.notEmpty(taskName))
+		if(Utils.notEmpty(taskName))
 			this.taskName = taskName;
 		else
 		if(run instanceof xRunnable)
@@ -50,12 +50,12 @@ public class xRunnable implements Runnable {
 		if(run == null) throw new RequiredArgumentException("run");
 		if(run instanceof xRunnable) {
 			final xRunnable xrun = (xRunnable) run;
-			if(utils.notEmpty(name))
+			if(Utils.notEmpty(name))
 				xrun.setTaskName(name);
 			return xrun;
 		}
 		return new xRunnable(
-				utils.isEmpty(name) ? "<Runnable>" : name,
+				Utils.isEmpty(name) ? "<Runnable>" : name,
 				run
 		);
 	}
@@ -74,11 +74,11 @@ public class xRunnable implements Runnable {
 		return this.taskName;
 	}
 	public void setTaskName(final String name) {
-		this.taskName = utils.isEmpty(name) ? null : name;
+		this.taskName = Utils.isEmpty(name) ? null : name;
 	}
 	public boolean taskNameEquals(final String name) {
-		if(utils.isEmpty(name))
-			return utils.isEmpty(this.taskName);
+		if(Utils.isEmpty(name))
+			return Utils.isEmpty(this.taskName);
 		return name.equals(this.taskName);
 	}
 

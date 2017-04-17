@@ -5,8 +5,7 @@ import java.io.StringWriter;
 import java.util.Set;
 import java.util.UUID;
 
-import com.poixson.commonjava.Utils.byRef.StringRef;
-import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.utils.byref.StringRef;
 import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
@@ -79,13 +78,13 @@ public final class StringUtils {
 
 	// string equals
 	public static boolean strEquals(final String a, final String b) {
-		if(utils.isEmpty(a)) return false;
-		if(utils.isEmpty(b)) return false;
+		if(Utils.isEmpty(a)) return false;
+		if(Utils.isEmpty(b)) return false;
 		return a.equals(b);
 	}
 	public static boolean strEqualsIgnoreCase(final String a, final String b) {
-		if(utils.isEmpty(a)) return false;
-		if(utils.isEmpty(b)) return false;
+		if(Utils.isEmpty(a)) return false;
+		if(Utils.isEmpty(b)) return false;
 		return a.equalsIgnoreCase(b);
 	}
 
@@ -93,8 +92,8 @@ public final class StringUtils {
 
 	// trim from string
 	public static String trims(final String str, final String...strip) {
-		if(utils.isEmpty(str))  return null;
-		if(utils.isEmpty(strip)) return null;
+		if(Utils.isEmpty(str))  return null;
+		if(Utils.isEmpty(strip)) return null;
 		final int stripCount = strip.length;
 		final int[] stripLen = new int[stripCount];
 		for(int i = 0; i < stripCount; i++)
@@ -125,7 +124,7 @@ public final class StringUtils {
 
 
 	public static String remove(final String str, final String...strip) {
-		if(utils.isEmpty(strip)) return str;
+		if(Utils.isEmpty(strip)) return str;
 		String dat = str;
 		for(final String s : strip)
 			dat = dat.replace(s, "");
@@ -160,7 +159,7 @@ public final class StringUtils {
 
 
 	public static String ensureUnique(final String match, final Set<String> existing) {
-		if(utils.isEmpty(match)) throw new RequiredArgumentException("match");
+		if(Utils.isEmpty(match)) throw new RequiredArgumentException("match");
 		if(existing == null)     throw new RequiredArgumentException("existing");
 		// already unique
 		if(existing.isEmpty() || !existing.contains(match))
@@ -264,9 +263,9 @@ public final class StringUtils {
 
 	// replace with array
 	public static String replaceWith(final String replaceWhat, final String[] withWhat, final String data) {
-		if(utils.isEmpty(replaceWhat)) return data;
-		if(utils.isEmpty(withWhat))    return data;
-		if(utils.isEmpty(data))        return data;
+		if(Utils.isEmpty(replaceWhat)) return data;
+		if(Utils.isEmpty(withWhat))    return data;
+		if(Utils.isEmpty(data))        return data;
 		final StringBuilder out = new StringBuilder();
 		final int count = withWhat.length;
 		int currentPos = 0;
@@ -290,11 +289,11 @@ public final class StringUtils {
 		return repeat(count, str, null);
 	}
 	public static String repeat(final int count, final String str, final String delim) {
-		if(utils.isEmpty(str)) throw new RequiredArgumentException("str");
+		if(Utils.isEmpty(str)) throw new RequiredArgumentException("str");
 		if(count < 1) return "";
 		final StringBuilder out = new StringBuilder();
 		// repeat string
-		if(utils.isEmpty(delim)) {
+		if(Utils.isEmpty(delim)) {
 			for(int i = 0; i < count; i++)
 				out.append(str);
 		} else {
@@ -335,7 +334,7 @@ public final class StringUtils {
 		return buf.toString()
 			.substring(
 				0,
-				utilsNumbers.MinMax(length, 0, buf.length())
+				NumberUtils.MinMax(length, 0, buf.length())
 			);
 	}
 
@@ -346,12 +345,12 @@ public final class StringUtils {
 		return addArray(delim, addThis);
 	}
 	public static String addArray(final String delim, final String[] addThis) {
-		if(utils.isEmpty(addThis)) return null;
-		final String dlm = (utils.isEmpty(delim) ? null : delim);
+		if(Utils.isEmpty(addThis)) return null;
+		final String dlm = (Utils.isEmpty(delim) ? null : delim);
 		final StringBuilder str = new StringBuilder();
 		boolean b = false;
 		for(final String line : addThis) {
-			if(utils.isEmpty(line)) continue;
+			if(Utils.isEmpty(line)) continue;
 			if(b && dlm != null)
 				str.append(dlm);
 			str.append(line);
@@ -392,7 +391,7 @@ public final class StringUtils {
 	}
 	public static String padCenter(final int width, final String text, final char padding) {
 		if(width < 1) return null;
-		if(utils.isEmpty(text))
+		if(Utils.isEmpty(text))
 			return repeat(width, padding);
 		final double count = ( ((double) width) - ((double) text.length()) ) / 2.0;
 		if(Math.ceil(count) < 1.0) return text;

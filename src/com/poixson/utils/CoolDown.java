@@ -55,7 +55,7 @@ public class CoolDown {
 
 
 	public long getCurrent() {
-		return utils.getSystemMillis();
+		return Utils.getSystemMillis();
 	}
 	public long getLast() {
 		return this.last.get();
@@ -82,7 +82,7 @@ public class CoolDown {
 		this.last.set(-1L);
 	}
 	public void resetRun() {
-		this.last.set(utils.getSystemMillis());
+		this.last.set(Utils.getSystemMillis());
 	}
 
 

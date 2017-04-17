@@ -25,8 +25,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
-import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
 /**
@@ -96,8 +95,8 @@ public class StreamBridge implements xStartable {
 				break;
 			}
 		}
-		utils.safeClose(this.out);
-		utils.safeClose(this.in);
+		Utils.safeClose(this.out);
+		Utils.safeClose(this.in);
 		this.stopping = true;
 		this.running = false;
 		this.remove();
@@ -113,8 +112,8 @@ public class StreamBridge implements xStartable {
 	public void Stop() {
 		this.stopping = true;
 		this.thread.interrupt();
-		utils.safeClose(this.out);
-		utils.safeClose(this.in);
+		Utils.safeClose(this.out);
+		Utils.safeClose(this.in);
 	}
 	@Override
 	public boolean isRunning() {

@@ -63,7 +63,7 @@ public class xTime {
 		return get().set(value, unit);
 	}
 	public static xTime get(final String value) {
-		if(utils.isEmpty(value)) return null;
+		if(Utils.isEmpty(value)) return null;
 		return get().set(value);
 	}
 	public static xTime get(final xTime time) {
@@ -124,7 +124,7 @@ public class xTime {
 	}
 	public xTime set(final String val) {
 		if(this.isFinal) throw UnmodifiableObjectException.get();
-		if(utils.notEmpty(val))
+		if(Utils.notEmpty(val))
 			this.value = parseLong(val).longValue();
 		return this;
 	}
@@ -145,7 +145,7 @@ public class xTime {
 	}
 	public void add(final String val) {
 		if(this.isFinal) throw UnmodifiableObjectException.get();
-		if(utils.notEmpty(val))
+		if(Utils.notEmpty(val))
 			this.value += parseLong(val).longValue();
 	}
 	public void add(final xTime time) {
@@ -158,14 +158,14 @@ public class xTime {
 
 	// parse time from string
 	public static xTime parse(final String value) {
-		if(utils.isEmpty(value)) return null;
+		if(Utils.isEmpty(value)) return null;
 		final Long lng = parseLong(value);
 		if(lng == null)
 			return null;
 		return xTime.get(lng, xTimeU.MS);
 	}
 	public static Long parseLong(final String value) {
-		if(utils.isEmpty(value)) return null;
+		if(Utils.isEmpty(value)) return null;
 		long time = 0;
 		StringBuilder tmp = new StringBuilder();
 		for(char c : value.toCharArray()) {
@@ -180,7 +180,7 @@ public class xTime {
 				);
 				if(timeValues.containsKey(chr)) {
 					final double u = timeValues.get(chr).doubleValue();
-					time += (utilsNumbers.toDouble(tmp.toString()).doubleValue() * u);
+					time += (NumberUtils.toDouble(tmp.toString()).doubleValue() * u);
 				}
 				tmp = new StringBuilder();
 				continue;

@@ -3,10 +3,9 @@ package com.poixson.utils.remapped;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import com.poixson.commonjava.Utils.utils;
-import com.poixson.commonjava.Utils.xRunnable;
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
-import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.utils.Utils;
+import com.poixson.utils.xRunnable;
+import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
 public class RemappedRunnable extends xRunnable {
@@ -43,8 +42,8 @@ public class RemappedRunnable extends xRunnable {
 			final Object targetClass, final String methodName)
 			throws NoSuchMethodException, SecurityException {
 		if(targetClass == null)       throw new RequiredArgumentException("targetClass");
-		if(utils.isEmpty(methodName)) throw new RequiredArgumentException("methodName");
-		this.setTaskName( utils.isEmpty(taskName) ? methodName : taskName );
+		if(Utils.isEmpty(methodName)) throw new RequiredArgumentException("methodName");
+		this.setTaskName( Utils.isEmpty(taskName) ? methodName : taskName );
 		this.obj = targetClass;
 		// static or instance class
 		final Class<?> clss =

@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
 public final class ObjectUtils {

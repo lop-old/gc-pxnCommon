@@ -19,7 +19,7 @@ public class xString {
 		this.data = data;
 	}
 	public xString(final Object obj) {
-		this.data = utilsString.toString(obj);
+		this.data = StringUtils.toString(obj);
 	}
 
 
@@ -36,10 +36,10 @@ public class xString {
 
 
 	public boolean isEmpty() {
-		return utils.isEmpty(this.data);
+		return Utils.isEmpty(this.data);
 	}
 	public boolean notEmpty() {
-		return utils.notEmpty(this.data);
+		return Utils.notEmpty(this.data);
 	}
 
 
@@ -56,7 +56,7 @@ public class xString {
 
 	public xString remove(final String...strip) {
 		if(this.data != null)
-			this.data = utilsString.remove(this.data, strip);
+			this.data = StringUtils.remove(this.data, strip);
 		return this;
 	}
 
@@ -82,7 +82,7 @@ public class xString {
 	}
 	public xString trims(final String...strip) {
 		if(this.data != null)
-			this.data = utilsString.trims(this.data, strip);
+			this.data = StringUtils.trims(this.data, strip);
 		return this;
 	}
 
@@ -103,12 +103,12 @@ public class xString {
 
 	public xString ensureStarts(final String start) {
 		if(this.data != null)
-			this.data = utilsString.ensureStarts(start, this.data);
+			this.data = StringUtils.ensureStarts(start, this.data);
 		return this;
 	}
 	public xString ensureEnds(final String end) {
 		if(this.data != null)
-			this.data = utilsString.ensureEnds(end, this.data);
+			this.data = StringUtils.ensureEnds(end, this.data);
 		return this;
 	}
 
@@ -116,7 +116,7 @@ public class xString {
 
 	public xString replaceWith(final String replaceWhat, final String[] withWhat) {
 		if(this.data != null)
-			this.data = utilsString.replaceWith(replaceWhat, withWhat, this.data);
+			this.data = StringUtils.replaceWith(replaceWhat, withWhat, this.data);
 		return this;
 	}
 
@@ -124,17 +124,17 @@ public class xString {
 
 	public xString pad(final int width, final char padding) {
 		if(this.data != null)
-			this.data = utilsString.pad(width, this.data, padding);
+			this.data = StringUtils.pad(width, this.data, padding);
 		return this;
 	}
 	public xString padFront(final int width, final char padding) {
 		if(this.data != null)
-			this.data = utilsString.padFront(width, this.data, padding);
+			this.data = StringUtils.padFront(width, this.data, padding);
 		return this;
 	}
 	public xString padCenter(final int width, final char padding) {
 		if(this.data != null)
-			this.data = utilsString.padCenter(width, this.data, padding);
+			this.data = StringUtils.padCenter(width, this.data, padding);
 		return this;
 	}
 
@@ -145,7 +145,7 @@ public class xString {
 
 
 	public xString delim(final String delimStr) {
-		this.delim = (utils.isEmpty(delimStr) ? null : delimStr);
+		this.delim = (Utils.isEmpty(delimStr) ? null : delimStr);
 		return this;
 	}
 	public String delim() {
@@ -157,7 +157,7 @@ public class xString {
 	public boolean hasNext() {
 		if(this.isEmpty()) return false;
 		final String dlm = this.delim;
-		if(utils.isEmpty(dlm)) return false;
+		if(Utils.isEmpty(dlm)) return false;
 		// trim
 		this.trim();
 		while(this.data.startsWith(dlm)) {

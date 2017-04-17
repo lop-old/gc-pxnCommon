@@ -40,7 +40,7 @@ public final class SanUtils {
 
 
 	public static String ValidateStringEnum(final String value, final String...valids) {
-		if(utils.isEmpty(value)) return null;
+		if(Utils.isEmpty(value)) return null;
 		if(valids.length == 0) return null;
 		for(final String v : valids) {
 			if(v == null || v.isEmpty()) continue;

@@ -18,17 +18,16 @@ public final class Utils {
 
 
 	public static void init() {
-		Keeper.add(new utils());
-		utilsCrypt.init();
-		utilsDirFile.init();
-		utilsNumbers.init();
-		utilsObject.init();
-		utilsProc.init();
-		utilsReflect.init();
-		utilsSan.init();
-		utilsString.init();
-		utilsThread.init();
-
+		Keeper.add(new Utils());
+//		CryptUtils.init();
+		DirsFiles.init();
+		NumberUtils.init();
+		ObjectUtils.init();
+//		ProcUtils.init();
+//		ReflectUtils.init();
+		SanUtils.init();
+		StringUtils.init();
+//		ThreadUtils.init();
 	}
 
 
@@ -363,8 +362,8 @@ public final class Utils {
 
 	// compare versions
 	public static String compareVersions(final String versionA, final String versionB) {
-		if(utils.isEmpty(versionA)) throw new RequiredArgumentException("versionA");
-		if(utils.isEmpty(versionB)) throw new RequiredArgumentException("versionB");
+		if(Utils.isEmpty(versionA)) throw new RequiredArgumentException("versionA");
+		if(Utils.isEmpty(versionB)) throw new RequiredArgumentException("versionB");
 		final String[] norms = normalisedVersions(versionA, versionB);
 		final int cmp = norms[0].compareTo(norms[1]);
 		if(cmp < 0)
@@ -374,13 +373,13 @@ public final class Utils {
 		return "=";
 	}
 	private static String[] normalisedVersions(final String versionA, final String versionB) {
-		if(utils.isEmpty(versionA)) throw new RequiredArgumentException("versionA");
-		if(utils.isEmpty(versionB)) throw new RequiredArgumentException("versionB");
+		if(Utils.isEmpty(versionA)) throw new RequiredArgumentException("versionA");
+		if(Utils.isEmpty(versionB)) throw new RequiredArgumentException("versionB");
 		// split string by .
 		final String[] splitA = Pattern.compile(".", Pattern.LITERAL).split(versionA);
 		final String[] splitB = Pattern.compile(".", Pattern.LITERAL).split(versionB);
-		if(utils.isEmpty(splitA)) throw new NullPointerException();
-		if(utils.isEmpty(splitB)) throw new NullPointerException();
+		if(Utils.isEmpty(splitA)) throw new NullPointerException();
+		if(Utils.isEmpty(splitB)) throw new NullPointerException();
 		// find longest part
 		int width = -1;
 		for(final String part : splitA) {
@@ -395,11 +394,11 @@ public final class Utils {
 		// build padded string
 		final StringBuilder outA = new StringBuilder();
 		for(final String part : splitA) {
-			outA.append( utilsString.padFront(width, part, '0') );
+			outA.append( StringUtils.padFront(width, part, '0') );
 		}
 		final StringBuilder outB = new StringBuilder();
 		for(final String part : splitB) {
-			outB.append( utilsString.padFront(width, part, '0') );
+			outB.append( StringUtils.padFront(width, part, '0') );
 		}
 		return new String[] {
 			outA.toString(),

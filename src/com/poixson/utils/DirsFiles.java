@@ -10,8 +10,7 @@ import java.io.InputStream;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
-import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
 public final class DirsFiles {
@@ -122,10 +121,10 @@ public final class DirsFiles {
 	}
 	// load resource
 	public static InputStream OpenResource(final String fileStr) {
-		if(utils.isEmpty(fileStr)) return null;
+		if(Utils.isEmpty(fileStr)) return null;
 		try {
-			return utilsDirFile.class.getResourceAsStream(
-				utilsString.ensureStarts("/", fileStr)
+			return DirsFiles.class.getResourceAsStream(
+				StringUtils.ensureStarts("/", fileStr)
 			);
 		} catch(Exception ignore) {}
 		return null;
@@ -133,24 +132,24 @@ public final class DirsFiles {
 	// load yml from jar reference
 	public static InputStream OpenResource(final Class<? extends Object> clss, final String fileName) {
 		if(clss == null)            throw new RequiredArgumentException("clss");
-		if(utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
+		if(Utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
 		final InputStream in = clss.getResourceAsStream(fileName);
 		return in;
 	}
 	// load yml from jar
 	public static InputJar OpenJarResource(final File jarFile, final String fileName) {
 		if(jarFile == null)         throw new RequiredArgumentException("jarFile");
-		if(utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
+		if(Utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
 		try {
 			final JarFile jar = new JarFile(jarFile);
 			final JarEntry entry = jar.getJarEntry(fileName);
 			if(entry == null) {
-				utils.safeClose(jar);
+				Utils.safeClose(jar);
 				return null;
 			}
 			final InputStream in = jar.getInputStream(entry);
 			if(in == null) {
-				utils.safeClose(jar);
+				Utils.safeClose(jar);
 				return null;
 			}
 			return new InputJar(jar, in);
@@ -170,8 +169,8 @@ public final class DirsFiles {
 		}
 		@Override
 		public void close() {
-			utils.safeClose(this.jar);
-			utils.safeClose(this.fileInput);
+			Utils.safeClose(this.jar);
+			Utils.safeClose(this.fileInput);
 		}
 	}
 
@@ -182,10 +181,10 @@ public final class DirsFiles {
 	// build path+file
 	public static String buildFilePath(final String filePath,
 			final String fileName, final String extension) {
-		if(utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
+		if(Utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
 		// file extension
 		final String ext;
-		if(utils.isEmpty(extension))
+		if(Utils.isEmpty(extension))
 			ext = ".yml";
 		else if(!extension.startsWith("."))
 			ext = "."+extension;
@@ -222,7 +221,7 @@ public final class DirsFiles {
 	public static String mergePaths(final String...strings) {
 		final StringBuilder merged = new StringBuilder();
 		for(String path : strings) {
-			if(utils.isEmpty(path)) continue;
+			if(Utils.isEmpty(path)) continue;
 			if(path.equals("."))
 				path = cwd();
 			else
@@ -245,7 +244,7 @@ public final class DirsFiles {
 
 
 	public static String san(final String text) {
-		return utilsSan.FileName(text);
+		return SanUtils.FileName(text);
 	}
 
 
