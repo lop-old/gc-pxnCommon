@@ -1,4 +1,4 @@
-package com.poixson.commonjava.Utils;
+package com.poixson.utils;
 /*
  * cron4j - A pure Java cron-like scheduler
  *

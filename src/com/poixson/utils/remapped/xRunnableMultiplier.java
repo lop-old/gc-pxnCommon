@@ -1,4 +1,4 @@
-package com.poixson.commonjava.remapped;
+package com.poixson.utils.remapped;
 
 import java.util.Iterator;
 import java.util.Set;

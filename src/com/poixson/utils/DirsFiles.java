@@ -1,4 +1,4 @@
-package com.poixson.commonjava.Utils;
+package com.poixson.utils;
 
 import java.io.Closeable;
 import java.io.File;
@@ -14,14 +14,14 @@ import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.xLogger.xLog;
 
 
-public final class utilsDirFile {
+public final class DirsFiles {
+	private DirsFiles() {}
 
 
 
 	public static void init() {
-		Keeper.add(new utilsDirFile());
+		Keeper.add(new DirsFiles());
 	}
-	private utilsDirFile() {}
 
 
 

@@ -1,14 +1,14 @@
-package com.poixson.commonjava.Utils;
+package com.poixson.utils;
 
 
-public final class utilsSan {
+public final class SanUtils {
+	private SanUtils() {}
 
 
 
 	public static void init() {
-		Keeper.add(new utilsSan());
+		Keeper.add(new SanUtils());
 	}
-	private utilsSan() {}
 
 
 

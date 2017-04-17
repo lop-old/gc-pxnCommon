@@ -1,4 +1,4 @@
-package com.poixson.commonjava.Utils;
+package com.poixson.utils;
 
 import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 

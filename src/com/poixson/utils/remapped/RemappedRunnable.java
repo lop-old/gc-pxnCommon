@@ -1,4 +1,4 @@
-package com.poixson.commonjava.remapped;
+package com.poixson.utils.remapped;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

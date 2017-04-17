@@ -1,4 +1,4 @@
-package com.poixson.commonjava.Utils;
+package com.poixson.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,14 +12,14 @@ import java.util.Set;
 import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 
 
-public final class utilsObject {
+public final class ObjectUtils {
+	private ObjectUtils() {}
 
 
 
 	public static void init() {
-		Keeper.add(new utilsObject());
+		Keeper.add(new ObjectUtils());
 	}
-	private utilsObject() {}
 
 
 

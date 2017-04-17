@@ -10,13 +10,13 @@ import com.poixson.commonjava.xLogger.xLog;
 import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
-public final class Strings {
-	private Strings() {}
+public final class StringUtils {
+	private StringUtils() {}
 
 
 
 	public static void init() {
-		Keeper.add(new Strings());
+		Keeper.add(new StringUtils());
 	}
 
 

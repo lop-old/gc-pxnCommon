@@ -5,8 +5,8 @@ import java.util.Random;
 import java.util.regex.Pattern;
 
 
-public final class Numbers {
-	private Numbers() {}
+public final class NumberUtils {
+	private NumberUtils() {}
 
 	/**
 	 * Max valid tcp/udp port number.
@@ -16,7 +16,7 @@ public final class Numbers {
 
 
 	public static void init() {
-		Keeper.add(new Numbers());
+		Keeper.add(new NumberUtils());
 	}
 
 
