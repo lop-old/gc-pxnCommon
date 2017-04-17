@@ -7,42 +7,39 @@ import java.util.Map;
 
 
 public class Dumper {
-
-	private static volatile Dumper instance = null;
-	private static final Object lock = new Object();
+	private Dumper() {}
 
 
 
-	protected static Dumper get() {
-		if (instance == null) {
-			synchronized(lock) {
-				if (instance == null)
-					instance = new Dumper();
-			}
-		}
-		return instance;
-	}
-
-
-
-	class DumpContext {
-		int maxDepth = 0;
+	protected static class DumpContext {
+		int maxDepth         = 0;
 		int maxArrayElements = 0;
-		int callCount = 0;
+		int callCount        = 0;
 		final Map<String, String> ignoreList = new HashMap<String, String>();
 		final Map<Object, Integer> visited = new HashMap<Object, Integer>();
 	}
 
 
 
-	public static String dump(final Object obj) {
-		return dump(obj, 0, 0, null);
+	public static void print(final Object obj) {
+		System.out.println(
+			dump(obj)
+		);
+	}
+	protected static String dump(final Object obj) {
+		return dump(
+			obj,
+			0,
+			0,
+			null
+		);
 	}
 
 
 
-	public static String dump(final Object obj, final int maxDepth, final int maxArrayElements, final String[] ignoreList) {
-		final DumpContext ctx = Dumper.get().new DumpContext();
+	protected static String dump(final Object obj, final int maxDepth,
+			final int maxArrayElements, final String[] ignoreList) {
+		final DumpContext ctx = new DumpContext();
 		ctx.maxDepth = maxDepth;
 		ctx.maxArrayElements = maxArrayElements;
 		if (ignoreList != null) {
@@ -75,15 +72,14 @@ public class Dumper {
 			return "<Ignored>";
 		}
 		if (objClass.isArray()) {
-			buffer.append("\n");
-			buffer.append(tabs.toString().substring(1));
-			buffer.append("[\n");
-			final int rowCount;
-			if (ctx.maxArrayElements == 0) {
-				rowCount = Array.getLength(obj);
-			} else {
-				rowCount = Math.min(ctx.maxArrayElements, Array.getLength(obj));
-			}
+			buffer
+				.append( "\n"                         )
+				.append( tabs.toString().substring(1) )
+				.append( "[\n"                        );
+			final int rowCount =
+				ctx.maxArrayElements == 0
+				? Array.getLength(obj)
+				: Math.min(ctx.maxArrayElements, Array.getLength(obj));
 			for (int i = 0; i < rowCount; i++) {
 				buffer.append(tabs.toString());
 				try {
@@ -98,36 +94,47 @@ public class Dumper {
 				buffer.append("\n");
 			}
 			if (rowCount < Array.getLength(obj)) {
-				buffer.append(tabs.toString());
-				buffer.append(Array.getLength(obj) - rowCount + " more array elements...");
-				buffer.append("\n");
+				final int rowCountMore = Array.getLength(obj) - rowCount;
+				buffer
+					.append( tabs.toString()             )
+					.append( rowCountMore                )
+					.append( " more array elements...\n" );
 			}
-			buffer.append(tabs.toString().substring(1));
-			buffer.append("]");
+			buffer
+				.append( tabs.toString().substring(1) )
+				.append( "]"                          );
 		} else {
-			buffer.append("\n");
-			buffer.append(tabs.toString().substring(1));
-			buffer.append("{\n");
-			buffer.append(tabs.toString());
-			buffer.append("hashCode: " + obj.hashCode());
-			buffer.append("\n");
+			buffer
+				.append( "\n"                         )
+				.append( tabs.toString().substring(1) )
+				.append( "{\n"                        )
+				.append( tabs.toString()              )
+				.append( "hashCode: "                 )
+				.append( obj.hashCode()               )
+				.append( "\n"                         );
 			while (objClass != null && objClass != Object.class) {
 				final Field[] fields = objClass.getDeclaredFields();
 				if (ctx.ignoreList.get(objClass.getSimpleName()) == null) {
 					if (objClass != obj.getClass()) {
-						buffer.append(tabs.toString().substring(1));
-						buffer.append("  Inherited from superclass " + objSimpleName + ":\n");
+						buffer
+							.append( tabs.toString().substring(1)   )
+							.append( "  Inherited from superclass " )
+							.append( objSimpleName                  )
+							.append( ":\n"                          );
 					}
 					for (int i = 0; i < fields.length; i++) {
 						final String fSimpleName = getSimpleNameWithoutArrayQualifier(fields[i].getType());
 						final String fName = fields[i].getName();
 						fields[i].setAccessible(true);
-						buffer.append(tabs.toString());
-						buffer.append(fName).append("(").append(fSimpleName).append(")");
-						buffer.append("=");
-						if (ctx.ignoreList.get(":" + fName) == null &&
-								ctx.ignoreList.get(fSimpleName + ":" + fName) == null &&
-								ctx.ignoreList.get(fSimpleName + ":") == null) {
+						buffer
+							.append( tabs.toString() )
+							.append( fName           )
+							.append( "("             )
+							.append( fSimpleName     )
+							.append( ")="             );
+						if (ctx.ignoreList.get(":" + fName) == null
+								&& ctx.ignoreList.get(fSimpleName + ":" + fName) == null
+								&& ctx.ignoreList.get(fSimpleName + ":") == null) {
 							try {
 								final Object value = fields[i].get(obj);
 								buffer.append(dumpValue(value, ctx));
@@ -136,8 +143,7 @@ public class Dumper {
 							}
 							buffer.append("\n");
 						} else {
-							buffer.append("<Ignored>");
-							buffer.append("\n");
+							buffer.append("<Ignored>\n");
 						}
 					}
 					objClass = objClass.getSuperclass();
@@ -147,8 +153,9 @@ public class Dumper {
 					objSimpleName = "";
 				}
 			}
-			buffer.append(tabs.toString().substring(1));
-			buffer.append("}");
+			buffer
+				.append( tabs.toString().substring(1) )
+				.append( "}"                          );
 		}
 		ctx.callCount--;
 		return buffer.toString();
@@ -160,18 +167,18 @@ public class Dumper {
 		if (value == null) {
 			return "<null>";
 		}
-		if (value.getClass().isPrimitive() ||
-				value.getClass() == java.lang.Short.class ||
-				value.getClass() == java.lang.Long.class ||
-				value.getClass() == java.lang.String.class ||
-				value.getClass() == java.lang.Integer.class ||
-				value.getClass() == java.lang.Float.class ||
-				value.getClass() == java.lang.Byte.class ||
-				value.getClass() == java.lang.Character.class ||
-				value.getClass() == java.lang.Double.class ||
-				value.getClass() == java.lang.Boolean.class ||
-				value.getClass() == java.util.Date.class ||
-				value.getClass().isEnum()) {
+		if (value.getClass().isPrimitive()
+				|| value.getClass() == java.lang.Short.class
+				|| value.getClass() == java.lang.Long.class
+				|| value.getClass() == java.lang.String.class
+				|| value.getClass() == java.lang.Integer.class
+				|| value.getClass() == java.lang.Float.class
+				|| value.getClass() == java.lang.Byte.class
+				|| value.getClass() == java.lang.Character.class
+				|| value.getClass() == java.lang.Double.class
+				|| value.getClass() == java.lang.Boolean.class
+				|| value.getClass() == java.util.Date.class
+				|| value.getClass().isEnum()) {
 			return value.toString();
 		}
 		final Integer visitedIndex = ctx.visited.get(value);
