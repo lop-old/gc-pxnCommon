@@ -3,8 +3,8 @@ package com.poixson.utils;
 
 public class xString {
 
-	protected volatile String data = null;
-	protected volatile String next = null;
+	protected volatile String data  = null;
+	protected volatile String next  = null;
 	protected volatile String delim = null;
 
 
@@ -45,11 +45,10 @@ public class xString {
 
 
 	public xString append(final String append) {
-		if (this.data == null) {
-			this.data = append;
-		} else {
-			this.data = this.data + append;
-		}
+		this.data =
+				this.data == null
+				? append
+				: this.data + append;
 		return this;
 	}
 
@@ -57,7 +56,10 @@ public class xString {
 
 	public xString remove(final String...strip) {
 		if (this.data != null) {
-			this.data = StringUtils.remove(this.data, strip);
+			this.data = StringUtils.removeFromStr(
+					this.data,
+					strip
+			);
 		}
 		return this;
 	}
@@ -159,7 +161,11 @@ public class xString {
 
 
 	public xString delim(final String delimStr) {
-		this.delim = (Utils.isEmpty(delimStr) ? null : delimStr);
+		this.delim = (
+				Utils.isEmpty(delimStr)
+				? null
+				: delimStr
+		);
 		return this;
 	}
 	public String delim() {
@@ -197,9 +203,11 @@ public class xString {
 		return this.next;
 	}
 	public String getNext() {
-		if (!this.hasNext())
-			return null;
-		return this.part();
+		return (
+			this.hasNext()
+			? this.part()
+			: null
+		);
 	}
 
 

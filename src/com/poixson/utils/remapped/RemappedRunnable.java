@@ -44,7 +44,11 @@ public class RemappedRunnable extends xRunnable {
 			throws NoSuchMethodException, SecurityException {
 		if (targetClass == null)       throw new RequiredArgumentException("targetClass");
 		if (Utils.isEmpty(methodName)) throw new RequiredArgumentException("methodName");
-		this.setTaskName( Utils.isEmpty(taskName) ? methodName : taskName );
+		this.setTaskName(
+			Utils.isEmpty(taskName)
+			? methodName
+			: taskName
+		);
 		this.obj = targetClass;
 		// static or instance class
 		final Class<?> clss = (

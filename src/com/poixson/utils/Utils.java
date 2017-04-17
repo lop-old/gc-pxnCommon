@@ -15,7 +15,7 @@ public final class Utils {
 
 
 
-	public static void init() {
+	protected static void InitAll() {
 		Keeper.add(new Utils());
 		CryptUtils.init();
 		DirsFiles.init();

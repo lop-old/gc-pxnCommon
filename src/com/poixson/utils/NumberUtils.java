@@ -194,11 +194,13 @@ public final class NumberUtils {
 
 	// formatDecimal("0.00", double)
 	public static String FormatDecimal(final String format, final double value) {
-		return (new DecimalFormat(format).format(value));
+		return (new DecimalFormat(format)
+				.format(value));
 	}
 	// formatDecimal("0.00", float)
 	public static String FormatDecimal(final String format, final float value) {
-		return (new DecimalFormat(format).format(value));
+		return (new DecimalFormat(format)
+				.format(value));
 	}
 
 
@@ -268,37 +270,37 @@ public final class NumberUtils {
 
 	// min/max value
 	public static int MinMax(final int value, final int min, final int max) {
-		if (min > max) throw new IllegalArgumentException("min cannot be greater than max");
+		if (min   > max) throw new IllegalArgumentException("min cannot be greater than max");
 		if (value < min) return min;
 		if (value > max) return max;
 		return value;
 	}
 	public static byte MinMax(final byte value, final byte min, final byte max) {
-		if (min > max) throw new IllegalArgumentException("min cannot be greater than max");
+		if (min   > max) throw new IllegalArgumentException("min cannot be greater than max");
 		if (value < min) return min;
 		if (value > max) return max;
 		return value;
 	}
 	public static short MinMax(final short value, final short min, final short max) {
-		if (min > max) throw new IllegalArgumentException("min cannot be greater than max");
+		if (min   > max) throw new IllegalArgumentException("min cannot be greater than max");
 		if (value < min) return min;
 		if (value > max) return max;
 		return value;
 	}
 	public static long MinMax(final long value, final long min, final long max) {
-		if (min > max) throw new IllegalArgumentException("min cannot be greater than max");
+		if (min   > max) throw new IllegalArgumentException("min cannot be greater than max");
 		if (value < min) return min;
 		if (value > max) return max;
 		return value;
 	}
 	public static double MinMax(final double value, final double min, final double max) {
-		if (min > max) throw new IllegalArgumentException("min cannot be greater than max");
+		if (min   > max) throw new IllegalArgumentException("min cannot be greater than max");
 		if (value < min) return min;
 		if (value > max) return max;
 		return value;
 	}
 	public static float MinMax(final float value, final float min, final float max) {
-		if (min > max) throw new IllegalArgumentException("min cannot be greater than max");
+		if (min   > max) throw new IllegalArgumentException("min cannot be greater than max");
 		if (value < min) return min;
 		if (value > max) return max;
 		return value;
@@ -344,7 +346,9 @@ public final class NumberUtils {
 		final StringBuilder str = new StringBuilder();
 		final String[] split = Pattern.compile(delim, Pattern.LITERAL).split(version);
 		for (final String part : split) {
-			str.append(String.format("%"+maxWidth+'s', part));
+			str.append(
+				String.format("%"+maxWidth+'s', part)
+			);
 		}
 		return str.toString();
 	}
@@ -361,9 +365,11 @@ public final class NumberUtils {
 		if (minNumber == maxNumber)
 			return minNumber;
 		if ((maxNumber - minNumber) == 1) {
-			if (oldNumber == minNumber)
-				return maxNumber;
-			return minNumber;
+			return (
+				oldNumber == minNumber
+				? maxNumber
+				: minNumber
+			);
 		}
 		int newNumber;
 		for (int i=0; i<100; i++) {

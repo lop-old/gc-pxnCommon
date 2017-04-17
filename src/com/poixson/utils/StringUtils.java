@@ -32,7 +32,7 @@ public final class StringUtils {
 		// boolean
 		if (obj instanceof Boolean) {
 			return
-				((boolean) obj) == true
+				((Boolean)obj).booleanValue()
 				? "TRUE"
 				: "false";
 		}
@@ -126,7 +126,7 @@ public final class StringUtils {
 
 
 
-	public static String remove(final String str, final String...strip) {
+	public static String removeFromStr(final String str, final String...strip) {
 		if (Utils.isEmpty(strip)) return str;
 		String dat = str;
 		for (final String s : strip) {
@@ -162,7 +162,7 @@ public final class StringUtils {
 
 
 
-	public static String EnsureUnique(final String match, final Set<String> existing) {
+	public static String ForceUnique(final String match, final Set<String> existing) {
 		if (Utils.isEmpty(match)) throw new RequiredArgumentException("match");
 		if (existing == null)     throw new RequiredArgumentException("existing");
 		// already unique
@@ -276,21 +276,23 @@ public final class StringUtils {
 		if (Utils.isEmpty(replaceWhat)) return data;
 		if (Utils.isEmpty(withWhat))    return data;
 		if (Utils.isEmpty(data))        return data;
-		final StringBuilder out = new StringBuilder();
+		final StringBuilder buf = new StringBuilder();
 		final int count = withWhat.length;
 		int currentPos = 0;
 		for (int i = 0; i < count; i++) {
 			final int thisPos = data.indexOf("?", currentPos);
 			if (thisPos > 0) {
-				out.append(data.substring(currentPos, thisPos))
+				buf.append(data.substring(currentPos, thisPos))
 					.append(withWhat[i]);
 				currentPos = thisPos + 1;
 			}
 		}
 		if (data.length() > currentPos) {
-			out.append(data.substring(currentPos));
+			buf.append(
+				data.substring(currentPos)
+			);
 		}
-		return out.toString();
+		return buf.toString();
 	}
 
 
@@ -302,31 +304,31 @@ public final class StringUtils {
 	public static String repeat(final int count, final String str, final String delim) {
 		if (Utils.isEmpty(str)) throw new RequiredArgumentException("str");
 		if (count < 1) return "";
-		final StringBuilder out = new StringBuilder();
+		final StringBuilder buf = new StringBuilder();
 		// repeat string
 		if (Utils.isEmpty(delim)) {
 			for (int i = 0; i < count; i++) {
-				out.append(str);
+				buf.append(str);
 			}
 		} else {
 			// repeat string with delim
 			boolean b = false;
 			for (int i = 0; i < count; i++) {
-				if (b) out.append(delim);
+				if (b) buf.append(delim);
 				b = true;
-				out.append(str);
+				buf.append(str);
 			}
 		}
-		return out.toString();
+		return buf.toString();
 	}
 	public static String repeat(final int count, final char chr) {
 		if (count < 1) return "";
-		final StringBuilder out = new StringBuilder();
+		final StringBuilder buf = new StringBuilder();
 		// repeat string
 		for (int i = 0; i < count; i++) {
-			out.append(chr);
+			buf.append(chr);
 		}
-		return out.toString();
+		return buf.toString();
 	}
 
 
@@ -360,19 +362,19 @@ public final class StringUtils {
 	public static String addArray(final String delim, final String[] addThis) {
 		if (Utils.isEmpty(addThis)) return null;
 		final String dlm = (Utils.isEmpty(delim) ? null : delim);
-		final StringBuilder str = new StringBuilder();
+		final StringBuilder buf = new StringBuilder();
 		boolean b = false;
 		for (final String line : addThis) {
 			if (Utils.isEmpty(line)) continue;
 			if (b && dlm != null) {
-				str.append(dlm);
+				buf.append(dlm);
 			}
-			str.append(line);
-			if (!b && str.length() > 0) {
+			buf.append(line);
+			if (!b && buf.length() > 0) {
 				b = true;
 			}
 		}
-		return str.toString();
+		return buf.toString();
 	}
 
 
@@ -382,8 +384,8 @@ public final class StringUtils {
 		final int count = width - text.length();
 		if (count < 1) return text;
 		return (new StringBuilder(width))
-			.append(text)
-			.append(repeat(count, padding))
+			.append( text                   )
+			.append( repeat(count, padding) )
 			.toString();
 	}
 	public static String padFront(final int width, final String text, final char padding) {
@@ -391,8 +393,8 @@ public final class StringUtils {
 		final int count = width - text.length();
 		if (count < 1) return text;
 		return (new StringBuilder(width))
-			.append(repeat(count, padding))
-			.append(text)
+			.append( repeat(count, padding) )
+			.append( text                   )
 			.toString();
 	}
 	public static String padEnd(final int width, final String text, final char padding) {
@@ -400,8 +402,8 @@ public final class StringUtils {
 		final int count = width - text.length();
 		if (count < 1) return text;
 		return (new StringBuilder(width))
-			.append(text)
-			.append(repeat(count, padding))
+			.append( text                   )
+			.append( repeat(count, padding) )
 			.toString();
 	}
 	public static String padCenter(final int width, final String text, final char padding) {
@@ -412,41 +414,57 @@ public final class StringUtils {
 		final double count = ( ((double) width) - ((double) text.length()) ) / 2.0;
 		if (Math.ceil(count) < 1.0) return text;
 		return (new StringBuilder(width))
-			.append(repeat((int) Math.floor(count), padding))
-			.append(text)
-			.append(repeat((int) Math.ceil(count), padding))
+			.append( repeat((int) Math.floor(count), padding) )
+			.append( text                                     )
+			.append( repeat((int) Math.ceil(count), padding)  )
 			.toString();
 	}
 
 
 
 	public static String pad(final int width, final int value) {
-		return pad(width, Integer.toString(value), '0');
+		return pad(
+				width,
+				Integer.toString(value),
+				'0'
+		);
 	}
 	public static String padFront(final int width, final int value) {
-		return padFront(width, Integer.toString(value), '0');
+		return padFront(
+				width,
+				Integer.toString(value),
+				'0'
+		);
 	}
 	public static String padEnd(final int width, final int value) {
-		return padEnd(width, Integer.toString(value), '0');
+		return padEnd(
+				width,
+				Integer.toString(value),
+				'0'
+		);
 	}
 	public static String padCenter(final int width, final int value) {
-		return padCenter(width, Integer.toString(value), '0');
+		return padCenter(
+				width,
+				Integer.toString(value),
+				'0'
+		);
 	}
 
 
 
 	public static String wildcardToRegex(String wildcard) {
-		final StringBuffer str = new StringBuffer(wildcard.length());
-		str.append('^');
+		final StringBuffer buf = new StringBuffer(wildcard.length());
+		buf.append('^');
 		final int len = wildcard.length();
 		for (int i = 0; i < len; i++) {
 			char c = wildcard.charAt(i);
 			switch (c) {
 			case '*':
-				str.append(".*");
+				buf.append(".*");
 				break;
 			case '?':
-				str.append(".");
+				buf.append(".");
 				break;
 			case '(':
 			case ')':
@@ -459,16 +477,15 @@ public final class StringUtils {
 			case '}':
 			case '|':
 			case '\\':
-				str.append('\\');
-				str.append(c);
+				buf.append('\\').append(c);
 				break;
 			default:
-				str.append(c);
+				buf.append(c);
 				break;
 			}
 		}
-		str.append('$');
-		return str.toString();
+		buf.append('$');
+		return buf.toString();
 	}
 
 

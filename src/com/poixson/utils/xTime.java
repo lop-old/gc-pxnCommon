@@ -30,23 +30,23 @@ public class xTime {
 		private static final long serialVersionUID = 1L;
 	{
 		// years
-		put(new Character('y'), new Long(YEAR));
+		put( new Character('y'), new Long(YEAR)  );
 		// months
-		put(new Character('o'), new Long(MONTH));
+		put( new Character('o'), new Long(MONTH) );
 		// weeks
-		put(new Character('w'), new Long(WEEK));
+		put( new Character('w'), new Long(WEEK)  );
 		// days
-		put(new Character('d'), new Long(DAY));
+		put( new Character('d'), new Long(DAY)   );
 		// hours
-		put(new Character('h'), new Long(HOUR));
+		put( new Character('h'), new Long(HOUR)  );
 		// minutes
-		put(new Character('m'), new Long(MIN));
+		put( new Character('m'), new Long(MIN)   );
 		// seconds
-		put(new Character('s'), new Long(SEC));
+		put( new Character('s'), new Long(SEC)   );
 		// ms
-		put(new Character('n'), new Long(MS));
+		put( new Character('n'), new Long(MS)    );
 		// ticks in ms
-		put(new Character('t'), new Long(TICK));
+		put( new Character('t'), new Long(TICK)  );
 	}};
 
 
@@ -175,11 +175,11 @@ public class xTime {
 	public static Long parseLong(final String value) {
 		if (Utils.isEmpty(value)) return null;
 		long time = 0;
-		StringBuilder tmp = new StringBuilder();
+		StringBuilder buf = new StringBuilder();
 		for (char c : value.toCharArray()) {
 			if (c == ' ') continue;
 			if (Character.isDigit(c) || c == '.' || c == ',') {
-				tmp.append(c);
+				buf.append(c);
 				continue;
 			}
 			if (Character.isLetter(c)) {
@@ -188,9 +188,9 @@ public class xTime {
 				);
 				if (timeValues.containsKey(chr)) {
 					final double u = timeValues.get(chr).doubleValue();
-					time += (NumberUtils.toDouble(tmp.toString()).doubleValue() * u);
+					time += (NumberUtils.toDouble(buf.toString()).doubleValue() * u);
 				}
-				tmp = new StringBuilder();
+				buf = new StringBuilder();
 				continue;
 			}
 		}
@@ -221,7 +221,7 @@ public class xTime {
 	public static String buildString(final long ms, final boolean fullFormat) {
 		if (ms < 1) return null;
 		long tmp = ms;
-		final StringBuilder out = new StringBuilder();
+		final StringBuilder buf = new StringBuilder();
 		for (final Entry<Character, Long> entry : timeValues.entrySet()) {
 			final char c = entry.getKey().charValue();
 			final long u = entry.getValue().longValue();
@@ -230,49 +230,49 @@ public class xTime {
 				((double) tmp) / ((double) u)
 			);
 			// append to string
-			if (out.length() > 0) {
-				out.append(' ');
+			if (buf.length() > 0) {
+				buf.append(' ');
 			}
-			out.append(Long.toString(val));
+			buf.append(Long.toString(val));
 			if (!fullFormat) {
 				// minimal format
-				out.append(c);
+				buf.append(c);
 			} else {
 				// full format
 				switch (c) {
 				case 'y':
-					out.append(" year");
+					buf.append(" year");
 					break;
 				case 'o':
-					out.append(" month");
+					buf.append(" month");
 					break;
 				case 'w':
-					out.append(" week");
+					buf.append(" week");
 					break;
 				case 'd':
-					out.append(" day");
+					buf.append(" day");
 					break;
 				case 'h':
-					out.append(" hour");
+					buf.append(" hour");
 					break;
 				case 'm':
-					out.append(" minute");
+					buf.append(" minute");
 					break;
 				case 's':
-					out.append(" second");
+					buf.append(" second");
 					break;
 				case 'n':
-					out.append(" ms");
+					buf.append(" ms");
 					break;
 				default:
 					continue;
 				}
 				if (c != 'n' && val > 1)
-					out.append('s');
+					buf.append('s');
 			}
 			tmp = tmp % u;
 		}
-		return out.toString();
+		return buf.toString();
 	}
 
 

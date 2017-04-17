@@ -41,13 +41,13 @@ public final class SystemHash {
 	 */
 	public static String generate() {
 		final int rnd = NumberUtils.getRandom(0, Integer.MAX_VALUE);
-		final StringBuffer str = new StringBuffer();
-		encode(str, DESCRIPTOR);
-		encode(str, Runtime.getRuntime());
-		encode(str, Thread.currentThread());
-		encode(str, System.currentTimeMillis());
-		encode(str, rnd);
-		return str.toString();
+		final StringBuffer buf = new StringBuffer();
+		encode( buf, DESCRIPTOR                 );
+		encode( buf, Runtime.getRuntime()       );
+		encode( buf, Thread.currentThread()     );
+		encode( buf, System.currentTimeMillis() );
+		encode( buf, rnd                        );
+		return buf.toString();
 	}
 
 
@@ -62,17 +62,18 @@ public final class SystemHash {
 	 */
 	private static String getMachineDescriptor() {
 		final StringBuffer desc = new StringBuffer();
-		desc.append(System.getProperty("os.name"));
-		desc.append("::");
-		desc.append(System.getProperty("os.arch"));
-		desc.append("::");
-		desc.append(System.getProperty("os.version"));
-		desc.append("::");
-		desc.append(System.getProperty("user.name"));
-		desc.append("::");
-		final StringBuffer b = buildNetworkInterfaceDescriptor();
-		if (b != null) {
-			desc.append(b);
+		desc
+			.append( System.getProperty("os.name")    )
+			.append( "::"                             )
+			.append( System.getProperty("os.arch")    )
+			.append( "::"                             )
+			.append( System.getProperty("os.version") )
+			.append( "::"                             )
+			.append( System.getProperty("user.name")  )
+			.append( "::"                             );
+		final StringBuffer buf = buildNetworkInterfaceDescriptor();
+		if (buf != null) {
+			desc.append(buf);
 		} else {
 			InetAddress addr = null;
 			try {

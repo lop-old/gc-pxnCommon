@@ -28,7 +28,8 @@ public class LockFile {
 
 
 	public static LockFile get(final String filename) {
-		if (Utils.isEmpty(filename)) throw new RequiredArgumentException("filename");
+		if (Utils.isEmpty(filename))
+			throw new RequiredArgumentException("filename");
 		synchronized(instanceLock) {
 			// existing lock
 			if (instances.containsKey(filename))

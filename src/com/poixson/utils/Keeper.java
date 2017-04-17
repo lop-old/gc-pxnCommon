@@ -24,7 +24,7 @@ public class Keeper {
 				if (instance == null)
 					instance = new Keeper();
 			}
-			Utils.init();
+			Utils.InitAll();
 		}
 		return instance;
 	}
@@ -35,15 +35,13 @@ public class Keeper {
 		if (obj == null) throw new RequiredArgumentException("obj");
 		holder.add(obj);
 //TODO:
-//		if (DEBUG_EXTRA())
-//			finest("Added: "+obj.getClass().getName());
+//		if (DEBUG_EXTRA()) finest("Added: "+obj.getClass().getName());
 	}
 	public static void remove(final Object obj) {
 		if (obj == null) throw new RequiredArgumentException("obj");
 		holder.remove(obj);
 //TODO:
-//		if (DEBUG_EXTRA())
-//			finest("Removed: "+obj.getClass().getName());
+//		if (DEBUG_EXTRA()) finest("Removed: "+obj.getClass().getName());
 	}
 	public static int removeAll(final Class<? extends Object> clss) {
 		if (holder.isEmpty())
