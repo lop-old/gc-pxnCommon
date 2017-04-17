@@ -12,8 +12,7 @@ public class LongRef {
 	public LongRef(final long value) {
 		this.value = value;
 	}
-	public LongRef() {
-	}
+	public LongRef() {}
 
 
 

@@ -12,8 +12,7 @@ public class DoubleRef {
 	public DoubleRef(final double value) {
 		this.value = value;
 	}
-	public DoubleRef() {
-	}
+	public DoubleRef() {}
 
 
 

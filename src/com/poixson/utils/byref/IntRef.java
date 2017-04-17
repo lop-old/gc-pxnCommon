@@ -12,8 +12,7 @@ public class IntRef {
 	public IntRef(final int value) {
 		this.value = value;
 	}
-	public IntRef() {
-	}
+	public IntRef() {}
 
 
 

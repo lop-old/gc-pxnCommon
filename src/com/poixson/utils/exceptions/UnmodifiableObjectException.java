@@ -18,12 +18,12 @@ public class UnmodifiableObjectException extends UnsupportedOperationException {
 		);
 		final String parentMethodName = trace[index].getMethodName();
 		final StringBuilder msg =
-				(new StringBuilder())
-				.append("Object cannot be modified! ")
-				.append(parentClassName)
-				.append("->")
-				.append(parentMethodName)
-				.append("()");
+			(new StringBuilder())
+				.append( "Object cannot be modified! " )
+				.append( parentClassName               )
+				.append( "->"                          )
+				.append( parentMethodName              )
+				.append( "()"                          );
 		return new UnmodifiableObjectException(msg.toString());
 	}
 	public UnmodifiableObjectException(final String msg) {

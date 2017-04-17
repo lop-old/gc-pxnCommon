@@ -12,8 +12,7 @@ public class StringRef {
 	public StringRef(final String value) {
 		this.value = value;
 	}
-	public StringRef() {
-	}
+	public StringRef() {}
 
 
 

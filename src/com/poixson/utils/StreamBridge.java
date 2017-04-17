@@ -86,7 +86,7 @@ public class StreamBridge implements xStartable {
 //					xLog.getRoot().trace(e);
 				break;
 			}
-			if(b == -1)
+			if (b == -1)
 				break;
 			try {
 				this.out.write(b);

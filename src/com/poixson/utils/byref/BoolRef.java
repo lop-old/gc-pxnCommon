@@ -12,8 +12,7 @@ public class BoolRef {
 	public BoolRef(final boolean value) {
 		this.value = value;
 	}
-	public BoolRef() {
-	}
+	public BoolRef() {}
 
 
 
@@ -31,8 +30,8 @@ public class BoolRef {
 
 
 	public boolean invert() {
-		return this.value = (!this.value);
-//		return this.value;
+		this.value = (!this.value);
+		return this.value;
 	}
 
 
