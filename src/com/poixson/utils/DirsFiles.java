@@ -27,7 +27,9 @@ public final class DirsFiles {
 	// get current working directory
 	public static String cwd() {
 		try {
-			return (new File(".")).getCanonicalPath().toString();
+			return (new File("."))
+					.getCanonicalPath()
+					.toString();
 		} catch (IOException ignore) {}
 		return null;
 	}
@@ -44,23 +46,26 @@ public final class DirsFiles {
 	public static File[] listContents(final File dir, final String[] extensions) {
 		if (dir == null) throw new RequiredArgumentException("dir");
 		if (!dir.isDirectory()) return null;
-		return dir.listFiles(new FileFilter() {
-			private String[] exts;
-			public FileFilter init(final String[] extens) {
-				this.exts = extens;
-				return this;
-			}
-			@Override
-			public boolean accept(File path) {
-				if (this.exts == null) return true;
-				final String pathStr = path.toString();
-				for (final String ext : this.exts) {
-					if (pathStr.endsWith(ext))
-						return true;
+		return dir.listFiles(
+			new FileFilter() {
+				private String[] exts;
+				public FileFilter init(final String[] extens) {
+					this.exts = extens;
+					return this;
 				}
-				return false;
-			}
-		}.init(extensions));
+				@Override
+				public boolean accept(File path) {
+					if (this.exts == null)
+						return true;
+					final String pathStr = path.toString();
+					for (final String ext : this.exts){
+						if (pathStr.endsWith(ext))
+							return true;
+					}
+					return false;
+				}
+			}.init(extensions)
+		);
 	}
 	public static File[] listContents(final File dir, final String extension) {
 		return listContents(dir, new String[] {extension});
@@ -192,20 +197,18 @@ public final class DirsFiles {
 		} else {
 			ext = extension;
 		}
-		final String fileStr;
-		if (!fileName.endsWith(ext)) {
-			fileStr = fileName + ext;
-		} else {
-			fileStr = fileName;
-		}
-		if (filePath == null || filePath.isEmpty()) {
+		final String fileStr = StringUtils.ForceEnds(ext, fileName);
+		if (filePath == null || filePath.isEmpty())
 			return fileStr;
-		}
 		final boolean a = (filePath.endsWith("/")  || filePath.endsWith("\\"));
 		final boolean b = (fileStr.startsWith("/") || fileStr.startsWith("\\"));
 		if (a && b) return filePath + fileStr.substring(1);
 		if (a || b) return filePath + fileStr;
-		return filePath + File.separator + fileStr;
+		return (new StringBuilder())
+			.append(filePath)
+			.append(File.separator)
+			.append(fileStr)
+			.toString();
 	}
 	public static String buildFilePath(final File path, final File file) {
 		if (file == null) throw new RequiredArgumentException("file");
@@ -215,10 +218,10 @@ public final class DirsFiles {
 		}
 		final String pathStr = path.getPath();
 		return (new StringBuilder())
-				.append(pathStr)
-				.append(pathStr.endsWith("/") ? "" : "/")
-				.append(fileStr)
-				.toString();
+			.append(pathStr)
+			.append(pathStr.endsWith("/") ? "" : "/")
+			.append(fileStr)
+			.toString();
 	}
 
 
@@ -230,17 +233,9 @@ public final class DirsFiles {
 			if (path.equals(".")) {
 				path = cwd();
 			}
-			while ( path.startsWith("/") || path.startsWith("\\") || path.endsWith(" ") ) {
-				path = path.substring(1);
-			}
-			while ( path.endsWith("/") || path.endsWith("\\") || path.endsWith(" ") ) {
-				path = path.substring(0, -1);
-			}
-			if (path.length() == 0)
+			path = StringUtils.trims(path, "/", "\\", " ", "\t", "\r", "\n");
+			if (Utils.isEmpty(path))
 				continue;
-//			if (merged.length() > 0) {
-//				merged.append(File.separatorChar);
-//			}
 			merged
 				.append(path)
 				.append(File.separatorChar);
@@ -248,12 +243,6 @@ public final class DirsFiles {
 		if (merged.length() == 0)
 			return null;
 		return merged.toString();
-	}
-
-
-
-	public static String san(final String text) {
-		return SanUtils.FileName(text);
 	}
 
 
