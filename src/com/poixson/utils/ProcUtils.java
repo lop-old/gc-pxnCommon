@@ -2,6 +2,9 @@ package com.poixson.utils;
 
 import java.lang.management.ManagementFactory;
 
+import com.poixson.utils.Keeper;
+import com.poixson.utils.NumberUtils;
+import com.poixson.utils.Utils;
 
 
 public final class ProcUtils {
@@ -15,21 +18,21 @@ public final class ProcUtils {
 
 
 
-	/ **
+	/**
 	 * Get the pid for the jvm process.
 	 * @return process id number (pid)
-	 * /
+	 */
 	// @ SuppressWarnings("restriction")
 	public static int getPid() {
 		final String str = ManagementFactory.getRuntimeMXBean().getName();
-		if(utils.isEmpty(str))
+		if (Utils.isEmpty(str))
 			return -1;
 		final String[] parts = str.split("@", 2);
-		if(parts == null)
+		if (parts == null)
 			return -1;
-		if(parts.length != 2)
+		if (parts.length != 2)
 			return -1;
-		final int pid = utilsNumbers.toInteger(parts[0], -1);
+		final int pid = NumberUtils.toInteger(parts[0], -1);
 		return pid;
 //another option to try
 //final int pid = Integer.parseInt(new File("/proc/self").getCanonicalFile().getName());
@@ -55,7 +58,7 @@ public final class ProcUtils {
 
 
 
-/ *
+/*
 	// single instance lock
 	public static boolean lockInstance(final String filepath) {
 		String path = filepath;
@@ -129,9 +132,8 @@ public final class ProcUtils {
 		}
 
 	}
-* /
+*/
 
 
 
 }
-*/

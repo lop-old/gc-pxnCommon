@@ -152,7 +152,7 @@ public final class CryptUtils {
 		final Formatter formatter = new Formatter(str);
 		for(final byte b : data)
 			formatter.format("%02x", new Byte(b));
-		utils.safeClose(formatter);
+		Utils.safeClose(formatter);
 		return str.toString();
 //		byte[] byteData = md.digest();
 //		StringBuffer hexString = new StringBuffer();
@@ -195,4 +195,3 @@ public final class CryptUtils {
 
 
 }
-*/

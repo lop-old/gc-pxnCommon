@@ -1,9 +1,5 @@
 package com.poixson.utils;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 
 public final class ReflectUtils {
 	private ReflectUtils() {}
@@ -16,6 +12,7 @@ public final class ReflectUtils {
 
 
 
+/*
 	// utilsReflect.invoke(new TestClass(), "func", "arg");
 	public static Object invoke(final Object clss, final String methodName, final Object... params) {
 		try {
@@ -45,8 +42,8 @@ public final class ReflectUtils {
 
 
 	public static String getStaticString(final Class<?> clss, final String name) {
-		if(clss == null)        throw new NullPointerException();
-		if(utils.isEmpty(name)) throw new NullPointerException();
+		if (clss == null)        throw new NullPointerException();
+		if (Utils.isEmpty(name)) throw new NullPointerException();
 		final Field field;
 		final String value;
 		try {
@@ -73,6 +70,7 @@ public final class ReflectUtils {
 		}
 		return value;
 	}
+*/
 
 
 
@@ -85,4 +83,3 @@ public final class ReflectUtils {
 
 
 }
-*/
