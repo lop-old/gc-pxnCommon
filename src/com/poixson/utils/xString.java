@@ -111,13 +111,13 @@ public class xString {
 
 	public xString ensureStarts(final String start) {
 		if (this.data != null) {
-			this.data = StringUtils.ensureStarts(start, this.data);
+			this.data = StringUtils.ForceStarts(start, this.data);
 		}
 		return this;
 	}
 	public xString ensureEnds(final String end) {
 		if (this.data != null) {
-			this.data = StringUtils.ensureEnds(end, this.data);
+			this.data = StringUtils.ForceEnds(end, this.data);
 		}
 		return this;
 	}

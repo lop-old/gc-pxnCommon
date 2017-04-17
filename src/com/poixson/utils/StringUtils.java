@@ -138,7 +138,7 @@ public final class StringUtils {
 
 
 	// ensure starts with
-	public static String ensureStarts(final String start, final String data) {
+	public static String ForceStarts(final String start, final String data) {
 		if (data == null)
 			return null;
 		if (data.startsWith(start))
@@ -149,7 +149,7 @@ public final class StringUtils {
 			.toString();
 	}
 	// ensure ends with
-	public static String ensureEnds(final String end, final String data) {
+	public static String ForceEnds(final String end, final String data) {
 		if (data == null)
 			return null;
 		if (data.endsWith(end))
@@ -162,7 +162,7 @@ public final class StringUtils {
 
 
 
-	public static String ensureUnique(final String match, final Set<String> existing) {
+	public static String EnsureUnique(final String match, final Set<String> existing) {
 		if (Utils.isEmpty(match)) throw new RequiredArgumentException("match");
 		if (existing == null)     throw new RequiredArgumentException("existing");
 		// already unique

@@ -124,7 +124,7 @@ public final class DirsFiles {
 		if (Utils.isEmpty(fileStr)) return null;
 		try {
 			return DirsFiles.class.getResourceAsStream(
-				StringUtils.ensureStarts("/", fileStr)
+				StringUtils.ForceStarts("/", fileStr)
 			);
 		} catch(Exception ignore) {}
 		return null;
