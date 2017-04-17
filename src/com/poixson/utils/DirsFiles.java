@@ -229,7 +229,7 @@ public final class DirsFiles {
 			if (Utils.isEmpty(path)) continue;
 			if (path.equals(".")) {
 				path = cwd();
-			} else {
+			}
 			while ( path.startsWith("/") || path.startsWith("\\") || path.endsWith(" ") ) {
 				path = path.substring(1);
 			}
