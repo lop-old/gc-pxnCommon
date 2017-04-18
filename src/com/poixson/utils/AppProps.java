@@ -1,5 +1,5 @@
 /*
-package com.poixson.commonjava.Utils;
+package com.poixson.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,7 +11,7 @@ import com.poixson.commonjava.Failure;
 import com.poixson.commonjava.xLogger.xLog;
 
 
-public class appProps {
+public class AppProps {
 
 	private static final String PROPS_FILE = "/app.properties";
 
@@ -53,7 +53,7 @@ public class appProps {
 
 
 	// load app.properties file
-	public appProps(final Class<?> clss) {
+	public AppProps(final Class<?> clss) {
 		Properties props = null;
 		InputStream in = null;
 		try {
