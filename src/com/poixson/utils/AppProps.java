@@ -1,22 +1,14 @@
-/*
 package com.poixson.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
-import com.poixson.commonjava.Failure;
-import com.poixson.commonjava.xLogger.xLog;
 
 
 public class AppProps {
 
 	private static final String PROPS_FILE = "/app.properties";
 
-	private static final ConcurrentMap<String, appProps> instances =
-			new ConcurrentHashMap<String, appProps>();
 
 	// properties
 	public final String name;
@@ -32,23 +24,6 @@ public class AppProps {
 
 
 
-	// get instance
-	public static appProps get(final Class<?> clss) {
-		final String className = clss.getName();
-		{
-			final appProps props = instances.get(className);
-			if(props != null)
-				return props;
-		}
-		synchronized(instances) {
-			if(instances.containsKey(className))
-				return instances.get(className);
-			final appProps props = new appProps(clss);
-			instances.put(className, props);
-			Keeper.add(props);
-			return props;
-		}
-	}
 
 
 
@@ -59,15 +34,17 @@ public class AppProps {
 		try {
 			props = new Properties();
 			in = clss.getResourceAsStream(PROPS_FILE);
-			if(in == null) {
-				Failure.fail("Failed to load "+PROPS_FILE+" resource from jar");
+			if (in == null) {
+//TODO:
+//				Failure.fail("Failed to load "+PROPS_FILE+" resource from jar");
 				throw new RuntimeException();
 			}
 			props.load(in);
 		} catch (IOException e) {
-			xLog.getRoot().trace(e);
+//TODO:
+//			xLog.getRoot().trace(e);
 		} finally {
-			utils.safeClose(in);
+			Utils.safeClose(in);
 		}
 		this.name       = props.getProperty("name");
 		this.title      = props.getProperty("title");
@@ -84,4 +61,3 @@ public class AppProps {
 
 
 }
-*/

@@ -1,4 +1,3 @@
-/*
 package com.poixson.utils;
 
 import java.io.IOException;
@@ -11,12 +10,11 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.poixson.commonjava.xLogger.xLog;
-
 
 public class xClock {
 
 	public static final String DEFAULT_TIMESERVER = "pool.ntp.org";
+
 	private volatile String timeserver = null;
 	private volatile boolean enableNTP = false;
 
@@ -36,10 +34,13 @@ public class xClock {
 
 
 	public static xClock get(final boolean blocking) {
-		if(instance == null) {
+		if (instance == null) {
 			synchronized(lock) {
-				if(instance == null)
+				if (instance == null) {
 					instance = new xClock(blocking);
+					// just to prevent gc
+					Keeper.add(instance);
+				}
 			}
 		}
 		instance.update();
@@ -54,8 +55,6 @@ public class xClock {
 	// new instance
 	private xClock(final boolean blocking) {
 		this.blocking = blocking;
-		// just to prevent gc
-		Keeper.add(this);
 	}
 	@Override
 	public Object clone() throws CloneNotSupportedException {
@@ -65,17 +64,16 @@ public class xClock {
 
 
 	public void update() {
-		if(!this.enableNTP) return;
-		if(this.running) return;
+		if (!this.enableNTP || this.running) return;
 		synchronized(this.runLock) {
-			if(this.running) return;
+			if (this.running) return;
 			this.running = true;
 			// wait for update
-			if(this.blocking) {
+			if (this.blocking) {
 				doUpdate();
 			// update threaded
 			} else {
-				if(this.thread == null) {
+				if (this.thread == null) {
 					this.thread = new Thread() {
 						@Override
 						public void run() {
@@ -91,11 +89,12 @@ public class xClock {
 
 
 	protected void doUpdate() {
-		if(!this.enableNTP) return;
-		if(!this.running) return;
+		if (!this.enableNTP || !this.running) return;
 		long time = getSystemTime();
 		// checked in last 60 seconds
-		if(this.lastChecked != 0.0 && ((time - this.lastChecked) < 60.0)) return;
+		if ( this.lastChecked != 0.0 &&
+			((time - this.lastChecked) < 60.0) )
+				return;
 		DatagramSocket socket = null;
 		try {
 			socket = new DatagramSocket();
@@ -111,24 +110,30 @@ public class xClock {
 			time = getSystemTime();
 			this.localOffset = ((msg.receiveTimestamp - msg.originateTimestamp) + (msg.transmitTimestamp - fromUnixTimestamp(time))) / 2.0;
 			// less than 100ms
-			if(this.localOffset < 0.1 && this.localOffset > -0.1) {
-				log().info("System time only off by "+utilsNumbers.FormatDecimal("0.000", this.localOffset)+", ignoring adjustment.");
+			if (this.localOffset < 0.1 && this.localOffset > -0.1) {
+//TODO:
+//				log().info("System time only off by "+
+//						NumberUtils.FormatDecimal("0.000", this.localOffset)+
+//						", ignoring adjustment.");
 				this.localOffset = 0.0;
 			} else {
-				log().info("Internal time adjusted by "+(this.localOffset>0 ? "+" : "-")+utilsNumbers.FormatDecimal("0.000", this.localOffset)+" seconds");
-				log().info("System time:   "+timestampToString(time / 1000.0));
-				log().info("Internal time: "+getString());
+//TODO:
+//				log().info("Internal time adjusted by "+(this.localOffset>0 ? "+" : "-")+
+//						NumberUtils.FormatDecimal("0.000", this.localOffset)+" seconds");
+//				log().info("System time:   "+timestampToString(time / 1000.0));
+//				log().info("Internal time: "+getString());
 			}
 		} catch (SocketException e) {
-			log().trace(e);
+//TODO:
+//			log().trace(e);
 		} catch (UnknownHostException e) {
-			log().trace(e);
+//			log().trace(e);
 		} catch (IOException e) {
-			log().trace(e);
+//			log().trace(e);
 		} catch (Exception e) {
-			log().trace(e);
+//			log().trace(e);
 		} finally {
-			utils.safeClose(socket);
+			Utils.safeClose(socket);
 			this.thread = null;
 			this.lastChecked = time;
 			this.running = false;
@@ -144,8 +149,9 @@ public class xClock {
 
 
 	public String getTimeServer() {
-		if(utils.isEmpty(this.timeserver))
+		if (Utils.isEmpty(this.timeserver)) {
 			return DEFAULT_TIMESERVER;
+		}
 		return this.timeserver;
 	}
 	public void setTimeServer(final String host) {
@@ -154,7 +160,7 @@ public class xClock {
 	public void setEnabled(final boolean enabled) {
 		synchronized(this.runLock) {
 			this.enableNTP = enabled;
-			if(!enabled) {
+			if (!enabled) {
 				this.localOffset = 0.0;
 				this.lastChecked = 0.0;
 			}
@@ -163,17 +169,17 @@ public class xClock {
 
 
 
-	/ **
+	/**
 	 * Get current time from system.
 	 * @return
-	 * /
+	 */
 	public static long getSystemTime() {
 		return System.currentTimeMillis();
 	}
-	/ **
+	/**
 	 * Get current time adjusted by NTP.
 	 * @return
-	 * /
+	 */
 	public long getCurrentTime() {
 		return getSystemTime() - ((long) this.localOffset);
 	}
@@ -199,9 +205,12 @@ public class xClock {
 
 
 	public static String timestampToString(final double timestamp) {
-		if(timestamp <= 0.0) return "0";
-		return new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss").format(new Date( (long)(timestamp * 1000.0) ))+
-				(new DecimalFormat("0.000").format( timestamp - ((long) timestamp) ));
+		if (timestamp <= 0.0)
+			return "0";
+		return (new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss"))
+				.format(new Date( (long)(timestamp * 1000.0) ))+
+				(new DecimalFormat("0.000")
+				.format( timestamp - ((long) timestamp) ));
 	}
 	public String getString() {
 		return timestampToString(seconds());
@@ -209,12 +218,12 @@ public class xClock {
 
 
 
-	// logger
-	public static xLog log() {
-		return utils.log();
-	}
+//TODO:
+//	// logger
+//	public static xLog log() {
+//		return utils.log();
+//	}
 
 
 
 }
-*/
