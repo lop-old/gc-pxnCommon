@@ -1,5 +1,5 @@
 /*
-package com.poixson.commonjava.Utils;
+package com.poixson.utils;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
