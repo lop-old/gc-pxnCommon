@@ -726,13 +726,12 @@ System.out.println("GC DONE");
 
 
 	// ascii header
-	@Override
 	protected void displayLogo() {
 		// colors
-		final String COLOR_POIXSON_P   = "bold,green";
-		final String COLOR_POIXSON_OI  = "bold,blue";
-		final String COLOR_POIXSON_X   = "bold,green";
-		final String COLOR_POIXSON_SON = "bold,blue";
+		final String COLOR_PXN_P       = "bold,green";
+		final String COLOR_PXN_OI      = "bold,blue";
+		final String COLOR_PXN_X       = "bold,green";
+		final String COLOR_PXN_SON     = "bold,blue";
 		final String COLOR_SOFTWARE    = "bold,black";
 		final String COLOR_VERSION     = "cyan";
 		final String COLOR_GRASS       = "green";
@@ -757,10 +756,10 @@ System.out.println("GC DONE");
 		// line 2
 		final Map<Integer, String> colors2 = new LinkedHashMap<Integer, String>();
 		colors2.put(new Integer(10), COLOR_DOG);
-		colors2.put(new Integer(21), COLOR_POIXSON_P);
-		colors2.put(new Integer(22), COLOR_POIXSON_OI);
-		colors2.put(new Integer(24), COLOR_POIXSON_X);
-		colors2.put(new Integer(25), COLOR_POIXSON_SON);
+		colors2.put(new Integer(21), COLOR_PXN_P);
+		colors2.put(new Integer(22), COLOR_PXN_OI);
+		colors2.put(new Integer(24), COLOR_PXN_X);
+		colors2.put(new Integer(25), COLOR_PXN_SON);
 		colors2.put(new Integer(38), COLOR_WITCH);
 		colors2.put(new Integer(40), COLOR_WITCH_EYES);
 		colors2.put(new Integer(41), COLOR_WITCH);
@@ -798,9 +797,9 @@ System.out.println("GC DONE");
 		// line 6
 		final Map<Integer, String> colors6 = new LinkedHashMap<Integer, String>();
 		colors6.put(new Integer(6),  COLOR_DOG);
-		colors6.put(new Integer(25), COLOR_FROG_EYES);
-		colors6.put(new Integer(26), COLOR_FROG);
-		colors6.put(new Integer(28), COLOR_FROG_EYES);
+		colors6.put(new Integer(27), COLOR_FROG_EYES);
+		colors6.put(new Integer(28), COLOR_FROG);
+		colors6.put(new Integer(30), COLOR_FROG_EYES);
 		colors6.put(new Integer(50), COLOR_CAT);
 		colors6.put(new Integer(53), COLOR_CAT_MOUTH);
 		colors6.put(new Integer(54), COLOR_CAT);
@@ -829,39 +828,39 @@ System.out.println("GC DONE");
 		// line 11
 		final Map<Integer, String> colors11 = new LinkedHashMap<Integer, String>();
 		colors11.put(new Integer(1),  COLOR_GRASS);
-		// build art
-		final String version = utilsString.padCenter(15, this.props.version, ' ');
+
+		// build lines
+		final String version = StringUtils.padCenter(15, this.getVersion(), ' ');
 		final PrintStream out = AnsiConsole.out;
 		out.println();
-		this.displayLogoLine(out, colors1, "                                     _/\\_                        "    );
-		this.displayLogoLine(out, colors2, "         |`-.__     PoiXson          (('>         _   _          "     );
-		this.displayLogoLine(out, colors3, "         / ' _/    Software     _    /^|         /\\\\_/ \\         "  );
-		this.displayLogoLine(out, colors4, "       -****\\\"  "+version+" =>--/_\\|m---    / 0  0  \\        "     );
-		this.displayLogoLine(out, colors5, "      /    }                         ^^        /_   v   _\\       "    );
-		this.displayLogoLine(out, colors6, "     /    \\             @..@                     \\__^___/        "   );
-		this.displayLogoLine(out, colors7, " \\ /`    \\\\\\           (----)                    /  0    \\       ");
-		this.displayLogoLine(out, colors8, "  `\\     /_\\\\         ( >__< )                  /        \\__     " );
-		this.displayLogoLine(out, colors9, "   `~~~~~~``~`        ^^ ~~ ^^                  \\_(_|_)___  \\    "   );
-		this.displayLogoLine(out, colors10,"^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^(____//^/^"    );
-		this.displayLogoLine(out, colors11,"/////////////////////////////////////////////////////////////////"    );
+		DisplayLineColors(out, colors1, "                                     _/\\_                        "    );
+		DisplayLineColors(out, colors2, "         |`-.__     PoiXson          (('>         _   _          "     );
+		DisplayLineColors(out, colors3, "         / ' _/    Software     _    /^|         /\\\\_/ \\         "  );
+		DisplayLineColors(out, colors4, "       -****\\\"  "+version+" =>--/_\\|m---    / 0  0  \\        "     );
+		DisplayLineColors(out, colors5, "      /    }                         ^^        /_   v   _\\       "    );
+		DisplayLineColors(out, colors6, "     /    \\               @..@                   \\__^___/        "   );
+		DisplayLineColors(out, colors7, " \\ /`    \\\\\\             (----)                  /  0    \\       ");
+		DisplayLineColors(out, colors8, "  `\\     /_\\\\           ( >__< )                /        \\__     " );
+		DisplayLineColors(out, colors9, "   `~~~~~~``~`          ^^ ~~ ^^                \\_(_|_)___  \\    "   );
+		DisplayLineColors(out, colors10,"^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^(____//^/^"    );
+		DisplayLineColors(out, colors11,"/////////////////////////////////////////////////////////////////"    );
 		out.println();
 		out.flush();
 	}
-
-//   |        A                B            C             D            |
-// 1 |                                     _/\_                        |
-// 2 |         |`-.__     PoiXson          (('>         _   _          |
-// 3 |         / ' _/    Software     _    /^|         /\\_/ \         |
-// 4 |       -****\"  <---version---> =>--/__|m---    / 0  0  \        |
-// 5 |      /    }                         ^^        /_   v   _\       |
-// 6 |     /    \             @..@                     \__^___/        |
-// 7 | \ /`    \\\           (----)                    /  0    \       |
-// 8 |  `\     /_\\         ( >__< )                  /        \__     |
-// 9 |   `~~~~~~``~`        ^^ ~~ ^^                  \_(_|_)___  \    |
+//  |        A                B            C             D            |
+//1 |                                     _/\_                        |
+//2 |         |`-.__     PoiXson          (('>         _   _          |
+//3 |         / ' _/    Software     _    /^|         /\\_/ \         |
+//4 |       -****\"  <---version---> =>--/__|m---    / 0  0  \        |
+//5 |      /    }                         ^^        /_   v   _\       |
+//6 |     /    \               @..@                   \__^___/        |
+//7 | \ /`    \\\             (----)                  /  0    \       |
+//8 |  `\     /_\\           ( >__< )                /        \__     |
+//9 |   `~~~~~~``~`          ^^ ~~ ^^                \_(_|_)___  \    |
 //10 |^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^(____//^/^|
 //11 |/////////////////////////////////////////////////////////////////|
-//   0 2 4 6 8 0 2 4 6 8 0 2 4 6 8 0 2 4 6 8 0 2 4 6 8 0 2 4 6 8 0 2 4 |
-//   0         1         2         3         4         5         6     |
+//  0 2 4 6 8 0 2 4 6 8 0 2 4 6 8 0 2 4 6 8 0 2 4 6 8 0 2 4 6 8 0 2 4 |
+//  0         1         2         3         4         5         6     |
 
 
 
