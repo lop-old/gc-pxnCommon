@@ -1,295 +1,469 @@
-/*
 package com.poixson.app;
 
 import java.io.PrintStream;
-import java.util.Arrays;
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
-import com.poixson.commonapp.app.annotations.xAppStep;
-import com.poixson.commonapp.app.annotations.xAppStep.StepType;
-import com.poixson.commonjava.Failure;
-import com.poixson.commonjava.Utils.LockFile;
-import com.poixson.commonjava.Utils.appProps;
-import com.poixson.commonjava.Utils.utils;
-import com.poixson.commonjava.Utils.utilsString;
-import com.poixson.commonjava.Utils.utilsThread;
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
-import com.poixson.commonjava.Utils.threads.xThreadPool;
-import com.poixson.commonjava.scheduler.xScheduler;
-import com.poixson.commonjava.xLogger.xLevel;
-import com.poixson.commonjava.xLogger.xLog;
-import com.poixson.commonjava.xLogger.commands.xCommandsHandler;
+import com.poixson.app.steps.xAppStep;
+import com.poixson.app.steps.xAppStep.StepType;
+import com.poixson.app.steps.xAppStepDAO;
+import com.poixson.utils.AppProps;
+import com.poixson.utils.Keeper;
+import com.poixson.utils.LockFile;
+import com.poixson.utils.StringUtils;
+import com.poixson.utils.ThreadUtils;
+import com.poixson.utils.Utils;
+import com.poixson.utils.xStartable;
+import com.poixson.utils.xTime;
 
 
-/ **
+/*
  * Startup sequence
- *   a. initMain()     | internal
- *   b. processArgs()  | abstracted to app
- *   c. init()         | internal
- *   d. initConfig()   | abstracted to app
- *   e. sync clock
- *   f. start thread queue
- *   g. startup(steps 1-8)  | steps abstracted to app
+ *   10  prevent root
+ *   20  lock file
+ *   50  load main configs
+ *   60  sync clock
+ *   80  display logo
+ *  100  start thread pools
+ *  150  start scheduler
  * Shutdown sequence
- *   a. shutdown()     | internal
- *   b. shutdown(steps 8-1) | steps abstracted to app
- * /
-public abstract class xApp {
+ *  150  stop scheduler
+ *  100  stop thread pools
+ *   60  display uptime
+ *   30  stop console input
+ *   20  release lock file
+ *   10  final garpage collect
+ */
+public abstract class xApp implements xStartable {
 
-	private static final String ALREADY_STARTED_EXCEPTION = "Illegal app state; this shouldn't happen; cannot start in this state; possibly already started?";
-//	private static final String ILLEGAL_STATE_EXCEPTION   = "Illegal app state; cannot continue; this shouldn't happen; Current state: ";
+//	protected static final String APP_ALREADY_STARTED_EXCEPTION =
+//			"Illegal app state, possibly already started? Cannot start in this state.";
+//	protected static final String APP_ILLEGAL_STATE_EXCEPTION =
+//			"Illegal app state, cannot continue! This shouldn't happen! Current state: ";
+
+	// app instance
+	protected static volatile xApp instance = null;
+	protected static final Object instanceLock = new Object();
+
+	// state
+	protected final AtomicInteger step = new AtomicInteger(0);
+	protected static final int STEP_OFF   = 0;
+	protected static final int STEP_START = 1;
+	protected static final int STEP_STOP  = Integer.MIN_VALUE;
+	protected static final int STEP_RUN   = Integer.MAX_VALUE;
+
+	protected volatile xTime startTime = null;
 
 	// mvn properties
-	protected final appProps props;
+	protected final AppProps props;
+
+	// just to prevent gc
+	@SuppressWarnings("unused")
+	private static final Keeper keeper = Keeper.get();
 
 
 
-	/ **
-	 * Get a single instance of the app.
-	 * /
 	public static xApp get() {
-		return (xApp) xAppAbstract.get();
+		return instance;
 	}
 	public static xApp peak() {
-		return (xApp) xAppAbstract.peak();
+		return instance;
 	}
 
 
 
-	// call this from main(args)
-	protected static void initMain(final String[] args,
-			final Class<? extends xApp> appClass) {
-		if(appClass == null) throw new RequiredArgumentException("appClass");
-		// single instance
-		if(instance != null) {
-			get().log().trace(new RuntimeException(ALREADY_STARTED_EXCEPTION));
-			Failure.fail(ALREADY_STARTED_EXCEPTION);
-		}
-		synchronized(instanceLock) {
-			if(instance != null) {
-				get().log().trace(new RuntimeException(ALREADY_STARTED_EXCEPTION));
-				Failure.fail(ALREADY_STARTED_EXCEPTION);
-				return;
-			}
-			try {
-				instance = appClass.newInstance();
-			} catch (ReflectiveOperationException e) {
-				get().log().trace(e);
-				Failure.fail(e.getMessage());
-				return;
-			}
-		}
-		// init logger
-		xLog.getRoot().setLevel(xLevel.ALL);
-		if(Failure.hasFailed()) {
-			System.out.println("Failure, pre-init!");
+	public xApp() {
+		if (instance != null) {
+//			get().log().trace(new RuntimeException(APP_ALREADY_STARTED_EXCEPTION)
+//			Failure.fail(
+//				APP_ALREADY_STARTED_EXCEPTION,
+//				new RuntimeException(APP_ALREADY_STARTED_EXCEPTION)
+//			);
+			System.out.println("Cannot init app, already inited!");
 			System.exit(1);
 		}
-		// no console
-		if(System.console() == null)
-			System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
-		// initialize console and enable colors
-		instance.initConsole();
-		// process command line arguments
-		final List<String> argsList = new LinkedList<String>();
-		argsList.addAll(Arrays.asList(args));
-		instance.processArgs(argsList);
-		instance.processDefaultArgs(argsList);
-		if(utils.notEmpty(argsList)) {
-			final StringBuilder str = new StringBuilder();
-			for(final String arg : argsList) {
-				if(utils.isEmpty(arg))
-					continue;
-				if(str.length() > 0)
-					str.append(" ");
-				str.append(arg);
-			}
-			if(str.length() > 0) {
-				System.out.println("Unknown arguments: "+str.toString());
+		synchronized(instanceLock) {
+			if (instance != null) {
+//				get().log().trace(new RuntimeException(APP_ALREADY_STARTED_EXCEPTION)
+//				Failure.fail(
+//					APP_ALREADY_STARTED_EXCEPTION,
+//					new RuntimeException(APP_ALREADY_STARTED_EXCEPTION)
+//				);
+				System.out.println("Cannot init app, already inited!");
 				System.exit(1);
-				return;
 			}
+			instance = this;
 		}
-		// handle command-line arguments
-		instance.displayStartupVars();
-		// app startup
-		instance.Start();
-		// pass main thread to thread pool
-		instance.run();
-		// main thread ended
-		Failure.fail("@|FG_RED Main process ended! (this shouldn't happen)|@");
-		System.exit(1);
+		this.props = new AppProps(this.getClass());
+//		xVars.init();
 	}
 
 
 
-	// new instance
-	protected xApp() {
-		super();
-		// mvn properties
-		this.props = appProps.get(this.getClass());
-	}
-
-
-
-	public xCommandsHandler getCommandsHandler() {
-		return null;
-	}
-
-
-
-	@Override
-	public void run() {
-		// pass main thread to thread pool
-		try {
-			xThreadPool.getMainPool()
-				.run();
-		} catch (Exception e) {
-			this.log().trace(e);
-			Failure.fail("Problem running main thread pool!");
-		}
-	}
-
-
-
-	// ------------------------------------------------------------------------------- //
-	// startup
-
-
-
-	// lock file
-	@xAppStep(type=StepType.STARTUP, title="LockFile", priority=3)
-	public void __STARTUP_lockfile() {
-		final String filename = this.getName()+".lock";
-		if(LockFile.get(filename) == null) {
-			Failure.fail("Failed to get lock on file: "+filename);
+	public void Start() {
+		// already starting or running
+		if (this.isRunning() || this.isStarting()) {
 			return;
 		}
+		synchronized(instanceLock) {
+			if (this.isRunning() || this.isStarting()) {
+				return;
+			}
+			// already stopping
+			if (this.isStopping()) {
+//TODO:
+System.out.println("Cannot start app, already stopping!");
+//System.exit(1);
+return;
+			}
+			// set starting state
+			if (!this.step.compareAndSet(STEP_OFF, STEP_START)) {
+//TODO:
+System.out.println("Invalid state, cannot start: "+Integer.toString(this.step.get()));
+System.exit(1);
+			}
+		}
+
+//TODO:
+//		// init logger
+//		xLog.getRoot().setLevel(xLevel.ALL);
+//		if (Failure.hasFailed()) {
+//			System.out.println("Failure, pre-init!");
+//			System.exit(1);
+//		}
+//		// no console
+//		if (System.console() == null) {
+//			System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
+//		}
+//		// initialize console and enable colors
+//		instance.initConsole();
+//		// process command line arguments
+//		final List<String> argsList = new LinkedList<String>();
+//		argsList.addAll(Arrays.asList(args));
+//		instance.processArgs(argsList);
+//		instance.processDefaultArgs(argsList);
+//		if (utils.notEmpty(argsList)) {
+//			final StringBuilder str = new StringBuilder();
+//			for (final String arg : argsList) {
+//				if (utils.isEmpty(arg)) continue;
+//				if (str.length() > 0)
+//					str.append(" ");
+//				str.append(arg);
+//			}
+//			if (str.length() > 0) {
+//				System.out.println("Unknown arguments: "+str.toString());
+//				System.exit(1);
+//				return;
+//			}
+//		}
+
+//		xConsole console = xLog.peakConsole();
+//		if (console == null || console instanceof xNoConsole) {
+//		if (!Utils.isJLineAvailable()) {
+//			Failure.fail("jline library not found");
+//		}
+//		console = new jlineConsole();
+//		xLog.setConsole(console);
+//	}
+//	// enable console color
+//	xLog.get().setFormatter(
+//		new xLogFormatter_Color(),
+//		logHandlerConsole.class
+//	);
+//}
+//		// handle command-line arguments
+//		instance.displayStartupVars();
+//		// main thread ended
+//		Failure.fail("@|FG_RED Main process ended! (this shouldn't happen)|@");
+//		System.exit(1);
+
+//TODO:
+//		this.log().title(
+System.out.println(
+			(new StringBuilder())
+				.append("Starting ")
+				.append(this.getTitle())
+				.append("..")
+				.toString()
+		);
+		// prepare startup steps
+		final Map<Integer, List<xAppStepDAO>> orderedSteps =
+				getSteps(StepType.STARTUP);
+		final int highestStep = findHighestPriorityStep(orderedSteps);
+		// startup loop
+		while (true) {
+			if (!this.isStarting()) {
+//TODO:
+System.out.println("Failed to start, inconsistent state!");
+return;
+			}
+			// invoke step
+			final List<xAppStepDAO> lst = orderedSteps.get( new Integer(this.step.get()) );
+			if (lst != null) {
+				boolean hasInvoked = false;
+				for (final xAppStepDAO dao : lst) {
+					try {
+						dao.invoke();
+						hasInvoked = true;
+					} catch (ReflectiveOperationException e) {
+//TODO:
+//						Failure.fail();
+						e.printStackTrace();
+						System.exit(1);
+					} catch (RuntimeException e) {
+//						Failure.fail();
+						e.printStackTrace();
+						System.exit(1);
+					}
+				}
+				// finished step
+				if (hasInvoked) {
+					System.out.flush();
+					// sleep a short bit
+					ThreadUtils.Sleep(20L);
+				}
+			}
+			// finished starting
+			if (this.step.get() >= highestStep) {
+				break;
+			}
+			this.step.incrementAndGet();
+		}
+		if (!this.isStarting()) {
+//TODO:
+System.out.println("Failed to start, inconsistent state!");
+System.exit(1);
+		}
+		// finished starting
+		this.step.set(STEP_RUN);
+	}
+	public void Stop() {
+		// already stopping or stopped
+		if (this.isStopped() || this.isStopping()) {
+			return;
+		}
+		synchronized(instanceLock) {
+			if (this.isStopped() || this.isStopping()) {
+				return;
+			}
+			if (this.isStarting()) {
+//TODO:
+System.out.println("Cannot stop app, already starting!");
+System.exit(1);
+			}
+			// set stopping state
+			this.step.set(STEP_STOP);
+		}
+//TODO:
+//		this.log().title(
+//			new String[] {
+System.out.println(
+				(new StringBuilder())
+					.append("Stopping ")
+					.append(this.getTitle())
+					.append("..")
+					.toString()
+);
+System.out.println(
+				(new StringBuilder())
+					.append("Uptime: ")
+					.append(this.getUptimeString())
+					.toString()
+);
+		// prepare shutdown steps
+		final Map<Integer, List<xAppStepDAO>> orderedSteps =
+				getSteps(StepType.SHUTDOWN);
+		final int highestStep = findHighestPriorityStep(orderedSteps);
+		this.step.set( 0 - highestStep );
+		// shutdown loop
+		while (true) {
+			if (!this.isStopping()) {
+//TODO:
+System.out.println("Failed to start, inconsistent state!");
+System.exit(1);
+			}
+			// invoke step
+			final List<xAppStepDAO> lst = orderedSteps.get( new Integer(this.step.get()) );
+			if (lst != null) {
+				boolean hasInvoked = false;
+System.out.println("STEP DN: "+this.step.get());
+				for (final xAppStepDAO dao : lst) {
+					try {
+						dao.invoke();
+						hasInvoked = true;
+					} catch (ReflectiveOperationException e) {
+//TODO:
+//						Failure.fail();
+						e.printStackTrace();
+						System.exit(1);
+					} catch (RuntimeException e) {
+//						Failure.fail();
+						e.printStackTrace();
+						System.exit(1);
+					}
+				}
+				// finished step
+				if (hasInvoked) {
+					System.out.flush();
+					// sleep a short bit
+					ThreadUtils.Sleep(20L);
+				}
+			}
+			// finished stopping
+			if (this.step.get() >= STEP_OFF) {
+				break;
+			}
+			this.step.incrementAndGet();
+		}
+		if (!this.isStopped()) {
+//TODO:
+System.out.println("Failed to stop, inconsistent state!");
+System.exit(1);
+		}
+		// finished starting
+		this.step.set(STEP_OFF);
 	}
 
 
 
-	// scheduler
-	@xAppStep(type=StepType.STARTUP, title="Scheduler", priority=75)
-	public void __STARTUP_scheduler() {
-		xScheduler.get()
-			.Start();
+	protected static Map<Integer, List<xAppStepDAO>> getSteps(final StepType type) {
+		final Map<Integer, List<xAppStepDAO>> orderedSteps =
+				new HashMap<Integer, List<xAppStepDAO>>();
+		final List<xAppStepDAO> steps = findSteps();
+		for (final xAppStepDAO dao : steps) {
+			if (!dao.isType(type)) continue;
+			List<xAppStepDAO> lst = orderedSteps.get(
+				new Integer(dao.priority)
+			);
+			// add new list to map
+			if (lst == null) {
+				lst = new LinkedList<xAppStepDAO>();
+				orderedSteps.put(
+					new Integer(dao.priority),
+					lst
+				);
+			}
+			lst.add(dao);
+		}
+		return orderedSteps;
+	}
+	protected static List<xAppStepDAO> findSteps() {
+		final Class<? extends xApp> clss = instance.getClass();
+		if (clss == null)
+			throw new RuntimeException("Failed to get app class!");
+		// get method annotations
+		final Method[] methods = clss.getMethods();
+		if (Utils.isEmpty(methods))
+			throw new RuntimeException("Failed to get app methods!");
+		final List<xAppStepDAO> steps = new LinkedList<xAppStepDAO>();
+		for (final Method m : methods) {
+			final xAppStep anno = m.getAnnotation(xAppStep.class);
+			if (anno == null) continue;
+//			if (!type.equals(anno.type())) continue;
+			// found step method
+			final xAppStepDAO dao =
+				new xAppStepDAO(
+					instance,
+					m,
+					anno
+				);
+			steps.add(dao);
+		}
+		return steps;
+	}
+	protected static int findHighestPriorityStep(final Map<Integer, List<xAppStepDAO>> steps) {
+		int highest = 0;
+		for (final Integer key : steps.keySet()) {
+			if (key.intValue() > highest) {
+				highest = key.intValue();
+			}
+		}
+		return highest;
 	}
 
 
 
-	// ------------------------------------------------------------------------------- //
-	// shutdown
-
-
-
-	// stop scheduler
-	@xAppStep(type=StepType.SHUTDOWN, title="Scheduler", priority=75)
-	public void __SHUTDOWN_scheduler() {
-		xScheduler.get()
-			.Stop();
+	public void run() {
+		throw new UnsupportedOperationException();
 	}
 
 
 
-	// stop thread pools
-	@xAppStep(type=StepType.SHUTDOWN, title="ThreadPools", priority=70)
-	public void __SHUTDOWN_threadpools() {
-		xThreadPool
-			.ShutdownAll();
+	public boolean isRunning() {
+		return (this.step.get() == STEP_RUN);
+	}
+	public boolean isStarting() {
+		final int step = this.step.get();
+		return (step > STEP_OFF && step < STEP_RUN);
+	}
+	public boolean isStopping() {
+		return (this.step.get() < STEP_OFF);
+	}
+	public boolean isStopped() {
+		return (this.step.get() == STEP_OFF);
 	}
 
 
 
-	// stop console input
-	@xAppStep(type=StepType.SHUTDOWN, title="Console", priority=32)
-	public void __SHUTDOWN_console() {
-		xLog.shutdown();
+//TODO:
+//	public long getUptime() {
+//		if(this.startTime == -1)
+//			return 0;
+//		return xClock.get(true).millis() - this.startTime;
+//	}
+	public String getUptimeString() {
+return "<uptime>";
+//		final xTime time = xTime.get(this.getUptime());
+//		if(time == null)
+//			return null;
+//		return time.toFullString();
 	}
-
-
-
-	// lock file
-	@xAppStep(type=StepType.SHUTDOWN, title="LockFile", priority=3)
-	public void __SHUTDOWN_lockfile() {
-		final String filename = this.getName()+".lock";
-		final LockFile lock = LockFile.peak(filename);
-		if(lock != null)
-			lock.release();
-	}
-
-
-
-	// garbage collect
-	@xAppStep(type=StepType.SHUTDOWN,title="GarbageCollect", priority=1)
-	public void __SHUTDOWN_gc() {
-		utilsThread.Sleep(250L);
-		xScheduler.clearInstance();
-		System.gc();
-		final xLog log = this.log();
-		if(xScheduler.hasLoaded())
-			log.warning("xScheduler hasn't fully unloaded!");
-		else
-			log.finest("xScheduler has been unloaded");
-
-	}
-
-
-
-	// ------------------------------------------------------------------------------- //
 
 
 
 	// mvn properties
-	@Override
 	public String getName() {
 		return this.props.name;
 	}
-	@Override
 	public String getTitle() {
 		return this.props.title;
 	}
-	@Override
 	public String getFullTitle() {
 		return this.props.full_title;
 	}
-	@Override
 	public String getVersion() {
 		return this.props.version;
 	}
-	@Override
 	public String getCommitHash() {
 		final String hash = this.getCommitHashFull();
-		if(utils.isEmpty(hash))
+		if (Utils.isEmpty(hash))
 			return "N/A";
 		return hash.substring(0, 7);
 	}
-	@Override
 	public String getCommitHashFull() {
 		return this.props.commitHash;
 	}
-	@Override
 	public String getURL() {
 		return this.props.url;
 	}
-	@Override
 	public String getOrgName() {
 		return this.props.org_name;
 	}
-	@Override
 	public String getOrgURL() {
 		return this.props.org_url;
 	}
-	@Override
 	public String getIssueName() {
 		return this.props.issue_name;
 	}
-	@Override
 	public String getIssueURL() {
 		return this.props.issue_url;
 	}
@@ -297,6 +471,257 @@ public abstract class xApp {
 
 
 	// ------------------------------------------------------------------------------- //
+	// startup steps
+
+
+
+	// ensure not root
+	@xAppStep(type=StepType.STARTUP, title="RootCheck", priority=10)
+	public void __STARTUP_rootcheck() {
+		final String user = System.getProperty("user.name");
+		if("root".equals(user)) {
+//TODO:
+//			this.log().warning("It is recommended to run as a non-root user");
+System.out.println("It is recommended to run as a non-root user");
+		} else
+		if("administrator".equalsIgnoreCase(user) || "admin".equalsIgnoreCase(user)) {
+//			this.log().warning("It is recommended to run as a non-administrator user");
+System.out.println("It is recommended to run as a non-administrator user");
+		}
+	}
+
+
+
+	// lock file
+	@xAppStep(type=StepType.STARTUP, title="LockFile", priority=20)
+	public void __STARTUP_lockfile() {
+		final String filename = this.getName()+".lock";
+		if(LockFile.get(filename) == null) {
+//TODO:
+//			Failure.fail("Failed to get lock on file: "+filename);
+//			return;
+System.out.println("Failed to get lock on file: "+filename);
+		}
+	}
+
+
+
+	// load configs
+	@xAppStep(type=StepType.STARTUP, title="Configs", priority=50)
+	public void __STARTUP_configs() {
+	}
+
+
+
+	// clock
+	@xAppStep(type=StepType.STARTUP, title="Clock", priority=60)
+	public void __STARTUP_clock() {
+System.out.println("CLOCK");
+//TODO:
+//		this.startTime = xClock.get(true).millis();
+	}
+
+
+
+	// display logo
+	@xAppStep(type=StepType.STARTUP, title="DisplayLogo", priority=80)
+	public void __STARTUP_displaylogo() {
+		this.displayLogo();
+//		displayStartupVars();
+	}
+
+
+
+	// start thread pools
+	@xAppStep(type=StepType.STARTUP, title="ThreadPools", priority=100)
+	public void __STARTUP_threadpools() {
+System.out.println("THREAD POOLS");
+//TODO:
+//		// pass main thread to thread pool
+//		try {
+//			xThreadPool.getMainPool()
+//				.run();
+//		} catch (Exception e) {
+//			this.log().trace(e);
+//			Failure.fail("Problem running main thread pool!");
+//		}
+	}
+
+
+
+	// start scheduler
+	@xAppStep(type=StepType.STARTUP, title="Scheduler", priority=150)
+	public void __STARTUP_scheduler() {
+System.out.println("SCHEDUILER");
+//TODO:
+//		xScheduler.get()
+//			.Start();
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// shutdown steps
+
+
+
+	// stop scheduler
+	@xAppStep(type=StepType.SHUTDOWN, title="Scheduler", priority=150)
+	public void __SHUTDOWN_scheduler() {
+System.out.println("STOP SCHED");
+//TODO:
+//		xScheduler.get()
+//			.Stop();
+	}
+
+
+
+	// stop thread pools
+	@xAppStep(type=StepType.SHUTDOWN, title="ThreadPools", priority=100)
+	public void __SHUTDOWN_threadpools() {
+System.out.println("STOP THREADS");
+//TODO:
+//		xThreadPool
+//			.ShutdownAll();
+	}
+
+
+
+	// display uptime
+	@xAppStep(type=StepType.SHUTDOWN, title="Uptime", priority=60)
+	public void __SHUTDOWN_uptimestats() {
+System.out.println("STOP UPTIME");
+//TODO: display total time running
+//this.getUptimeString();
+	}
+
+
+
+	// stop console input
+	@xAppStep(type=StepType.SHUTDOWN, title="Console", priority=30)
+	public void __SHUTDOWN_console() {
+System.out.println("STOP CONSOLE");
+//TODO:
+//		xLog.shutdown();
+	}
+
+
+
+	// release lock file
+	@xAppStep(type=StepType.SHUTDOWN, title="LockFile", priority=20)
+	public void __SHUTDOWN_lockfile() {
+System.out.println("RELEASE LOCK");
+//TODO:
+//		final String filename = this.getName()+".lock";
+//		final LockFile lock = LockFile.peak(filename);
+//		if(lock != null) {
+//			lock.release();
+//		}
+	}
+
+
+
+	// garbage collect
+	@xAppStep(type=StepType.SHUTDOWN,title="GarbageCollect", priority=10)
+	public void __SHUTDOWN_gc() {
+System.out.println("GC DONE");
+//TODO:
+//		utilsThread.Sleep(250L);
+//		xScheduler.clearInstance();
+		System.gc();
+//		final xLog log = this.log();
+//		if(xScheduler.hasLoaded()) {
+//			log.warning("xScheduler hasn't fully unloaded!");
+//		} else {
+//			log.finest("xScheduler has been unloaded");
+//		}
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+
+
+
+	protected static void DisplayLineColors(final PrintStream out,
+			final Map<Integer, String> colors, final String line) {
+		final StringBuilder buffer = new StringBuilder();
+		int last = 0;
+		boolean hasColor = false;
+		for (final Entry<Integer, String> entry : colors.entrySet()) {
+			final int pos = entry.getKey().intValue() - 1;
+			if (pos > last) {
+				buffer.append(
+					line.substring(last, pos)
+				);
+			}
+			last = pos;
+			if (hasColor) {
+				buffer.append("|@");
+			}
+			hasColor = true;
+			buffer
+				.append("@|")
+				.append(entry.getValue())
+				.append(" ");
+		}
+		if (last < line.length()) {
+			buffer.append(line.substring(last));
+		}
+		if (hasColor) {
+			buffer.append("|@");
+		}
+		out.println(
+			Ansi.ansi().a(" ")
+				.render(buffer.toString())
+				.reset().a(" ")
+		);
+	}
+
+
+
+//	protected void displayTestColors() {
+//		final PrintStream out = AnsiConsole.out;
+//		out.println(Ansi.ansi().reset());
+//		for (final Ansi.Color color : Ansi.Color.values()) {
+//			final String name = Strings.padCenter(7, color.name(), ' ');
+//			out.println(Ansi.ansi()
+//				.a("   ")
+//				.fg(color).a(name)
+//				.a("   ")
+//				.bold().a("BOLD-"+name)
+//				.a("   ")
+//				.boldOff().fg(Ansi.Color.WHITE).bg(color).a(name)
+//				.reset()
+//			);
+//		}
+//		out.println(Ansi.ansi().reset());
+//		out.println();
+//		out.flush();
+//	}
+
+
+
+//	public void displayStartupVars() {
+//		final PrintStream out = AnsiConsole.out;
+//		final String hash;
+//		out.println();
+//		out.println(" Pid: "+Proc.getPid());
+//		out.println(" Version: "+this.getVersion());
+//		out.println(" Commit:  "+this.getCommitHash());
+//		out.println(" Running as:  "+System.getProperty("user.name"));
+//		out.println(" Current dir: "+System.getProperty("user.dir"));
+//		out.println(" java home:   "+System.getProperty("java.home"));
+//		out.println(" Terminal:    "+System.getProperty("jline.terminal"));
+//		if (xVars.debug())
+//			out.println(" Debug: true");
+//		if (Utils.notEmpty(args)) {
+//			out.println();
+//			out.println(utilsString.addStrings(" ", args));
+//		}
+//		out.println();
+//		out.flush();
+//	}
 
 
 
@@ -441,4 +866,3 @@ public abstract class xApp {
 
 
 }
-*/

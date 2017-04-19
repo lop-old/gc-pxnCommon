@@ -1,53 +1,78 @@
-/*
 package com.poixson.app.steps;
 
 import java.lang.reflect.Method;
 
-import com.poixson.commonapp.app.annotations.xAppStep;
-import com.poixson.commonapp.app.annotations.xAppStep.StepType;
-import com.poixson.commonjava.Utils.utils;
-import com.poixson.commonjava.Utils.utilsString;
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
+import com.poixson.app.xApp;
+import com.poixson.app.steps.xAppStep.StepType;
+import com.poixson.utils.StringUtils;
+import com.poixson.utils.Utils;
+import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
 public class xAppStepDAO {
 
 	public final StepType type;
-	public final int      step;
+	public final int      priority;
 	public final String   name;
 	public final String   title;
+
+	public final xApp     app;
 	public final Method   method;
+	public final xAppStep anno;
 
 
 
-	public xAppStepDAO(final xAppStep annotation, final Method method) {
-		if(annotation == null) throw new RequiredArgumentException("annotation");
-		if(method     == null) throw new RequiredArgumentException("method");
-		this.type = annotation.type();
-		this.step = annotation.priority();
-		// strip method down to name
+	public xAppStepDAO(final xApp app, final Method method, final xAppStep anno) {
+		if(app    == null) throw new RequiredArgumentException("app");
+		if(method == null) throw new RequiredArgumentException("method");
+		if(anno   == null) throw new RequiredArgumentException("annotation");
+		this.type = anno.type();
+		this.priority = (
+				anno.priority() < 0
+				? 0 - anno.priority()
+				: anno.priority()
+			);
+		this.app    = app;
+		this.method = method;
+		this.anno   = anno;
 		{
 			String name = method.getName();
-			name = utilsString.trims(name, "_");
-			for(final String trim : new String[] {
-					"startup",
-					"start",
-					"shutdown",
-					"stop"
-			}) {
-				if(name.startsWith(trim))
-					name = name.substring(trim.length());
-				name = utilsString.trims(name, "_");
-			}
-			if(utils.isEmpty(name))
-				name = utilsString.trims(method.getName(), "_");
-			this.name = name;
+			name = StringUtils.trims(
+				name,
+				"_",
+				"startup",
+				"start",
+				"shutdown",
+				"stop"
+			);
+			this.name =
+				Utils.isEmpty(name)
+				? StringUtils.trims(this.method.getName(), "_")
+				: name;
 		}
-		this.title = utils.isEmpty(annotation.title()) ? this.name : annotation.title();
-		this.method = method;
+		this.title =
+			Utils.isEmpty(anno.title())
+			? this.name
+			: anno.title();
+	}
+
+
+
+	public boolean isType(final StepType type) {
+		if (type == null)
+			return false;
+		return type.equals(this.type);
+	}
+	public boolean isPriority(final byte priority) {
+		return (this.priority == priority);
+	}
+
+
+
+	public void invoke() throws ReflectiveOperationException, RuntimeException {
+		this.method.invoke(this.app);
 	}
 
 
 
 }
-*/
