@@ -41,9 +41,11 @@ public final class ThreadUtils {
 			if (Utils.isEmpty(name)) continue;
 			if (!includeDaemon && name.startsWith("main:")) continue;
 //			// check ignore list
-//			for(final String str : ignoreThreadNames)
-//				if(name.equals(str))
+//			for (final String str : ignoreThreadNames) {
+//				if (name.equals(str)) {
 //					continue;
+//				}
+//			}
 			// add to list
 			list.add(thread.getName());
 		}

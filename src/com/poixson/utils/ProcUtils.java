@@ -62,14 +62,14 @@ public final class ProcUtils {
 	// single instance lock
 	public static boolean lockInstance(final String filepath) {
 		String path = filepath;
-		if(utils.isEmpty(path)) {
+		if (Utils.isEmpty(path)) {
 			final xApp app = xApp.peak();
-			if(app != null) {
+			if (app != null) {
 				final String appName = app.getName();
 				path = appName+".lock";
 			}
 		}
-		if(utils.isEmpty(path))
+		if (Utils.isEmpty(path))
 			throw new RequiredArgumentException("filepath");
 		final File file = new File(path);
 		RandomAccessFile access = null;
@@ -77,38 +77,41 @@ public final class ProcUtils {
 			access = new RandomAccessFile(file, "rw");
 			final FileLock lock = access.getChannel().tryLock();
 			final int pid = getPid();
-			if(pid > 0)
+			if (pid > 0) {
 				access.write(Integer.toString(pid).getBytes());
-			else
+			} else {
 				access.writeUTF("<PID>");
-			if(lock == null) {
-				utils.safeClose(access);
+			}
+			if (lock == null) {
+				Utils.safeClose(access);
 				return false;
 			}
 			// register shutdown hook
 			Runtime.getRuntime().addShutdownHook(
-					new LockFileReleaseThread(
-							file,
-							access
-					)
+				new LockFileReleaseThread(
+					file,
+					access
+				)
 			);
 			return true;
 		} catch (OverlappingFileLockException e) {
-			xLog.getRoot().severe("Unable to create or lock file: "+file.toString());
-			xLog.getRoot().severe("File may already be locked!");
+			final xLog log = xLog.getRoot();
+			log.severe("Unable to create or lock file: "+file.toString());
+			log.severe("File may already be locked!");
 			return false;
 		} catch (Exception e) {
-			xLog.getRoot().severe("Unable to create or lock file: "+file.toString());
-			xLog.getRoot().trace(e);
+			final xLog log = xLog.getRoot();
+			log.severe("Unable to create or lock file: "+file.toString());
+			log.trace(e);
 		} finally {
-			utils.safeClose(access);
+			Utils.safeClose(access);
 		}
 		return false;
 	}
 
 
 
-	static class LockFileReleaseThread extends Thread {
+	protected static class LockFileReleaseThread extends Thread {
 
 		private final File file;
 		private final RandomAccessFile access;
@@ -126,8 +129,9 @@ public final class ProcUtils {
 				utils.safeClose(this.access);
 				this.file.delete();
 			} catch (Exception e) {
-				xLog.getRoot().severe("Unable to release lock file: "+this.file.toString());
-				xLog.getRoot().trace(e);
+				final xLog log = xLog.getRoot();
+				log.severe("Unable to release lock file: "+this.file.toString());
+				log.trace(e);
 			}
 		}
 

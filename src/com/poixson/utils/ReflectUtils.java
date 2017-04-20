@@ -17,7 +17,8 @@ public final class ReflectUtils {
 	public static Object invoke(final Object clss, final String methodName, final Object... params) {
 		try {
 			final Method method = clss.getClass().getMethod(methodName, getParemeterClasses(params));
-			if(method == null) return null;
+			if (method == null)
+				return null;
 			return method.invoke(clss, params);
 		} catch (NoSuchMethodException e) {
 //TODO:
@@ -34,8 +35,9 @@ public final class ReflectUtils {
 	@SuppressWarnings("rawtypes")
 	private static Class[] getParemeterClasses(final Object...params) {
 		Class[] classes = new Class[params.length];
-		for(int i = 0; i < classes.length; i++)
+		for (int i = 0; i < classes.length; i++) {
 			classes[i] = params[i].getClass();
+		}
 		return classes;
 	}
 

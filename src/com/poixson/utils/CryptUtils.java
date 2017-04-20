@@ -53,7 +53,8 @@ public final class CryptUtils {
 	public static String crypt(final String cryptMethod, final String data) {
 		try {
 			final MessageDigest md = MessageDigest.getInstance(cryptMethod);
-			if(md == null) return null;
+			if (md == null)
+				return null;
 			md.update(data.getBytes());
 			return toHex(md.digest());
 		} catch (NoSuchAlgorithmException e) {
@@ -66,7 +67,8 @@ public final class CryptUtils {
 	public static String crypt(final String cryptMethod, final String key, final String data) {
 		try {
 			final Mac mac = Mac.getInstance(cryptMethod);
-			if(mac == null) return null;
+			if (mac == null)
+				return null;
 			mac.init(new SecretKeySpec(key.getBytes(), cryptMethod));
 			return toHex(
 				mac.doFinal(
@@ -98,7 +100,8 @@ public final class CryptUtils {
 	public static String hmac(final String key, final String data, final String cryptMethod) {
 		try {
 			final Mac mac = Mac.getInstance(cryptMethod);
-			if(mac == null) return null;
+			if (mac == null)
+				return null;
 			mac.init(new SecretKeySpec(key.getBytes(), cryptMethod));
 			return toHex(
 				mac.doFinal(
@@ -119,24 +122,24 @@ public final class CryptUtils {
 
 	// base64 encode
 	public static String Base64Encode(final String data) {
-		if(data == null)   return null;
-		if(data.isEmpty()) return "";
+		if (data == null)   return null;
+		if (data.isEmpty()) return "";
 		return new String(Base64Encode(data.getBytes()));
 	}
 	public static byte[] Base64Encode(final byte[] data) {
-		if(data == null)     return null;
-		if(data.length == 0) return new byte[0];
+		if (data == null)     return null;
+		if (data.length == 0) return new byte[0];
 		return Base64.getEncoder().encode(data);
 	}
 	// base64 decode
 	public static String Base64Decode(final String data) {
-		if(data == null)   return null;
-		if(data.isEmpty()) return "";
+		if (data == null)   return null;
+		if (data.isEmpty()) return "";
 		return new String(Base64Decode(data.getBytes()));
 	}
 	public static byte[] Base64Decode(final byte[] data) {
-		if(data == null)     return null;
-		if(data.length == 0) return new byte[0];
+		if (data == null)     return null;
+		if (data.length == 0) return new byte[0];
 		return Base64.getDecoder().decode(data);
 	}
 
@@ -147,11 +150,12 @@ public final class CryptUtils {
 		return toHex(data.getBytes());
 	}
 	public static String toHex(final byte[] data) {
-		if(data == null || data.length == 0) return null;
+		if (data == null || data.length == 0) return null;
 		final StringBuilder str = new StringBuilder(data.length * 2);
 		final Formatter formatter = new Formatter(str);
-		for(final byte b : data)
+		for (final byte b : data) {
 			formatter.format("%02x", new Byte(b));
+		}
 		Utils.safeClose(formatter);
 		return str.toString();
 //		byte[] byteData = md.digest();
@@ -170,15 +174,16 @@ public final class CryptUtils {
 		return fromHex(hex.toCharArray());
 	}
 	public static byte[] fromHex(final char[] hex) {
-		if(hex == null || hex.length == 0) return null;
+		if (hex == null || hex.length == 0) return null;
 		final int length = hex.length / 2;
 		byte[] out = new byte[length];
-		for(int i=0; i<length; i++) {
+		for (int i=0; i<length; i++) {
 			final int high = Character.digit(hex[i * 2], 16);
 			final int low = Character.digit(hex[(i * 2) + 1], 16);
 			int value = (high << 4) | low;
-			if(value > 127)
+			if (value > 127) {
 				value -= 256;
+			}
 			out[i] = (byte) value;
 		}
 		return out;

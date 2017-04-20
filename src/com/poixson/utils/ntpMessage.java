@@ -328,7 +328,7 @@ public class ntpMessage {
 	 * a byte is signed.
 	 */
 	public static short unsignedByteToShort(final byte b) {
-		if((b & 0x80) == 0x80)
+		if ((b & 0x80) == 0x80)
 			return (short) (128 + (b & 0x7f));
 		return b;
 	}
@@ -344,7 +344,7 @@ public class ntpMessage {
 	 */
 	public static double decodeTimestamp(final byte[] array, final int pointer) {
 		double r = 0.0;
-		for(int i=0; i<8; i++)
+		for (int i=0; i<8; i++)
 			r += unsignedByteToShort(array[pointer + i]) * Math.pow(2, (3 - i) * 8);
 		return r;
 	}
@@ -356,7 +356,7 @@ public class ntpMessage {
 	public static void encodeTimestamp(final byte[] array, final int pointer, final double timestamp) {
 		double stamp = timestamp;
 		// Converts a double into a 64-bit fixed point
-		for(int i=0; i<8; i++) {
+		for (int i=0; i<8; i++) {
 			// 2^24, 2^16, 2^8, .. 2^-32
 			final double base = Math.pow(2, (3 - i) * 8);
 			// Capture byte value
@@ -377,7 +377,7 @@ public class ntpMessage {
 	 * formatted date/time string.
 	 */
 	public static String timestampToString(final double timestamp) {
-		if(timestamp == 0)
+		if (timestamp == 0)
 			return "0";
 
 		// timestamp is relative to 1900, utc is used by Java and is relative
@@ -407,11 +407,11 @@ public class ntpMessage {
 		// In the case of NTP Version 3 or Version 4 stratum-0 (unspecified)
 		// or stratum-1 (primary) servers, this is a four-character ASCII
 		// string, left justified and zero padded to 32 bits.
-		if(stratum == 0 || stratum == 1)
+		if (stratum == 0 || stratum == 1)
 			return new String(ref);
 		// In NTP Version 3 secondary servers, this is the 32-bit IPv4
 		// address of the reference source.
-		if(version == 3) {
+		if (version == 3) {
 			final StringBuilder str = new StringBuilder();
 			str.append(unsignedByteToShort(ref[0])).append(".");
 			str.append(unsignedByteToShort(ref[1])).append(".");
@@ -421,7 +421,7 @@ public class ntpMessage {
 		}
 		// In NTP Version 4 secondary servers, this is the low order 32 bits
 		// of the latest transmit timestamp of the reference source.
-		if(version == 4) {
+		if (version == 4) {
 			final StringBuilder str = new StringBuilder();
 			str.append(unsignedByteToShort(ref[0]) / 256.0);
 			str.append(unsignedByteToShort(ref[1]) / 65536.0);
