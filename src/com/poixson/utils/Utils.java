@@ -50,6 +50,33 @@ public final class Utils {
 
 
 
+	public static boolean isBlank(final String value) {
+		if (isEmpty(value)) {
+			return true;
+		}
+		for (int i=0; i < value.length(); i++) {
+			if ( ! Character.isWhitespace(value.charAt(i)) ) {
+				return false;
+			}
+		}
+		return true;
+	}
+	public static boolean notBlank(final String value) {
+		return ! isBlank(value);
+	}
+
+
+
+	public static String DefaultIfBlank(final String value, final String defaultStr) {
+		return (
+			isBlank(value)
+			? defaultStr
+			: value
+		);
+	}
+
+
+
 	/**
 	 * Is array empty.
 	 * @param Object[]
