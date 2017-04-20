@@ -1,16 +1,15 @@
-/*
-package com.poixson.commonjava.xLogger;
+package com.poixson.utils.xLogger;
 
 import java.util.List;
 
-import com.poixson.commonjava.Utils.xClock;
+import com.poixson.utils.xClock;
 
 
 public class xLogRecord {
 
-	private final xLog log;
+	private final xLog   log;
 	private final xLevel level;
-	private final long timestamp;
+	private final long   timestamp;
 	private final String msg;
 
 
@@ -31,7 +30,7 @@ public class xLogRecord {
 	}
 	// java util level type
 	public java.util.logging.Level javaLevel() {
-		if(this.level == null)
+		if (this.level == null)
 			return null;
 		return this.level.getJavaLevel();
 	}
@@ -47,7 +46,7 @@ public class xLogRecord {
 
 	// get message
 	public String msg() {
-		if(this.msg == null)
+		if (this.msg == null)
 			return "";
 		return this.msg;
 	}
@@ -62,4 +61,3 @@ public class xLogRecord {
 
 
 }
-*/

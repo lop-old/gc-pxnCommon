@@ -1,21 +1,26 @@
-/*
-package com.poixson.commonjava.xLogger;
+package com.poixson.utils.xLogger;
 
 import java.util.List;
 
-import com.poixson.commonjava.Utils.utilsString;
+import com.poixson.utils.StringUtils;
 
 
 public abstract class xLogPrinting {
 
 
-
 	public abstract xLog get(final String name);
 	public abstract xLog getWeak();
 	public abstract xLog getWeak(final String name);
+	public abstract xLog clone();
 
 	public abstract boolean isRoot();
+
+	public abstract void setLevel(final xLevel lvl);
+	public abstract xLevel getLevel();
+	public abstract boolean isLoggable(final xLevel lvl);
+
 	public abstract List<String> getNameTree();
+
 	public abstract void addHandler(final xLogHandler handler);
 	public abstract void setHandler(final xLogHandler handler);
 
@@ -41,24 +46,34 @@ public abstract class xLogPrinting {
 
 	// title
 	public void title(final String msg) {
-		if(msg == null)
+		if (msg == null) {
 			this.publish(" @|FG_MAGENTA [[|@ @|FG_CYAN <null>|@ @|FG_MAGENTA ]]|@");
-		else
+		} else
+		if (msg.contains("\n")) {
+			msg.replace("\r", "");
+			this.title(
+				msg.split("\n")
+			);
+		} else {
 			this.publish(" @|FG_MAGENTA [[|@ @|FG_CYAN "+msg+"|@ @|FG_MAGENTA ]]|@");
+		}
 	}
 	// multi-lined title
 	public void title(final String[] msgs) {
 		// find max length
 		int len = 0;
-		for(final String line : msgs)
-			if(line.length() > len)
+		for (final String line : msgs) {
+			if (line.length() > len) {
 				len = line.length();
+			}
+		}
 		// print lines
-		for(final String line : msgs)
-			this.title( line+utilsString.repeat(len - line.length(), " ") );
+		for (final String line : msgs) {
+			this.title( line + StringUtils.repeat(len - line.length(), " ") );
+		}
 	}
 	public void title(final List<String> list) {
-		if(list == null) return;
+		if (list == null) return;
 		this.title(list.toArray(new String[0]));
 	}
 
@@ -68,7 +83,7 @@ public abstract class xLogPrinting {
 	public void trace(final Throwable e) {
 		this.publish(
 			xLevel.SEVERE,
-			utilsString.ExceptionToString(e)
+			StringUtils.ExceptionToString(e)
 		);
 	}
 
@@ -121,4 +136,3 @@ public abstract class xLogPrinting {
 
 
 }
-*/
