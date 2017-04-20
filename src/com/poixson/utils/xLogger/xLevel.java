@@ -1,13 +1,12 @@
-/*
-package com.poixson.commonjava.xLogger;
+package com.poixson.utils.xLogger;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.poixson.commonjava.Utils.utils;
-import com.poixson.commonjava.Utils.utilsNumbers;
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.NumberUtils;
+import com.poixson.utils.Utils;
+import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
 public class xLevel implements Serializable {
@@ -37,11 +36,12 @@ public class xLevel implements Serializable {
 
 
 	private xLevel(final String name, final int value) {
-		if(utils.isEmpty(name)) throw new RequiredArgumentException("name");
+		if (Utils.isEmpty(name))
+			throw new RequiredArgumentException("name");
 		this.name = name.toUpperCase();
 		this.value = value;
-		if(value != Integer.MIN_VALUE && value < minValue) minValue = value;
-		if(value != Integer.MAX_VALUE && value > maxValue) maxValue = value;
+		if (value != Integer.MIN_VALUE && value < minValue) minValue = value;
+		if (value != Integer.MAX_VALUE && value > maxValue) maxValue = value;
 		knownLevels.add(this);
 	}
 	@Override
@@ -55,32 +55,37 @@ public class xLevel implements Serializable {
 		return knownLevels.toArray(new xLevel[0]);
 	}
 	public static xLevel FindLevel(final String name) {
-		if(utils.isEmpty(name)) return null;
-		if(utilsNumbers.isNumeric(name))
-			return FindLevel(utilsNumbers.toInteger(name));
+		if (Utils.isEmpty(name)) return null;
+		if (NumberUtils.isNumeric(name)) {
+			return FindLevel(NumberUtils.toInteger(name));
+		}
 		final String nameStr = name.toUpperCase();
-		for(final xLevel level : knownLevels)
-			if(nameStr.equalsIgnoreCase(level.name))
+		for (final xLevel level : knownLevels) {
+			if (nameStr.equalsIgnoreCase(level.name)) {
 				return level;
+			}
+		}
 		return null;
 	}
 	public static xLevel FindLevel(final Integer value) {
-		if(value == null) return null;
+		if (value == null) return null;
 		final int val = value.intValue();
-		if(val == xLevel.ALL.value) return xLevel.ALL;
-		if(val == xLevel.OFF.value) return xLevel.OFF;
+		if (val == xLevel.ALL.value) return xLevel.ALL;
+		if (val == xLevel.OFF.value) return xLevel.OFF;
 		xLevel level = xLevel.OFF;
 		int offset = xLevel.OFF.value;
-		for(final xLevel lvl : knownLevels) {
-			if(level.equals(xLevel.OFF) || level.equals(xLevel.ALL)) continue;
-			if(val < lvl.value) continue;
-			if(val - lvl.value < offset) {
+		for (final xLevel lvl : knownLevels) {
+			if (level.equals(xLevel.OFF) || level.equals(xLevel.ALL))
+				continue;
+			if (val < lvl.value) continue;
+			if (val - lvl.value < offset) {
 				offset = val - lvl.value;
 				level = lvl;
 			}
 		}
-		if(level == null)
+		if (level == null) {
 			return xLevel.OFF;
+		}
 		return level;
 	}
 	public static xLevel parse(final String value) {
@@ -90,20 +95,20 @@ public class xLevel implements Serializable {
 
 
 	public boolean isLoggable(final xLevel level) {
-		if(level == null) return false;
+		if (level == null) return false;
 		// off (disabled)
-		if(this.value == xLevel.OFF.value) return false;
+		if (this.value == xLevel.OFF.value) return false;
 		// all (forced)
-		if(this.value == xLevel.ALL.value) return true;
+		if (this.value == xLevel.ALL.value) return true;
 		// check level
-		if(level.value == xLevel.ALL.value) return true;
+		if (level.value == xLevel.ALL.value) return true;
 		return this.value <= level.value;
 	}
 
 
 
 	public boolean equals(final xLevel level) {
-		if(level == null) return false;
+		if (level == null) return false;
 		return (level.value == this.value);
 	}
 
@@ -126,4 +131,3 @@ public class xLevel implements Serializable {
 
 
 }
-*/
