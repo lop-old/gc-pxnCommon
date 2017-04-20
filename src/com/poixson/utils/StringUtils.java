@@ -64,6 +64,60 @@ public final class StringUtils {
 
 
 
+	public static boolean isAlpha(final String str) {
+		if (str == null)
+			return false;
+		int sz = str.length();
+		for (int i = 0; i < sz; i++) {
+			if ( ! Character.isLetter(str.charAt(i)) ) {
+				return false;
+			}
+		}
+		return true;
+	}
+	public static boolean isAlphaSpace(final String str) {
+		if (str == null)
+			return false;
+		int sz = str.length();
+		for (int i = 0; i < sz; i++) {
+			final Character chr = str.charAt(i);
+			if ( ! Character.isLetter(chr) ) {
+				if ( ! Character.isSpaceChar(chr) ) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	public static boolean isAlphaNum(final String str) {
+		if (str == null)
+			return false;
+		int sz = str.length();
+		for (int i = 0; i < sz; i++) {
+			final Character chr = str.charAt(i);
+			if ( ! Character.isLetterOrDigit(chr)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	public static boolean isAlphaNumSpace(final String str) {
+		if (str == null)
+			return false;
+		int sz = str.length();
+		for (int i = 0; i < sz; i++) {
+			final Character chr = str.charAt(i);
+			if ( ! Character.isLetterOrDigit(chr)) {
+				if ( ! Character.isSpaceChar(chr) ) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+
+
 	public static String FormatMessage(final String format, final Object... args) {
 		String msg = format;
 		for (final Object obj : args) {
@@ -87,6 +141,21 @@ public final class StringUtils {
 		if (Utils.isEmpty(a)) return false;
 		if (Utils.isEmpty(b)) return false;
 		return a.equalsIgnoreCase(b);
+	}
+
+
+
+	public static String trimToNull(final String str) {
+		if (str == null)
+			return null;
+		if (str.length() == 0)
+			return null;
+		final String result = str.trim();
+		return (
+			result.length() == 0
+			? null
+			: result
+		);
 	}
 
 
