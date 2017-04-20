@@ -1,5 +1,4 @@
-/*
-package com.poixson.commonjava.xEvents;
+package com.poixson.utils.xEvents;
 
 
 public interface xEventListener {
@@ -19,4 +18,3 @@ public interface xEventListener {
 
 
 }
-*/

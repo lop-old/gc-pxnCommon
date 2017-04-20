@@ -1,15 +1,13 @@
-/*
-package com.poixson.commonjava.xEvents;
+package com.poixson.utils.xEvents;
 
 import java.lang.reflect.Method;
 
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
-import com.poixson.commonjava.xEvents.xEventListener.ListenerPriority;
+import com.poixson.utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.xEvents.xEventListener.ListenerPriority;
 
-
-/ **
+/**
  * Supports fixed named listener method.
- * /
+ */
 public abstract class xHandlerSimple extends xHandler {
 
 
@@ -31,12 +29,19 @@ public abstract class xHandlerSimple extends xHandler {
 	// register fixed named method
 	@Override
 	public void register(final xEventListener listener) {
-		if(listener == null) throw new RequiredArgumentException("listener");
+		if (listener == null) throw new RequiredArgumentException("listener");
+//TODO:
 //		{
 //			final Class<? extends xEventListener> expected = this.getEventListenerType();
-//			if(!expected.equals(listener.getClass())) {
-//				throw new IllegalArgumentException("Invalid event listener type:  "+
-//						listener.getClass().getName()+"  expected: "+expected.getName());
+//			if (!expected.equals(listener.getClass())) {
+//				throw new IllegalArgumentException(
+//					(new StringBuilder())
+//						.append("Invalid event listener type:  ")
+//						.append(listener.getClass().getName())
+//						.append("  expected: ")
+//						.append(expected.getName())
+//						.toString()
+//				);
 //			}
 //		}
 		final String methodName = this.getMethodName();
@@ -44,20 +49,30 @@ public abstract class xHandlerSimple extends xHandler {
 		final Method methodFound;
 		try {
 			methodFound = listener.getClass().getMethod(
-					methodName,
-					this.getEventDataType()
+				methodName,
+				this.getEventDataType()
 			);
 		} catch (NoSuchMethodException e) {
-			throw new RuntimeException("No event listener method "+
-					methodName+"() found in class: "+
-					listener.getClass().getName());
+			throw new RuntimeException(
+				(new StringBuilder())
+					.append("No event listener method ")
+					.append(methodName)
+					.append("() found in class: ")
+					.append(listener.getClass().getName())
+					.toString()
+			);
 		} catch (SecurityException e) {
 			throw new RuntimeException(e);
 		}
-		if(methodFound == null) {
-			throw new RuntimeException("No event listener method "+
-					methodName+"() found in class: "+
-					listener.getClass().getName());
+		if (methodFound == null) {
+			throw new RuntimeException(
+				(new StringBuilder())
+					.append("No event listener method ")
+					.append(methodName)
+					.append("() found in class: ")
+					.append(listener.getClass().getName())
+					.toString()
+			);
 		}
 		// set properties
 		final xListenerDAO dao = new xListenerDAO(
@@ -69,8 +84,14 @@ public abstract class xHandlerSimple extends xHandler {
 				true   // filter cancelled
 		);
 		// log results
-		this.log().finest("Registered listener "+methodName+
-				"() in class: "+listener.getClass().getName());
+		this.log().finest(
+			(new StringBuilder())
+				.append("Registered listener ")
+				.append(methodName)
+				.append("() in class: ")
+				.append(listener.getClass().getName())
+				.toString()
+		);
 		synchronized(this.listeners) {
 			this.listeners.add(dao);
 		}
@@ -79,4 +100,3 @@ public abstract class xHandlerSimple extends xHandler {
 
 
 }
-*/

@@ -1,13 +1,14 @@
-/*
-package com.poixson.commonjava.xEvents;
+package com.poixson.utils.xEvents;
 
+import java.lang.ref.SoftReference;
 import java.lang.reflect.InvocationTargetException;
 
-import com.poixson.commonjava.Utils.xRunnable;
-import com.poixson.commonjava.Utils.byRef.BoolRef;
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
-import com.poixson.commonjava.xEvents.xEventListener.ListenerPriority;
-import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.utils.xRunnable;
+import com.poixson.utils.byref.BoolRef;
+import com.poixson.utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.xEvents.xEventListener.ListenerPriority;
+import com.poixson.utils.xEvents.xHandler.xListenerDAO;
+import com.poixson.utils.xLogger.xLog;
 
 
 public class xRunnableEvent extends xRunnable {
@@ -22,11 +23,11 @@ public class xRunnableEvent extends xRunnable {
 
 	public xRunnableEvent(final xListenerDAO dao,
 			final xEventData event, final ListenerPriority priority) {
-		if(dao      == null) throw new RequiredArgumentException("dao");
-		if(event    == null) throw new RequiredArgumentException("event");
-		if(priority == null) throw new RequiredArgumentException("priority");
-		this.dao   = dao;
-		this.event = event;
+		if (dao      == null) throw new RequiredArgumentException("dao");
+		if (event    == null) throw new RequiredArgumentException("event");
+		if (priority == null) throw new RequiredArgumentException("priority");
+		this.dao      = dao;
+		this.event    = event;
 		this.priority = priority;
 	}
 
@@ -34,12 +35,18 @@ public class xRunnableEvent extends xRunnable {
 
 	@Override
 	public void run() {
-		this.log().finest("Invoking event: "+this.priority.name()+
-				"  "+this.dao.listener.getClass().getName());
+		this.log().finest(
+			(new StringBuilder())
+				.append("Invoking event: ")
+				.append(this.priority.name())
+				.append("  ")
+				.append(this.dao.listener.getClass().getName())
+				.toString()
+		);
 		try {
 			this.dao.method.invoke(
-					this.dao.listener,
-					this.event
+				this.dao.listener,
+				this.event
 			);
 		} catch (IllegalAccessException e) {
 			//this.event.setCancelled();
@@ -65,7 +72,7 @@ public class xRunnableEvent extends xRunnable {
 
 
 	public void waitUntilRun() {
-		if(this.hasRun.value)
+		if (this.hasRun.value)
 			return;
 		synchronized(this.hasRun) {
 			try {
@@ -96,4 +103,3 @@ public class xRunnableEvent extends xRunnable {
 
 
 }
-*/

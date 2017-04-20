@@ -1,5 +1,4 @@
-/*
-package com.poixson.commonjava.xEvents;
+package com.poixson.utils.xEvents;
 
 
 public abstract class xEventData {
@@ -8,6 +7,7 @@ public abstract class xEventData {
 
 	public xEventData() {
 	}
+
 
 
 	// event handled
@@ -38,9 +38,9 @@ public abstract class xEventData {
 
 
 
-	/ **
+	/**
 	 * Reset state for next listener.
-	 * /
+	 */
 	public void reset() {}
 
 
@@ -49,12 +49,12 @@ public abstract class xEventData {
 	public String toString() {
 		final String str = super.toString();
 		final int i = str.lastIndexOf(".");
-		if(i != -1)
-			return str.substring(i+1);
+		if (i != -1 && i < str.length()) {
+			return str.substring( i + 1 );
+		}
 		return str;
 	}
 
 
 
 }
-*/

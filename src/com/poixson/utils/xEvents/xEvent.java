@@ -1,12 +1,11 @@
-/*
-package com.poixson.commonjava.xEvents.annotations;
+package com.poixson.utils.xEvents;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.poixson.commonjava.xEvents.xEventListener.ListenerPriority;
+import com.poixson.utils.xEvents.xEventListener.ListenerPriority;
 
 
 @Target(ElementType.METHOD)
@@ -21,4 +20,3 @@ public @interface xEvent {
 
 
 }
-*/
