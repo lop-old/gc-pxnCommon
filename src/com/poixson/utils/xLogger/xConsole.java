@@ -3,7 +3,7 @@ package com.poixson.utils.xLogger;
 import com.poixson.utils.xStartable;
 
 
-public interface xConsole extends Runnable, xStartable {
+public interface xConsole extends xStartable {
 
 
 	@Override
