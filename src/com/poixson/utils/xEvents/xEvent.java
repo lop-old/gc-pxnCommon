@@ -14,6 +14,7 @@ public @interface xEvent {
 
 
 	ListenerPriority priority() default ListenerPriority.NORMAL;
+//TODO:
 //	boolean async()             default false;
 	boolean filterHandled()     default true;
 	boolean filterCancelled()   default true;

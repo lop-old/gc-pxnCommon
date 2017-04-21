@@ -131,7 +131,7 @@ public class Dumper {
 							.append( fName           )
 							.append( "("             )
 							.append( fSimpleName     )
-							.append( ")="             );
+							.append( ")="            );
 						if (ctx.ignoreList.get(":" + fName) == null
 								&& ctx.ignoreList.get(fSimpleName + ":" + fName) == null
 								&& ctx.ignoreList.get(fSimpleName + ":") == null) {

@@ -111,7 +111,6 @@ public abstract class xApp implements xStartable {
 			instance = this;
 		}
 		this.props = new AppProps(this.getClass());
-//		xVars.init();
 	}
 
 

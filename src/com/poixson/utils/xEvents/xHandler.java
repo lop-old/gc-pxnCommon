@@ -30,12 +30,14 @@ public abstract class xHandler {
 		public final Method           method;
 
 		public final ListenerPriority priority;
+//TODO:
 //		public final boolean          async;
 		public final boolean          filterHandled;
 		public final boolean          filterCancelled;
 
 		public xListenerDAO(final xEventListener listener, final Method method,
 				final ListenerPriority priority,
+//TODO:
 //				final boolean async,
 				final boolean filterHandled, final boolean filterCancelled) {
 			if (listener == null) throw new RequiredArgumentException("listener");
@@ -49,6 +51,7 @@ public abstract class xHandler {
 					? ListenerPriority.NORMAL
 					: priority
 			);
+//TODO:
 //			this.async           = async;
 			this.filterHandled   = filterHandled;
 			this.filterCancelled = filterCancelled;
@@ -148,6 +151,7 @@ public abstract class xHandler {
 	public void trigger(final xEventData event) {
 //TODO: ensure main thread
 		if (event == null) throw new RequiredArgumentException("event");
+//TODO:
 //		final Set<xRunnableEvent> waitFor = new HashSet<xRunnableEvent>();
 		boolean isFirst = true;
 		// LOOP_PRIORITIES:
@@ -180,8 +184,8 @@ public abstract class xHandler {
 //				xThreadPool.getMainPool()
 //					.runLater(run);
 				run.run();
-			} // listeners loop
-		} // priorities loop
+			} /* listeners loop */
+		} /* priorities loop */
 		if (isFirst) {
 			this.log().finest("Event ignored: "+event.toString());
 		}

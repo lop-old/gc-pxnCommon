@@ -269,8 +269,9 @@ public class xTime {
 				default:
 					continue;
 				}
-				if (c != 'n' && val > 1)
+				if (c != 'n' && val > 1) {
 					buf.append('s');
+				}
 			}
 			tmp = tmp % u;
 		}

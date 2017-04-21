@@ -155,6 +155,7 @@ public final class CryptUtils {
 		}
 		Utils.safeClose(formatter);
 		return str.toString();
+//TODO: is this useful?
 //		byte[] byteData = md.digest();
 //		StringBuffer hexString = new StringBuffer();
 //		for (int i = 0; i < byteData.length; i++) {

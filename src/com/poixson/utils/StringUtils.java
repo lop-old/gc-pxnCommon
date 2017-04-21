@@ -121,8 +121,8 @@ public final class StringUtils {
 		String msg = format;
 		for (final Object obj : args) {
 			msg = msg.replaceFirst(
-					"\\{\\}",
-					toString(obj)
+				"\\{\\}",
+				toString(obj)
 			);
 		}
 		return msg;
@@ -211,10 +211,11 @@ public final class StringUtils {
 			return null;
 		if (data.startsWith(start))
 			return data;
-		return (new StringBuilder())
-			.append(start)
-			.append(data)
-			.toString();
+		return
+			(new StringBuilder())
+				.append(start)
+				.append(data)
+				.toString();
 	}
 	// ensure ends with
 	public static String ForceEnds(final String end, final String data) {
@@ -222,10 +223,11 @@ public final class StringUtils {
 			return null;
 		if (data.endsWith(end))
 			return data;
-		return (new StringBuilder())
-			.append(data)
-			.append(end)
-			.toString();
+		return
+			(new StringBuilder())
+				.append(data)
+				.append(end)
+				.toString();
 	}
 
 
@@ -234,13 +236,17 @@ public final class StringUtils {
 		if (Utils.isEmpty(match)) throw new RequiredArgumentException("match");
 		if (existing == null)     throw new RequiredArgumentException("existing");
 		// already unique
-		if (existing.isEmpty() || !existing.contains(match)) {
-			return match;
-		}
+		if (existing.isEmpty())        return match;
+		if (!existing.contains(match)) return match;
 		int i = 0;
 		while (true) {
 			i++;
-			final String dat = match+"_"+Integer.toString(i);
+			final String dat =
+				(new StringBuilder())
+					.append(match)
+					.append("_")
+					.append(i)
+					.toString();
 			if (!existing.contains(dat)) {
 				return dat;
 			}
@@ -286,11 +292,9 @@ public final class StringUtils {
 		int pos = Integer.MAX_VALUE;
 		for (final char c : delims) {
 			final int p = data.indexOf(c);
-			if (p == -1)
-				continue;
+			if (p == -1) continue;
 			if (pos > p) pos = p;
-			if (pos == 0)
-				break;
+			if (pos == 0) break;
 		}
 		if (pos == Integer.MAX_VALUE) {
 			return data;
@@ -302,21 +306,16 @@ public final class StringUtils {
 		int pos = Integer.MAX_VALUE;
 		for (final char c : delims) {
 			final int p = data.value.indexOf(c);
-			if (p == -1)
-				continue;
+			if (p == -1) continue;
 			if (pos > p) pos = p;
-			if (pos == 0)
-				break;
+			if (pos == 0) break;
 		}
 		final String part;
 		if (pos == Integer.MAX_VALUE) {
 			return null;
-//			part       = data.value;
-//			data.value = "";
-		} else {
-			part       = data.value.substring(0, pos);
-			data.value = data.value.substring(pos + 1);
 		}
+		part       = data.value.substring(0, pos);
+		data.value = data.value.substring(pos + 1);
 		return part;
 	}
 	// get last part
@@ -350,8 +349,8 @@ public final class StringUtils {
 		for (int i = 0; i < count; i++) {
 			final int thisPos = data.indexOf("?", currentPos);
 			if (thisPos > 0) {
-				buf.append(data.substring(currentPos, thisPos))
-					.append(withWhat[i]);
+				buf.append(data.substring(currentPos, thisPos));
+				buf.append(withWhat[i]);
 				currentPos = thisPos + 1;
 			}
 		}
@@ -414,11 +413,12 @@ public final class StringUtils {
 			if (str == null) throw new RequiredArgumentException("str");
 			buf.append(str);
 		}
-		return buf.toString()
-			.substring(
-				0,
-				NumberUtils.MinMax(length, 0, buf.length())
-			);
+		return
+			buf.toString()
+				.substring(
+					0,
+					NumberUtils.MinMax(length, 0, buf.length())
+				);
 	}
 
 
@@ -451,28 +451,31 @@ public final class StringUtils {
 		if (width < 1) return null;
 		final int count = width - text.length();
 		if (count < 1) return text;
-		return (new StringBuilder(width))
-			.append( text                   )
-			.append( repeat(count, padding) )
-			.toString();
+		return
+			(new StringBuilder(width))
+				.append( text                   )
+				.append( repeat(count, padding) )
+				.toString();
 	}
 	public static String padFront(final int width, final String text, final char padding) {
 		if (width < 1) return null;
 		final int count = width - text.length();
 		if (count < 1) return text;
-		return (new StringBuilder(width))
-			.append( repeat(count, padding) )
-			.append( text                   )
-			.toString();
+		return
+			(new StringBuilder(width))
+				.append( repeat(count, padding) )
+				.append( text                   )
+				.toString();
 	}
 	public static String padEnd(final int width, final String text, final char padding) {
 		if (width < 1) return null;
 		final int count = width - text.length();
 		if (count < 1) return text;
-		return (new StringBuilder(width))
-			.append( text                   )
-			.append( repeat(count, padding) )
-			.toString();
+		return
+			(new StringBuilder(width))
+				.append( text                   )
+				.append( repeat(count, padding) )
+				.toString();
 	}
 	public static String padCenter(final int width, final String text, final char padding) {
 		if (width < 1) return null;
@@ -481,11 +484,12 @@ public final class StringUtils {
 		}
 		final double count = ( ((double) width) - ((double) text.length()) ) / 2.0;
 		if (Math.ceil(count) < 1.0) return text;
-		return (new StringBuilder(width))
-			.append( repeat((int) Math.floor(count), padding) )
-			.append( text                                     )
-			.append( repeat((int) Math.ceil(count), padding)  )
-			.toString();
+		return
+			(new StringBuilder(width))
+				.append( repeat((int) Math.floor(count), padding) )
+				.append( text                                     )
+				.append( repeat((int) Math.ceil(count), padding)  )
+				.toString();
 	}
 
 

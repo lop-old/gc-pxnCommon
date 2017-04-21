@@ -8,6 +8,7 @@ import com.poixson.utils.Utils;
 import com.poixson.utils.exceptions.RequiredArgumentException;
 import com.poixson.utils.xEvents.xEventListener.ListenerPriority;
 
+
 /**
  * Supports dynamicly named listener methods.
  */
@@ -66,6 +67,7 @@ public abstract class xHandlerGeneric extends xHandler {
 			}
 			// get properties
 			final ListenerPriority priority = anno.priority();
+//TODO:
 //			final boolean async             = anno.async();
 			final boolean filterHandled     = anno.filterHandled();
 			final boolean filterCancelled   = anno.filterCancelled();
@@ -73,6 +75,7 @@ public abstract class xHandlerGeneric extends xHandler {
 					listener,
 					method,
 					priority,
+//TODO:
 //					async,          // run asynchronous
 					filterHandled,  // filter handled
 					filterCancelled // filter cancelled

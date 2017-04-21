@@ -66,7 +66,8 @@ public class xClock {
 
 
 	public void update() {
-		if (!this.enableNTP || this.running) return;
+		if (!this.enableNTP) return;
+		if (this.running)    return;
 		synchronized(this.runLock) {
 			if (this.running) return;
 			this.running = true;
@@ -91,7 +92,8 @@ public class xClock {
 
 
 	protected void doUpdate() {
-		if (!this.enableNTP || !this.running) return;
+		if (!this.enableNTP) return;
+		if (!this.running)   return;
 		long time = getSystemTime();
 		// checked in last 60 seconds
 		if ( this.lastChecked != 0.0) {
@@ -189,7 +191,8 @@ public class xClock {
 
 
 	public long millis() {
-		return (long) getCurrentTime();
+		final long time = this.getCurrentTime();
+		return time;
 	}
 	public double seconds() {
 		return millis() / 1000.0;
@@ -201,7 +204,8 @@ public class xClock {
 		return (timestamp / 1000.0) + 2208988800.0;
 	}
 	protected static double fromUnixTimestamp() {
-		return fromUnixTimestamp( (double) getSystemTime() );
+		final double time = getSystemTime();
+		return fromUnixTimestamp(time);
 	}
 
 
@@ -209,11 +213,22 @@ public class xClock {
 	public static String timestampToString(final double timestamp) {
 		if (timestamp <= 0.0)
 			return "0";
-		return
+		final StringBuilder buf = new StringBuilder();
+		buf.append(
 			(new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss"))
-				.format(new Date( (long)(timestamp * 1000.0) ))+
-			(new DecimalFormat("0.000")
-				.format( timestamp - ((long) timestamp) ));
+				.format(
+					new Date(
+						(long) (timestamp * 1000.0)
+					)
+				)
+		);
+		buf.append(
+			(new DecimalFormat("0.000"))
+				.format(
+					timestamp - timestamp
+				)
+		);
+		return buf.toString();
 	}
 	public String getString() {
 		return timestampToString(seconds());

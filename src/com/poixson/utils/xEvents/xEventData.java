@@ -5,8 +5,7 @@ public abstract class xEventData {
 
 
 
-	public xEventData() {
-	}
+	public xEventData() {}
 
 
 

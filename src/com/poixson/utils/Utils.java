@@ -19,8 +19,8 @@ public final class Utils {
 
 	protected static void InitAll() {
 		Keeper.add(new Utils());
-		Failure.init();
 		xVars.init();
+		Failure.init();
 		CryptUtils.init();
 		DirsFiles.init();
 		NumberUtils.init();

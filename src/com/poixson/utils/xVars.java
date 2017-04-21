@@ -23,7 +23,11 @@ public class xVars {
 
 
 
+	// ------------------------------------------------------------------------------- //
 	// debug mode
+
+
+
 	private static volatile Boolean debug = null;
 	private static final Object debugLock = new Object();
 
@@ -53,6 +57,11 @@ public class xVars {
 			}
 		}
 	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// original std out/err/in
 
 
 

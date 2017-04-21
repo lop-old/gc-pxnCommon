@@ -89,8 +89,7 @@ public final class Failure {
 		return failed;
 	}
 	public static String[] getMessages() {
-		if(!failed)
-			return null;
+		if (!failed) return null;
 		return messages.toArray(new String[0]);
 	}
 	public static void addMessageSilently(final String msg) {

@@ -156,15 +156,16 @@ public class xString {
 
 
 
-	// *** parser *** //
+	// ------------------------------------------------------------------------------- //
+	// parser
 
 
 
 	public xString delim(final String delimStr) {
 		this.delim = (
-				Utils.isEmpty(delimStr)
-				? null
-				: delimStr
+			Utils.isEmpty(delimStr)
+			? null
+			: delimStr
 		);
 		return this;
 	}

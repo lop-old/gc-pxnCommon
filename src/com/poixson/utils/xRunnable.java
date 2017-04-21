@@ -23,7 +23,7 @@ public class xRunnable implements Runnable {
 	public xRunnable(final xRunnable run) {
 		this(
 			run.getTaskName(),
-			(Runnable) run
+			run
 		);
 	}
 	public xRunnable(final Runnable run) {

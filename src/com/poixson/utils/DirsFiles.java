@@ -181,7 +181,9 @@ public final class DirsFiles {
 
 
 
-	// these functions can have inconsistent results. a better class will be needed
+// TODO: these functions can have inconsistent results. a better class will be needed
+
+
 
 	// build path+file
 	public static String buildFilePath(final String filePath,

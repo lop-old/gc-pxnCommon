@@ -22,7 +22,6 @@ public final class ProcUtils {
 	 * Get the pid for the jvm process.
 	 * @return process id number (pid)
 	 */
-	// @ SuppressWarnings("restriction")
 	public static int getPid() {
 		final String str = ManagementFactory.getRuntimeMXBean().getName();
 		if (Utils.isEmpty(str))
@@ -34,6 +33,7 @@ public final class ProcUtils {
 			return -1;
 		final int pid = NumberUtils.toInteger(parts[0], -1);
 		return pid;
+//TODO:
 //another option to try
 //final int pid = Integer.parseInt(new File("/proc/self").getCanonicalFile().getName());
 //original
@@ -58,6 +58,7 @@ public final class ProcUtils {
 
 
 
+//TODO:
 /*
 	// single instance lock
 	public static boolean lockInstance(final String filepath) {
