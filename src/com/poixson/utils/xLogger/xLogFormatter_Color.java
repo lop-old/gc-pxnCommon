@@ -1,10 +1,7 @@
-/*
-package com.poixson.commonjava.xLogger.formatters;
+package com.poixson.utils.xLogger;
 
-import com.poixson.commonjava.Utils.utilsString;
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
-import com.poixson.commonjava.xLogger.xLevel;
-import com.poixson.commonjava.xLogger.xLogRecord;
+import com.poixson.utils.StringUtils;
+import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
 public class xLogFormatter_Color extends xLogFormatter_Default {
@@ -14,38 +11,45 @@ public class xLogFormatter_Color extends xLogFormatter_Default {
 	// level
 	@Override
 	protected String partLevel(final xLogRecord record) {
-		if(record == null) throw new RequiredArgumentException("record");
+		if (record == null) throw new RequiredArgumentException("record");
 		final xLevel level = record.level();
 		final String color;
 		// all, finest, finer, fine
-		if(level.isLoggable(xLevel.FINE))
+		if (level.isLoggable(xLevel.FINE)) {
 			color = "FG_BLACK,BOLD";
-//			color = "FG_WHITE,BOLD";
+			//color = "FG_WHITE,BOLD";
+		} else
 		// info
-		else if(level.isLoggable(xLevel.INFO))
+		if (level.isLoggable(xLevel.INFO)) {
 			color = "FG_CYAN";
-//			color = "FG_CYAN,BOLD";
+			//color = "FG_CYAN,BOLD";
+		} else
 		// warning
-		else if(level.isLoggable(xLevel.WARNING))
+		if (level.isLoggable(xLevel.WARNING)) {
 			color = "FG_RED";
+		} else
 		// severe
-		else if(level.isLoggable(xLevel.SEVERE))
+		if (level.isLoggable(xLevel.SEVERE)) {
 			color = "FG_RED,BOLD";
+		} else
 		// fatal
-		else if(level.isLoggable(xLevel.FATAL))
+		if (level.isLoggable(xLevel.FATAL)) {
 			color = "FG_RED,BOLD,UNDERLINE";
+		} else
 		// stdout
-		else if(level.isLoggable(xLevel.STDOUT))
+		if (level.isLoggable(xLevel.STDOUT)) {
 			color = "FG_GREEN";
+		} else
 		// stderr
-		else if(level.isLoggable(xLevel.STDERR))
+		if (level.isLoggable(xLevel.STDERR)) {
 			color = "FG_YELLOW";
 		// off
-		else
+		} else {
 			color = "FG_BLACK,BOLD";
+		}
 		return (new StringBuilder())
 			.append("@|FG_BLACK,BOLD [|@@|").append(color).append(" ")
-			.append(utilsString.padCenter(
+			.append(StringUtils.padCenter(
 				7,
 				level.toString(),
 				' '
@@ -57,4 +61,3 @@ public class xLogFormatter_Color extends xLogFormatter_Default {
 
 
 }
-*/

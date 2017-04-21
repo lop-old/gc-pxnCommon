@@ -1,14 +1,11 @@
-/*
-package com.poixson.commonjava.xLogger.formatters;
-
-import com.poixson.commonjava.xLogger.xLogRecord;
+package com.poixson.utils.xLogger;
 
 
 public class xLogFormatter_Simple extends xLogFormatter_Default {
 
 
 
-	// timestamp
+//TODO: timestamp
 	@Override
 	protected String partTimestamp(final xLogRecord record) {
 		return " ";
@@ -17,4 +14,3 @@ public class xLogFormatter_Simple extends xLogFormatter_Default {
 
 
 }
-*/

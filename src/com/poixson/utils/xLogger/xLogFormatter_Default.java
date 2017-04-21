@@ -1,24 +1,22 @@
-/*
-package com.poixson.commonjava.xLogger.formatters;
+package com.poixson.utils.xLogger;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import com.poixson.commonjava.Utils.utilsString;
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
-import com.poixson.commonjava.xLogger.xLogFormatterInterface;
-import com.poixson.commonjava.xLogger.xLogRecord;
+import com.poixson.utils.StringUtils;
+import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
-public class xLogFormatter_Default implements xLogFormatterInterface {
+public class xLogFormatter_Default implements xLogFormatter {
 
 
 
 	@Override
 	public String formatMsg(final xLogRecord record) {
-		if(record == null) throw new RequiredArgumentException("record");
-		if(record.level() == null)
+		if (record == null) throw new RequiredArgumentException("record");
+		if (record.level() == null) {
 			return record.msg();
+		}
 		String[] parts = new String[4];
 		// timestamp
 		parts[0] = partTimestamp(record);
@@ -28,23 +26,23 @@ public class xLogFormatter_Default implements xLogFormatterInterface {
 		parts[2] = partCrumbs(record);
 		// message
 		parts[3] = partMessage(record);
-		return utilsString.addArray(" ", parts);
+		return StringUtils.addArray(" ", parts);
 	}
 
 
 
 	// timestamp
 	protected String partTimestamp(final xLogRecord record) {
-		if(record == null) throw new RequiredArgumentException("record");
-		SimpleDateFormat dateFormat = new SimpleDateFormat("D yyyy-MM-dd HH:mm:ss");
+		if (record == null) throw new RequiredArgumentException("record");
+		final SimpleDateFormat dateFormat = new SimpleDateFormat("D yyyy-MM-dd HH:mm:ss");
 		return dateFormat.format(new Long(record.timestamp()));
 	}
 	// level
 	protected String partLevel(final xLogRecord record) {
-		if(record == null) throw new RequiredArgumentException("record");
+		if (record == null) throw new RequiredArgumentException("record");
 		return (new StringBuilder())
 			.append("[")
-			.append(utilsString.padCenter(
+			.append(StringUtils.padCenter(
 				7,
 				record.level().toString(),
 				' '
@@ -54,20 +52,21 @@ public class xLogFormatter_Default implements xLogFormatterInterface {
 	}
 	// [logger] [crumbs]
 	protected String partCrumbs(final xLogRecord record) {
-		if(record == null) throw new RequiredArgumentException("record");
+		if (record == null) throw new RequiredArgumentException("record");
 		final List<String> tree = record.getNameTree();
-		if(tree.isEmpty())
+		if (tree.isEmpty())
 			return "";
 		final StringBuilder crumbs = new StringBuilder();
 		boolean first = true;
 		crumbs.append("@|FG_BLACK,BOLD ");
-		for(String name : tree) {
-			if(name == null || name.isEmpty())
+		for (String name : tree) {
+			if (name == null || name.isEmpty())
 				continue;
-			if(first)
+			if (first) {
 				first = false;
-			else
+			} else {
 				crumbs.append(' ');
+			}
 			crumbs.append("[").append(name).append("]");
 		}
 		crumbs.append("|@");
@@ -81,4 +80,3 @@ public class xLogFormatter_Default implements xLogFormatterInterface {
 
 
 }
-*/

@@ -1,12 +1,10 @@
-/*
-package com.poixson.commonjava.xLogger;
+package com.poixson.utils.xLogger;
 
 
-public interface xLogFormatterInterface {
+public interface xLogFormatter {
 
 
 	public String formatMsg(final xLogRecord record);
 
 
 }
-*/

@@ -1,20 +1,19 @@
-/*
-package com.poixson.commonjava.xLogger.commands;
+package com.poixson.utils.xLogger;
 
-import com.poixson.commonjava.xEvents.xEventData;
-import com.poixson.commonjava.xEvents.xEventListener;
-import com.poixson.commonjava.xEvents.xHandlerSimple;
+import com.poixson.utils.xEvents.xEventData;
+import com.poixson.utils.xEvents.xEventListener;
+import com.poixson.utils.xEvents.xHandlerSimple;
 
 
-public class xCommandsHandler extends xHandlerSimple {
+public class xCommandHandler extends xHandlerSimple {
 	private static final String LISTENER_METHOD_NAME = "onCommand";
 
 
 
-	public static xCommandsHandler get() {
-		return new xCommandsHandler();
+	public static xCommandHandler get() {
+		return new xCommandHandler();
 	}
-	protected xCommandsHandler() {
+	protected xCommandHandler() {
 		super();
 	}
 
@@ -30,6 +29,9 @@ public class xCommandsHandler extends xHandlerSimple {
 	protected Class<? extends xEventData> getEventDataType() {
 		return xCommandEvent.class;
 	}
+
+
+
 	// fixed method name
 	@Override
 	protected String getMethodName() {
@@ -39,4 +41,3 @@ public class xCommandsHandler extends xHandlerSimple {
 
 
 }
-*/

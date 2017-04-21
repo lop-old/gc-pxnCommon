@@ -1,28 +1,23 @@
-/*
-package com.poixson.commonjava.xLogger;
+package com.poixson.utils.xLogger;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.poixson.commonjava.xVars;
-import com.poixson.commonjava.Utils.Keeper;
-import com.poixson.commonjava.Utils.utils;
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
-import com.poixson.commonjava.scheduler.ticker.xTickHandler;
-import com.poixson.commonjava.scheduler.ticker.xTickPrompt;
-import com.poixson.commonjava.xLogger.commands.xCommandsHandler;
-import com.poixson.commonjava.xLogger.formatters.xLogFormatter_Default;
+import com.poixson.utils.Keeper;
+import com.poixson.utils.Utils;
+import com.poixson.utils.xVars;
+import com.poixson.utils.exceptions.RequiredArgumentException;
+
+// ------------------------------------------------------------------------------- //
 
 
-public class xLog extends xLogPrinting {
-*/
 
+/* minimal
 
-// minimal
-/*
 	// logger
 	public static xLog log() {
 		return xLog.getRoot();
@@ -31,8 +26,6 @@ public class xLog extends xLogPrinting {
 
 
 
-// local caching
-/*
 	// logger
 	private static volatile xLog _log = null;
 	public static xLog log() {
@@ -40,12 +33,8 @@ public class xLog extends xLogPrinting {
 			_log = xLog.log();
 		return _log;
 	}
-*/
+/* soft-cache
 
-
-
-// overridable
-/*
 	// logger
 	private volatile xLog _log = null;
 	private xLog _log_default  = null;
@@ -64,10 +53,10 @@ public class xLog extends xLogPrinting {
 
 
 
-	// ------------------------------------------------------------------------------- //
+// ------------------------------------------------------------------------------- //
 
+public class xLog extends xLogPrinting {
 
-/*
 	// root logger
 	protected static volatile xLog root = null;
 	protected static final Object lock = new Object();
@@ -108,7 +97,7 @@ public class xLog extends xLogPrinting {
 
 	// get root logger
 	public static xLog getRoot() {
-		if(root == null)
+		if (root == null)
 			init();
 		return root;
 	}
@@ -119,17 +108,20 @@ public class xLog extends xLogPrinting {
 	// get sub-logger
 	@Override
 	public xLog get(final String logName) {
-		if(utils.isEmpty(logName))
+		if (Utils.isEmpty(logName)) {
 			return this;
+		}
 		{
 			final xLog log = this.loggers.get(logName);
-			if(log != null)
+			if (log != null) {
 				return log;
+			}
 		}
 		// new logger
 		synchronized(this.loggers) {
-			if(this.loggers.containsKey(logName))
+			if (this.loggers.containsKey(logName)) {
 				return this.loggers.get(logName);
+			}
 			final xLog log = new xLog(logName, this);
 			this.loggers.put(logName, log);
 			return log;
@@ -138,8 +130,9 @@ public class xLog extends xLogPrinting {
 	// new instance (weak reference)
 	@Override
 	public xLog getWeak(final String logName) {
-		if(utils.isEmpty(logName))
+		if (Utils.isEmpty(logName)) {
 			return new xLog(logName, this.parent);
+		}
 		return new xLog(logName, this);
 	}
 	@Override
@@ -155,14 +148,15 @@ public class xLog extends xLogPrinting {
 
 	// new logger instance
 	protected xLog(final String logName, final xLog parentLogger) {
-		if(utils.isEmpty(logName) && parentLogger != null)
+		if (Utils.isEmpty(logName) && parentLogger != null)
 			throw new RequiredArgumentException("name");
-		this.name = logName;
+		this.name   = logName;
 		this.parent = parentLogger;
 		// new root logger
-		if(this.isRoot()) {
-			if(this.level == null)
+		if (this.isRoot()) {
+			if (this.level == null) {
 				this.level = DEFAULT_LEVEL;
+			}
 			Keeper.add(this);
 		}
 	}
@@ -178,25 +172,32 @@ public class xLog extends xLogPrinting {
 
 
 	// log level
+	@Override
 	public void setLevel(final xLevel lvl) {
 		this.level = lvl;
 		// handlers
-		for(final xLogHandler handler : this.handlers)
+		for (final xLogHandler handler : this.handlers) {
 			handler.setLevel(lvl);
+		}
 	}
+	@Override
 	public xLevel getLevel() {
 		return this.level;
 	}
 	// is level loggable
+	@Override
 	public boolean isLoggable(final xLevel lvl) {
-		if(lvl == null || this.level == null)
+		if (lvl == null || this.level == null) {
 			return true;
+		}
 		// forced debug mode
-		if(xVars.debug())
+		if (xVars.debug()) {
 			return true;
+		}
 		// local logger level
-		if(this.level.isLoggable(lvl))
+		if (this.level.isLoggable(lvl)) {
 			return true;
+		}
 		return false;
 //		// handlers
 //		for(xLogHandler handler : handlers)
@@ -214,13 +215,15 @@ public class xLog extends xLogPrinting {
 
 
 	// formatter
-	public void setFormatter(final xLogFormatterInterface formatter, final Class<?> type) {
-		if(formatter == null) throw new RequiredArgumentException("formatter");
-		for(final xLogHandler handler : this.handlers)
-			if(type == null || type.equals(handler.getClass()))
+	public void setFormatter(final xLogFormatter formatter, final Class<?> type) {
+		if (formatter == null) throw new RequiredArgumentException("formatter");
+		for (final xLogHandler handler : this.handlers) {
+			if (type == null || type.equals(handler.getClass())) {
 				handler.setFormatter(formatter);
+			}
+		}
 	}
-	public void setFormatter(final xLogFormatterInterface formatter) {
+	public void setFormatter(final xLogFormatter formatter) {
 		this.setFormatter(formatter, null);
 	}
 
@@ -229,10 +232,11 @@ public class xLog extends xLogPrinting {
 	// [logger] [crumbs]
 	// recursive name tree
 	private void buildNameTree(final List<String> list) {
-		if(this.parent != null) {
+		if (this.parent != null) {
 			this.parent.buildNameTree(list);
-			if(utils.notEmpty(this.name))
+			if (Utils.notEmpty(this.name)) {
 				list.add(this.name);
+			}
 		}
 	}
 	@Override
@@ -261,26 +265,35 @@ public class xLog extends xLogPrinting {
 	@Override
 	public void publish(final xLogRecord record) {
 		final xLevel lvl = record.level();
-		if(!isLoggable(lvl))
-			return;
-		if(this.parent != null)
+		if (!this.isLoggable(lvl)) return;
+		if (this.parent != null) {
 			this.parent.publish(record);
-		if(!this.handlers.isEmpty()) {
-			for(final xLogHandler handler : this.handlers) {
-				if(handler.isLoggable(lvl))
+		}
+		if (this.handlers.isEmpty()) {
+			final PrintStream out = xVars.getOriginalOut();
+			out.println(
+				record.msg()
+			);
+		} else {
+			for (final xLogHandler handler : this.handlers) {
+				if (handler.isLoggable(lvl)) {
 					handler.publish(record);
+				}
 			}
 		}
 	}
 	// publish string to handlers
 	@Override
 	public void publish(final String msg) {
-		if(msg == null) publish("");
-		if(this.parent != null)
+		if (msg == null) {
+			publish("");
+		}
+		if (this.parent != null) {
 			this.parent.publish(msg);
-		if(!this.handlers.isEmpty()) {
-			for(final xLogHandler handler : this.handlers)
-				handler.publish(msg);
+		}
+		// publish to handlers
+		for (final xLogHandler handler : this.handlers) {
+			handler.publish(msg);
 		}
 	}
 
@@ -295,12 +308,14 @@ public class xLog extends xLogPrinting {
 
 	public static void setConsole(final xConsole console) {
 		consoleHandler = console;
-		if(consoleHandler != null && commandHandler != null)
+		if (consoleHandler != null && commandHandler != null) {
 			consoleHandler.setCommandHandler(commandHandler);
+		}
 	}
 	public static xConsole getConsole() {
-		if(consoleHandler == null)
+		if (consoleHandler == null) {
 			consoleHandler = new xNoConsole();
+		}
 		return consoleHandler;
 	}
 	public static xConsole peekConsole() {
@@ -309,24 +324,29 @@ public class xLog extends xLogPrinting {
 	public static void shutdown() {
 		// stop prompt ticker
 		{
-			final xTickHandler handler = xTickHandler.peak();
-			if(handler != null)
-				handler.unregisterType(xTickPrompt.class);
+//TODO:
+//			final xTickHandler tickHandler = xTickHandler.peak();
+//			if (tickHandler != null) {
+//				tickHandler.unregisterType(xTickPrompt.class);
+//			}
 		}
 		// stop console input
 		{
 			final xConsole console = peekConsole();
-			if(console != null)
+			if (console != null) {
 				console.Stop();
+			}
 		}
 	}
 
 
 
 	// set command handler
-	public static void setCommandHandler(final xCommandsHandler commandsHandler) {
-		if(commandsHandler == null) throw new RequiredArgumentException("commandsHandler");
-		if(consoleHandler  == null) throw new RuntimeException("consoleHandler not set; command handler not supported.");
+	public static void setCommandHandler(final xCommandHandler commandsHandler) {
+		if (commandsHandler == null)
+			throw new RequiredArgumentException("commandsHandler");
+		if (consoleHandler  == null)
+			throw new RuntimeException("consoleHandler not set; command handler not supported.");
 		commandHandler = commandsHandler;
 		consoleHandler.setCommandHandler(commandsHandler);
 	}
@@ -334,4 +354,3 @@ public class xLog extends xLogPrinting {
 
 
 }
-*/

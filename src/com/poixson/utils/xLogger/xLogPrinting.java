@@ -11,6 +11,7 @@ public abstract class xLogPrinting {
 	public abstract xLog get(final String name);
 	public abstract xLog getWeak();
 	public abstract xLog getWeak(final String name);
+	@Override
 	public abstract xLog clone();
 
 	public abstract boolean isRoot();

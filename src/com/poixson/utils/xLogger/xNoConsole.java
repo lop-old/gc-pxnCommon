@@ -1,7 +1,6 @@
-/*
-package com.poixson.commonjava.xLogger;
+package com.poixson.utils.xLogger;
 
-import com.poixson.commonjava.xLogger.commands.xCommandsHandler;
+import java.lang.ref.SoftReference;
 
 
 public class xNoConsole implements xConsole {
@@ -26,15 +25,15 @@ public class xNoConsole implements xConsole {
 	@Override
 	public void Stop() {
 	}
-	@Override
-	public boolean isRunning() {
-		return false;
-	}
 
 
 
 	@Override
 	public void run() {
+	}
+	@Override
+	public boolean isRunning() {
+		return false;
 	}
 
 
@@ -45,17 +44,20 @@ public class xNoConsole implements xConsole {
 	@Override
 	public void flush() {
 	}
+
+
+
 	@Override
 	public void print(final String msg) {
 		String str = msg;
 		// strip color tags
-		while(true) {
+		while (true) {
 			final int posA = str.indexOf("@|");
-			if(posA == -1) break;
+			if (posA == -1) break;
 			final int posB = str.indexOf(' ', posA);
 			final int posC = str.indexOf("|@", posB);
-			if(posB == -1) break;
-			if(posC == -1) break;
+			if (posB == -1) break;
+			if (posC == -1) break;
 			// strip out color tags
 			final StringBuilder tmp = new StringBuilder();
 			tmp.append(str.substring(0, posA));
@@ -68,12 +70,12 @@ public class xNoConsole implements xConsole {
 			System.out.flush();
 		}
 	}
+
+
+
 	@Override
 	public void drawPrompt() {
 	}
-
-
-
 	@Override
 	public void setPrompt(final String prompt) {
 	}
@@ -81,11 +83,8 @@ public class xNoConsole implements xConsole {
 	public String getPrompt() {
 		return null;
 	}
-
-
-
 	@Override
-	public void setCommandHandler(final xCommandsHandler handler) {
+	public void setCommandHandler(final xCommandHandler handler) {
 	}
 
 
@@ -98,4 +97,3 @@ public class xNoConsole implements xConsole {
 
 
 }
-*/

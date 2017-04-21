@@ -1,7 +1,6 @@
-/*
-package com.poixson.commonjava.xLogger.commands;
+package com.poixson.utils.xLogger;
 
-import com.poixson.commonjava.xEvents.xEventListener;
+import com.poixson.utils.xEvents.xEventListener;
 
 
 public interface xCommandListener extends xEventListener {
@@ -11,4 +10,3 @@ public interface xCommandListener extends xEventListener {
 
 
 }
-*/

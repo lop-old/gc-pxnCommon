@@ -1,13 +1,11 @@
-/*
-package com.poixson.commonjava.xLogger;
+package com.poixson.utils.xLogger;
 
-import com.poixson.commonjava.xLogger.formatters.xLogFormatter_Default;
-
+import java.lang.ref.SoftReference;
 
 
 public abstract class xLogHandler {
 
-	private volatile xLogFormatterInterface formatter = null;
+	private volatile xLogFormatter formatter = null;
 	private volatile xLevel level = null;
 	private final Object formatLock = new Object();
 
@@ -48,7 +46,7 @@ public abstract class xLogHandler {
 	}
 	// is level loggable
 	public boolean isLoggable(final xLevel lvl) {
-		if(lvl == null || this.level == null)
+		if (lvl == null || this.level == null)
 			return true;
 		return this.level.isLoggable(lvl);
 	}

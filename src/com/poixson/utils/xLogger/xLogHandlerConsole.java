@@ -1,29 +1,25 @@
-/*
-package com.poixson.commonjava.xLogger;
-
-import com.poixson.commonjava.xLogger.xConsole;
-import com.poixson.commonjava.xLogger.xLog;
-import com.poixson.commonjava.xLogger.xLogHandler;
-import com.poixson.commonjava.xLogger.xLogRecord;
+package com.poixson.utils.xLogger;
 
 
-public class logHandlerConsole extends xLogHandler {
+public class xLogHandlerConsole extends xLogHandler {
 
 
 
-	public logHandlerConsole() {
+	public xLogHandlerConsole() {
 	}
 
 
 
 	@Override
 	public void publish(final xLogRecord record) {
-		publish(msgFormat(record));
+		publish(
+			msgFormat(record)
+		);
 	}
 	@Override
 	public void publish(final String msg) {
 		final xConsole console = xLog.getConsole();
-		if(console == null) {
+		if (console == null) {
 			System.out.println(msg);
 		} else {
 			console.print(msg);
@@ -33,4 +29,3 @@ public class logHandlerConsole extends xLogHandler {
 
 
 }
-*/
