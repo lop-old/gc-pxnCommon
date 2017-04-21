@@ -265,10 +265,12 @@ public class xLog extends xLogPrinting {
 			this.parent.publish(record);
 		}
 		if (this.handlers.isEmpty()) {
-			final PrintStream out = xVars.getOriginalOut();
-			out.println(
-				record.msg()
-			);
+			if (this.isRoot()) {
+				final PrintStream out = xVars.getOriginalOut();
+				out.println(
+					record.msg()
+				);
+			}
 		} else {
 			for (final xLogHandler handler : this.handlers) {
 				if (handler.isLoggable(lvl)) {
