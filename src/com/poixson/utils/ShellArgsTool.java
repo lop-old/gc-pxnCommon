@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import com.poixson.utils.xLogger.xLog;
+
 
 public class ShellArgsTool {
 
@@ -24,17 +26,24 @@ public class ShellArgsTool {
 	public static ShellArgsTool init(final String[] argsArray) {
 		final ShellArgsTool argsTool = new ShellArgsTool(argsArray);
 		// ansi color enabled
-		if (argsTool.hasFlag("--ascii")) {
-//TODO:
+		if (argsTool.hasFlag("--color")) {
+			final Boolean bool = argsTool.getFlagBoolean("--color");
+			if (bool != null) {
+				xVars.setConsoleColor(
+						bool.booleanValue()
+				);
+			}
 		}
 		// ansi color disabled
-		if (argsTool.hasFlag("--no-ascii")) {
-//TODO:
+		if (argsTool.hasFlag("--no-color")) {
+			xVars.setConsoleColor(false);
 		}
 		// detect color support
 //TODO:
 		// clear screen
-//TODO:
+		if (xVars.isConsoleColorEnabled()) {
+			xLog.getConsole().clear();
+		}
 		return argsTool;
 	}
 
