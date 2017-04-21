@@ -1,5 +1,4 @@
-/*
-package com.poixson.commonjava.Utils;
+package com.poixson.utils;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -8,8 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.poixson.commonjava.Utils.exceptions.UnmodifiableObjectException;
-import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.utils.exceptions.UnmodifiableObjectException;
+import com.poixson.utils.xLogger.xLog;
 
 
 public class DualKeyMap<K, J, V> {
@@ -64,16 +63,17 @@ public class DualKeyMap<K, J, V> {
 
 
 	public void clear() {
-		if(this.isFinal) throw UnmodifiableObjectException.get();
+		if (this.isFinal) throw UnmodifiableObjectException.get();
 		this.kMap.clear();
 		this.jMap.clear();
 	}
 	public V remove(final K kKey, final J jKey) {
-		if(this.isFinal) throw UnmodifiableObjectException.get();
+		if (this.isFinal) throw UnmodifiableObjectException.get();
 		final V resultK = this.kMap.remove(kKey);
 		final V resultJ = this.jMap.remove(jKey);
-		if(resultK != null)
+		if (resultK != null) {
 			return resultK;
+		}
 		return resultJ;
 	}
 
@@ -131,22 +131,33 @@ public class DualKeyMap<K, J, V> {
 
 	// put a key,key,value
 	public V put(final K kKey, final J jKey, final V value) {
-		if(this.isFinal) UnmodifiableObjectException.get();
+		if (this.isFinal) UnmodifiableObjectException.get();
 		this.kMap.put(kKey, value);
 		this.jMap.put(jKey, value);
 		return value;
 	}
 	public void putAll(final DualKeyMap<K, J, V> map) {
-		if(this.isFinal) throw UnmodifiableObjectException.get();
+		if (this.isFinal) throw UnmodifiableObjectException.get();
 		final Iterator<Entry<K, V>> itK = this.kMap.entrySet().iterator();
 		final Iterator<Entry<J, V>> itJ = this.jMap.entrySet().iterator();
-		while(itK.hasNext() && itJ.hasNext()) {
+		while (itK.hasNext() && itJ.hasNext()) {
 			final Entry<K, V> entryK = itK.next();
 			final Entry<J, V> entryJ = itJ.next();
-			if(!entryK.getValue().equals(entryJ.getValue())) {
-				xLog.getRoot().severe("Missmatched values in DualKeyMap object! [ "+
-						entryK.getKey().toString()+" : "+entryK.getValue().toString()+" ] != [ "+
-						entryJ.getKey().toString()+" : "+entryJ.getValue().toString()+" ] ");
+			if ( ! entryK.getValue().equals(entryJ.getValue()) ) {
+				xLog.getRoot()
+					.severe(
+						(new StringBuilder())
+							.append("Missmatched values in DualKeyMap object! [ ")
+							.append(entryK.getKey().toString())
+							.append(" : ")
+							.append(entryK.getValue().toString())
+							.append(" ] != [ ")
+							.append(entryJ.getKey().toString())
+							.append(" : ")
+							.append(entryJ.getValue().toString())
+							.append(" ] ")
+							.toString()
+					);
 				continue;
 			}
 			this.put(
@@ -160,4 +171,3 @@ public class DualKeyMap<K, J, V> {
 
 
 }
-*/

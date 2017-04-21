@@ -1,5 +1,4 @@
-/*
-package com.poixson.commonjava.Utils;
+package com.poixson.utils;
 
 import java.awt.Font;
 import java.io.File;
@@ -7,24 +6,26 @@ import java.io.File;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
-import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.xLogger.xLog;
 
 
-public final class utilsSwing {
-	private utilsSwing() {}
+public final class SwingUtils {
+	private SwingUtils() {}
 
 
 
 	// change font size
 	public static void changeFontSize(final JComponent component, final int size) {
-		if(component == null) throw new RequiredArgumentException("component");
+		if (component == null) throw new RequiredArgumentException("component");
 		final Font font = component.getFont();
-		component.setFont(new Font(
-			font.getFontName(),
-			font.getStyle(),
-			font.getSize() + size
-		));
+		component.setFont(
+			new Font(
+				font.getFontName(),
+				font.getStyle(),
+				font.getSize() + size
+			)
+		);
 	}
 
 
@@ -32,7 +33,7 @@ public final class utilsSwing {
 	// load image file/resource
 	public static ImageIcon loadImageResource(final String path) {
 		// open file
-		if((new File(path)).exists()) {
+		if ((new File(path)).exists()) {
 			try {
 				final ImageIcon image = new ImageIcon(path);
 				log().fine("Loaded image file: "+path);
@@ -53,10 +54,9 @@ public final class utilsSwing {
 
 	// logger
 	public static xLog log() {
-		return utils.log();
+		return Utils.log();
 	}
 
 
 
 }
-*/
