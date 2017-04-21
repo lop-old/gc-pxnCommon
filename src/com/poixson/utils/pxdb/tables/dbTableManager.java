@@ -1,11 +1,10 @@
-/*
-package com.poixson.commonjava.pxdb.TableManager;
+package com.poixson.utils.pxdb.tables;
 
 import java.sql.SQLException;
 
-import com.poixson.commonjava.pxdb.dbManager;
-import com.poixson.commonjava.pxdb.dbQuery;
-import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.utils.pxdb.dbManager;
+import com.poixson.utils.pxdb.dbQuery;
+import com.poixson.utils.xLogger.xLog;
 
 
 public abstract class dbTableManager {
@@ -41,11 +40,12 @@ public abstract class dbTableManager {
 	}
 	// create if needed
 	public void createIfMissing(final TableDAO table) throws SQLException {
-		if(!tableExists(table.tableName)) {
+		if (!tableExists(table.tableName)) {
 			log().info("Creating db table: "+table.tableName);
 			// create table
 			final dbQuery db = getDB();
 			try {
+//TODO:
 //				final StringBuilder sql = new StringBuilder();
 //				//TODO: sql.append();
 //				db.Prepare("CREATE TABLE ? ( "+sql.toString()+" )");
@@ -56,8 +56,9 @@ public abstract class dbTableManager {
 				db.free();
 			}
 		}
+//TODO:
 //		// check fields
-//		for(FieldDAO field : table.fields){
+//		for (FieldDAO field : table.fields){
 //
 //		}
 	}
@@ -72,4 +73,3 @@ public abstract class dbTableManager {
 
 
 }
-*/

@@ -1,11 +1,10 @@
-/*
-package com.poixson.commonjava.pxdb.TableManager;
+package com.poixson.utils.pxdb.tables;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.poixson.commonjava.Utils.utilsSan;
-import com.poixson.commonjava.pxdb.dbQuery;
+import com.poixson.utils.SanUtils;
+import com.poixson.utils.pxdb.dbQuery;
 
 
 public class TableDAO {
@@ -21,7 +20,7 @@ public class TableDAO {
 
 	// table dao
 	public TableDAO(final String tableName) {
-		this.tableName = utilsSan.AlphaNumSafe(tableName);
+		this.tableName = SanUtils.AlphaNumSafe(tableName);
 	}
 
 
@@ -32,8 +31,8 @@ public class TableDAO {
 		return this;
 	}
 	public String getIdField() {
-		if(this.idField == null)   return null;
-		if(this.idField.isEmpty()) return "id";
+		if (this.idField == null)   return null;
+		if (this.idField.isEmpty()) return "id";
 		return this.idField;
 	}
 
@@ -43,7 +42,13 @@ public class TableDAO {
 	public TableDAO addField(final String type, final String name,
 			final String size, final String def, final boolean nullable) {
 		this.fields.add(
-			new FieldDAO(type, name, size, def, nullable)
+			new FieldDAO(
+				type,
+				name,
+				size,
+				def,
+				nullable
+			)
 		);
 		return this;
 	}
@@ -59,13 +64,14 @@ public class TableDAO {
 
 	// CREATE TABLE name ( fields ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1
 	public String sqlCreateTable() {
-		return (new StringBuilder())
-			.append("CREATE TABLE `")
-			.append(dbQuery.san(this.tableName))
-			.append("` ( ")
-			.append(sqlFields())
-			.append(" ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1")
-		.toString();
+		return
+			(new StringBuilder())
+				.append("CREATE TABLE `")
+				.append(dbQuery.san(this.tableName))
+				.append("` ( ")
+				.append(sqlFields())
+				.append(" ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1")
+				.toString();
 	}
 	// ALTER TABLE name ADD field
 	public String sqlAddField(final FieldDAO field) {
@@ -75,22 +81,31 @@ public class TableDAO {
 	public String sqlFields() {
 		final StringBuilder sql = new StringBuilder();
 		// id field
-		if(getIdField() != null) {
+		if (getIdField() != null) {
 			sql.append(
-				FieldDAO.sqlIdField(getIdField())
+				FieldDAO.sqlIdField(
+					getIdField()
+				)
 			);
 		}
 		// all other fields
-		for(final FieldDAO field : this.fields) {
-			if(sql.length() > 0)
+		for (final FieldDAO field : this.fields) {
+			if (sql.length() > 0) {
 				sql.append(", ");
+			}
 			sql.append(field.sqlField());
 		}
 		// unique fields
-		for(final String u : this.unique) {
-			if(sql.length() > 0)
+		for (final String u : this.unique) {
+			if (sql.length() > 0) {
 				sql.append(", ");
-			sql.append("UNIQUE KEY `"+u+"` (`"+u+"`)");
+			}
+			sql
+				.append("UNIQUE KEY `")
+				.append(u)
+				.append("` (`")
+				.append(u)
+				.append("`)");
 		}
 		return sql.toString();
 	}
@@ -98,4 +113,3 @@ public class TableDAO {
 
 
 }
-*/

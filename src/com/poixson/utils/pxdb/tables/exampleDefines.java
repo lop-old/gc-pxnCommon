@@ -1,9 +1,8 @@
-/*
-package com.poixson.commonjava.pxdb.TableManager;
+package com.poixson.utils.pxdb.tables;
 
 import java.sql.SQLException;
 
-import com.poixson.commonjava.pxdb.dbQuery;
+import com.poixson.utils.pxdb.dbQuery;
 
 
 public class exampleDefines extends dbTableManager {
@@ -19,7 +18,7 @@ public class exampleDefines extends dbTableManager {
 			defineTable("Example")
 				.idField("id")
 				// note, if default=null and nullable=false then
-				//   no default is set and a value is required
+				// no default is set and a value is required
 				//			type	name			size	default	nullable
 				.addField("str",	"name",			"16",	null,	false)
 				.addField("int",	"value",		"11",	"0",	false)
@@ -44,4 +43,3 @@ public class exampleDefines extends dbTableManager {
 
 
 }
-*/
