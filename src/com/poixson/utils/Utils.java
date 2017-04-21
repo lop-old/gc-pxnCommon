@@ -6,9 +6,11 @@ import java.lang.ref.SoftReference;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
 import com.poixson.utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.xLogger.xLevel;
 import com.poixson.utils.xLogger.xLog;
 
 
@@ -17,9 +19,12 @@ public final class Utils {
 
 
 
+	private static AtomicBoolean inited = new AtomicBoolean(false);
 	protected static void InitAll() {
-		Keeper.add(new Utils());
+		if (!inited.compareAndSet(false, true))
+			return;
 		xVars.init();
+		Keeper.add(new Utils());
 		Failure.init();
 		CryptUtils.init();
 		DirsFiles.init();

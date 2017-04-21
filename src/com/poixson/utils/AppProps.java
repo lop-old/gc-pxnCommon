@@ -43,7 +43,8 @@ public class AppProps {
 			}
 			props.load(in);
 		} catch (IOException e) {
-			xLog.getRoot().trace(e);
+			xLog.getRoot()
+				.trace(e);
 		} finally {
 			Utils.safeClose(in);
 		}

@@ -116,7 +116,9 @@ public class jlineConsole implements xConsole {
 
 	@Override
 	public void Start() {
-		log().finest("Start jlineConsole");
+		if (xVars.debug()) {
+			log().finest("Start jlineConsole");
+		}
 		if (this.isStopping()) throw new RuntimeException("Console already stopped");
 		if (this.isRunning())  throw new RuntimeException("Console already running");
 		if (!this.starting.compareAndSet(false, true)) {
@@ -226,9 +228,6 @@ public class jlineConsole implements xConsole {
 	// input listener loop
 	@Override
 	public void run() {
-		if (!this.starting.compareAndSet(false, true)) {
-			return;
-		}
 		if (!this.running.compareAndSet(false, true)) {
 			return;
 		}

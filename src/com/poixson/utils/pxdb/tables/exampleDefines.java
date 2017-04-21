@@ -7,6 +7,7 @@ import com.poixson.utils.pxdb.dbQuery;
 
 public class exampleDefines extends dbTableManager {
 
+//TODO: this should be custom
 	private static final String TABLE_PREFIX = "pxn_";
 
 

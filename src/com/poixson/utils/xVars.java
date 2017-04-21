@@ -12,11 +12,8 @@ public class xVars {
 
 
 
-	private static volatile boolean inited = false;
 	public static void init() {
-		if (!inited) {
-			Keeper.add(new xVars());
-		}
+		Keeper.add(new xVars());
 	}
 	private xVars() {
 	}
@@ -49,11 +46,13 @@ public class xVars {
 			}
 			// change debug state
 			if (!value) {
-				xLog.getRoot().fine("Disabled debug mode");
+				xLog.getRoot()
+					.fine("Disabled debug mode");
 			}
 			debug = Boolean.valueOf(value);
 			if (value) {
-				xLog.getRoot().fine("Enabled debug mode");
+				xLog.getRoot()
+					.fine("Enabled debug mode");
 			}
 		}
 	}
