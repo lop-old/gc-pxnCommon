@@ -1,18 +1,22 @@
-/*
-package com.poixson.commonjava;
+package com.poixson.utils;
 
-import com.poixson.commonjava.Utils.Keeper;
-import com.poixson.commonjava.xLogger.xLog;
+import java.io.InputStream;
+import java.io.PrintStream;
+
+import com.poixson.utils.xLogger.xLog;
 
 
 public class xVars {
+
+	private static final boolean DEFAULT_DEBUG = false;
 
 
 
 	private static volatile boolean inited = false;
 	public static void init() {
-		if(!inited)
+		if (!inited) {
 			Keeper.add(new xVars());
+		}
 	}
 	private xVars() {
 	}
@@ -20,22 +24,36 @@ public class xVars {
 
 
 	// debug mode
-	private static final boolean DEFAULT_DEBUG = false;
 	private static volatile Boolean debug = null;
+	private static final Object debugLock = new Object();
 
 	public static boolean debug() {
-		if(debug == null)
+		final Boolean bool = debug;
+		if (bool == null) {
 			return DEFAULT_DEBUG;
-		return debug.booleanValue();
+		}
+		return bool.booleanValue();
 	}
 	public static void debug(final boolean value) {
-		if(debug != null && debug.booleanValue() == value) return;
-		if(!value) xLog.getRoot().fine("Disabled debug mode");
-		debug = Boolean.valueOf(value);
-		// if(value) xLog.getRoot().fine("Enabled debug mode");
+		synchronized(debugLock) {
+			// check existing value
+			final Boolean bool = debug;
+			if (bool != null) {
+				if (bool.booleanValue() == value) {
+					return;
+				}
+			}
+			// change debug state
+			if (!value) {
+				xLog.getRoot().fine("Disabled debug mode");
+			}
+			debug = Boolean.valueOf(value);
+			if (value) {
+				xLog.getRoot().fine("Enabled debug mode");
+			}
+		}
 	}
 
 
 
 }
-*/
