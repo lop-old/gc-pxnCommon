@@ -95,22 +95,18 @@ public final class Failure {
 	public static void addMessageSilently(final String msg) {
 		messages.add(msg);
 	}
-//	@Override
-//	public String toString() {
-//		if(!this.failed)
-//			return null;
-//		synchronized(this.lock) {
-//			final String[] msgs = this.getMessages();
-//			if(msgs == null)
-//				return null;
-//			if(msgs.length == 0)
-//				return "";
-//			return utilsString.addArray(
-//				"; ",
-//				msgs
-//			);
-//		}
-//	}
+	@Override
+	public String toString() {
+		if (!failed)
+			return null;
+		final String[] msgs = getMessages();
+		if (msgs == null)     return null;
+		if (msgs.length == 0) return "";
+		return StringUtils.addArray(
+			"; ",
+			msgs
+		);
+	}
 
 
 
