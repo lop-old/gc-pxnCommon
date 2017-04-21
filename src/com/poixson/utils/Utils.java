@@ -2,12 +2,14 @@ package com.poixson.utils;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.lang.ref.SoftReference;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
 import com.poixson.utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.xLogger.xLog;
 
 
 public final class Utils {
@@ -447,11 +449,19 @@ public final class Utils {
 
 
 
-//TODO:
-//	// logger
-//	public static xLog log() {
-//		return xLog.getRoot();
-//	}
+	// logger
+	private static volatile SoftReference<xLog> _log = null;
+	public static xLog log() {
+		if (_log != null) {
+			final xLog log = _log.get();
+			if (log != null) {
+				return log;
+			}
+		}
+		final xLog log = xLog.getRoot();
+		_log = new SoftReference<xLog>(log);
+		return log;
+	}
 
 
 

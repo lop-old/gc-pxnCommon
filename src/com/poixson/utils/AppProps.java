@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import com.poixson.utils.xLogger.xLog;
+
 
 public class AppProps {
 
@@ -31,14 +33,17 @@ public class AppProps {
 			props = new Properties();
 			in = clss.getResourceAsStream(PROPS_FILE);
 			if (in == null) {
-//TODO:
-//				Failure.fail("Failed to load "+PROPS_FILE+" resource from jar");
-				throw new RuntimeException();
+				final String msg =
+					(new StringBuilder())
+						.append("Failed to load ")
+						.append(PROPS_FILE)
+						.append(" resource from jar")
+						.toString();
+				Failure.fail(msg, new RuntimeException(msg));
 			}
 			props.load(in);
 		} catch (IOException e) {
-//TODO:
-//			xLog.getRoot().trace(e);
+			xLog.getRoot().trace(e);
 		} finally {
 			Utils.safeClose(in);
 		}

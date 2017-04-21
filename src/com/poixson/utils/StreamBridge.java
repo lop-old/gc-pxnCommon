@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.poixson.utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.xLogger.xLog;
 
 
 /**
@@ -81,9 +82,12 @@ public class StreamBridge implements xStartable {
 			try {
 				b = this.in.read();
 			} catch (IOException e) {
-//TODO:
-//				if (!this.stopping && !Thread.interrupted())
-//					xLog.getRoot().trace(e);
+				if (!this.stopping) {
+					if (!Thread.interrupted()) {
+						xLog.getRoot()
+							.trace(e);
+					}
+				}
 				break;
 			}
 			if (b == -1)
@@ -91,9 +95,12 @@ public class StreamBridge implements xStartable {
 			try {
 				this.out.write(b);
 			} catch (IOException e) {
-//TODO:
-//				if (!this.stopping && !Thread.interrupted())
-//					xLog.getRoot().trace(e);
+				if (!this.stopping) {
+					if (!Thread.interrupted()) {
+						xLog.getRoot()
+							.trace(e);
+					}
+				}
 				break;
 			}
 		}

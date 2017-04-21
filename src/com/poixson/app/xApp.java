@@ -1,6 +1,7 @@
 package com.poixson.app;
 
 import java.io.PrintStream;
+import java.lang.ref.SoftReference;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -17,6 +18,7 @@ import com.poixson.app.steps.xAppStep;
 import com.poixson.app.steps.xAppStep.StepType;
 import com.poixson.app.steps.xAppStepDAO;
 import com.poixson.utils.AppProps;
+import com.poixson.utils.Failure;
 import com.poixson.utils.Keeper;
 import com.poixson.utils.LockFile;
 import com.poixson.utils.StringUtils;
@@ -25,6 +27,12 @@ import com.poixson.utils.Utils;
 import com.poixson.utils.xClock;
 import com.poixson.utils.xStartable;
 import com.poixson.utils.xTime;
+import com.poixson.utils.xLogger.jlineConsole;
+import com.poixson.utils.xLogger.xConsole;
+import com.poixson.utils.xLogger.xLevel;
+import com.poixson.utils.xLogger.xLog;
+import com.poixson.utils.xLogger.xLogFormatter_Color;
+import com.poixson.utils.xLogger.xLogHandlerConsole;
 
 
 /*
@@ -84,23 +92,21 @@ public abstract class xApp implements xStartable {
 
 	public xApp() {
 		if (instance != null) {
-//			get().log().trace(new RuntimeException(APP_ALREADY_STARTED_EXCEPTION)
-//			Failure.fail(
-//				APP_ALREADY_STARTED_EXCEPTION,
-//				new RuntimeException(APP_ALREADY_STARTED_EXCEPTION)
-//			);
-			System.out.println("Cannot init app, already inited!");
-			System.exit(1);
+			xLog.getRoot()
+				.trace(new RuntimeException(APP_ALREADY_STARTED_EXCEPTION));
+			Failure.fail(
+				APP_ALREADY_STARTED_EXCEPTION,
+				new RuntimeException(APP_ALREADY_STARTED_EXCEPTION)
+			);
 		}
 		synchronized(instanceLock) {
 			if (instance != null) {
-//				get().log().trace(new RuntimeException(APP_ALREADY_STARTED_EXCEPTION)
-//				Failure.fail(
-//					APP_ALREADY_STARTED_EXCEPTION,
-//					new RuntimeException(APP_ALREADY_STARTED_EXCEPTION)
-//				);
-				System.out.println("Cannot init app, already inited!");
-				System.exit(1);
+				xLog.getRoot()
+					.trace(new RuntimeException(APP_ALREADY_STARTED_EXCEPTION));
+				Failure.fail(
+					APP_ALREADY_STARTED_EXCEPTION,
+					new RuntimeException(APP_ALREADY_STARTED_EXCEPTION)
+				);
 			}
 			instance = this;
 		}
@@ -122,16 +128,13 @@ public abstract class xApp implements xStartable {
 			}
 			// already stopping
 			if (this.isStopping()) {
-//TODO:
-System.out.println("Cannot start app, already stopping!");
-//System.exit(1);
-return;
+				this.log().warning(APP_ALREADY_STOPPING_EXCEPTION);
+				return;
 			}
 			// set starting state
 			if (!this.step.compareAndSet(STEP_OFF, STEP_START)) {
-//TODO:
-System.out.println("Invalid state, cannot start: "+Integer.toString(this.step.get()));
-System.exit(1);
+				this.log().warning(APP_INVALID_STATE_EXCEPTION+this.step.get());
+				return;
 			}
 		}
 
@@ -188,9 +191,7 @@ System.exit(1);
 //		Failure.fail("@|FG_RED Main process ended! (this shouldn't happen)|@");
 //		System.exit(1);
 
-//TODO:
-//		this.log().title(
-System.out.println(
+		this.log().title(
 			(new StringBuilder())
 				.append("Starting ")
 				.append(this.getTitle())
@@ -204,9 +205,8 @@ System.out.println(
 		// startup loop
 		while (true) {
 			if (!this.isStarting()) {
-//TODO:
-System.out.println("Failed to start, inconsistent state!");
-return;
+				Failure.fail(APP_INCONSISTENT_STATE_EXCEPTION,
+						new RuntimeException(APP_INCONSISTENT_STATE_EXCEPTION));
 			}
 			// invoke step
 			final List<xAppStepDAO> lst = orderedSteps.get( new Integer(this.step.get()) );
@@ -217,14 +217,9 @@ return;
 						dao.invoke();
 						hasInvoked = true;
 					} catch (ReflectiveOperationException e) {
-//TODO:
-//						Failure.fail();
-						e.printStackTrace();
-						System.exit(1);
+						Failure.fail("Failed to invoke startup step!", e);
 					} catch (RuntimeException e) {
-//						Failure.fail();
-						e.printStackTrace();
-						System.exit(1);
+						Failure.fail("Failed to invoke startup step!", e);
 					}
 				}
 				// finished step
@@ -241,9 +236,8 @@ return;
 			this.step.incrementAndGet();
 		}
 		if (!this.isStarting()) {
-//TODO:
-System.out.println("Failed to start, inconsistent state!");
-System.exit(1);
+			Failure.fail(APP_INCONSISTENT_STATE_EXCEPTION,
+					new RuntimeException(APP_INCONSISTENT_STATE_EXCEPTION));
 		}
 		// finished starting
 		this.step.set(STEP_RUN);
@@ -261,22 +255,19 @@ System.exit(1);
 			// set stopping state
 			this.step.set(STEP_STOP);
 		}
-//TODO:
-//		this.log().title(
-//			new String[] {
-System.out.println(
+		this.log().title(
+			new String[] {
 				(new StringBuilder())
 					.append("Stopping ")
 					.append(this.getTitle())
 					.append("..")
-					.toString()
-);
-System.out.println(
+					.toString(),
 				(new StringBuilder())
 					.append("Uptime: ")
 					.append(this.getUptimeString())
 					.toString()
-);
+			}
+		);
 		// prepare shutdown steps
 		final Map<Integer, List<xAppStepDAO>> orderedSteps =
 				getSteps(StepType.SHUTDOWN);
@@ -285,9 +276,8 @@ System.out.println(
 		// shutdown loop
 		while (true) {
 			if (!this.isStopping()) {
-//TODO:
-System.out.println("Failed to start, inconsistent state!");
-System.exit(1);
+				Failure.fail(APP_INCONSISTENT_STOP_EXCEPTION,
+						new RuntimeException(APP_INCONSISTENT_STOP_EXCEPTION));
 			}
 			// invoke step
 			final List<xAppStepDAO> lst = orderedSteps.get( new Integer(this.step.get()) );
@@ -299,14 +289,9 @@ System.out.println("STEP DN: "+this.step.get());
 						dao.invoke();
 						hasInvoked = true;
 					} catch (ReflectiveOperationException e) {
-//TODO:
-//						Failure.fail();
-						e.printStackTrace();
-						System.exit(1);
+						Failure.fail("Failed to invoke shutdown step!", e);
 					} catch (RuntimeException e) {
-//						Failure.fail();
-						e.printStackTrace();
-						System.exit(1);
+						Failure.fail("Failed to invoke shutdown step!", e);
 					}
 				}
 				// finished step
@@ -323,9 +308,8 @@ System.out.println("STEP DN: "+this.step.get());
 			this.step.incrementAndGet();
 		}
 		if (!this.isStopped()) {
-//TODO:
-System.out.println("Failed to stop, inconsistent state!");
-System.exit(1);
+			Failure.fail(APP_INCONSISTENT_STOP_EXCEPTION,
+					new RuntimeException(APP_INCONSISTENT_STOP_EXCEPTION));
 		}
 		// finished starting
 		this.step.set(STEP_OFF);
@@ -478,13 +462,10 @@ return "<uptime>";
 	public void __STARTUP_rootcheck() {
 		final String user = System.getProperty("user.name");
 		if ("root".equals(user)) {
-//TODO:
-//			this.log().warning("It is recommended to run as a non-root user");
-System.out.println("It is recommended to run as a non-root user");
+			this.log().warning("It is recommended to run as a non-root user");
 		} else
 		if ("administrator".equalsIgnoreCase(user) || "admin".equalsIgnoreCase(user)) {
-//			this.log().warning("It is recommended to run as a non-administrator user");
-System.out.println("It is recommended to run as a non-administrator user");
+			this.log().warning("It is recommended to run as a non-administrator user");
 		}
 	}
 
@@ -495,10 +476,7 @@ System.out.println("It is recommended to run as a non-administrator user");
 	public void __STARTUP_lockfile() {
 		final String filename = this.getName()+".lock";
 		if (LockFile.get(filename) == null) {
-//TODO:
-//			Failure.fail("Failed to get lock on file: "+filename);
-//			return;
-System.out.println("Failed to get lock on file: "+filename);
+			Failure.fail("Failed to get lock on file: "+filename);
 		}
 	}
 
@@ -638,6 +616,22 @@ System.out.println("GC DONE");
 
 
 	// ------------------------------------------------------------------------------- //
+
+
+
+	// logger
+	private volatile SoftReference<xLog> _log = null;
+	public xLog log() {
+		if (this._log != null) {
+			final xLog log = this._log.get();
+			if (log != null) {
+				return log;
+			}
+		}
+		final xLog log = xLog.getRoot();
+		this._log = new SoftReference<xLog>(log);
+		return log;
+	}
 
 
 

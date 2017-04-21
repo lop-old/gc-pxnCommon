@@ -201,21 +201,19 @@ public abstract class xHandler {
 
 
 	// logger
-	private volatile xLog _log = null;
-	private xLog _log_default  = null;
+	private volatile SoftReference<xLog> _log = null;
 	public xLog log() {
-		final xLog log = this._log;
-		if(log != null)
-			return log;
-		if(this._log_default == null)
-			this._log_default = xLog.getRoot();
-		return this._log_default;
-	}
-	public void setLog(final xLog log) {
-		this._log = log;
+		if (this._log != null) {
+			final xLog log = this._log.get();
+			if (log != null) {
+				return log;
+			}
+		}
+		final xLog log = xLog.getRoot();
+		this._log = new SoftReference<xLog>(log);
+		return log;
 	}
 
 
 
 }
-*/

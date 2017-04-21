@@ -10,6 +10,8 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.poixson.utils.xLogger.xLog;
+
 
 public class xClock {
 
@@ -97,6 +99,7 @@ public class xClock {
 				return;
 			}
 		}
+		final xLog log = this.log();
 		DatagramSocket socket = null;
 		try {
 			socket = new DatagramSocket();
@@ -113,27 +116,24 @@ public class xClock {
 			this.localOffset = ((msg.receiveTimestamp - msg.originateTimestamp) + (msg.transmitTimestamp - fromUnixTimestamp(time))) / 2.0;
 			// less than 100ms
 			if (this.localOffset < 0.1 && this.localOffset > -0.1) {
-//TODO:
-//				log().info("System time only off by "+
-//						NumberUtils.FormatDecimal("0.000", this.localOffset)+
-//						", ignoring adjustment.");
+				log.info("System time only off by "+
+						NumberUtils.FormatDecimal("0.000", this.localOffset)+
+						", ignoring adjustment.");
 				this.localOffset = 0.0;
 			} else {
-//TODO:
-//				log().info("Internal time adjusted by "+(this.localOffset>0 ? "+" : "-")+
-//						NumberUtils.FormatDecimal("0.000", this.localOffset)+" seconds");
-//				log().info("System time:   "+timestampToString(time / 1000.0));
-//				log().info("Internal time: "+getString());
+				log.info("Internal time adjusted by "+(this.localOffset>0 ? "+" : "-")+
+						NumberUtils.FormatDecimal("0.000", this.localOffset)+" seconds");
+				log.info("System time:   "+timestampToString(time / 1000.0));
+				log.info("Internal time: "+getString());
 			}
 		} catch (SocketException e) {
-//TODO:
-//			log().trace(e);
+			log.trace(e);
 		} catch (UnknownHostException e) {
-//			log().trace(e);
+			log.trace(e);
 		} catch (IOException e) {
-//			log().trace(e);
+			log.trace(e);
 		} catch (Exception e) {
-//			log().trace(e);
+			log.trace(e);
 		} finally {
 			Utils.safeClose(socket);
 			this.thread = null;
@@ -221,11 +221,10 @@ public class xClock {
 
 
 
-//TODO:
-//	// logger
-//	public static xLog log() {
-//		return utils.log();
-//	}
+	// logger
+	public xLog log() {
+		return Utils.log();
+	}
 
 
 

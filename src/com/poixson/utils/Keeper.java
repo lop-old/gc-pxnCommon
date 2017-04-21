@@ -5,11 +5,12 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.poixson.utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.xLogger.xLog;
 
 
 public class Keeper {
-//	private static final String LOG_NAME = "KEEPER";
-//	private static final boolean DEBUG_EXTRA = false;
+	private static final String LOG_NAME = "KEEPER";
+	private static final boolean DEBUG_EXTRA = false;
 
 	private static volatile Keeper instance = null;
 	private static final Object instanceLock = new Object();
@@ -34,14 +35,16 @@ public class Keeper {
 	public static void add(final Object obj) {
 		if (obj == null) throw new RequiredArgumentException("obj");
 		holder.add(obj);
-//TODO:
-//		if (DEBUG_EXTRA()) finest("Added: "+obj.getClass().getName());
+		if (DEBUG_EXTRA) {
+			log().finest("Added: "+obj.getClass().getName());
+		}
 	}
 	public static void remove(final Object obj) {
 		if (obj == null) throw new RequiredArgumentException("obj");
 		holder.remove(obj);
-//TODO:
-//		if (DEBUG_EXTRA()) finest("Removed: "+obj.getClass().getName());
+		if (DEBUG_EXTRA) {
+			log().finest("Removed: "+obj.getClass().getName());
+		}
 	}
 	public static int removeAll(final Class<? extends Object> clss) {
 		if (holder.isEmpty())
@@ -62,35 +65,11 @@ public class Keeper {
 
 
 
-//TODO:
-//	// logger
-//	private static volatile xLog _log = null;
-//	private static xLog log() {
-//		if (!DEBUG_EXTRA()) return null;
-//		if (_log == null) {
-//			_log = xLog.getRoot(LOG_NAME);
-//		}
-//		return _log;
-//	}
-//	private static void finest(final String msg) {
-//		(new Thread() {
-//			private volatile String msg = null;
-//			public Thread finest(final String msg) {
-//				this.msg = msg;
-//				return this;
-//			}
-//			@Override
-//			public void run() {
-//				log().finest(this.msg);
-//			}
-//		}).finest(msg)
-//		.start();
-//	}
-//	private static boolean DEBUG_EXTRA() {
-//		if (DEBUG_EXTRA)
-//			return xVars.debug();
-//		return false;
-//	}
+	// logger
+	private static xLog log() {
+		return xLog.getRoot()
+				.get(LOG_NAME);
+	}
 
 
 

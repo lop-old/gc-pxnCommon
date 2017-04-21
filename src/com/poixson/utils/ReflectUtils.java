@@ -21,14 +21,13 @@ public final class ReflectUtils {
 				return null;
 			return method.invoke(clss, params);
 		} catch (NoSuchMethodException e) {
-//TODO:
-//			log().trace(e);
+			log().trace(e);
 		} catch (SecurityException e) {
-//			log().trace(e);
+			log().trace(e);
 		} catch (InvocationTargetException e) {
-//			log().trace(e);
+			log().trace(e);
 		} catch (IllegalAccessException e) {
-//			log().trace(e);
+			log().trace(e);
 		}
 		return null;
 	}
@@ -51,36 +50,31 @@ public final class ReflectUtils {
 		try {
 			field = clss.getField(name);
 		} catch (NoSuchFieldException e) {
-//TODO:
-//			log().trace(e);
+			log().trace(e);
 			return null;
 		} catch (SecurityException e) {
-//TODO:
-//			log().trace(e);
+			log().trace(e);
 			return null;
 		}
 		try {
 			value = (String) field.get(String.class);
 		} catch (IllegalArgumentException e) {
-//TODO:
-//			log().trace(e);
+			log().trace(e);
 			return null;
 		} catch (IllegalAccessException e) {
-//TODO:
-//			log().trace(e);
+			log().trace(e);
 			return null;
 		}
 		return value;
 	}
+
+
+
+	// logger
+	public static xLog log() {
+		return Utils.log();
+	}
 */
-
-
-
-//TODO:
-//	// logger
-//	public static xLog log() {
-//		return utils.log();
-//	}
 
 
 

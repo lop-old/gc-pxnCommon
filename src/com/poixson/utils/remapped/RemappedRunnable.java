@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import com.poixson.utils.Utils;
 import com.poixson.utils.xRunnable;
 import com.poixson.utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.xLogger.xLog;
 
 
 public class RemappedRunnable extends xRunnable {
@@ -27,8 +28,7 @@ public class RemappedRunnable extends xRunnable {
 					methodName
 			);
 		} catch (Exception e) {
-//TODO:
-//			log().trace(e);
+			log().trace(e);
 		}
 		return null;
 	}
@@ -69,24 +69,22 @@ public class RemappedRunnable extends xRunnable {
 		try {
 			this.method.invoke(this.obj);
 		} catch (IllegalAccessException e) {
-//TODO:
-//			log().trace(e);
+			log().trace(e);
 		} catch (IllegalArgumentException e) {
-//			log().trace(e);
+			log().trace(e);
 		} catch (InvocationTargetException e) {
-//			log().trace(e);
+			log().trace(e);
 		} catch (Exception e) {
-//			log().trace(e);
+			log().trace(e);
 		}
 	}
 
 
 
-//TODO:
-//	// logger
-//	public static xLog log() {
-//		return xLog.getRoot();
-//	}
+	// logger
+	public static xLog log() {
+		return xLog.getRoot();
+	}
 
 
 

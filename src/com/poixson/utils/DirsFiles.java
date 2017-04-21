@@ -247,7 +247,6 @@ public final class DirsFiles {
 
 
 
-//TODO:
 //	// logger
 //	public static xLog log() {
 //		return Utils.log();
