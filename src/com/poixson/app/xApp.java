@@ -22,6 +22,7 @@ import com.poixson.utils.LockFile;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.ThreadUtils;
 import com.poixson.utils.Utils;
+import com.poixson.utils.xClock;
 import com.poixson.utils.xStartable;
 import com.poixson.utils.xTime;
 
@@ -44,11 +45,11 @@ import com.poixson.utils.xTime;
  *   10  final garpage collect
  */
 public abstract class xApp implements xStartable {
-
-//	protected static final String APP_ALREADY_STARTED_EXCEPTION =
-//			"Illegal app state, possibly already started? Cannot start in this state.";
-//	protected static final String APP_ILLEGAL_STATE_EXCEPTION =
-//			"Illegal app state, cannot continue! This shouldn't happen! Current state: ";
+	private static final String APP_ALREADY_STARTED_EXCEPTION    = "Cannot init app, already inited!";
+	private static final String APP_ALREADY_STOPPING_EXCEPTION   = "Cannot start app, already stopping!";
+	private static final String APP_INVALID_STATE_EXCEPTION      = "Invalid state, cannot start: ";
+	private static final String APP_INCONSISTENT_STATE_EXCEPTION = "Failed to start, inconsistent state!";
+	private static final String APP_INCONSISTENT_STOP_EXCEPTION  = "Failed to stop, inconsistent state!";
 
 	// app instance
 	protected static volatile xApp instance = null;
@@ -109,6 +110,7 @@ public abstract class xApp implements xStartable {
 
 
 
+	@Override
 	public void Start() {
 		// already starting or running
 		if (this.isRunning() || this.isStarting()) {
@@ -246,6 +248,7 @@ System.exit(1);
 		// finished starting
 		this.step.set(STEP_RUN);
 	}
+	@Override
 	public void Stop() {
 		// already stopping or stopped
 		if (this.isStopped() || this.isStopping()) {
@@ -254,11 +257,6 @@ System.exit(1);
 		synchronized(instanceLock) {
 			if (this.isStopped() || this.isStopping()) {
 				return;
-			}
-			if (this.isStarting()) {
-//TODO:
-System.out.println("Cannot stop app, already starting!");
-System.exit(1);
 			}
 			// set stopping state
 			this.step.set(STEP_STOP);
@@ -358,8 +356,7 @@ System.exit(1);
 	}
 	protected static List<xAppStepDAO> findSteps() {
 		final Class<? extends xApp> clss = instance.getClass();
-		if (clss == null)
-			throw new RuntimeException("Failed to get app class!");
+		if (clss == null) throw new RuntimeException("Failed to get app class!");
 		// get method annotations
 		final Method[] methods = clss.getMethods();
 		if (Utils.isEmpty(methods))
@@ -368,7 +365,6 @@ System.exit(1);
 		for (final Method m : methods) {
 			final xAppStep anno = m.getAnnotation(xAppStep.class);
 			if (anno == null) continue;
-//			if (!type.equals(anno.type())) continue;
 			// found step method
 			final xAppStepDAO dao =
 				new xAppStepDAO(
@@ -392,12 +388,14 @@ System.exit(1);
 
 
 
+	@Override
 	public void run() {
 		throw new UnsupportedOperationException();
 	}
 
 
 
+	@Override
 	public boolean isRunning() {
 		return (this.step.get() == STEP_RUN);
 	}
@@ -416,14 +414,14 @@ System.exit(1);
 
 //TODO:
 //	public long getUptime() {
-//		if(this.startTime == -1)
+//		if (this.startTime == -1)
 //			return 0;
 //		return xClock.get(true).millis() - this.startTime;
 //	}
 	public String getUptimeString() {
 return "<uptime>";
 //		final xTime time = xTime.get(this.getUptime());
-//		if(time == null)
+//		if (time == null)
 //			return null;
 //		return time.toFullString();
 	}
@@ -479,12 +477,12 @@ return "<uptime>";
 	@xAppStep(type=StepType.STARTUP, title="RootCheck", priority=10)
 	public void __STARTUP_rootcheck() {
 		final String user = System.getProperty("user.name");
-		if("root".equals(user)) {
+		if ("root".equals(user)) {
 //TODO:
 //			this.log().warning("It is recommended to run as a non-root user");
 System.out.println("It is recommended to run as a non-root user");
 		} else
-		if("administrator".equalsIgnoreCase(user) || "admin".equalsIgnoreCase(user)) {
+		if ("administrator".equalsIgnoreCase(user) || "admin".equalsIgnoreCase(user)) {
 //			this.log().warning("It is recommended to run as a non-administrator user");
 System.out.println("It is recommended to run as a non-administrator user");
 		}
@@ -496,7 +494,7 @@ System.out.println("It is recommended to run as a non-administrator user");
 	@xAppStep(type=StepType.STARTUP, title="LockFile", priority=20)
 	public void __STARTUP_lockfile() {
 		final String filename = this.getName()+".lock";
-		if(LockFile.get(filename) == null) {
+		if (LockFile.get(filename) == null) {
 //TODO:
 //			Failure.fail("Failed to get lock on file: "+filename);
 //			return;
@@ -516,9 +514,11 @@ System.out.println("Failed to get lock on file: "+filename);
 	// clock
 	@xAppStep(type=StepType.STARTUP, title="Clock", priority=60)
 	public void __STARTUP_clock() {
-System.out.println("CLOCK");
-//TODO:
-//		this.startTime = xClock.get(true).millis();
+		final xClock clock = xClock.get(true);
+		this.startTime =
+			xTime.get(
+				clock.millis()
+			);
 	}
 
 
@@ -535,7 +535,6 @@ System.out.println("CLOCK");
 	// start thread pools
 	@xAppStep(type=StepType.STARTUP, title="ThreadPools", priority=100)
 	public void __STARTUP_threadpools() {
-System.out.println("THREAD POOLS");
 //TODO:
 //		// pass main thread to thread pool
 //		try {
@@ -552,7 +551,6 @@ System.out.println("THREAD POOLS");
 	// start scheduler
 	@xAppStep(type=StepType.STARTUP, title="Scheduler", priority=150)
 	public void __STARTUP_scheduler() {
-System.out.println("SCHEDUILER");
 //TODO:
 //		xScheduler.get()
 //			.Start();
@@ -614,7 +612,7 @@ System.out.println("RELEASE LOCK");
 //TODO:
 //		final String filename = this.getName()+".lock";
 //		final LockFile lock = LockFile.peak(filename);
-//		if(lock != null) {
+//		if (lock != null) {
 //			lock.release();
 //		}
 	}
@@ -626,11 +624,11 @@ System.out.println("RELEASE LOCK");
 	public void __SHUTDOWN_gc() {
 System.out.println("GC DONE");
 //TODO:
-//		utilsThread.Sleep(250L);
+//		Utils.Sleep(250L);
 //		xScheduler.clearInstance();
 		System.gc();
 //		final xLog log = this.log();
-//		if(xScheduler.hasLoaded()) {
+//		if (xScheduler.hasLoaded()) {
 //			log.warning("xScheduler hasn't fully unloaded!");
 //		} else {
 //			log.finest("xScheduler has been unloaded");

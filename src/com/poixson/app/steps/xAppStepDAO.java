@@ -23,15 +23,15 @@ public class xAppStepDAO {
 
 
 	public xAppStepDAO(final xApp app, final Method method, final xAppStep anno) {
-		if(app    == null) throw new RequiredArgumentException("app");
-		if(method == null) throw new RequiredArgumentException("method");
-		if(anno   == null) throw new RequiredArgumentException("annotation");
+		if (app    == null) throw new RequiredArgumentException("app");
+		if (method == null) throw new RequiredArgumentException("method");
+		if (anno   == null) throw new RequiredArgumentException("annotation");
 		this.type = anno.type();
 		this.priority = (
-				anno.priority() < 0
-				? 0 - anno.priority()
-				: anno.priority()
-			);
+			anno.priority() < 0
+			? 0 - anno.priority()
+			: anno.priority()
+		);
 		this.app    = app;
 		this.method = method;
 		this.anno   = anno;
@@ -50,10 +50,11 @@ public class xAppStepDAO {
 				? StringUtils.trims(this.method.getName(), "_")
 				: name;
 		}
-		this.title =
+		this.title = (
 			Utils.isEmpty(anno.title())
 			? this.name
-			: anno.title();
+			: anno.title()
+		);
 	}
 
 
