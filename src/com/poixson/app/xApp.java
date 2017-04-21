@@ -138,19 +138,36 @@ public abstract class xApp implements xStartable {
 			}
 		}
 
-//TODO:
-//		// init logger
-//		xLog.getRoot().setLevel(xLevel.ALL);
-//		if (Failure.hasFailed()) {
-//			System.out.println("Failure, pre-init!");
-//			System.exit(1);
-//		}
-//		// no console
-//		if (System.console() == null) {
-//			System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
-//		}
-//		// initialize console and enable colors
-//		instance.initConsole();
+		// init logger
+		{
+			final xLog log = xLog.getRoot();
+			log.setLevel(xLevel.ALL);
+			if (Failure.hasFailed()) {
+				System.out.println("Failure, pre-init!");
+				System.exit(1);
+			}
+			// initialize console and enable colors
+			if (System.console() != null) {
+				if (!Utils.isJLineAvailable()) {
+					Failure.fail("jline library not found");
+				}
+//TODO: detect when no console color is supported
+				// load console
+				final xConsole console = new jlineConsole();
+				xLog.setConsole(
+					console
+				);
+				console.Start();
+				log.setHandler(
+					new xLogHandlerConsole()
+				);
+				// enable console color
+				xLog.getRoot().setFormatter(
+					new xLogFormatter_Color(),
+					xLogHandlerConsole.class
+				);
+			}
+		}
 //		// process command line arguments
 //		final List<String> argsList = new LinkedList<String>();
 //		argsList.addAll(Arrays.asList(args));
@@ -171,20 +188,6 @@ public abstract class xApp implements xStartable {
 //			}
 //		}
 
-//		xConsole console = xLog.peakConsole();
-//		if (console == null || console instanceof xNoConsole) {
-//		if (!Utils.isJLineAvailable()) {
-//			Failure.fail("jline library not found");
-//		}
-//		console = new jlineConsole();
-//		xLog.setConsole(console);
-//	}
-//	// enable console color
-//	xLog.get().setFormatter(
-//		new xLogFormatter_Color(),
-//		logHandlerConsole.class
-//	);
-//}
 //		// handle command-line arguments
 //		instance.displayStartupVars();
 //		// main thread ended
