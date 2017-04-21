@@ -10,10 +10,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface xAppStep {
 
+
 	public enum StepType {STARTUP, SHUTDOWN};
 
 	StepType type();
 	int priority() default 100;
 	String title() default "";
+
 
 }

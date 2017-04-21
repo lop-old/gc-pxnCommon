@@ -9,7 +9,6 @@ public class AppProps {
 
 	private static final String PROPS_FILE = "/app.properties";
 
-
 	// properties
 	public final String name;
 	public final String title;
@@ -21,9 +20,6 @@ public class AppProps {
 	public final String org_url;
 	public final String issue_name;
 	public final String issue_url;
-
-
-
 
 
 

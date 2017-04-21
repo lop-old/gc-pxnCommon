@@ -21,7 +21,6 @@ public final class StringUtils {
 
 
 	// object to string
-	@SuppressWarnings("boxing")
 	public static String toString(final Object obj) {
 		// null
 		if (obj == null)
@@ -80,7 +79,7 @@ public final class StringUtils {
 			return false;
 		int sz = str.length();
 		for (int i = 0; i < sz; i++) {
-			final Character chr = str.charAt(i);
+			final char chr = str.charAt(i);
 			if ( ! Character.isLetter(chr) ) {
 				if ( ! Character.isSpaceChar(chr) ) {
 					return false;
@@ -94,7 +93,7 @@ public final class StringUtils {
 			return false;
 		int sz = str.length();
 		for (int i = 0; i < sz; i++) {
-			final Character chr = str.charAt(i);
+			final char chr = str.charAt(i);
 			if ( ! Character.isLetterOrDigit(chr)) {
 				return false;
 			}
@@ -106,7 +105,7 @@ public final class StringUtils {
 			return false;
 		int sz = str.length();
 		for (int i = 0; i < sz; i++) {
-			final Character chr = str.charAt(i);
+			final char chr = str.charAt(i);
 			if ( ! Character.isLetterOrDigit(chr)) {
 				if ( ! Character.isSpaceChar(chr) ) {
 					return false;
@@ -522,7 +521,7 @@ public final class StringUtils {
 
 
 
-	public static String wildcardToRegex(String wildcard) {
+	public static String wildcardToRegex(final String wildcard) {
 		final StringBuffer buf = new StringBuffer(wildcard.length());
 		buf.append('^');
 		final int len = wildcard.length();

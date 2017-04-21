@@ -1007,6 +1007,7 @@ public final class ApacheSystemUtils {
 	 * @deprecated Use {@link #JAVA_VERSION_FLOAT} instead.
 	 *			 Method will be removed in Commons Lang 3.0.
 	 */
+	@Deprecated
 	public static float getJavaVersion() {
 		return JAVA_VERSION_FLOAT;
 	}

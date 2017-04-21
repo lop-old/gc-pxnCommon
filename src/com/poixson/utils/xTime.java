@@ -168,9 +168,11 @@ public class xTime {
 	public static xTime parse(final String value) {
 		if (Utils.isEmpty(value)) return null;
 		final Long lng = parseLong(value);
-		if (lng == null)
-			return null;
-		return xTime.get(lng, xTimeU.MS);
+		return (
+			lng == null
+			? null
+			: xTime.get(lng.longValue(), xTimeU.MS)
+		);
 	}
 	public static Long parseLong(final String value) {
 		if (Utils.isEmpty(value)) return null;

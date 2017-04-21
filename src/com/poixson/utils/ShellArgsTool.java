@@ -204,10 +204,13 @@ public class ShellArgsTool {
 		if (str == null) {
 			return null;
 		}
-		return NumberUtils.toBoolean(
-			str,
-			true
-		);
+		return
+			Boolean.valueOf(
+				NumberUtils.toBoolean(
+					str,
+					true
+				)
+			);
 	}
 
 

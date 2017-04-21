@@ -92,9 +92,11 @@ public class xClock {
 		if (!this.enableNTP || !this.running) return;
 		long time = getSystemTime();
 		// checked in last 60 seconds
-		if ( this.lastChecked != 0.0 &&
-			((time - this.lastChecked) < 60.0) )
+		if ( this.lastChecked != 0.0) {
+			if ((time - this.lastChecked) < 60.0) {
 				return;
+			}
+		}
 		DatagramSocket socket = null;
 		try {
 			socket = new DatagramSocket();
@@ -207,9 +209,10 @@ public class xClock {
 	public static String timestampToString(final double timestamp) {
 		if (timestamp <= 0.0)
 			return "0";
-		return (new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss"))
+		return
+			(new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss"))
 				.format(new Date( (long)(timestamp * 1000.0) ))+
-				(new DecimalFormat("0.000")
+			(new DecimalFormat("0.000")
 				.format( timestamp - ((long) timestamp) ));
 	}
 	public String getString() {
