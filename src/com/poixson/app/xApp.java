@@ -38,10 +38,10 @@ import com.poixson.utils.xLogger.xLogHandlerConsole;
 /*
  * Startup sequence
  *   10  prevent root
- *   20  lock file
  *   50  load main configs
  *   60  sync clock
  *   80  display logo
+ *   90  lock file
  *  100  start thread pools
  *  150  start scheduler
  * Shutdown sequence
@@ -473,17 +473,6 @@ return "<uptime>";
 
 
 
-	// lock file
-	@xAppStep(type=StepType.STARTUP, title="LockFile", priority=20)
-	public void __STARTUP_lockfile() {
-		final String filename = this.getName()+".lock";
-		if (LockFile.get(filename) == null) {
-			Failure.fail("Failed to get lock on file: "+filename);
-		}
-	}
-
-
-
 	// load configs
 	@xAppStep(type=StepType.STARTUP, title="Configs", priority=50)
 	public void __STARTUP_configs() {
@@ -508,6 +497,17 @@ return "<uptime>";
 	public void __STARTUP_displaylogo() {
 		this.displayLogo();
 //		displayStartupVars();
+	}
+
+
+
+	// lock file
+	@xAppStep(type=StepType.STARTUP, title="LockFile", priority=90)
+	public void __STARTUP_lockfile() {
+		final String filename = this.getName()+".lock";
+		if (LockFile.get(filename) == null) {
+			Failure.fail("Failed to get lock on file: "+filename);
+		}
 	}
 
 
