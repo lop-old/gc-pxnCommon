@@ -90,8 +90,17 @@ public class xNoConsole implements xConsole {
 
 
 	// logger
-	public static xLog log() {
-		return xLog.getRoot();
+	private volatile SoftReference<xLog> _log = null;
+	public xLog log() {
+		if (this._log != null) {
+			final xLog log = this._log.get();
+			if (log != null) {
+				return log;
+			}
+		}
+		final xLog log = xLog.getRoot();
+		this._log = new SoftReference<xLog>(log);
+		return log;
 	}
 
 

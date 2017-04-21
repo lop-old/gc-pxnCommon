@@ -19,6 +19,12 @@ public class xCommandHandler extends xHandlerSimple {
 
 
 
+	@Override
+	public void register(xEventListener listener) {
+	}
+
+
+
 	// listener type
 	@Override
 	protected Class<? extends xEventListener> getEventListenerType() {

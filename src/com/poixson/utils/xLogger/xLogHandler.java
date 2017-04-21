@@ -6,34 +6,14 @@ import java.lang.ref.SoftReference;
 public abstract class xLogHandler {
 
 	private volatile xLogFormatter formatter = null;
+	private volatile SoftReference<xLogFormatter> formatterDefault = null;
+
 	private volatile xLevel level = null;
-	private final Object formatLock = new Object();
 
 
 
 	public abstract void publish(final xLogRecord record);
 	public abstract void publish(final String msg);
-	protected String msgFormat(final xLogRecord record) {
-		return getFormatter().formatMsg(record);
-	}
-
-
-
-	// formatter
-	public void setFormatter(final xLogFormatterInterface formatter) {
-		synchronized(this.formatLock) {
-			this.formatter = formatter;
-		}
-	}
-	protected xLogFormatterInterface getFormatter() {
-		if(this.formatter == null) {
-			synchronized(this.formatLock) {
-				if(this.formatter == null)
-					this.formatter = new xLogFormatter_Default();
-			}
-		}
-		return this.formatter;
-	}
 
 
 
@@ -53,5 +33,33 @@ public abstract class xLogHandler {
 
 
 
+	protected String msgFormat(final xLogRecord record) {
+		return getFormatter()
+				.formatMsg(record);
+	}
+
+
+
+	// formatter
+	public void setFormatter(final xLogFormatter formatter) {
+		this.formatter = formatter;
+	}
+	protected xLogFormatter getFormatter() {
+		xLogFormatter formatter = this.formatter;
+		if (formatter != null) {
+			return formatter;
+		}
+		// use default formatter
+		formatter = this.formatterDefault.get();
+		if (formatter == null) {
+			formatter = new xLogFormatter_Default();
+			this.formatterDefault = new SoftReference<xLogFormatter>(
+					formatter
+			);
+		}
+		return formatter;
+	}
+
+
+
 }
-*/
