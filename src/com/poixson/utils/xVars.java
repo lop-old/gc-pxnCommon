@@ -56,4 +56,55 @@ public class xVars {
 
 
 
+	private static volatile PrintStream originalOut = null;
+	private static volatile PrintStream originalErr = null;
+	private static volatile InputStream  originalIn  = null;
+
+	// original std-out stream
+	public static PrintStream getOriginalOut() {
+		final PrintStream out = originalOut;
+		return (
+			out == null
+			? System.out
+			: out
+		);
+	}
+	public static void setOriginalOut(final PrintStream out) {
+		if (out != null) {
+			originalOut = out;
+		}
+	}
+
+	// original std-err stream
+	public static PrintStream getOriginalErr() {
+		final PrintStream err = originalErr;
+		return (
+			err == null
+			? System.err
+			: err
+		);
+	}
+	public static void setOriginalErr(final PrintStream err) {
+		if (err != null) {
+			originalErr = err;
+		}
+	}
+
+	// original std-in stream
+	public static InputStream getOriginalIn() {
+		final InputStream in = originalIn;
+		return (
+			in == null
+			? System.in
+			: in
+		);
+	}
+	public static void setOriginalIn(final InputStream in) {
+		if (in != null) {
+			originalIn = in;
+		}
+	}
+
+
+
 }
