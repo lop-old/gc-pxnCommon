@@ -12,7 +12,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.fusesource.jansi.Ansi;
-import org.fusesource.jansi.AnsiConsole;
 
 import com.poixson.app.steps.xAppStep;
 import com.poixson.app.steps.xAppStep.StepType;
@@ -33,6 +32,7 @@ import com.poixson.utils.xLogger.xLevel;
 import com.poixson.utils.xLogger.xLog;
 import com.poixson.utils.xLogger.xLogFormatter_Color;
 import com.poixson.utils.xLogger.xLogHandlerConsole;
+import com.poixson.utils.xLogger.xLogPrintStream;
 
 
 /*
@@ -825,7 +825,10 @@ System.out.println("GC DONE");
 
 		// build lines
 		final String version = StringUtils.padCenter(15, this.getVersion(), ' ');
-		final PrintStream out = AnsiConsole.out;
+		final PrintStream out = new xLogPrintStream(
+				xLog.getRoot(),
+				null
+		);
 		out.println();
 		DisplayLineColors(out, colors1, "                                     _/\\_                        "    );
 		DisplayLineColors(out, colors2, "         |`-.__     PoiXson          (('>         _   _          "     );
@@ -838,6 +841,12 @@ System.out.println("GC DONE");
 		DisplayLineColors(out, colors9, "   `~~~~~~``~`          ^^ ~~ ^^                \\_(_|_)___  \\    "   );
 		DisplayLineColors(out, colors10,"^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^(____//^/^"    );
 		DisplayLineColors(out, colors11,"/////////////////////////////////////////////////////////////////"    );
+		out.println();
+		out.println(" This program comes with absolutely no warranty. This is free");
+		out.println(" software and you are welcome to modify it or redistribute it");
+		out.println(" under certain conditions. Type 'show license' at the command");
+		out.println(" prompt for license details, or go to www.growcontrol.com for");
+		out.println(" more information.");
 		out.println();
 		out.flush();
 	}
