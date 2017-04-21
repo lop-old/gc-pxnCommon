@@ -1,5 +1,4 @@
-/*
-package com.poixson.commonjava.pxdb;
+package com.poixson.utils.pxdb;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -7,10 +6,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.poixson.commonjava.Utils.CoolDown;
-import com.poixson.commonjava.Utils.utilsThread;
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
-import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.utils.CoolDown;
+import com.poixson.utils.ThreadUtils;
+import com.poixson.utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.xLogger.xLog;
 
 
 public class dbPool {
@@ -30,7 +29,7 @@ public class dbPool {
 
 
 	protected dbPool(final dbConfig config) {
-		if(config == null) throw new RequiredArgumentException("config");
+		if (config == null) throw new RequiredArgumentException("config");
 		this.config = config;
 		this.poolSize = new dbPoolSize(this);
 		this.poolSize.setSoft(config.getPoolSizeWarn());
@@ -48,7 +47,8 @@ public class dbPool {
 
 	// get db key
 	public String dbKey() {
-		if(this.config == null) throw new RequiredArgumentException("config");
+		if (this.config == null)
+			throw new RequiredArgumentException("config");
 		return this.config.dbKey();
 	}
 
@@ -56,9 +56,9 @@ public class dbPool {
 
 	// pool is connected
 	public boolean isConnected() {
-		// TODO: this get a lock and releases. can probably be improved using isLocked()
+// TODO: this get a lock and releases. can probably be improved using isLocked()
 		final dbWorker worker = getExisting();
-		if(worker == null)
+		if (worker == null)
 			return false;
 		worker.free();
 		return true;
@@ -66,7 +66,7 @@ public class dbPool {
 	// ping the db server
 	public boolean isConnectionValid() {
 		final dbWorker worker = getExisting();
-		if(worker == null)
+		if (worker == null)
 			return false;
 		try {
 			return worker.getConnection().isValid(1);
@@ -86,33 +86,34 @@ public class dbPool {
 			final CoolDown maxHardBlocking = CoolDown.get("5s");
 			maxHardBlocking.resetRun();
 			int count = 0;
-			while(true) {
+			while (true) {
 				count = getWorkerCount();
 				// get existing connection
-				if(count > 0) {
+				if (count > 0) {
 					worker = getExisting();
-					if(worker != null)
+					if (worker != null)
 						break;
 					count = getWorkerCount();
 				}
 				// soft max
-				if(count >= this.poolSize.getSoft())
+				if (count >= this.poolSize.getSoft()) {
 					this.poolSize.StartWarningThread();
+				}
 				// hard max
-				if(count >= this.poolSize.getHard()) {
+				if (count >= this.poolSize.getHard()) {
 					this.poolSize.HardLimitWarningMessage();
 					// stop waiting
-					if(maxHardBlocking.runAgain()) {
+					if (maxHardBlocking.runAgain()) {
 						log().severe("Failed to get a db connection! Blocked for "+maxHardBlocking.getDuration().toFullString()+".. Giving up.");
 						return null;
 					}
 					// wait for a free worker
-					utilsThread.Sleep(100L);
+					ThreadUtils.Sleep(100L);
 					continue;
 				}
 				// new worker/connection
 				worker = newWorker();
-				if(worker == null)
+				if (worker == null)
 					return null;
 				return worker;
 			}
@@ -121,15 +122,15 @@ public class dbPool {
 	}
 	public dbWorker getExisting() {
 		synchronized(this.workers) {
-			if(this.workers.isEmpty())
+			if (this.workers.isEmpty())
 				return null;
 			// workers in pool
 			final Iterator<dbWorker> it = this.workers.iterator();
-			while(it.hasNext()) {
+			while (it.hasNext()) {
 				final dbWorker worker = it.next();
 				// errored or disconnected
-				if(worker == null || worker.isClosed()) {
-					if(worker != null) {
+				if (worker == null || worker.isClosed()) {
+					if (worker != null) {
 						log().warning("Connection [ "+Integer.toString(worker.getId())+" ] dropped");
 						worker.close();
 					}
@@ -137,12 +138,10 @@ public class dbPool {
 					continue;
 				}
 				// in use
-				if(worker.inUse())
+				if (worker.inUse())
 					continue;
 				// get lock
-				if(worker.getLock()) {
-//					if(debug)
-//						log.debug("db", "Connection pool size: "+Integer.toString(pool.size()));
+				if (worker.getLock()) {
 					return worker;
 				}
 			}
@@ -153,23 +152,25 @@ public class dbPool {
 //	private final CoolDown coolFail = CoolDown.get("2s");
 	private dbWorker newWorker() {
 		// hard limit reached
-		if(getWorkerCount() >= this.poolSize.getHard())
+		if (getWorkerCount() >= this.poolSize.getHard())
 			return null;
 		// connect to db
 		final Connection conn = this.config.getConnection();
-		// failed to connect
-//		if(conn == null) {
-//			if(this.coolFail.runAgain())
+//TODO:
+//		// failed to connect
+//		if (conn == null) {
+//			if (this.coolFail.runAgain()) {
 //				log().severe("Failed to connect to database! "+this.config.dbKey());
+//			}
 //			return null;
 //		}
-		if(conn == null)
+		if (conn == null)
 			return null;
 		// successful connection
 		final dbWorker worker = new dbWorker(this.config.dbKey(), conn);
 		synchronized(this.workers) {
 			this.workers.add(worker);
-			if(!worker.getLock())
+			if (!worker.getLock())
 				return null;
 		}
 		return worker;
@@ -185,4 +186,3 @@ public class dbPool {
 
 
 }
-*/

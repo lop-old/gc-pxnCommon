@@ -1,18 +1,17 @@
-/*
-package com.poixson.commonjava.pxdb;
+package com.poixson.utils.pxdb;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLNonTransientConnectionException;
 
-import com.poixson.commonjava.Utils.utils;
-import com.poixson.commonjava.Utils.utilsNumbers;
-import com.poixson.commonjava.Utils.utilsSan;
-import com.poixson.commonjava.Utils.utilsString;
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
-import com.poixson.commonjava.xLogger.xLevel;
-import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.utils.NumberUtils;
+import com.poixson.utils.SanUtils;
+import com.poixson.utils.StringUtils;
+import com.poixson.utils.Utils;
+import com.poixson.utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.xLogger.xLevel;
+import com.poixson.utils.xLogger.xLog;
 
 
 public class dbQuery {
@@ -38,13 +37,13 @@ public class dbQuery {
 	// new query
 	public static dbQuery get(final String dbKey) {
 		final dbWorker worker = dbManager.getWorkerLock(dbKey);
-		if(worker == null)
+		if (worker == null)
 			return null;
 		return new dbQuery(worker);
 	}
 	// new query (must already have lock)
 	public dbQuery(final dbWorker worker) {
-		if(worker == null) throw new RequiredArgumentException("worker");
+		if (worker == null) throw new RequiredArgumentException("worker");
 		this.worker = worker;
 		this.tablePrefix = worker.getTablePrefix();
 	}
@@ -53,16 +52,16 @@ public class dbQuery {
 
 	// prepared query
 	public dbQuery Prepare(final String sqlStr) throws SQLException {
-		if(utils.isEmpty(sqlStr)) throw new RequiredArgumentException("sqlStr");
+		if (Utils.isEmpty(sqlStr)) throw new RequiredArgumentException("sqlStr");
 		synchronized(this.lock) {
-			if(!this.worker.inUse()) {
+			if (!this.worker.inUse()) {
 				log().trace(new IllegalAccessException("dbWorker not locked!"));
 				return null;
 			}
 			this.clean();
 			this.sql = sqlStr.replace(
 				"_table_",
-				(this.tablePrefix == null ? "" : this.tablePrefix)
+				this.getTablePrefix()
 			);
 			try {
 				// prepared statement
@@ -79,10 +78,11 @@ public class dbQuery {
 		return this;
 	}
 	public boolean Prep(final String sqlStr) {
-		if(utils.isEmpty(sqlStr)) throw new RequiredArgumentException("sqlStr");
+		if (Utils.isEmpty(sqlStr)) throw new RequiredArgumentException("sqlStr");
 		try {
-			if(this.Prepare(sqlStr) != null)
+			if (this.Prepare(sqlStr) != null) {
 				return true;
+			}
 		} catch (SQLException e) {
 			log().trace(e);
 		}
@@ -95,40 +95,53 @@ public class dbQuery {
 	// execute query
 	public boolean Execute() throws SQLException {
 		synchronized(this.lock) {
-			if(!this.worker.inUse()) {
+			if (!this.worker.inUse()) {
 				log().trace(new IllegalAccessException("dbWorker not locked!"));
 				return false;
 			}
-			if(this.st == null) return false;
-			if(utils.isEmpty(this.sql)) return false;
+			if (this.st == null)         return false;
+			if (Utils.isEmpty(this.sql)) return false;
 			String str = this.sql;
-			while(str.startsWith(" "))
+			while (str.startsWith(" ")) {
 				str = str.substring(1);
-			if(str.isEmpty()) return false;
+			}
+			if (str.isEmpty()) return false;
 			final String queryType;
 			{
 				final int pos = str.indexOf(" ");
-				queryType = (pos == -1) ?
-						str.toUpperCase() :
-						str.substring(0, pos).toUpperCase();
+				queryType = (
+					pos == -1
+					? str.toUpperCase()
+					: str.substring(0, pos).toUpperCase()
+				);
 			}
-//			if(!quiet)
-//				getLog().debug("query", this.sql+(args.isEmpty() ? "" : "  ["+args+" ]") );
 			try {
 				// log query
 				this.worker.logDesc();
-				if(log().isLoggable(xLevel.FINEST)) {
+				if (log().isLoggable(xLevel.FINEST)) {
 					// replace ? with values
 					log().finest(
-						"("+Integer.toString(this.worker.getId())+") QUERY: "+
-						utilsString.replaceWith("?", this.args, str)
+						(new StringBuilder())
+							.append("(")
+							.append(this.worker.getId())
+							.append(") QUERY: ")
+							.append(
+								StringUtils.replaceWith(
+									"?",
+									this.args,
+									str
+								)
+							)
+							.toString()
 					);
 				}
 				// execute query
-				if(queryType.equals("INSERT") || queryType.equals("UPDATE") || queryType.equals("CREATE") || queryType.equals("DELETE"))
+				if (queryType.equals("INSERT") || queryType.equals("UPDATE")
+				|| queryType.equals("CREATE") || queryType.equals("DELETE")) {
 					this.resultInt = this.st.executeUpdate();
-				else
+				} else {
 					this.rs = this.st.executeQuery();
+				}
 			} catch (SQLNonTransientConnectionException e) {
 				log().severe("db connection closed!");
 				this.close();
@@ -141,9 +154,9 @@ public class dbQuery {
 		return true;
 	}
 	public boolean Execute(final String sqlStr) throws SQLException {
-		if(utils.isEmpty(sqlStr))
+		if (Utils.isEmpty(sqlStr))
 			return false;
-		if(Prepare(sqlStr) == null)
+		if (Prepare(sqlStr) == null)
 			return false;
 		return Execute();
 	}
@@ -190,27 +203,28 @@ public class dbQuery {
 
 	// get db key
 	public String dbKey() {
-		if(this.worker == null)
+		if (this.worker == null)
 			return null;
 		return this.worker.dbKey();
 	}
-//	// table prefix
-//	public String getTablePrefix() {
-//		return this.tablePrefix;
-//	}
+	public String getTablePrefix() {
+		if (Utils.isEmpty(this.tablePrefix))
+			return "";
+		return this.tablePrefix;
+	}
 
 
 
 	// clean vars
 	public void clean() {
 		synchronized(this.lock) {
-			if(this.rs != null) {
+			if (this.rs != null) {
 				try {
 					this.rs.close();
 				} catch (SQLException ignore) {}
 				this.rs = null;
 			}
-			if(this.st != null) {
+			if (this.st != null) {
 				try {
 					this.st.close();
 				} catch (SQLException ignore) {}
@@ -236,7 +250,7 @@ public class dbQuery {
 
 	// san string for sql
 	public static String san(final String text) {
-		return utilsSan.AlphaNumSafe(text);
+		return SanUtils.AlphaNumSafe(text);
 	}
 
 
@@ -244,7 +258,8 @@ public class dbQuery {
 	// has next row
 	public boolean hasNext() {
 		synchronized(this.lock) {
-			if(this.rs == null) return false;
+			if (this.rs == null)
+				return false;
 			try {
 				return this.rs.next();
 			} catch (SQLException e) {
@@ -278,11 +293,20 @@ public class dbQuery {
 	// query parameters
 	public dbQuery setString(final int index, final String value) {
 		synchronized(this.lock) {
-			if(this.st == null) return null;
+			if (this.st == null)
+				return null;
 			try {
 				this.st.setString(index, value);
-				if(this.paramCount > 0)
-					this.args[index-1] = ARG_PRE+"str"+ARG_DELIM+value+ARG_POST;
+				if (this.paramCount > 0) {
+					this.args[index-1] =
+						(new StringBuilder())
+							.append(ARG_PRE)
+							.append("str")
+							.append(ARG_DELIM)
+							.append(value)
+							.append(ARG_POST)
+							.toString();
+				}
 			} catch (SQLException e) {
 				log().trace(e);
 				this.clean();
@@ -311,11 +335,20 @@ public class dbQuery {
 	// set int
 	public dbQuery setInt(final int index, final int value) {
 		synchronized(this.lock) {
-			if(this.st == null) return null;
+			if (this.st == null)
+				return null;
 			try {
 				this.st.setInt(index, value);
-				if(this.paramCount > 0)
-					this.args[index-1] = ARG_PRE+"int"+ARG_DELIM+Integer.toString(value)+ARG_POST;
+				if (this.paramCount > 0) {
+					this.args[index-1] =
+						(new StringBuilder())
+							.append(ARG_PRE)
+							.append("int")
+							.append(ARG_DELIM)
+							.append(value)
+							.append(ARG_POST)
+							.toString();
+				}
 			} catch (SQLException e) {
 				log().trace(e);
 				this.clean();
@@ -333,8 +366,9 @@ public class dbQuery {
 	public Integer getInt(final String label) {
 		try {
 			final String value = this.getString(label);
-			if(value != null)
-				return utilsNumbers.toInteger(value);
+			if (value != null) {
+				return NumberUtils.toInteger(value);
+			}
 		} catch (SQLException e) {
 			log().trace(e);
 		}
@@ -346,11 +380,20 @@ public class dbQuery {
 	// set long
 	public dbQuery setLong(final int index, final long value) {
 		synchronized(this.lock) {
-			if(this.st == null) return null;
+			if (this.st == null)
+				return null;
 			try {
 				this.st.setLong(index, value);
-				if(this.paramCount > 0)
-					this.args[index-1] = ARG_PRE+"lng"+ARG_DELIM+Long.toString(value)+ARG_POST;
+				if (this.paramCount > 0) {
+					this.args[index-1] =
+						(new StringBuilder())
+							.append(ARG_PRE)
+							.append("lng")
+							.append(ARG_DELIM)
+							.append(value)
+							.append(ARG_POST)
+							.toString();
+				}
 			} catch (SQLException e) {
 				log().trace(e);
 				this.clean();
@@ -368,8 +411,9 @@ public class dbQuery {
 	public Long getLng(final String label) {
 		try {
 			final String value = this.getString(label);
-			if(value != null)
-				return utilsNumbers.toLong(value);
+			if (value != null) {
+				return NumberUtils.toLong(value);
+			}
 		} catch (SQLException e) {
 			log().trace(e);
 		}
@@ -380,10 +424,18 @@ public class dbQuery {
 
 	// set decimal
 	public dbQuery setDecimal(final int index, final double value) {
-		if(this.setDouble(index, value) == null)
+		if (this.setDouble(index, value) == null)
 			return null;
-		if(this.paramCount > 0)
-			this.args[index-1] = ARG_PRE+"dec"+ARG_DELIM+Double.toString(value)+ARG_POST;
+		if (this.paramCount > 0) {
+			this.args[index-1] =
+				(new StringBuilder())
+					.append(ARG_PRE)
+					.append("dec")
+					.append(ARG_DELIM)
+					.append(value)
+					.append(ARG_POST)
+					.toString();
+		}
 		return this;
 	}
 	// get decimal
@@ -399,11 +451,20 @@ public class dbQuery {
 	// set double
 	public dbQuery setDouble(final int index, final double value) {
 		synchronized(this.lock) {
-			if(this.st == null) return null;
+			if (this.st == null)
+				return null;
 			try {
 				this.st.setDouble(index, value);
-				if(this.paramCount > 0)
-					this.args[index-1] = ARG_PRE+"dbl"+ARG_DELIM+Double.toString(value)+ARG_POST;
+				if (this.paramCount > 0) {
+					this.args[index-1] =
+						(new StringBuilder())
+							.append(ARG_PRE)
+							.append("dbl")
+							.append(ARG_DELIM)
+							.append(value)
+							.append(ARG_POST)
+							.toString();
+				}
 			} catch (SQLException e) {
 				log().trace(e);
 				this.clean();
@@ -421,8 +482,9 @@ public class dbQuery {
 	public Double getDbl(final String label) {
 		try {
 			final String value = this.getString(label);
-			if(value != null)
-				return utilsNumbers.toDouble(value);
+			if (value != null) {
+				return NumberUtils.toDouble(value);
+			}
 		} catch (SQLException e) {
 			log().trace(e);
 		}
@@ -434,11 +496,20 @@ public class dbQuery {
 	// set float
 	public dbQuery setFloat(final int index, final float value) {
 		synchronized(this.lock) {
-			if(this.st == null) return null;
+			if (this.st == null)
+				return null;
 			try {
 				this.st.setFloat(index, value);
-				if(this.paramCount > 0)
-					this.args[index-1] = ARG_PRE+"flt"+ARG_DELIM+Float.toString(value)+ARG_POST;
+				if (this.paramCount > 0) {
+					this.args[index-1] =
+						(new StringBuilder())
+							.append(ARG_PRE)
+							.append("flt")
+							.append(ARG_DELIM)
+							.append(value)
+							.append(ARG_POST)
+							.toString();
+				}
 			} catch (SQLException e) {
 				log().trace(e);
 				this.clean();
@@ -456,8 +527,9 @@ public class dbQuery {
 	public Float getFlt(final String label) {
 		try {
 			final String value = this.getString(label);
-			if(value != null)
-				return utilsNumbers.toFloat(value);
+			if (value != null) {
+				return NumberUtils.toFloat(value);
+			}
 		} catch (SQLException e) {
 			log().trace(e);
 		}
@@ -469,11 +541,24 @@ public class dbQuery {
 	// set boolean
 	public dbQuery setBool(final int index, final boolean value) {
 		synchronized(this.lock) {
-			if(this.st == null) return null;
+			if (this.st == null)
+				return null;
 			try {
 				this.st.setBoolean(index, value);
-				if(this.paramCount > 0)
-					this.args[index-1] = ARG_PRE+"bool"+ARG_DELIM+(value ? "True" : "False")+ARG_POST;
+				if (this.paramCount > 0) {
+					this.args[index-1] =
+						(new StringBuilder())
+							.append(ARG_PRE)
+							.append("bool")
+							.append(ARG_DELIM)
+							.append(
+								value
+								? "True"
+								: "False"
+							)
+							.append(ARG_POST)
+							.toString();
+				}
 			} catch (SQLException e) {
 				log().trace(e);
 				this.clean();
@@ -491,8 +576,9 @@ public class dbQuery {
 	public Boolean getBool(final String label) {
 		try {
 			final String value = this.getString(label);
-			if(value != null)
-				return utilsNumbers.toBoolean(value);
+			if (value != null) {
+				return NumberUtils.toBoolean(value);
+			}
 		} catch (SQLException e) {
 			log().trace(e);
 		}
@@ -503,13 +589,14 @@ public class dbQuery {
 
 	// lock table (readable/unreadable)
 	public boolean lockTable(final String tableName, final boolean readable) {
-		if(utils.isEmpty(tableName)) throw new RequiredArgumentException("tableName");
+		if (Utils.isEmpty(tableName)) throw new RequiredArgumentException("tableName");
 		synchronized(this.lock) {
-			final StringBuilder str = (new StringBuilder())
-				.append("LOCK TABLES `").append(tableName).append("` ")
-				.append(readable ? "READ" : "WRITE")
-				.append(" /"+"* lock table *"+"/");
-			if(!Prep(str.toString()) || !Exec()) {
+			final StringBuilder str =
+				(new StringBuilder())
+					.append("LOCK TABLES `").append(tableName).append("` ")
+					.append(readable ? "READ" : "WRITE")
+					.append(" /"+"* lock table *"+"/");
+			if (!Prep(str.toString()) || !Exec()) {
 				log().severe("Failed to lock table "+tableName);
 				return false;
 			}
@@ -518,14 +605,18 @@ public class dbQuery {
 	}
 	// lock table (unreadable)
 	public boolean lockTable(final String tableName) {
-		return this.lockTable(tableName, false);
+		return this.lockTable(
+				tableName,
+				false
+		);
 	}
 	// unlock table
 	public void unlockTables() {
 		synchronized(this.lock) {
 			final String sqlStr = "UNLOCK TABLES /"+"* unlock table *"+"/";
-			if(!Prep(sqlStr) || !Exec())
+			if (!Prep(sqlStr) || !Exec()) {
 				log().severe("Failed to unlock tables");
+			}
 		}
 	}
 
@@ -539,4 +630,3 @@ public class dbQuery {
 
 
 }
-*/

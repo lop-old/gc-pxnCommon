@@ -1,12 +1,11 @@
-/*
-package com.poixson.commonjava.pxdb;
+package com.poixson.utils.pxdb;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import com.poixson.commonjava.Utils.utils;
-import com.poixson.commonjava.Utils.xCloseable;
-import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.utils.Utils;
+import com.poixson.utils.xCloseable;
+import com.poixson.utils.xLogger.xLog;
 
 
 public class dbWorker implements xCloseable {
@@ -43,7 +42,7 @@ public class dbWorker implements xCloseable {
 	}
 	public String getTablePrefix() {
 		final dbConfig config = dbManager.getConfig(this.dbKey);
-		if(config == null)
+		if (config == null)
 			return null;
 		return config.getTablePrefix();
 	}
@@ -53,7 +52,7 @@ public class dbWorker implements xCloseable {
 	// close connection
 	@Override
 	public void close() {
-		if(this.conn != null) {
+		if (this.conn != null) {
 			try {
 				this.conn.close();
 			} catch (SQLException ignore) {}
@@ -73,30 +72,32 @@ public class dbWorker implements xCloseable {
 		return this.inUse;
 	}
 	public boolean getLock() {
-		if(this.inUse)
+		if (this.inUse)
 			return false;
 		synchronized(this.useLock) {
-			if(this.inUse)
+			if (this.inUse) {
 				return false;
+			}
 			this.inUse = true;
 		}
 		log().finest("Locked #"+Integer.toString(this.id));
 		return true;
 	}
 	public void free() {
-		if(utils.notEmpty(this.desc))
+		if (Utils.notEmpty(this.desc))
 			this.logDesc();
 		log().finest("Released #"+Integer.toString(this.id));
 		this.inUse = false;
 	}
-//	/ **
+//TODO:
+//	/**
 //	 * Get the time connection has been locked for
 //	 * @return time in milliseconds
-//	 * /
+//	 */
 //	@Override
 //	public long getLockTime() {
 //TODO: this isn't being used yet
-//		if(lockTime < 1)
+//		if (lockTime < 1)
 //			return -1;
 //		return pxnUtils.getCurrentMillis() - lockTime;
 //	}
@@ -108,7 +109,7 @@ public class dbWorker implements xCloseable {
 		this.desc = descStr;
 	}
 	public void logDesc() {
-		if(utils.isEmpty(this.desc))
+		if (Utils.isEmpty(this.desc))
 			return;
 		log().fine("Query: "+this.desc);
 		this.desc = null;
@@ -138,4 +139,3 @@ public class dbWorker implements xCloseable {
 
 
 }
-*/
