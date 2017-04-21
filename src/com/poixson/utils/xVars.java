@@ -107,4 +107,32 @@ public class xVars {
 
 
 
+	// ------------------------------------------------------------------------------- //
+	// console color
+
+
+
+	private static volatile Boolean consoleColorEnabled = null;
+
+	public static Boolean getConsoleColorEnabled() {
+		return consoleColorEnabled;
+	}
+	public static boolean isConsoleColorEnabled() {
+		final Boolean enabled = consoleColorEnabled;
+		if (enabled == null)
+			return false;
+		return enabled.booleanValue();
+	}
+	public static boolean isConsoleColorDisabled() {
+		final Boolean enabled = consoleColorEnabled;
+		if (enabled == null)
+			return false;
+		return enabled.booleanValue();
+	}
+	public static void setConsoleColor(final boolean enabled) {
+		consoleColorEnabled = Boolean.valueOf(enabled);
+	}
+
+
+
 }
