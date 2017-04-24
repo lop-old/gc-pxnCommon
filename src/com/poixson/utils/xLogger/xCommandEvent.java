@@ -1,5 +1,6 @@
 package com.poixson.utils.xLogger;
 
+import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
 import com.poixson.utils.exceptions.RequiredArgumentException;
 import com.poixson.utils.xEvents.xEventData;
@@ -57,6 +58,13 @@ public class xCommandEvent extends xEventData {
 		if (index > this.args.length-1)
 			return null;
 		return this.args[index];
+	}
+
+
+
+	@Override
+	public String toString() {
+		return "CMD:"+StringUtils.addArray(" ", this.args);
 	}
 
 
