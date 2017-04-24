@@ -58,7 +58,7 @@ public class xLog extends xLogPrinting {
 	protected final String name;
 	protected final xLog parent;
 	protected volatile xLevel level = null;
-	protected static volatile xCommandHandler commandHandler = null;
+	protected static final xCommandHandler commandHandler = new xCommandHandler();
 
 	// sub-loggers
 	private final ConcurrentMap<String, xLog> loggers = new ConcurrentHashMap<String, xLog>();
@@ -162,6 +162,12 @@ public class xLog extends xLogPrinting {
 	@Override
 	public xLog clone() {
 		return getWeak();
+	}
+
+
+
+	public static xCommandHandler getCommandHandler() {
+		return commandHandler;
 	}
 
 
@@ -305,8 +311,10 @@ public class xLog extends xLogPrinting {
 
 	public static void setConsole(final xConsole console) {
 		consoleHandler = console;
-		if (consoleHandler != null && commandHandler != null) {
-			consoleHandler.setCommandHandler(commandHandler);
+		if (consoleHandler != null) {
+			consoleHandler.setCommandHandler(
+				commandHandler
+			);
 		}
 	}
 	public static xConsole getConsole() {
@@ -334,18 +342,6 @@ public class xLog extends xLogPrinting {
 				console.Stop();
 			}
 		}
-	}
-
-
-
-	// set command handler
-	public static void setCommandHandler(final xCommandHandler commandsHandler) {
-		if (commandsHandler == null)
-			throw new RequiredArgumentException("commandsHandler");
-		if (consoleHandler  == null)
-			throw new RuntimeException("consoleHandler not set; command handler not supported.");
-		commandHandler = commandsHandler;
-		consoleHandler.setCommandHandler(commandsHandler);
 	}
 
 
