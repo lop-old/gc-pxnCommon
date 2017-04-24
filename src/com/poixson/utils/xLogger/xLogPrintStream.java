@@ -7,6 +7,8 @@ import java.io.PrintStream;
 
 public class xLogPrintStream extends PrintStream {
 
+	private final xLog log;
+
 
 
 	private static class xLogOutputStream extends OutputStream {
@@ -56,6 +58,14 @@ public class xLogPrintStream extends PrintStream {
 			(new xLogOutputStream())
 				.init(log, level)
 		);
+		this.log = log;
+	}
+
+
+
+	@Override
+	public void println() {
+		this.log.publish();
 	}
 
 
