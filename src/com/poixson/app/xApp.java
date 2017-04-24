@@ -26,8 +26,6 @@ import com.poixson.utils.Utils;
 import com.poixson.utils.xClock;
 import com.poixson.utils.xStartable;
 import com.poixson.utils.xTime;
-import com.poixson.utils.xLogger.jlineConsole;
-import com.poixson.utils.xLogger.xConsole;
 import com.poixson.utils.xLogger.xLevel;
 import com.poixson.utils.xLogger.xLog;
 import com.poixson.utils.xLogger.xLogFormatter_Color;
@@ -151,20 +149,12 @@ public abstract class xApp implements xStartable {
 					Failure.fail("jline library not found");
 				}
 //TODO: detect when no console color is supported
-				// load console
-				final xConsole console = new jlineConsole();
-				xLog.setConsole(
-					console
-				);
-				console.Start();
-				log.setHandler(
-					new xLogHandlerConsole()
-				);
 				// enable console color
-				xLog.getRoot().setFormatter(
-					new xLogFormatter_Color(),
-					xLogHandlerConsole.class
-				);
+				xLog.getRoot()
+					.setFormatter(
+						new xLogFormatter_Color(),
+						xLogHandlerConsole.class
+					);
 			}
 		}
 //		// process command line arguments
@@ -193,6 +183,7 @@ public abstract class xApp implements xStartable {
 //		Failure.fail("@|FG_RED Main process ended! (this shouldn't happen)|@");
 //		System.exit(1);
 
+		this.log().publish();
 		this.log().title(
 			(new StringBuilder())
 				.append("Starting ")
