@@ -2,7 +2,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
-<!-- http://maven-repository.com/ -->
 	<modelVersion>4.0.0</modelVersion>
 	<name>pxnCommon</name>
 	<artifactId>pxnCommon</artifactId>
@@ -10,23 +9,15 @@
 	<version>3.6.1</version>
 	<packaging>jar</packaging>
 	<url>http://poixson.com</url>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jline-version>2.12.1</jline-version>
-		<org.yaml-version>1.15</org.yaml-version>
-		<org.xeustechnologies-version>2.6</org.xeustechnologies-version>
-		<junit-version>4.12</junit-version>
-		<maven-compiler-plugin-version>3.3</maven-compiler-plugin-version>
-		<maven-jar-plugin-version>2.6</maven-jar-plugin-version>
-		<surefire-version>2.18.1</surefire-version>
-		<project-info-reports-version>2.8</project-info-reports-version>
-		<cobertura-version>2.7</cobertura-version>
-	</properties>
 	<scm>
 		<url>https://github.com/GrowControl/pxnCommon</url>
 		<connection>scm:git:https://github.com/GrowControl/pxnCommon.git</connection>
 		<developerConnection>scm:git:https://github.com/GrowControl/pxnCommon.git</developerConnection>
 	</scm>
+	<ciManagement>
+		<url>ci.poixson.com</url>
+		<system>pxnci</system>
+	</ciManagement>
 	<organization>
 		<name>PoiXson</name>
 		<url>http://poixson.com</url>
@@ -35,10 +26,22 @@
 		<url>https://github.com/GrowControl/pxnCommon/issues</url>
 		<system>github</system>
 	</issueManagement>
-	<ciManagement>
-		<url>ci.poixson.com</url>
-		<system>pxnci</system>
-	</ciManagement>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<jline-version>2.12.1</jline-version>
+		<org.yaml-version>1.15</org.yaml-version>
+		<org.xeustechnologies-version>2.6</org.xeustechnologies-version>
+
+		<maven-compiler-plugin-version>3.3</maven-compiler-plugin-version>
+		<maven-jar-plugin-version>2.6</maven-jar-plugin-version>
+
+		<junit-version>4.12</junit-version>
+		<surefire-version>2.18.1</surefire-version>
+		<cobertura-version>2.7</cobertura-version>
+		<project-info-reports-version>2.8</project-info-reports-version>
+
+	</properties>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<testSourceDirectory>tests</testSourceDirectory>
@@ -55,20 +58,21 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>${maven-jar-plugin-version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${surefire-version}</version>
 				<configuration>
 					<useFile>false</useFile>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>${maven-jar-plugin-version}</version>
-			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
+
 		<dependency>
 			<groupId>jline</groupId>
 			<artifactId>jline</artifactId>
@@ -87,19 +91,7 @@
 			<version>${org.xeustechnologies-version}</version>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit-version}</version>
-			<type>jar</type>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.maven.surefire</groupId>
-			<artifactId>surefire-junit47</artifactId>
-			<version>${surefire-version}</version>
-			<scope>test</scope>
-		</dependency>
+
 	</dependencies>
 	<reporting>
 		<plugins>
