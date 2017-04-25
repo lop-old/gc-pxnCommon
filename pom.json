@@ -1,0 +1,31 @@
+{
+	"Name": "pxnCommon",
+	"ArtifactId": "pxncommon",
+	"GroupId": "com.poixson",
+	"Version": "3.6.1",
+	"URL": "http://poixson.com",
+	"Github-Path": "GrowControl/pxnCommon",
+	"Org-Name": "PoiXson",
+	"Deps": {
+		"jline": {
+			"GroupId": "org.jline",
+			"ArtifactId": "jline",
+			"Version": "3.2.0"
+		},
+		"jansi": {
+			"GroupId": "org.fusesource.jansi",
+			"ArtifactId": "jansi",
+			"Version": "1.15"
+		},
+		"snakeyaml": {
+			"GroupId": "org.yaml",
+			"ArtifactId": "snakeyaml",
+			"Version": "1.18"
+		},
+		"jcl": {
+			"GroupId": "org.xeustechnologies",
+			"ArtifactId": "jcl-core",
+			"Version": "2.8"
+		}
+	}
+}
