@@ -1,10 +1,11 @@
+<!-- Generated on: April 25, 2017 16:05 UTC -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<name>pxnCommon</name>
-	<artifactId>pxnCommon</artifactId>
+	<artifactId>pxncommon</artifactId>
 	<groupId>com.poixson</groupId>
 	<version>3.6.1</version>
 	<packaging>jar</packaging>
@@ -12,7 +13,7 @@
 	<scm>
 		<url>https://github.com/GrowControl/pxnCommon</url>
 		<connection>scm:git:https://github.com/GrowControl/pxnCommon.git</connection>
-		<developerConnection>scm:git:https://github.com/GrowControl/pxnCommon.git</developerConnection>
+		<developerConnection>scm:git:git@github.com:GrowControl/pxnCommon.git</developerConnection>
 	</scm>
 	<ciManagement>
 		<url>ci.poixson.com</url>
@@ -45,7 +46,7 @@
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<testSourceDirectory>tests</testSourceDirectory>
-		<finalName>${project.artifactId}-${project.version}</finalName>
+		<finalName>${project.name}-${project.version}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -67,6 +68,8 @@
 				<version>${surefire-version}</version>
 				<configuration>
 					<useFile>false</useFile>
+					<parallel>methods</parallel>
+					<threadCount>4</threadCount>
 				</configuration>
 			</plugin>
 		</plugins>
