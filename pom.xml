@@ -31,11 +31,13 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<jline-version>2.12.1</jline-version>
-		<org.yaml-version>1.15</org.yaml-version>
-		<org.xeustechnologies-version>2.6</org.xeustechnologies-version>
+		<snakeyaml-version>1.15</snakeyaml-version>
+		<jcl-version>2.6</jcl-version>
 
 		<maven-compiler-plugin-version>3.3</maven-compiler-plugin-version>
 		<maven-jar-plugin-version>2.6</maven-jar-plugin-version>
+		<maven-source-plugin-version>2.4</maven-source-plugin-version>
+		<maven-eclipse-plugin-version>2.10</maven-eclipse-plugin-version>
 
 		<junit-version>4.12</junit-version>
 		<surefire-version>2.18.1</surefire-version>
@@ -47,6 +49,16 @@
 		<sourceDirectory>src</sourceDirectory>
 		<testSourceDirectory>tests</testSourceDirectory>
 		<finalName>${project.name}-${project.version}</finalName>
+		<resources>
+			<resource>
+				<directory>resources</directory>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>testresources</directory>
+			</testResource>
+		</testResources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -61,6 +73,24 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>${maven-jar-plugin-version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>${maven-source-plugin-version}</version>
+				<configuration>
+					<finalName>${project.name}-source-${project.version}</finalName>
+					<attach>false</attach>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>${maven-eclipse-plugin-version}</version>
+				<configuration>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>true</downloadJavadocs>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -80,19 +110,16 @@
 			<groupId>jline</groupId>
 			<artifactId>jline</artifactId>
 			<version>${jline-version}</version>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
-			<version>${org.yaml-version}</version>
-			<scope>compile</scope>
+			<version>${snakeyaml-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.xeustechnologies</groupId>
 			<artifactId>jcl-core</artifactId>
-			<version>${org.xeustechnologies-version}</version>
-			<scope>compile</scope>
+			<version>${jcl-version}</version>
 		</dependency>
 
 	</dependencies>
