@@ -20,7 +20,7 @@ public final class Utils {
 
 
 	private static AtomicBoolean inited = new AtomicBoolean(false);
-	protected static void InitAll() {
+	public static void InitAll() {
 		if (!inited.compareAndSet(false, true))
 			return;
 		xVars.init();
