@@ -5,8 +5,6 @@ import java.io.PrintStream;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
-import com.poixson.commonjava.Utils.Keeper;
-
 
 public class HangCatcher implements xStartable {
 
@@ -70,7 +68,6 @@ public class HangCatcher implements xStartable {
 	@Override
 	public void Stop() {
 		this.cancel = true;
-		Keeper.remove(this);
 	}
 
 
@@ -92,7 +89,6 @@ public class HangCatcher implements xStartable {
 		}
 		this.cancel = true;
 		this.thread = null;
-		Keeper.remove(this);
 	}
 	@Override
 	public boolean isRunning() {
