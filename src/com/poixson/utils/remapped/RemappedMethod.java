@@ -1,89 +1,81 @@
 package com.poixson.utils.remapped;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import com.poixson.utils.ReflectUtils;
 import com.poixson.utils.Utils;
 import com.poixson.utils.xRunnable;
 import com.poixson.utils.exceptions.RequiredArgumentException;
 import com.poixson.utils.xLogger.xLog;
 
 
-public class RemappedRunnable extends xRunnable {
+public class RemappedMethod extends xRunnable {
 
-	protected final Object obj;
-	protected final Method method;
+	public final Object container;
+	public final Method method;
+	public final Object[] args;
 
 
 
-	public static RemappedRunnable get(final Object targetClass, final String methodName) {
-		return get(null, targetClass, methodName);
+	public RemappedMethod(final Object container,
+			final String methodName, final Object...args) {
+		this(
+			null,
+			container,
+			ReflectUtils.getMethodByName(container, methodName),
+			args
+		);
 	}
-	public static RemappedRunnable get(final String taskName,
-			final Object targetClass, final String methodName) {
-		try {
-			return new RemappedRunnable(
-					taskName,
-					targetClass,
-					methodName
-			);
-		} catch (Exception e) {
-			log().trace(e);
-		}
-		return null;
+	public RemappedMethod(final Object container,
+			final Method methodName, final Object...args) {
+		this(
+			null,
+			container,
+			methodName,
+			args
+		);
 	}
-
-
-
-	public RemappedRunnable(final Object targetClass, final String methodName)
-			throws NoSuchMethodException, SecurityException {
-		this(null, targetClass, methodName);
+	public RemappedMethod(final String taskName, final Object container,
+			final String methodName, final Object...args) {
+		this(
+			taskName,
+			container,
+			ReflectUtils.getMethodByName(container, methodName),
+			args
+		);
 	}
-	public RemappedRunnable(final String taskName,
-			final Object targetClass, final String methodName)
-			throws NoSuchMethodException, SecurityException {
-		if (targetClass == null)       throw new RequiredArgumentException("targetClass");
-		if (Utils.isEmpty(methodName)) throw new RequiredArgumentException("methodName");
+	public RemappedMethod(final String taskName, final Object container,
+			final Method method, final Object...args) {
+		if (container == null) throw new RequiredArgumentException("container");
+		if (method == null)    throw new RequiredArgumentException("method");
+		this.container = container;
+		this.method    = method;
+		this.args      = args;
+		// static or instance class
 		this.setTaskName(
 			Utils.isEmpty(taskName)
-			? methodName
+			? method.getName()
 			: taskName
 		);
-		this.obj = targetClass;
-		// static or instance class
-		final Class<?> clss = (
-			targetClass instanceof Class
-			? (Class<?>) targetClass
-			: targetClass.getClass()
-		);
-		if (clss == null) throw new RuntimeException();
-		// find method to call
-		this.method = clss.getMethod(methodName);
-		if (this.method == null) throw new NoSuchMethodException();
 	}
 
 
 
+	// invoke stored method
 	@Override
 	public void run() {
-		try {
-			this.method.invoke(this.obj);
-		} catch (IllegalAccessException e) {
-			log().trace(e);
-		} catch (IllegalArgumentException e) {
-			log().trace(e);
-		} catch (InvocationTargetException e) {
-			log().trace(e);
-		} catch (Exception e) {
-			log().trace(e);
-		}
+		ReflectUtils.InvokeMethod(
+			this.container,
+			this.method,
+			this.args
+		);
 	}
 
 
 
 	// logger
 	public static xLog log() {
-		return xLog.getRoot();
+		return Utils.log();
 	}
 
 
