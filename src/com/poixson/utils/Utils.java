@@ -366,7 +366,8 @@ public final class Utils {
 		return false;
 	}
 	public static boolean isJLineAvailable() {
-		return isLibAvailable("jline.Terminal");
+		return isLibAvailable("org.jline.reader.LineReader") &&
+				isLibAvailable("org.jline.terminal.Terminal");
 	}
 	public static boolean isRxtxAvailable() {
 		return isLibAvailable("gnu.io.CommPortIdentifier");
