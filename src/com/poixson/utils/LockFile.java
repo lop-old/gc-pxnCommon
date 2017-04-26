@@ -30,8 +30,12 @@ public class LockFile {
 
 
 	public static LockFile get(final String filename) {
-		if (Utils.isEmpty(filename))
+		if (Utils.isEmpty(filename)) {
 			throw new RequiredArgumentException("filename");
+		}
+		if ( ! filename.equals(SanUtils.FileName(filename)) ) {
+			throw new IllegalArgumentException("Invalid lock file name: "+filename);
+		}
 		synchronized(instanceLock) {
 			// existing lock
 			if (instances.containsKey(filename))
