@@ -218,10 +218,13 @@ public class xLog extends xLogPrinting {
 
 
 	// formatter
-	public void setFormatter(final xLogFormatter formatter, final Class<?> type) {
+	public void setFormatter(final xLogFormatter formatter, final Class<?> handlerType) {
 		if (formatter == null) throw new RequiredArgumentException("formatter");
 		for (final xLogHandler handler : this.handlers) {
-			if (type == null || type.equals(handler.getClass())) {
+			if (handlerType == null) {
+				handler.setFormatter(formatter);
+			} else
+			if (handlerType.equals(handler.getClass())) {
 				handler.setFormatter(formatter);
 			}
 		}

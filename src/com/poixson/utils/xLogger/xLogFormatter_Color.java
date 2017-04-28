@@ -48,12 +48,16 @@ public class xLogFormatter_Color extends xLogFormatter_Default {
 			color = "FG_BLACK,BOLD";
 		}
 		return (new StringBuilder())
-			.append("@|FG_BLACK,BOLD [|@@|").append(color).append(" ")
-			.append(StringUtils.padCenter(
-				7,
-				level.toString(),
-				' '
-			))
+			.append("@|FG_BLACK,BOLD [|@@|")
+			.append(color)
+			.append(" ")
+			.append(
+				StringUtils.padCenter(
+					7,
+					level.toString(),
+					' '
+				)
+			)
 			.append("|@@|FG_BLACK,BOLD ]|@")
 			.toString();
 	}

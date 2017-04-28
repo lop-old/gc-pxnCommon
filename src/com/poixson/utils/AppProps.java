@@ -11,7 +11,7 @@ public class AppProps {
 
 	private static final String PROPS_FILE = "/app.properties";
 
-	// properties
+	// property values
 	public final String name;
 	public final String title;
 	public final String full_title;

@@ -10,17 +10,8 @@ public class xCommandHandler extends xHandlerSimple {
 
 
 
-	public static xCommandHandler get() {
-		return new xCommandHandler();
-	}
-	protected xCommandHandler() {
+	public xCommandHandler() {
 		super();
-	}
-
-
-
-	@Override
-	public void register(xEventListener listener) {
 	}
 
 

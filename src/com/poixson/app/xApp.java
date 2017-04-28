@@ -206,8 +206,16 @@ public abstract class xApp implements xStartable {
 						new RuntimeException(APP_INCONSISTENT_STATE_EXCEPTION));
 			}
 			// invoke step
-			final List<xAppStepDAO> lst = orderedSteps.get( new Integer(this.step.get()) );
+			final int stepInt = this.step.get();
+			final List<xAppStepDAO> lst = orderedSteps.get( new Integer(stepInt) );
 			if (lst != null) {
+//				this.log().fine(
+//					(new StringBuilder())
+//						.append("Startup Step ")
+//						.append(stepInt)
+//						.append(" ..")
+//						.toString()
+//				);
 				boolean hasInvoked = false;
 				for (final xAppStepDAO dao : lst) {
 					try {
@@ -223,11 +231,13 @@ public abstract class xApp implements xStartable {
 				if (hasInvoked) {
 					out.flush();
 					// sleep a short bit
-					ThreadUtils.Sleep(20L);
+					if (xVars.debug()) {
+						ThreadUtils.Sleep(20L);
+					}
 				}
 			}
 			// finished starting
-			if (this.step.get() >= highestStep) {
+			if (stepInt >= highestStep) {
 				break;
 			}
 			this.step.incrementAndGet();
@@ -242,13 +252,11 @@ public abstract class xApp implements xStartable {
 	@Override
 	public void Stop() {
 		// already stopping or stopped
-		if (this.isStopped() || this.isStopping()) {
-			return;
-		}
+		if (this.isStopped())  return;
+		if (this.isStopping()) return;
 		synchronized(instanceLock) {
-			if (this.isStopped() || this.isStopping()) {
-				return;
-			}
+			if (this.isStopped())  return;
+			if (this.isStopping()) return;
 			// set stopping state
 			this.step.set(STEP_STOP);
 		}
@@ -278,10 +286,17 @@ public abstract class xApp implements xStartable {
 						new RuntimeException(APP_INCONSISTENT_STOP_EXCEPTION));
 			}
 			// invoke step
-			final List<xAppStepDAO> lst = orderedSteps.get( new Integer(this.step.get()) );
+			final int stepInt = 0 - this.step.get();
+			final List<xAppStepDAO> lst = orderedSteps.get( new Integer(stepInt) );
 			if (lst != null) {
+//				this.log().fine(
+//					(new StringBuilder())
+//						.append("Shutdown Step ")
+//						.append(stepInt)
+//						.append(" ..")
+//						.toString()
+//				);
 				boolean hasInvoked = false;
-System.out.println("STEP DN: "+this.step.get());
 				for (final xAppStepDAO dao : lst) {
 					try {
 						dao.invoke();
@@ -296,20 +311,22 @@ System.out.println("STEP DN: "+this.step.get());
 				if (hasInvoked) {
 					out.flush();
 					// sleep a short bit
-					ThreadUtils.Sleep(20L);
+					if (xVars.debug()) {
+						ThreadUtils.Sleep(20L);
+					}
 				}
 			}
 			// finished stopping
-			if (this.step.get() >= STEP_OFF) {
+			if (stepInt >= STEP_OFF) {
 				break;
 			}
 			this.step.incrementAndGet();
 		}
-		if (!this.isStopped()) {
+		if (!this.isStopping()) {
 			Failure.fail(APP_INCONSISTENT_STOP_EXCEPTION,
 					new RuntimeException(APP_INCONSISTENT_STOP_EXCEPTION));
 		}
-		// finished starting
+		// finished stopping
 		this.step.set(STEP_OFF);
 	}
 
@@ -542,7 +559,6 @@ return "<uptime>";
 	// stop scheduler
 	@xAppStep(type=StepType.SHUTDOWN, title="Scheduler", priority=150)
 	public void __SHUTDOWN_scheduler() {
-System.out.println("STOP SCHED");
 //TODO:
 //		xScheduler.get()
 //			.Stop();
@@ -553,7 +569,6 @@ System.out.println("STOP SCHED");
 	// stop thread pools
 	@xAppStep(type=StepType.SHUTDOWN, title="ThreadPools", priority=100)
 	public void __SHUTDOWN_threadpools() {
-System.out.println("STOP THREADS");
 //TODO:
 //		xThreadPool
 //			.ShutdownAll();
@@ -564,7 +579,6 @@ System.out.println("STOP THREADS");
 	// display uptime
 	@xAppStep(type=StepType.SHUTDOWN, title="Uptime", priority=60)
 	public void __SHUTDOWN_uptimestats() {
-System.out.println("STOP UPTIME");
 //TODO: display total time running
 //this.getUptimeString();
 	}
@@ -574,7 +588,6 @@ System.out.println("STOP UPTIME");
 	// stop console input
 	@xAppStep(type=StepType.SHUTDOWN, title="Console", priority=30)
 	public void __SHUTDOWN_console() {
-System.out.println("STOP CONSOLE");
 //TODO:
 //		xLog.shutdown();
 	}
@@ -584,7 +597,6 @@ System.out.println("STOP CONSOLE");
 	// release lock file
 	@xAppStep(type=StepType.SHUTDOWN, title="LockFile", priority=20)
 	public void __SHUTDOWN_lockfile() {
-System.out.println("RELEASE LOCK");
 //TODO:
 //		final String filename = this.getName()+".lock";
 //		final LockFile lock = LockFile.peak(filename);
@@ -598,7 +610,6 @@ System.out.println("RELEASE LOCK");
 	// garbage collect
 	@xAppStep(type=StepType.SHUTDOWN,title="GarbageCollect", priority=10)
 	public void __SHUTDOWN_gc() {
-System.out.println("GC DONE");
 //TODO:
 //		Utils.Sleep(250L);
 //		xScheduler.clearInstance();
