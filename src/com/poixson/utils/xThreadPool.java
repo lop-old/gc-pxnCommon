@@ -84,10 +84,10 @@ public class xThreadPool implements xStartable {
 		this.poolName = poolName;
 		this.group = new ThreadGroup(poolName);
 		this.threadFactory = new xThreadFactory(
-				this.poolName,
-				this.group,
-				false, // daemon
-				this.priority
+			this.poolName, // thread name
+			this.group,    // thread group
+			false,         // daemon
+			this.priority  // thread priority
 		);
 	}
 
@@ -167,11 +167,11 @@ public class xThreadPool implements xStartable {
 //			return false;
 //		final Thread thread = Thread.currentThread();
 //		// main pool
-//		if(this.isMainPool())
+//		if (this.isMainPool())
 //			return thread.equals(mainPool);
 //		// check threads in this pool
-//		for(final Thread t : this.threads) {
-//			if(thread.equals(t))
+//		for (final Thread t : this.threads) {
+//			if (thread.equals(t))
 //				return true;
 //		}
 //		return false;
@@ -217,7 +217,7 @@ public class xThreadPool implements xStartable {
 		if (targetClass == null)  throw new RequiredArgumentException("targetClass");
 		if (targetMethod == null) throw new RequiredArgumentException("targetMethod");
 //TODO:
-//		if(this.isPoolThread()) {
+//		if (this.isPoolThread()) {
 //			return false;
 //		}
 		final String taskName =
@@ -230,8 +230,8 @@ public class xThreadPool implements xStartable {
 				.toString();
 
 		final xRunnable run = new xRunnable(taskName) {
-			private volatile Object targetClass = null;
 
+			private volatile Object targetClass  = null;
 			private volatile Method targetMethod = null;
 			private volatile Object[] args       = null;
 			public xRunnable init(final Object targetClass,
@@ -282,7 +282,7 @@ public class xThreadPool implements xStartable {
 			}
 			return null;
 		}
-		// thread stats
+		// thread count limits
 		{
 //TODO:
 //			if (DETAILED_LOGGING) {
@@ -361,29 +361,35 @@ public class xThreadPool implements xStartable {
 
 	// set thread priority
 	public void setThreadPriority(final int priority) {
-		if(priority > this.group.getMaxPriority())
+		if (priority > this.group.getMaxPriority()) {
 			this.group.setMaxPriority(priority);
+		}
 		this.threadFactory.setPriority(priority);
 		this.priority = priority;
 		final Iterator<Thread> it = this.threads.iterator();
-		while(it.hasNext())
-			it.next().setPriority(priority);
-		if(priority < this.group.getMaxPriority())
+		while (it.hasNext()) {
+			it.next()
+				.setPriority(priority);
+		}
+		if (priority < this.group.getMaxPriority()) {
 			this.group.setMaxPriority(priority);
+		}
 	}
 
 
 
+	// run loop
 	@Override
 	public void run() {
 		final Thread currentThread = Thread.currentThread();
 		final String threadName = currentThread.getName();
 		final xLog log = this.log().getWeak(threadName);
 		log.finer("Started thread..");
-		// thread loop
+		// inactive thread timer
 		final CoolDown inactive = CoolDown.get(this.timeoutInactiveThread);
 		inactive.resetRun();
-		while(true) {
+		// run loop
+		while (true) {
 			{
 				if (this.active.get() < 0) {
 					while (this.active.get() < 0) {
@@ -409,13 +415,16 @@ public class xThreadPool implements xStartable {
 			// pull from queue
 			final xRunnable task;
 			try {
-				task = this.queue.poll(ThreadSleepTime.getMS(), xTimeU.MS);
+				task = this.queue.poll(
+						this.timeThreadSleep.getMS(),
+						xTimeU.MS
+				);
 			} catch (InterruptedException ignore) {
 				ThreadUtils.Sleep(250L);
 				continue;
 			}
-			// run task
-			if(task != null) {
+			// run queued task
+			if (task != null) {
 				final int runIndex = this.runCount.incrementAndGet();
 				this.active.incrementAndGet();
 				currentThread.setName(
@@ -464,8 +473,9 @@ public class xThreadPool implements xStartable {
 					break;
 				}
 			}
-			if(DETAILED_LOGGING)
+			if (DETAILED_LOGGING) {
 				log.warning("Thread idle..");
+			}
 		}
 		// remove stopped thread
 		this.threads.remove(currentThread);
@@ -473,10 +483,10 @@ public class xThreadPool implements xStartable {
 	// run task now
 	protected boolean doRunTaskNow() {
 //TODO:
-//		if(this.runNow.get() != null) {
+//		if (this.runNow.get() != null) {
 //			this.active.incrementAndGet();
 //			final xRunnable task = this.runNow.get();
-//			if(task != null) {
+//			if (task != null) {
 //				final int runIndex = this.runCount.incrementAndGet();
 //				currentThread.setName(
 //						(new StringBuilder())
@@ -505,9 +515,9 @@ return false;
 
 
 
-	// run a task as soon as possible (generally 0.9ms)
+	// run a task as soon as possible (generally less than 1ms)
 	public void runNow(final Runnable run) {
-		if(run == null) throw new RequiredArgumentException("run");
+		if (run == null) throw new RequiredArgumentException("run");
 		final xRunnable task = xRunnable.cast(run);
 		final xThreadPoolStats stats = this.getStats();
 		if (!this.isMainPool()) {
@@ -523,8 +533,8 @@ return false;
 //TODO: if already in main thread, just run and return
 
 		// queue to run next
-		while(true) {
 //TODO:
+		while (true) {
 			if (this.runTaskNow.compareAndSet(null, task)) {
 				break;
 			}
@@ -546,15 +556,15 @@ ThreadUtils.Sleep(1L);
 
 //TODO:
 		// make sure there's a thread
-		if(this.isMainPool()) {
-			if(this.getActiveCount() < 1) {
+		if (this.isMainPool()) {
+			if (this.getActiveCount() < 1) {
 				try {
 					mainThread.interrupt();
 				} catch (Exception ignore) {}
 			}
 		} else {
 			this.newThread();
-			if(this.getActiveCount() < 1) {
+			if (this.getActiveCount() < 1) {
 				try {
 					final Iterator<Thread> it = this.threads.iterator();
 					it.hasNext();
@@ -605,11 +615,11 @@ ThreadUtils.Sleep(1L);
 */
 	// queue a task
 	public void runLater(final Runnable run) {
-		if(run == null) throw new RequiredArgumentException("run");
+		if (run == null) throw new RequiredArgumentException("run");
 		final xRunnable task = xRunnable.cast(run);
 //TODO:
 //		// pass to main pool
-//		if(this.getMaxThreads() < 1 && !this.isMainPool) {
+//		if (this.getMaxThreads() < 1 && !this.isMainPool) {
 //			getMainPool().runLater(task);
 //			return;
 //		}
@@ -621,7 +631,8 @@ ThreadUtils.Sleep(1L);
 			} else
 				this.log().warning("Thread queue jammed! "+task.getTaskName());
 		} catch (InterruptedException e) {
-			this.log().trace(e);
+			this.log()
+				.trace(e);
 			return;
 		}
 		newThread();
@@ -635,8 +646,8 @@ ThreadUtils.Sleep(1L);
 	 */
 //TODO:
 //	public void setMaxThreads(final int size) {
-//		if(size < 1) throw new IllegalArgumentException("Invalid pool size: "+Integer.toString(size));
-//		if(size > POOL_LIMIT)
+//		if (size < 1) throw new IllegalArgumentException("Invalid pool size: "+Integer.toString(size));
+//		if (size > POOL_LIMIT)
 //			this.poolSize = POOL_LIMIT;
 //		else
 //			this.poolSize = size;
