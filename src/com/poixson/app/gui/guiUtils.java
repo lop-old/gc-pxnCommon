@@ -23,7 +23,7 @@ public final class guiUtils {
 	public static ImageIcon loadImageResource(final String path) {
 		// open file
 		final File file = new File(path);
-		if(file.exists()) {
+		if (file.exists()) {
 			try {
 				final ImageIcon image = new ImageIcon(path);
 				log().finer("Loaded image file: "+path);
@@ -54,41 +54,59 @@ public final class guiUtils {
 	 * /
 	public static boolean forceDispatchThread(final Object callingFrom,
 			final String callingMethod, final Object...args) {
-		if(callingFrom == null)          throw new RequiredArgumentException("callingFrom");
-		if(utils.isEmpty(callingMethod)) throw new RequiredArgumentException("callingMethod");
+		if (callingFrom == null)          throw new RequiredArgumentException("callingFrom");
+		if (utils.isEmpty(callingMethod)) throw new RequiredArgumentException("callingMethod");
 		// already running from event dispatch thread
-		if(SwingUtilities.isEventDispatchThread())
+		if (SwingUtilities.isEventDispatchThread()) {
 			return false;
+		}
 		// get calling class
 		final Class<?> clss = callingFrom.getClass();
 		// get calling method
 		final Method method;
 		try {
-			switch(args.length) {
+			switch (args.length) {
 			case 0:
-				method = clss.getMethod(callingMethod);
+				method = clss.getMethod(
+					callingMethod
+				);
 				break;
 			case 1:
-				method = clss.getMethod(callingMethod,
-					args[0].getClass() );
+				method = clss.getMethod(
+					callingMethod,
+					args[0].getClass()
+				);
 				break;
 			case 2:
-				method = clss.getMethod(callingMethod,
-					args[0].getClass(), args[1].getClass() );
+				method = clss.getMethod(
+					callingMethod,
+					args[0].getClass(),
+					args[1].getClass()
+				);
 				break;
 			case 3:
-				method = clss.getMethod(callingMethod,
-					args[0].getClass(), args[1].getClass(), args[2].getClass() );
+				method = clss.getMethod(
+					callingMethod,
+					args[0].getClass(),
+					args[1].getClass(),
+					args[2].getClass()
+				);
 				break;
 			case 4:
-				method = clss.getMethod(callingMethod,
-					args[0].getClass(), args[1].getClass(), args[2].getClass(), args[3].getClass() );
+				method = clss.getMethod(
+					callingMethod,
+					args[0].getClass(),
+					args[1].getClass(),
+					args[2].getClass(),
+					args[3].getClass()
+				);
 				break;
 			default:
 				throw new IllegalArgumentException("Too many arguments");
 			}
 		} catch (NoSuchMethodException e) {
-			log().trace(e);
+			log()
+				.trace(e);
 			throw new IllegalArgumentException("Method not found");
 		}
 		// pass to dispatch thread
@@ -108,25 +126,41 @@ public final class guiUtils {
 					@Override
 					public void run() {
 						try {
-							switch(this.a.length) {
+							switch (this.a.length) {
 							case 0:
-								this.m.invoke(this.o);
+								this.m.invoke(
+									this.o
+								);
 								break;
 							case 1:
-								this.m.invoke(this.o,
-									this.a[0] );
+								this.m.invoke(
+									this.o,
+									this.a[0]
+								);
 								break;
 							case 2:
-								this.m.invoke(this.o,
-									this.a[0], this.a[1] );
+								this.m.invoke(
+									this.o,
+									this.a[0],
+									this.a[1]
+								);
 								break;
 							case 3:
-								this.m.invoke(this.o,
-									this.a[0], this.a[1], this.a[2] );
+								this.m.invoke(
+									this.o,
+									this.a[0],
+									this.a[1],
+									this.a[2]
+								);
 								break;
 							case 4:
-								this.m.invoke(this.o,
-									this.a[0], this.a[1], this.a[2], this.a[3] );
+								this.m.invoke(
+									this.o,
+									this.a[0],
+									this.a[1],
+									this.a[2],
+									this.a[3]
+								);
 								break;
 							default:
 								throw new IllegalArgumentException("Too many arguments");

@@ -32,10 +32,10 @@ public class xScheduledTask {
 
 
 	public long untilNextTrigger() {
-		if(this.finished)
+		if (this.finished)
 			return -1L;
 		final TriggerType trigger = this.trigger;
-		if(trigger == null)
+		if (trigger == null)
 			return -1L;
 		return trigger.untilNextTrigger();
 	}
@@ -46,18 +46,20 @@ public class xScheduledTask {
 
 
 	public void trigger() {
-		if(!this.repeating)
+		if (!this.repeating) {
 			this.finished = true;
+		}
 		final xRunnable r = this.run;
-		if(r == null) {
+		if (r == null) {
 			xLog.getRoot().warning("Scheduled task has null runnable");
 			return;
 		}
 		// get thread pool
 		xThreadPool p = this.pool;
 		// use main thread pool
-		if(p == null)
+		if (p == null) {
 			p = xThreadPool.getMainPool();
+		}
 		// run task
 		p.runLater(r);
 		this.count.incrementAndGet();
@@ -92,13 +94,16 @@ public class xScheduledTask {
 
 	public String getTaskName() {
 		final xRunnable r = this.run;
-		if(r == null) return null;
+		if (r == null) {
+			return null;
+		}
 		return r.getTaskName();
 	}
 	public boolean taskNameEquals(final String name) {
 		final String n = this.getTaskName();
-		if(utils.isEmpty(name))
+		if (utils.isEmpty(name)) {
 			return utils.isEmpty(n);
+		}
 		return name.equals(n);
 	}
 

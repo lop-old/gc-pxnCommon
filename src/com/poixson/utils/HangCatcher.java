@@ -74,8 +74,8 @@ public class HangCatcher implements xStartable {
 
 	@Override
 	public void run() {
-		while(!this.cancel) {
-			if(this.cool.runAgain()) {
+		while (!this.cancel) {
+			if (this.cool.runAgain()) {
 				final PrintStream out = AnsiConsole.out;
 				out.println();
 				out.println(Ansi.ansi().a(" ").fg(Ansi.Color.RED).a("************************").reset().a(" "));

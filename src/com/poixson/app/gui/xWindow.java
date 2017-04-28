@@ -47,11 +47,12 @@ public abstract class xWindow extends JFrame implements Closeable {
 		log().finer("New window created: "+this.windowName);
 		// annotations
 		final xWindowProperties props = this.getClass().getAnnotation(xWindowProperties.class);
-		if(props != null) {
+		if (props != null) {
 			// window title
 			final String title = props.title();
-			if(utils.notEmpty(title))
+			if (utils.notEmpty(title)) {
 				this.setTitle(title);
+			}
 			// resizable
 			this.setResizable(props.resizable());
 		}
@@ -68,7 +69,8 @@ public abstract class xWindow extends JFrame implements Closeable {
 
 
 	public void autoHeight(final int width) {
-		if(guiUtils.forceDispatchThread(this, "autoHeight")) return;
+		if (guiUtils.forceDispatchThread(this, "autoHeight"))
+			return;
 		this.pack();
 		this.setSize(width, this.getHeight());
 	}
@@ -77,9 +79,10 @@ public abstract class xWindow extends JFrame implements Closeable {
 
 	// show window
 	public void Show() {
-		if(guiUtils.forceDispatchThread(this, "Show")) return;
+		if (guiUtils.forceDispatchThread(this, "Show"))
+			return;
 		this.setVisible(true);
-		if(!this.isFocused()) {
+		if (!this.isFocused()) {
 			this.setVisible(true);
 			this.requestFocus();
 		}
@@ -88,21 +91,20 @@ public abstract class xWindow extends JFrame implements Closeable {
 
 
 	protected void registerCloseHook() {
-		if(!this.closeHooked.compareAndSet(false, true))
-			return;
-		if(guiUtils.forceDispatchThread(this, "registerCloseHook")) return;
+		if (!this.closeHooked.compareAndSet(false, true))            return;
+		if (guiUtils.forceDispatchThread(this, "registerCloseHook")) return;
 		// window close event listener
 		this.addWindowListener(
-				RemappedWindowAdapter.get(
-						this,
-						"close"
-				)
+			RemappedWindowAdapter.get(
+				this,
+				"close"
+			)
 		);
 	}
 	@Override
 	public void close() {
-		if(guiUtils.forceDispatchThread(this, "close")) return;
-		if(!this.closing.compareAndSet(false, true)) return;
+		if (guiUtils.forceDispatchThread(this, "close")) return;
+		if (!this.closing.compareAndSet(false, true))    return;
 		// close window
 		log().fine("Closing window: "+this.windowName);
 		this.dispose();

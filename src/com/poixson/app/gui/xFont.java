@@ -32,8 +32,9 @@ public class xFont {
 
 	public xFont(final String format) {
 		this();
-		if(utils.notEmpty(format))
+		if (utils.notEmpty(format)) {
 			this.apply(format);
+		}
 	}
 	public xFont(final xFont font) {
 		this();
@@ -47,8 +48,9 @@ public class xFont {
 
 
 	public Font getFont(final String format) {
-		if(utils.isEmpty(format))
+		if (utils.isEmpty(format)) {
 			return this.getFont();
+		}
 		final xFont font = new xFont(this);
 		font.apply(format);
 		return font.getFont();
@@ -64,20 +66,22 @@ public class xFont {
 
 
 	public xFont apply(final String format) {
-		if(utils.isEmpty(format))
+		if (utils.isEmpty(format))
 			return this;
 		final xString str = xString.get(format);
-		while(str.delim(",").hasNext()) {
+		while (str.delim(",").hasNext()) {
 			// get part
 			final String part;
 			{
 				final String prt = str.part();
-				if(prt == null) break;
+				if (prt == null)
+					break;
 				part = prt.trim().toLowerCase();
-				if(utils.isEmpty(part)) continue;
+				if (utils.isEmpty(part))
+					continue;
 			}
 			// font style
-			switch(part) {
+			switch (part) {
 			case "b":
 			case "bold":
 				this.style = Style.BOLD;
@@ -92,22 +96,30 @@ public class xFont {
 				continue;
 			}
 			// font family
-			if(part.startsWith("family") || part.startsWith("fam")) {
-				String tmp = (part.startsWith("family") ? part.substring(6) : part.substring(3) ).trim();
-				if(tmp.startsWith("=") || tmp.startsWith(":"))
+			if (part.startsWith("family")
+			|| part.startsWith("fam")) {
+				String tmp = (
+					part.startsWith("family")
+					? part.substring(6)
+					: part.substring(3)
+				).trim();
+				if (tmp.startsWith("=")
+				|| tmp.startsWith(":"))
 					tmp = tmp.substring(1).trim();
 				this.family = tmp;
 				continue;
 			}
 			// font size
-			if(part.startsWith("size")) {
+			if (part.startsWith("size")) {
 				String tmp = part.substring(4).trim();
-				if(tmp.startsWith("=") || tmp.startsWith(":"))
+				if (tmp.startsWith("=") || tmp.startsWith(":")) {
 					tmp = tmp.substring(1).trim();
-				if(tmp.startsWith("+"))
+				}
+				if (tmp.startsWith("+")) {
 					tmp = tmp.substring(1).trim();
+				}
 				final Integer i = utilsNumbers.toInteger(tmp);
-				if(i == null) {
+				if (i == null) {
 					xLog.getRoot().warning("Invalid font size value: "+part);
 					continue;
 				}

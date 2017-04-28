@@ -27,10 +27,14 @@ public class TriggerCron implements TriggerType {
 
 
 	public TriggerCron(final String pattern) {
-		this(new CronPattern(pattern));
+		this(
+			new CronPattern(pattern)
+		);
 	}
 	public TriggerCron(final CronPattern pattern) {
-		this(new CronPredictor(pattern));
+		this(
+			new CronPredictor(pattern)
+		);
 	}
 	public TriggerCron(final CronPredictor predictor) {
 		this.predictor = predictor;

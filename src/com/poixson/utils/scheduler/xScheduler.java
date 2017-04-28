@@ -31,9 +31,9 @@ public class xScheduler implements xStartable {
 
 
 	public static xScheduler get() {
-		if(instance == null) {
+		if (instance == null) {
 			synchronized(instanceLock) {
-				if(instance == null)
+				if (instance == null)
 					instance = new xScheduler();
 			}
 		}
@@ -43,11 +43,12 @@ public class xScheduler implements xStartable {
 		return (instance != null);
 	}
 	public static void clearInstance() {
-		if(instance == null) return;
+		if (instance == null)
+			return;
 		Keeper.remove(instance);
 		synchronized(instanceLock) {
-			if(instance == null) return;
-			if(instance.isRunning()) throw new IllegalStateException();
+			if (instance == null) return;
+			if (instance.isRunning()) throw new IllegalStateException();
 			instance = null;
 		}
 	}
@@ -66,11 +67,11 @@ public class xScheduler implements xStartable {
 
 	@Override
 	public void Start() {
-		if(this.stopping) throw new RuntimeException("Scheduler already stopped"); 
-		if(this.running)  throw new RuntimeException("Scheduler already running");
+		if (this.stopping) throw new RuntimeException("Scheduler already stopped"); 
+		if (this.running)  throw new RuntimeException("Scheduler already running");
 		synchronized(this.thread){
-			if(this.stopping) throw new RuntimeException("Scheduler already stopped");
-			if(this.running)  throw new RuntimeException("Scheduler already running");
+			if (this.stopping) throw new RuntimeException("Scheduler already stopped");
+			if (this.running)  throw new RuntimeException("Scheduler already running");
 			this.thread.start();
 		} 
 	}
@@ -89,39 +90,42 @@ public class xScheduler implements xStartable {
 	// scheduler manager loop
 	@Override
 	public void run() {
-		if(this.stopping) throw new RuntimeException("Scheduler already stopped");
-		if(this.running)  throw new RuntimeException("Scheduler already running");
+		if (this.stopping) throw new RuntimeException("Scheduler already stopped");
+		if (this.running)  throw new RuntimeException("Scheduler already running");
 		synchronized(this.thread) {
-			if(this.stopping) throw new RuntimeException("Scheduler already stopped");
-			if(this.running)  throw new RuntimeException("Scheduler already running");
+			if (this.stopping) throw new RuntimeException("Scheduler already stopped");
+			if (this.running)  throw new RuntimeException("Scheduler already running");
 			this.running = true;
 		}
 		log().fine("Starting xScheduler Manager..");
 		final Set<xScheduledTask> finished = new HashSet<xScheduledTask>();
-		while(!this.stopping) {
+		while (!this.stopping) {
 			long sleep = this.threadSleepTime.getMS();
 			// check task triggers
 			final Iterator<xScheduledTask> it = this.tasks.iterator();
-			while(it.hasNext()) {
+			while (it.hasNext()) {
 				final xScheduledTask task = it.next();
 				final long s = task.untilNextTrigger();
-				if(s == -1) continue;
+				if (s == -1)
+					continue;
 				// trigger now
-				if(s == 0) {
+				if (s == 0) {
 					task.trigger();
 					// not repeating
-					if(!task.repeating)
+					if (!task.repeating) {
 						finished.add(task);
+					}
 				}
 				final double d = s;
 				final long ss = (long) Math.floor(d * 0.95);
 				// sleep less
-				if(ss < sleep)
+				if (ss < sleep) {
 					sleep = ss;
+				}
 			}
 			// remove finished
-			if(!finished.isEmpty()) {
-				for(final xScheduledTask task : finished) {
+			if (!finished.isEmpty()) {
+				for (final xScheduledTask task : finished) {
 					log().finest("Finished scheduled task: "+task.getTaskName());
 					this.tasks.remove(task);
 				}
@@ -129,8 +133,9 @@ public class xScheduler implements xStartable {
 			}
 			// sleep thread
 			//log().finest("SLEEPING: "+Long.toString(sleep));
-			if(sleep > 0)
+			if (sleep > 0) {
 				utilsThread.Sleep(sleep);
+			}
 		}
 		log().finer("Stopped xScheduler thread");
 		this.stopping = true;
@@ -148,18 +153,19 @@ public class xScheduler implements xStartable {
 
 	public boolean hasTask(final String name) {
 		final Iterator<xScheduledTask> it = this.tasks.iterator();
-		while(it.hasNext()) {
-			if(it.next().taskNameEquals(name))
+		while (it.hasNext()) {
+			if (it.next().taskNameEquals(name)) {
 				return true;
+			}
 		}
 		return false;
 	}
 	public boolean cancel(final String name) {
 		boolean found = false;
 		final Iterator<xScheduledTask> it = this.tasks.iterator();
-		while(it.hasNext()) {
+		while (it.hasNext()) {
 			final xScheduledTask task = it.next();
-			if(task.taskNameEquals(name)) {
+			if (task.taskNameEquals(name)) {
 				it.remove();
 				found = true;
 			}
@@ -167,7 +173,8 @@ public class xScheduler implements xStartable {
 		return found;
 	}
 	public boolean cancel(final xScheduledTask task) {
-		if(task == null) return false;
+		if (task == null)
+			return false;
 		return this.tasks.remove(task);
 	}
 
