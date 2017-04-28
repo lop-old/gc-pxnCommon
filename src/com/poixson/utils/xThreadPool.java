@@ -1,6 +1,6 @@
-/*
-package com.poixson.commonjava.Utils.threads;
+package com.poixson.utils;
 
+import java.lang.ref.SoftReference;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -24,7 +24,7 @@ import com.poixson.commonjava.Utils.xTimeU;
 import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
 import com.poixson.commonjava.remapped.RemappedRunnable;
 import com.poixson.commonjava.xLogger.xLevel;
-import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.utils.xLogger.xLog;
 
 
 public class xThreadPool implements xStartable {
@@ -253,11 +253,11 @@ public class xThreadPool implements xStartable {
 
 
 
-	/ **
+	/**
 	 * Create a new thread if needed, skip if queue is empty.
 	 * @return true if new thread has been created; false if
 	 *         using existing; null if failed
-	 * /
+	 */
 	protected Boolean newThread() {
 		if(this.isMainPool() || this.poolSize < 1)
 			return Boolean.FALSE;
@@ -636,10 +636,10 @@ public class xThreadPool implements xStartable {
 	public int getMaxThreads() {
 		return this.poolSize;
 	}
-	/ **
+	/**
 	 * Set the maximum number of threads for this pool.
 	 * @param size max number of threads allowed.
-	 * /
+	 */
 	public void setMaxThreads(final int size) {
 		if(size < 1) throw new IllegalArgumentException("Invalid pool size: "+Integer.toString(size));
 		if(size > POOL_LIMIT)
@@ -657,10 +657,10 @@ public class xThreadPool implements xStartable {
 	public int getActiveCount() {
 		return this.active.get();
 	}
-	/ **
+	/**
 	 * Returns true if pool is not currently in use and queue is empty.
 	 * @return true if inactive and empty.
-	 * /
+	 */
 	public boolean isEmpty() {
 		return (this.queue.size() == 0 && this.active.get() == 0);
 	}
@@ -718,15 +718,26 @@ public class xThreadPool implements xStartable {
 
 
 	// logger
-	private volatile xLog _log = null;
+	private volatile SoftReference<xLog> _log = null;
 	public xLog log() {
-		if(this._log == null)
-			this._log = xLog.getRoot()
-				.get(LOG_NAME+"|"+this.poolName);
-		return this._log;
+		if (this._log != null) {
+			final xLog log = this._log.get();
+			if (log != null) {
+				return log;
+			}
+		}
+		final xLog log = xLog.getRoot()
+			.get(
+				(new StringBuilder())
+					.append(LOG_NAME)
+					.append("|")
+					.append(this.poolName)
+					.toString()
+			);
+		this._log = new SoftReference<xLog>(log);
+		return log;
 	}
 
 
 
 }
-*/

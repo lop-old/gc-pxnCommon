@@ -26,6 +26,8 @@ import com.poixson.utils.ThreadUtils;
 import com.poixson.utils.Utils;
 import com.poixson.utils.xClock;
 import com.poixson.utils.xStartable;
+import com.poixson.utils.xThreadPool;
+import com.poixson.utils.xThreadPoolFactory;
 import com.poixson.utils.xTime;
 import com.poixson.utils.xVars;
 import com.poixson.utils.xLogger.xLevel;
@@ -543,15 +545,9 @@ return "<uptime>";
 	// start thread pools
 	@xAppStep(type=StepType.STARTUP, title="ThreadPools", priority=100)
 	public void __STARTUP_threadpools() {
-//TODO:
-//		// pass main thread to thread pool
-//		try {
-//			xThreadPool.getMainPool()
-//				.run();
-//		} catch (Exception e) {
-//			this.log().trace(e);
-//			Failure.fail("Problem running main thread pool!");
-//		}
+		final xThreadPool pool =
+				xThreadPoolFactory.getMainPool();
+		pool.Start();
 	}
 
 
@@ -584,9 +580,8 @@ return "<uptime>";
 	// stop thread pools
 	@xAppStep(type=StepType.SHUTDOWN, title="ThreadPools", priority=100)
 	public void __SHUTDOWN_threadpools() {
-//TODO:
-//		xThreadPool
-//			.ShutdownAll();
+		xThreadPoolFactory
+			.ShutdownAll();
 	}
 
 

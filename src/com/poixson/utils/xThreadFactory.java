@@ -1,5 +1,4 @@
-/*
-package com.poixson.commonjava.Utils.threads;
+package com.poixson.utils;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -56,4 +55,3 @@ public class xThreadFactory implements ThreadFactory {
 
 
 }
-*/

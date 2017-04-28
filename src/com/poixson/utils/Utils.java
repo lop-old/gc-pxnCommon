@@ -25,6 +25,8 @@ public final class Utils {
 			return;
 		xVars.init();
 		Keeper.add(new Utils());
+		xThreadPoolFactory
+			.getMainPool();
 		Failure.init();
 		CryptUtils.init();
 		DirsFiles.init();
