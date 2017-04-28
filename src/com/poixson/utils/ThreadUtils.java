@@ -1,10 +1,14 @@
 package com.poixson.utils;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import com.poixson.utils.xLogger.xLog;
 
 public final class ThreadUtils {
 	private ThreadUtils() {}
 
-//	public static final String[] ignoreThreadNames = new String[] {
+	public static final String[] ignoreThreadNames = new String[] {
 //		"Main-Server-Thread",
 //		"Reference Handler",
 //		"NonBlockingInputStreamThread",
@@ -16,7 +20,7 @@ public final class ThreadUtils {
 //		"AWT-Shutdown",
 //		"Finalizer",
 //		"Exit"
-//	};
+	};
 
 
 
@@ -26,26 +30,29 @@ public final class ThreadUtils {
 
 
 
-/*
 	// list running thread names
 	public static String[] getThreadNames() {
 		return getThreadNames(true);
 	}
 	public static String[] getThreadNames(final boolean includeDaemon) {
 		final Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-		if (threadSet.isEmpty()) return null;
+		if (threadSet.isEmpty())
+			return null;
 		final Set<String> list = new HashSet<String>();
 		for (final Thread thread : threadSet) {
-			if (!includeDaemon && thread.isDaemon()) continue;
+			if (!includeDaemon && thread.isDaemon())
+				continue;
 			final String name = thread.getName();
-			if (Utils.isEmpty(name)) continue;
-			if (!includeDaemon && name.startsWith("main:")) continue;
-//			// check ignore list
-//			for (final String str : ignoreThreadNames) {
-//				if (name.equals(str)) {
-//					continue;
-//				}
-//			}
+			if (Utils.isEmpty(name))
+				continue;
+			if (!includeDaemon && name.startsWith("main:"))
+				continue;
+			// check ignore list
+			for (final String str : ignoreThreadNames) {
+				if (name.equals(str)) {
+					continue;
+				}
+			}
 			// add to list
 			list.add(thread.getName());
 		}
@@ -55,21 +62,21 @@ public final class ThreadUtils {
 	}
 	// display threads still running
 	public static void displayStillRunning() {
-//TODO:
-//		if (!xVars.debug()) return;
-		final String[] threadNames = utilsThread.getThreadNames(false);
+		if (!xVars.debug()) return;
+		final String[] threadNames = getThreadNames(false);
 		// no threads still running
 		if (Utils.isEmpty(threadNames)) return;
 		// build message
-		final StringBuilder msg = new StringBuilder();
-		msg.append("Threads still running:  ").append(threadNames.length);
+		final StringBuilder msg =
+				(new StringBuilder())
+					.append("Threads still running:  ")
+					.append(threadNames.length);
 		for (final String name : threadNames) {
 			msg.append("\n  ").append(name);
 		}
-//TODO:
-//		xLog.getRoot().publish(msg.toString());
+		xLog.getRoot()
+			.publish(msg.toString());
 	}
-*/
 
 
 
