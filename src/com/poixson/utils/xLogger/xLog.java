@@ -1,5 +1,6 @@
 package com.poixson.utils.xLogger;
 
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -166,6 +167,18 @@ public class xLog extends xLogPrinting {
 
 
 
+	public static PrintStream getOriginalOut() {
+		return xVars.getOriginalOut();
+	}
+	public static PrintStream getOriginalErr() {
+		return xVars.getOriginalErr();
+	}
+	public static InputStream getOriginalIn() {
+		return xVars.getOriginalIn();
+	}
+
+
+
 	public static xCommandHandler getCommandHandler() {
 		return commandHandler;
 	}
@@ -272,10 +285,10 @@ public class xLog extends xLogPrinting {
 		}
 		if (this.handlers.isEmpty()) {
 			if (this.isRoot()) {
-				final PrintStream out = xVars.getOriginalOut();
-				out.println(
-					record.msg()
-				);
+				getOriginalOut()
+					.println(
+						record.msg()
+					);
 			}
 		} else {
 			for (final xLogHandler handler : this.handlers) {

@@ -32,9 +32,6 @@ public class jlineConsole implements xConsole {
 	private volatile String prompt = null;
 	private volatile xCommandHandler handler = null;
 
-	private static volatile PrintStream originalOut = null;
-	private static volatile PrintStream originalErr = null;
-
 	// console input thread
 	private volatile Thread  thread = null;
 	private volatile boolean stopping = false;
@@ -127,7 +124,6 @@ public class jlineConsole implements xConsole {
 		// capture std out
 		if (OVERRIDE_STDIO) {
 			xVars.setOriginalOut(System.out);
-			originalOut = System.out;
 			System.setOut(
 				new PrintStream(
 					new OutputStream() {
@@ -147,7 +143,6 @@ public class jlineConsole implements xConsole {
 			);
 			// capture std err
 			xVars.setOriginalErr(System.err);
-			originalErr = System.err;
 			System.setErr(
 				new PrintStream(
 					new OutputStream() {
@@ -189,15 +184,14 @@ public class jlineConsole implements xConsole {
 				return;
 			}
 		}
-		// restore original out/err
-		if (originalOut != null) {
-			System.setOut(originalOut);
+		synchronized(printLock) {
+			// restore out
+			System.setOut(xVars.getOriginalOut());
+			xVars.setOriginalOut(null);
+			// restore err
+			System.setErr(xVars.getOriginalErr());
+			xVars.setOriginalErr(null);
 		}
-		originalOut = null;
-		if (originalErr != null) {
-			System.setErr(originalErr);
-		}
-		originalErr = null;
 		// stop console input thread
 		if (this.thread != null) {
 			try {
@@ -231,6 +225,7 @@ public class jlineConsole implements xConsole {
 		if (!this.running.compareAndSet(false, true)) {
 			return;
 		}
+		final PrintStream out = getOriginalOut();
 		while (!this.isStopping()) {
 			if (this.thread != null) {
 				if (this.thread.isInterrupted()) {
@@ -239,15 +234,12 @@ public class jlineConsole implements xConsole {
 			}
 			String line = null;
 			try {
-				getOriginalOut()
-					.print('\r');
-				line = reader.readLine(this.getPrompt());
-				flush();
-			} catch (IOException e) {
-				if ("Stream closed".equals(e.getMessage()))
-					break;
-				log().trace(e);
-				break;
+				out.print('\r');
+				line = getReader()
+					.readLine(
+						this.getPrompt()
+					);
+				out.flush();
 			} catch (Exception e) {
 				log().trace(e);
 				break;
@@ -271,10 +263,8 @@ public class jlineConsole implements xConsole {
 		this.stopping = true;
 		this.running.set(false);
 		this.setPrompt("");
-		getOriginalOut()
-			.println();
-		flush();
-		reader.shutdown();
+		out.println();
+		out.flush();
 		reader = null;
 		try {
 			AnsiConsole.systemUninstall();
@@ -294,18 +284,10 @@ public class jlineConsole implements xConsole {
 
 
 	protected static PrintStream getOriginalOut() {
-		return (
-			originalOut == null
-			? System.out
-			: originalOut
-		);
+		return xLog.getOriginalOut();
 	}
 	protected static PrintStream getOriginalErr() {
-		return (
-			originalErr == null
-			? System.err
-			: originalErr
-		);
+		return xLog.getOriginalErr();
 	}
 
 
@@ -345,8 +327,8 @@ public class jlineConsole implements xConsole {
 	public void flush() {
 		try {
 			synchronized(printLock) {
-				reader.flush();
-				//getOriginalOut().flush();
+				getOriginalOut()
+					.flush();
 			}
 		} catch (Exception ignore) {}
 	}

@@ -26,6 +26,7 @@ import com.poixson.utils.Utils;
 import com.poixson.utils.xClock;
 import com.poixson.utils.xStartable;
 import com.poixson.utils.xTime;
+import com.poixson.utils.xVars;
 import com.poixson.utils.xLogger.xLevel;
 import com.poixson.utils.xLogger.xLog;
 import com.poixson.utils.xLogger.xLogFormatter_Color;
@@ -140,7 +141,8 @@ public abstract class xApp implements xStartable {
 			final xLog log = xLog.getRoot();
 			log.setLevel(xLevel.ALL);
 			if (Failure.hasFailed()) {
-				System.out.println("Failure, pre-init!");
+				xVars.getOriginalOut()
+					.println("Failure, pre-init!");
 				System.exit(1);
 			}
 			// initialize console and enable colors
@@ -171,7 +173,8 @@ public abstract class xApp implements xStartable {
 //				str.append(arg);
 //			}
 //			if (str.length() > 0) {
-//				System.out.println("Unknown arguments: "+str.toString());
+//				xVars.getOriginalOut()
+//					.println("Unknown arguments: "+str.toString());
 //				System.exit(1);
 //				return;
 //			}
@@ -196,6 +199,7 @@ public abstract class xApp implements xStartable {
 				getSteps(StepType.STARTUP);
 		final int highestStep = findHighestPriorityStep(orderedSteps);
 		// startup loop
+		final PrintStream out = xVars.getOriginalOut();
 		while (true) {
 			if (!this.isStarting()) {
 				Failure.fail(APP_INCONSISTENT_STATE_EXCEPTION,
@@ -217,7 +221,7 @@ public abstract class xApp implements xStartable {
 				}
 				// finished step
 				if (hasInvoked) {
-					System.out.flush();
+					out.flush();
 					// sleep a short bit
 					ThreadUtils.Sleep(20L);
 				}
@@ -267,6 +271,7 @@ public abstract class xApp implements xStartable {
 		final int highestStep = findHighestPriorityStep(orderedSteps);
 		this.step.set( 0 - highestStep );
 		// shutdown loop
+		final PrintStream out = xVars.getOriginalOut();
 		while (true) {
 			if (!this.isStopping()) {
 				Failure.fail(APP_INCONSISTENT_STOP_EXCEPTION,
@@ -289,7 +294,7 @@ System.out.println("STEP DN: "+this.step.get());
 				}
 				// finished step
 				if (hasInvoked) {
-					System.out.flush();
+					out.flush();
 					// sleep a short bit
 					ThreadUtils.Sleep(20L);
 				}
