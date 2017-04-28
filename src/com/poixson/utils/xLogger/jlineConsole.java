@@ -23,7 +23,7 @@ import com.poixson.utils.xVars;
 
 
 public class jlineConsole implements xConsole {
-	protected static final String DEFAULT_PROMPT = " #>";
+	protected static final String  DEFAULT_PROMPT = " #>";
 	protected static final boolean OVERRIDE_STDIO = false;
 
 	private static final Object printLock = new Object();
@@ -132,6 +132,15 @@ public class jlineConsole implements xConsole {
 	}
 	public static Terminal getTerm() {
 		return term;
+	}
+
+
+
+	protected static PrintStream getOriginalOut() {
+		return xLog.getOriginalOut();
+	}
+	protected static PrintStream getOriginalErr() {
+		return xLog.getOriginalErr();
 	}
 
 
@@ -312,24 +321,17 @@ public class jlineConsole implements xConsole {
 
 
 
-	protected static PrintStream getOriginalOut() {
-		return xLog.getOriginalOut();
-	}
-	protected static PrintStream getOriginalErr() {
-		return xLog.getOriginalErr();
-	}
-
-
-
 	// clear screen
 	@Override
 	public void clear() {
-		AnsiConsole.out.println(
-			Ansi.ansi()
-				.eraseScreen()
-				.cursor(0, 0)
-		);
-		flush();
+		synchronized(printLock) {
+			AnsiConsole.out.println(
+				Ansi.ansi()
+					.eraseScreen()
+					.cursor(0, 0)
+			);
+			flush();
+		}
 	}
 	public void clearLine() {
 		final PrintStream out = getOriginalOut();
@@ -348,7 +350,6 @@ public class jlineConsole implements xConsole {
 						.append('\r')
 				);
 			}
-			out.flush();
 		}
 	}
 	// flush buffer
