@@ -18,6 +18,7 @@ import com.poixson.app.steps.xAppStep.StepType;
 import com.poixson.app.steps.xAppStepDAO;
 import com.poixson.utils.AppProps;
 import com.poixson.utils.Failure;
+import com.poixson.utils.HangCatcher;
 import com.poixson.utils.Keeper;
 import com.poixson.utils.LockFile;
 import com.poixson.utils.StringUtils;
@@ -198,6 +199,12 @@ public abstract class xApp implements xStartable {
 		final Map<Integer, List<xAppStepDAO>> orderedSteps =
 				getSteps(StepType.STARTUP);
 		final int highestStep = findHighestPriorityStep(orderedSteps);
+		// hang catcher
+		final HangCatcher hangCatcher = new HangCatcher(
+			"10s",
+			"100n"
+		);
+		hangCatcher.Start();
 		// startup loop
 		final PrintStream out = xVars.getOriginalOut();
 		while (true) {
@@ -242,6 +249,7 @@ public abstract class xApp implements xStartable {
 			}
 			this.step.incrementAndGet();
 		}
+		hangCatcher.Stop();
 		if (!this.isStarting()) {
 			Failure.fail(APP_INCONSISTENT_STATE_EXCEPTION,
 					new RuntimeException(APP_INCONSISTENT_STATE_EXCEPTION));
@@ -278,6 +286,12 @@ public abstract class xApp implements xStartable {
 				getSteps(StepType.SHUTDOWN);
 		final int highestStep = findHighestPriorityStep(orderedSteps);
 		this.step.set( 0 - highestStep );
+		// hang catcher
+		final HangCatcher hangCatcher = new HangCatcher(
+			"10s",
+			"100n"
+		);
+		hangCatcher.Start();
 		// shutdown loop
 		final PrintStream out = xVars.getOriginalOut();
 		while (true) {
@@ -322,6 +336,7 @@ public abstract class xApp implements xStartable {
 			}
 			this.step.incrementAndGet();
 		}
+		hangCatcher.Stop();
 		if (!this.isStopping()) {
 			Failure.fail(APP_INCONSISTENT_STOP_EXCEPTION,
 					new RuntimeException(APP_INCONSISTENT_STOP_EXCEPTION));
