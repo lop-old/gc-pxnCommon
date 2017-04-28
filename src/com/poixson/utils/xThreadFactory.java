@@ -16,10 +16,18 @@ public class xThreadFactory implements ThreadFactory {
 
 
 	public xThreadFactory(final String name) {
-		this(name, false);
+		this(
+			name,
+			false
+		);
 	}
 	public xThreadFactory(final String name, final boolean daemon) {
-		this(name, null, daemon, Thread.NORM_PRIORITY);
+		this(
+			name,
+			null,
+			daemon,
+			Thread.NORM_PRIORITY
+		);
 	}
 	public xThreadFactory(final String name, final ThreadGroup group, final boolean daemon, final int priority) {
 		this.name     = name;
@@ -32,7 +40,7 @@ public class xThreadFactory implements ThreadFactory {
 
 	@Override
 	public Thread newThread(final Runnable run) {
-		if(this.count.get() > Integer.MAX_VALUE - 100)
+		if (this.count.get() > Integer.MAX_VALUE - 100)
 			throw new IllegalStateException("ThreadFactory count overflow!");
 		final int id = this.count.incrementAndGet();
 		final Thread thread = new Thread(this.group, run);
@@ -45,11 +53,13 @@ public class xThreadFactory implements ThreadFactory {
 
 
 	public void setPriority(final int priority) {
-		if(priority > this.priority)
+		if (priority > this.priority) {
 			this.group.setMaxPriority(priority);
+		}
 		this.priority = priority;
-		if(priority < this.group.getMaxPriority())
+		if (priority < this.group.getMaxPriority()) {
 			this.group.setMaxPriority(priority);
+		}
 	}
 
 
