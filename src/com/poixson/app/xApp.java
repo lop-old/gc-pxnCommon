@@ -603,8 +603,7 @@ return "<uptime>";
 	// stop console input
 	@xAppStep(type=StepType.SHUTDOWN, title="Console", priority=30)
 	public void __SHUTDOWN_console() {
-//TODO:
-//		xLog.shutdown();
+		xLog.Shutdown();
 	}
 
 

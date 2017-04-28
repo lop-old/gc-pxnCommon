@@ -342,7 +342,7 @@ public class xLog extends xLogPrinting {
 	public static xConsole peekConsole() {
 		return consoleHandler;
 	}
-	public static void shutdown() {
+	public static void Shutdown() {
 		// stop prompt ticker
 		{
 //TODO:
