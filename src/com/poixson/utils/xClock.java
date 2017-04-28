@@ -115,18 +115,60 @@ public class xClock {
 			final ntpMessage msg = new ntpMessage(packet.getData());
 			// calculate local offset for correction
 			time = getSystemTime();
-			this.localOffset = ((msg.receiveTimestamp - msg.originateTimestamp) + (msg.transmitTimestamp - fromUnixTimestamp(time))) / 2.0;
+			this.localOffset =
+				(
+					(msg.receiveTimestamp - msg.originateTimestamp)
+					+ (msg.transmitTimestamp - fromUnixTimestamp(time))
+				) / 2.0;
 			// less than 100ms
 			if (this.localOffset < 0.1 && this.localOffset > -0.1) {
-				log.info("System time only off by "+
-						NumberUtils.FormatDecimal("0.000", this.localOffset)+
-						", ignoring adjustment.");
+				log.info(
+					(new StringBuilder())
+						.append("System time only off by ")
+						.append(
+							NumberUtils.FormatDecimal(
+								"0.000",
+								this.localOffset
+							)
+						)
+						.append(", ignoring adjustment.")
+						.toString()
+				);
 				this.localOffset = 0.0;
 			} else {
-				log.info("Internal time adjusted by "+(this.localOffset>0 ? "+" : "-")+
-						NumberUtils.FormatDecimal("0.000", this.localOffset)+" seconds");
-				log.info("System time:   "+timestampToString(time / 1000.0));
-				log.info("Internal time: "+getString());
+				log.info(
+					(new StringBuilder())
+						.append("Internal time adjusted by ")
+						.append(
+							this.localOffset > 0
+							? "+"
+							: "-"
+						)
+						.append(
+							NumberUtils.FormatDecimal(
+								"0.000",
+								this.localOffset
+							)
+						)
+						.append(" seconds")
+						.toString()
+				);
+				log.info(
+					(new StringBuilder())
+						.append("System time:   ")
+						.append(
+							timestampToString(
+								time / 1000.0
+							)
+						)
+						.toString()
+				);
+				log.info(
+					(new StringBuilder())
+						.append("Internal time: ")
+						.append(getString())
+						.toString()
+				);
 			}
 		} catch (SocketException e) {
 			log.trace(e);
@@ -204,8 +246,10 @@ public class xClock {
 		return (timestamp / 1000.0) + 2208988800.0;
 	}
 	protected static double fromUnixTimestamp() {
-		final double time = getSystemTime();
-		return fromUnixTimestamp(time);
+		return
+			fromUnixTimestamp(
+				getSystemTime()
+			);
 	}
 
 
