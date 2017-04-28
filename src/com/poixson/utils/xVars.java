@@ -1,8 +1,10 @@
 package com.poixson.utils;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
 
+import com.poixson.utils.xLogger.jlineConsole;
 import com.poixson.utils.xLogger.xLog;
 
 
@@ -160,6 +162,45 @@ public class xVars {
 	}
 	public static void setBellStyle(final jlineConsole.BellType bell) {
 		bellStyle = bell;
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// jline history
+
+
+
+	// history size
+	private static volatile int jLineHistorySize = 200;
+
+	public static int getJLineHistorySize() {
+		return jLineHistorySize;
+	}
+	public static void setJLineHistorySize(final int size) {
+		jLineHistorySize =
+			NumberUtils.MinMax(
+				size,
+				1,
+				10000
+			);
+	}
+
+
+
+	// history file
+	private static volatile File jLineHistoryFile = null;
+
+	public static File getJLineHistoryFile() {
+		return jLineHistoryFile;
+	}
+	public static void setJLineHistoryFile(final String fileStr) {
+		setJLineHistoryFile(
+			new File(fileStr)
+		);
+	}
+	public static void setJLineHistoryFile(final File file) {
+		jLineHistoryFile = file;
 	}
 
 

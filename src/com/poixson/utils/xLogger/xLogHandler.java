@@ -45,18 +45,23 @@ public abstract class xLogHandler {
 		this.formatter = formatter;
 	}
 	protected xLogFormatter getFormatter() {
+		// use custom formatter
 		xLogFormatter formatter = this.formatter;
 		if (formatter != null) {
 			return formatter;
 		}
 		// use default formatter
-		formatter = this.formatterDefault.get();
-		if (formatter == null) {
-			formatter = new xLogFormatter_Default();
-			this.formatterDefault = new SoftReference<xLogFormatter>(
-					formatter
-			);
+		return this.getDefaultFormatter();
+	}
+	public xLogFormatter getDefaultFormatter() {
+		final SoftReference<xLogFormatter> formDef = this.formatterDefault;
+		if (formDef != null) {
+			return formDef.get();
 		}
+		final xLogFormatter formatter = new xLogFormatter_Default();
+		this.formatterDefault = new SoftReference<xLogFormatter>(
+				formatter
+		);
 		return formatter;
 	}
 

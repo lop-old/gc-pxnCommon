@@ -1,6 +1,5 @@
 package com.poixson.utils.xLogger;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -9,16 +8,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
+import org.jline.reader.EndOfFileException;
+import org.jline.reader.History;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 
-import com.poixson.utils.ApacheSystemUtils;
+import com.poixson.app.xApp;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.ThreadUtils;
 import com.poixson.utils.Utils;
 import com.poixson.utils.xVars;
-
-import jline.console.ConsoleReader;
-import jline.console.history.FileHistory;
-import jline.console.history.History;
 
 
 public class jlineConsole implements xConsole {
@@ -26,8 +27,8 @@ public class jlineConsole implements xConsole {
 	protected static final boolean OVERRIDE_STDIO = false;
 
 	private static final Object printLock = new Object();
-	private static volatile ConsoleReader reader = null;
-	private static volatile Boolean jlineEnabled = null;
+	private static volatile Terminal   term   = null;
+	private static volatile LineReader reader = null;
 
 	private volatile String prompt = null;
 	private volatile xCommandHandler handler = null;
@@ -71,59 +72,44 @@ public class jlineConsole implements xConsole {
 
 
 	public jlineConsole() {
-		// console reader
-		if (reader == null) {
-			jlineEnabled = null;
-			// no console
-			if (System.console() == null) {
-				jlineEnabled = Boolean.FALSE;
-				System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
-				return;
-			}
-			// set os type
-			if (ApacheSystemUtils.IS_OS_LINUX) {
-				System.setProperty("jline.terminal", "jline.UnixTerminal");
-			} else
-			if (ApacheSystemUtils.IS_OS_WINDOWS) {
-				System.setProperty("jline.terminal", "jline.WindowsTerminal");
-			} else {
-				System.setProperty("jline.terminal", "jline.UnsupportedTerminal");
-			}
-			// get console reader
-			try {
-				reader = new ConsoleReader(
-					System.in,
-					getOriginalOut()
+		InitReader();
+	}
+	private void InitReader() {
+		if (reader != null) return;
+		// get console reader
+		try {
+			term = TerminalBuilder.builder()
+					.streams(
+						xLog.getOriginalIn(),
+						xLog.getOriginalOut()
+					)
+					.system(true)
+					.build();
+			reader = LineReaderBuilder.builder()
+					.terminal(term)
+					.appName(xApp.get().getTitle())
+//TODO: .completer(completer)
+					.build();
+		} catch (IOException e) {
+			log().trace(e);
+		}
+		try {
+			if (bellStyle != null) {
+				reader.setVariable(
+					LineReader.BELL_STYLE,
+					this.bellStyle
 				);
-			} catch (IOException ignore) {
-				// try again with jline disabled
-				try {
-					jlineEnabled = Boolean.FALSE;
-					System.setProperty("user.language",  "en");
-					reader = new ConsoleReader(
-						System.in,
-						getOriginalOut()
-					);
-				} catch (IOException e) {
-					log().trace(e);
-				}
 			}
-			if (jlineEnabled == null) {
-				jlineEnabled = Boolean.TRUE;
-			}
-			try {
-				reader.setBellEnabled(false);
-				final FileHistory history =
-					new FileHistory(
-						new File("./history.txt")
-					);
-				history.setMaxSize(200);
-				reader.setHistory(history);
-				reader.setHistoryEnabled(true);
-				reader.setExpandEvents(true);
-			} catch (Exception e) {
-				log().trace(e);
-			}
+			reader.setVariable(
+				LineReader.HISTORY_FILE,
+				xVars.getJLineHistoryFile()
+			);
+			reader.setVariable(
+				LineReader.HISTORY_SIZE,
+				xVars.getJLineHistorySize()
+			);
+		} catch (Exception e) {
+			log().trace(e);
 		}
 	}
 	@Override
@@ -137,6 +123,15 @@ public class jlineConsole implements xConsole {
 				this.Stop();
 			}
 		}
+	}
+
+
+
+	public static LineReader getReader() {
+		return reader;
+	}
+	public static Terminal getTerm() {
+		return term;
 	}
 
 
@@ -232,13 +227,12 @@ public class jlineConsole implements xConsole {
 			} catch (Exception ignore) {}
 		}
 		// save command history
+		final LineReader reader = getReader();
 		if (reader != null) {
 			try {
 				final History history = reader.getHistory();
 				if (history != null) {
-					if (history instanceof FileHistory) {
-						((FileHistory) history).flush();
-					}
+					history.save();
 				}
 			} catch (Exception e) {
 				log().trace(e);
@@ -270,6 +264,11 @@ public class jlineConsole implements xConsole {
 						this.getPrompt()
 					);
 				out.flush();
+			} catch (EndOfFileException e) {
+				if ("Stream closed".equals(e.getMessage()))
+					break;
+				log().trace(e);
+				break;
 			} catch (Exception e) {
 				log().trace(e);
 				break;
@@ -401,15 +400,16 @@ public class jlineConsole implements xConsole {
 	// draw command prompt
 	@Override
 	public void drawPrompt() {
-		if (reader == null)
-			return;
-		try {
-			synchronized(printLock) {
-				this.clearLine();
-				reader.drawLine();
-				reader.flush();
+		final LineReader reader = getReader();
+		if (reader == null) return;
+		synchronized(printLock) {
+			this.clearLine();
+			if (Utils.notEmpty(this.prompt)) {
+				final PrintStream out = getOriginalOut();
+				out.print(this.prompt);
+				out.flush();
 			}
-		} catch (IOException ignore) {}
+		}
 	}
 	// render jAnsi
 	public static String renderAnsi(final String msg) {
@@ -424,7 +424,6 @@ public class jlineConsole implements xConsole {
 	@Override
 	public void setPrompt(final String prompt) {
 		this.prompt = prompt;
-		reader.setPrompt(this.getPrompt());
 		this.drawPrompt();
 	}
 	@Override
