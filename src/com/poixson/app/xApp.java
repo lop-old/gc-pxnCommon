@@ -350,7 +350,7 @@ public abstract class xApp implements xStartable {
 	protected static Map<Integer, List<xAppStepDAO>> getSteps(final StepType type) {
 		final Map<Integer, List<xAppStepDAO>> orderedSteps =
 				new HashMap<Integer, List<xAppStepDAO>>();
-		final List<xAppStepDAO> steps = findSteps();
+		final List<xAppStepDAO> steps = FindAllSteps();
 		for (final xAppStepDAO dao : steps) {
 			if (!dao.isType(type)) continue;
 			List<xAppStepDAO> lst = orderedSteps.get(
@@ -368,7 +368,7 @@ public abstract class xApp implements xStartable {
 		}
 		return orderedSteps;
 	}
-	protected static List<xAppStepDAO> findSteps() {
+	protected static List<xAppStepDAO> FindAllSteps() {
 		final Class<? extends xApp> clss = instance.getClass();
 		if (clss == null) throw new RuntimeException("Failed to get app class!");
 		// get method annotations
