@@ -302,8 +302,8 @@ public abstract class xApp implements xStartable {
 						new RuntimeException(APP_INCONSISTENT_STOP_EXCEPTION));
 			}
 			// invoke step
-			final int stepInt = 0 - this.step.get();
-			final List<xAppStepDAO> lst = orderedSteps.get( new Integer(stepInt) );
+			final int stepInt = this.step.get();
+			final List<xAppStepDAO> lst = orderedSteps.get( new Integer(0 - stepInt) );
 			if (lst != null) {
 //				this.log().fine(
 //					(new StringBuilder())
@@ -333,7 +333,7 @@ public abstract class xApp implements xStartable {
 				}
 			}
 			// finished stopping
-			if (stepInt >= STEP_OFF) {
+			if (stepInt >= STEP_OFF - 1) {
 				break;
 			}
 			this.step.incrementAndGet();
