@@ -66,7 +66,7 @@ public class LockFile {
 					}.init(lock)
 			);
 			instances.put(filename, lock);
-			log().info("Locked file: "+filename);
+			log().fine("Locked file: "+filename);
 			Keeper.add(lock);
 			return lock;
 		}
@@ -110,7 +110,7 @@ public class LockFile {
 		} catch (Exception ignore) {}
 		Utils.safeClose(this.channel);
 		Utils.safeClose(this.randFile);
-		log().info("Released file lock: "+this.filename);
+		log().fine("Released file lock: "+this.filename);
 		Keeper.remove(this);
 		try {
 			this.file.delete();
