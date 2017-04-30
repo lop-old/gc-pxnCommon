@@ -16,6 +16,12 @@ public final class ReflectUtils {
 
 
 
+	public static String getClassName(final Class<?> clss) {
+		return clss.getSimpleName();
+	}
+
+
+
 	public static Method getMethodByName(final Object container,
 			final String methodName, final Object...args) {
 		if (container == null)         throw new IllegalArgumentException("container");
