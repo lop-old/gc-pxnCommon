@@ -34,11 +34,37 @@ import com.poixson.utils.exceptions.RequiredArgumentException;
 	public xLog log() {
 		if (this._log != null) {
 			final xLog log = this._log.get();
-			if (log != null) {
+			if (log != null)
 				return log;
-			}
 		}
 		final xLog log = xLog.getRoot();
+		this._log = new SoftReference<xLog>(log);
+		return log;
+	}
+*/
+
+
+
+/* named soft-cache
+
+	// logger
+	private volatile SoftReference<xLog> _log = null;
+	private volatile String _className = null;
+	public xLog log() {
+		if (this._log != null) {
+			final xLog log = this._log.get();
+			if (log != null)
+				return log;
+		}
+		if (this._className == null) {
+			this._className =
+				ReflectUtils.getClassName(
+					this.getClass()
+				);
+		}
+		final xLog log =
+			xLog.getRoot()
+				.get(this._className);
 		this._log = new SoftReference<xLog>(log);
 		return log;
 	}
