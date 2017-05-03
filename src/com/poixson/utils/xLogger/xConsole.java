@@ -28,6 +28,9 @@ public interface xConsole extends xStartable {
 	public void setPrompt(final String prompt);
 	public void drawPrompt();
 
+	public Character getMask();
+	public void setMask(final Character mask);
+
 	public xCommandHandler getCommandHandler();
 
 

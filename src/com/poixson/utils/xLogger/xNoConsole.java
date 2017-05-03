@@ -96,6 +96,16 @@ public class xNoConsole implements xConsole {
 
 
 
+	@Override
+	public Character getMask() {
+		return null;
+	}
+	@Override
+	public void setMask(final Character mask) {
+	}
+
+
+
 	public xCommandHandler getCommandHandler() {
 		return null;
 	}

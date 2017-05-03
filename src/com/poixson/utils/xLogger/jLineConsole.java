@@ -29,6 +29,7 @@ public class jlineConsole implements xConsole {
 	private static final Object printLock = new Object();
 	private static volatile Terminal   term   = null;
 	private static volatile LineReader reader = null;
+	private volatile Character mask = null;
 
 	private volatile String prompt = null;
 	private volatile xCommandHandler handler = null;
@@ -388,6 +389,21 @@ public class jlineConsole implements xConsole {
 				out.flush();
 			}
 		}
+	}
+
+
+
+	@Override
+	public Character getMask() {
+		return this.mask;
+	}
+	@Override
+	public void setMask(final Character mask) {
+		this.mask = (
+			Utils.isEmpty(mask)
+			? null
+			: mask
+		);
 	}
 
 
