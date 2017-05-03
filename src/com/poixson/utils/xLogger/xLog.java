@@ -85,7 +85,6 @@ public class xLog extends xLogPrinting {
 	protected final String name;
 	protected final xLog parent;
 	protected volatile xLevel level = null;
-	protected static final xCommandHandler commandHandler = new xCommandHandler();
 
 	// sub-loggers
 	private final ConcurrentMap<String, xLog> loggers = new ConcurrentHashMap<String, xLog>();
@@ -206,7 +205,9 @@ public class xLog extends xLogPrinting {
 
 
 	public static xCommandHandler getCommandHandler() {
-		return commandHandler;
+		return
+			getConsole()
+				.getCommandHandler();
 	}
 
 
@@ -353,11 +354,6 @@ public class xLog extends xLogPrinting {
 
 	public static void setConsole(final xConsole console) {
 		consoleHandler = console;
-		if (consoleHandler != null) {
-			consoleHandler.setCommandHandler(
-				commandHandler
-			);
-		}
 	}
 	public static xConsole getConsole() {
 		if (consoleHandler == null) {
