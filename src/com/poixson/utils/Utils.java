@@ -395,15 +395,15 @@ public final class Utils {
 	public static boolean isJLineAvailable() {
 		switch (JLINE_VERSION) {
 		case version2x:
-			if (!isLibAvailable("org.jline.reader.LineReader"))
-				return false;
-			if (!isLibAvailable("org.jline.terminal.Terminal"))
-				return false;
-			return true;
-		case version3x:
 			if (!isLibAvailable("jline.console.ConsoleReader"))
 				return false;
 			if (!isLibAvailable("jline.Terminal"))
+				return false;
+			return true;
+		case version3x:
+			if (!isLibAvailable("org.jline.reader.LineReader"))
+				return false;
+			if (!isLibAvailable("org.jline.terminal.Terminal"))
 				return false;
 			return true;
 		default:
