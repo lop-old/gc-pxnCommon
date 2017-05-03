@@ -17,10 +17,6 @@ public interface xConsole extends xStartable {
 	public void setPrompt(final String prompt);
 	public String getPrompt();
 
-	public String getBellStr();
-	public jlineConsole.BellType getBell();
-	public void setBell(final String bellStr);
-
 	public void setCommandHandler(final xCommandHandler handler);
 
 

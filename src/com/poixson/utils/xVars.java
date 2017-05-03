@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
 
-import com.poixson.utils.xLogger.jlineConsole;
 import com.poixson.utils.xLogger.xLog;
 
 
@@ -142,26 +141,6 @@ public class xVars {
 	}
 	public static void setConsoleColor(final boolean enabled) {
 		consoleColorEnabled = Boolean.valueOf(enabled);
-	}
-
-
-
-	// console bell
-	private static volatile jlineConsole.BellType bellStyle = null;
-
-	public static String getBellStr() {
-		final jlineConsole.BellType bellStyle =
-				getBellStyle();
-		if (bellStyle == null)
-			return null;
-		return bellStyle
-				.toString();
-	}
-	public static jlineConsole.BellType getBellStyle() {
-		return bellStyle;
-	}
-	public static void setBellStyle(final jlineConsole.BellType bell) {
-		bellStyle = bell;
 	}
 
 

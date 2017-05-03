@@ -41,36 +41,6 @@ public class jlineConsole implements xConsole {
 
 
 
-	public static enum BellType {
-		NONE,
-		AUDIBLE,
-		VISIBLE;
-
-		public static BellType byString(final String bellStr) {
-			if (Utils.isEmpty(bellStr))
-				return null;
-			switch (bellStr.toLowerCase()) {
-			case "audible":
-			case "beep":
-			case "audio":
-			case "sound":
-				return BellType.AUDIBLE;
-			case "visible":
-			case "visual":
-			case "screen":
-				return BellType.VISIBLE;
-			default:
-				break;
-			}
-			return BellType.NONE;
-		}
-
-	};
-
-	private volatile BellType bellStyle = BellType.VISIBLE;
-
-
-
 	public jlineConsole() {
 		InitReader();
 	}
@@ -94,12 +64,6 @@ public class jlineConsole implements xConsole {
 			log().trace(e);
 		}
 		try {
-			if (bellStyle != null) {
-				reader.setVariable(
-					LineReader.BELL_STYLE,
-					this.bellStyle
-				);
-			}
 			reader.setVariable(
 				LineReader.HISTORY_FILE,
 				xVars.getJLineHistoryFile()
@@ -435,22 +399,6 @@ public class jlineConsole implements xConsole {
 			? DEFAULT_PROMPT
 			: prompt
 		);
-	}
-
-
-
-	@Override
-	public String getBellStr() {
-		return this.bellStyle
-				.toString();
-	}
-	@Override
-	public BellType getBell() {
-		return this.bellStyle;
-	}
-	@Override
-	public void setBell(final String bellStr) {
-		this.bellStyle = BellType.byString(bellStr);
 	}
 
 

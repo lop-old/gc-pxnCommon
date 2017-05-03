@@ -86,18 +86,6 @@ public class xNoConsole implements xConsole {
 
 
 
-	public String getBellStr() {
-		return null;
-	}
-	public jlineConsole.BellType getBell() {
-		return null;
-	}
-	public void setBell(final String bellStr) {
-		throw new UnsupportedOperationException();
-	}
-
-
-
 	@Override
 	public void setCommandHandler(final xCommandHandler handler) {
 	}
