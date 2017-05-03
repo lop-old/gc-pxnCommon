@@ -256,9 +256,6 @@ public class jlineConsole implements xConsole {
 				} else {
 					final xCommandEvent event = new xCommandEvent(line);
 					handler.trigger(event);
-					if (!event.isHandled()) {
-						log().publish("Unknown command: "+event.getArg(0));
-					}
 				}
 			}
 		}

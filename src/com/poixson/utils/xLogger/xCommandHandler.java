@@ -37,4 +37,25 @@ public class xCommandHandler extends xHandlerSimple {
 
 
 
+	// trigger event
+	@Override
+	public void trigger(final xEventData event) {
+		if ( ! (event instanceof xCommandEvent) )
+			throw new IllegalArgumentException("event must be instance of xCommandEvent!");
+		// pass to handler
+		super.trigger(event);
+		// unknown command
+		if (!event.isHandled()) {
+			final xCommandEvent cmdEvent = (xCommandEvent) event;
+			log().publish(
+				(new StringBuilder())
+					.append("Unknown command: ")
+					.append(cmdEvent.getArg(0))
+					.toString()
+			);
+		}
+	}
+
+
+
 }
