@@ -404,8 +404,8 @@ public class jlineConsole implements xConsole {
 
 
 	@Override
-	public void setCommandHandler(final xCommandHandler handler) {
-		this.handler = handler;
+	public xCommandHandler getCommandHandler() {
+		return this.handler;
 	}
 
 

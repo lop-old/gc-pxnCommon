@@ -86,8 +86,8 @@ public class xNoConsole implements xConsole {
 
 
 
-	@Override
-	public void setCommandHandler(final xCommandHandler handler) {
+	public xCommandHandler getCommandHandler() {
+		return null;
 	}
 
 

@@ -18,7 +18,7 @@ public interface xConsole extends xStartable {
 	public void setPrompt(final String prompt);
 	public void drawPrompt();
 
-	public void setCommandHandler(final xCommandHandler handler);
+	public xCommandHandler getCommandHandler();
 
 
 }
