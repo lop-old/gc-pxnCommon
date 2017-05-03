@@ -140,11 +140,14 @@ public class jLineConsole implements xConsole {
 
 
 
-	protected static PrintStream getOriginalOut() {
-		return xLog.getOriginalOut();
+	public static PrintStream getOriginalOut() {
+		return xVars.getOriginalOut();
 	}
-	protected static PrintStream getOriginalErr() {
-		return xLog.getOriginalErr();
+	public static PrintStream getOriginalErr() {
+		return xVars.getOriginalErr();
+	}
+	public static InputStream getOriginalIn() {
+		return xVars.getOriginalIn();
 	}
 
 
@@ -190,9 +193,8 @@ public class jLineConsole implements xConsole {
 				);
 			}
 		}
-		if (this.isStopping()) {
+		if (this.isStopping())
 			throw new RuntimeException("Console already stopped");
-		}
 		// input listener thread
 		if (this.thread == null) {
 			this.thread = new Thread(this);
@@ -202,9 +204,8 @@ public class jLineConsole implements xConsole {
 		this.thread = new Thread(this);
 		this.thread.setDaemon(true);
 		this.thread.start();
-		if (this.isStopping()) {
+		if (this.isStopping())
 			throw new RuntimeException("Console already stopped");
-		}
 	}
 	@Override
 	public void Stop() {
@@ -219,10 +220,10 @@ public class jLineConsole implements xConsole {
 		// restore original std out/err
 		synchronized(this.printLock){
 			// restore out
-			System.setOut(xVars.getOriginalOut());
+			System.setOut( xVars.getOriginalOut() );
 			xVars.setOriginalOut(null);
 			// restore err
-			System.setErr(xVars.getOriginalErr());
+			System.setErr( xVars.getOriginalErr() );
 			xVars.setOriginalErr(null);
 		}
 		// stop console input thread
@@ -318,6 +319,9 @@ public class jLineConsole implements xConsole {
 			AnsiConsole.systemUninstall();
 		} catch (Exception ignore) {}
 	}
+
+
+
 	@Override
 	public boolean isRunning() {
 		if (this.stopping)
@@ -334,20 +338,20 @@ public class jLineConsole implements xConsole {
 	// clear screen
 	@Override
 	public void clear() {
-		synchronized(printLock) {
+		synchronized(this.printLock) {
 			AnsiConsole.out.println(
 				Ansi.ansi()
 					.eraseScreen()
 					.cursor(0, 0)
 			);
-			flush();
+			this.flush();
 		}
 	}
 	@Override
 	public void clearLine() {
 		final PrintStream out = getOriginalOut();
 		final String prompt = this.getPrompt();
-		synchronized(printLock) {
+		synchronized(this.printLock) {
 			if (Utils.isEmpty(prompt)) {
 				out.print('\r');
 				this.flush();
@@ -373,11 +377,10 @@ public class jLineConsole implements xConsole {
 			this.flush();
 		}
 	}
-	// flush buffer
 	@Override
 	public void flush() {
 		try {
-			synchronized(printLock) {
+			synchronized(this.printLock) {
 				getOriginalOut()
 					.flush();
 			}
@@ -401,14 +404,14 @@ public class jLineConsole implements xConsole {
 						.append(str)
 						.toString()
 				);
-			// draw command prompt
+			// print command prompt
 			this.drawPrompt();
 		}
 	}
 
 
 
-	// command prompt
+	// command prompt string
 	@Override
 	public String getPrompt() {
 		final String prompt = this.prompt;
