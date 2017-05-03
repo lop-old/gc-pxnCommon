@@ -8,14 +8,9 @@
 	"Org-Name": "PoiXson",
 	"Deps": {
 		"jline": {
-			"GroupId": "org.jline",
+			"GroupId": "jline",
 			"ArtifactId": "jline",
-			"Version": "3.2.0"
-		},
-		"jansi": {
-			"GroupId": "org.fusesource.jansi",
-			"ArtifactId": "jansi",
-			"Version": "1.15"
+			"Version": "2.14.3"
 		},
 		"snakeyaml": {
 			"GroupId": "org.yaml",
