@@ -7,6 +7,7 @@ public class xNoConsole implements xConsole {
 
 	private static final Object printLock = new Object();
 
+	private volatile boolean running = false;
 
 
 	public xNoConsole() {
@@ -21,9 +22,11 @@ public class xNoConsole implements xConsole {
 	@Override
 	public void Start() {
 		log().finest("Start xNoConsole");
+		this.running = true;
 	}
 	@Override
 	public void Stop() {
+		this.running = false;
 	}
 
 
@@ -33,13 +36,20 @@ public class xNoConsole implements xConsole {
 	}
 	@Override
 	public boolean isRunning() {
-		return false;
+		return this.running;
+	}
+	@Override
+	public boolean isStopping() {
+		return ! this.running;
 	}
 
 
 
 	@Override
 	public void clear() {
+	}
+	@Override
+	public void clearLine() {
 	}
 	@Override
 	public void flush() {

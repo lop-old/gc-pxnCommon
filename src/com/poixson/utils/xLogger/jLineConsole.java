@@ -279,6 +279,7 @@ public class jlineConsole implements xConsole {
 			return false;
 		return this.running.get();
 	}
+	@Override
 	public boolean isStopping() {
 		return this.stopping;
 	}
@@ -297,6 +298,7 @@ public class jlineConsole implements xConsole {
 			flush();
 		}
 	}
+	@Override
 	public void clearLine() {
 		final PrintStream out = getOriginalOut();
 		final String prompt = this.getPrompt();
