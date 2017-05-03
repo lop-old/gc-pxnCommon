@@ -189,6 +189,25 @@ public final class Utils {
 
 
 	/**
+	 * Is Character empty.
+	 * @param Character
+	 * @return True if chr is null.
+	 */
+	public static boolean isEmpty(final Character chr) {
+		return (chr == null);
+	}
+	/**
+	 * is Character populated.
+	 * @param Character
+	 * @return True if chr contains a value.
+	 */
+	public static boolean notEmpty(final Character chr) {
+		return (chr != null);
+	}
+
+
+
+	/**
 	 * Is short array empty.
 	 * @param short[]
 	 * @return True if array is null or empty.
