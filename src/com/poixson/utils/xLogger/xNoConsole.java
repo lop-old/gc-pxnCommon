@@ -74,14 +74,14 @@ public class xNoConsole implements xConsole {
 
 
 	@Override
-	public void drawPrompt() {
+	public String getPrompt() {
+		return null;
 	}
 	@Override
 	public void setPrompt(final String prompt) {
 	}
 	@Override
-	public String getPrompt() {
-		return null;
+	public void drawPrompt() {
 	}
 
 

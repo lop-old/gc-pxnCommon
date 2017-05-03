@@ -362,7 +362,21 @@ public class jlineConsole implements xConsole {
 
 
 
-	// draw command prompt
+	// command prompt
+	@Override
+	public String getPrompt() {
+		final String prompt = this.prompt;
+		return (
+			Utils.isEmpty(prompt)
+			? DEFAULT_PROMPT
+			: prompt
+		);
+	}
+	@Override
+	public void setPrompt(final String prompt) {
+		this.prompt = prompt;
+		this.drawPrompt();
+	}
 	@Override
 	public void drawPrompt() {
 		final LineReader reader = getReader();
@@ -376,29 +390,15 @@ public class jlineConsole implements xConsole {
 			}
 		}
 	}
+
+
+
 	// render jAnsi
 	public static String renderAnsi(final String msg) {
 		return
 			Ansi.ansi()
 				.render(msg)
 				.toString();
-	}
-
-
-
-	@Override
-	public void setPrompt(final String prompt) {
-		this.prompt = prompt;
-		this.drawPrompt();
-	}
-	@Override
-	public String getPrompt() {
-		final String prompt = this.prompt;
-		return (
-			Utils.isEmpty(prompt)
-			? DEFAULT_PROMPT
-			: prompt
-		);
 	}
 
 
