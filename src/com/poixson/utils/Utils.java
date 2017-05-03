@@ -18,6 +18,11 @@ import com.poixson.utils.xThreadPool.xThreadPoolFactory;
 public final class Utils {
 	private Utils() {}
 
+	public enum jLineVersion {
+		version2x,
+		version3x
+	}
+	public static final jLineVersion JLINE_VERSION = jLineVersion.version2x;
 
 
 	private static AtomicBoolean inited = new AtomicBoolean(false);
@@ -369,8 +374,23 @@ public final class Utils {
 		return false;
 	}
 	public static boolean isJLineAvailable() {
-		return isLibAvailable("org.jline.reader.LineReader") &&
-				isLibAvailable("org.jline.terminal.Terminal");
+		switch (JLINE_VERSION) {
+		case version2x:
+			if (!isLibAvailable("org.jline.reader.LineReader"))
+				return false;
+			if (!isLibAvailable("org.jline.terminal.Terminal"))
+				return false;
+			return true;
+		case version3x:
+			if (!isLibAvailable("jline.console.ConsoleReader"))
+				return false;
+			if (!isLibAvailable("jline.Terminal"))
+				return false;
+			return true;
+		default:
+			break;
+		}
+		return false;
 	}
 	public static boolean isRxtxAvailable() {
 		return isLibAvailable("gnu.io.CommPortIdentifier");
