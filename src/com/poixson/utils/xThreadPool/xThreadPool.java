@@ -104,6 +104,43 @@ public class xThreadPool implements xStartable {
 
 
 
+	//TODO:
+//	// warning: checking pools of more than 1 thread can hurt performance.
+//	public boolean isPoolThread() {
+//		if (this.threadCount.get() == 0)
+//			return false;
+//		final Thread thread = Thread.currentThread();
+//		// main pool
+//		if (this.isMainPool())
+//			return thread.equals(mainPool);
+//		// check threads in this pool
+//		for (final Thread t : this.threads) {
+//			if (thread.equals(t))
+//				return true;
+//		}
+//		return false;
+//	}
+	public boolean forcePoolThread(final String className,
+			final String methodName, final Object...args) {
+		if (Utils.isEmpty(className))  throw new RequiredArgumentException("className");
+		if (Utils.isEmpty(methodName)) throw new RequiredArgumentException("methodName");
+		final Object targetClass;
+		try {
+			targetClass = Class.forName(className);
+		} catch (ClassNotFoundException e) {
+			throw new IllegalArgumentException("Invalid class: "+className, e);
+		}
+		if (targetClass == null)
+			throw new IllegalArgumentException("Invalid class: "+className);
+		return forcePoolThread(
+			targetClass,
+			methodName,
+			args
+		);
+	}
+
+
+
 	@Override
 	public void Start() {
 //TODO:
@@ -171,40 +208,6 @@ public class xThreadPool implements xStartable {
 
 
 
-//TODO:
-//	// warning: checking pools of more than 1 thread can hurt performance.
-//	public boolean isPoolThread() {
-//		if (this.threadCount.get() == 0)
-//			return false;
-//		final Thread thread = Thread.currentThread();
-//		// main pool
-//		if (this.isMainPool())
-//			return thread.equals(mainPool);
-//		// check threads in this pool
-//		for (final Thread t : this.threads) {
-//			if (thread.equals(t))
-//				return true;
-//		}
-//		return false;
-//	}
-	public boolean forcePoolThread(final String className,
-			final String methodName, final Object...args) {
-		if (Utils.isEmpty(className))  throw new RequiredArgumentException("className");
-		if (Utils.isEmpty(methodName)) throw new RequiredArgumentException("methodName");
-		final Object targetClass;
-		try {
-			targetClass = Class.forName(className);
-		} catch (ClassNotFoundException e) {
-			throw new IllegalArgumentException("Invalid class: "+className, e);
-		}
-		if (targetClass == null)
-			throw new IllegalArgumentException("Invalid class: "+className);
-		return forcePoolThread(
-			targetClass,
-			methodName,
-			args
-		);
-	}
 	public boolean forcePoolThread(final Object targetClass,
 			final String methodName, final Object...args) {
 		if (targetClass == null)       throw new RequiredArgumentException("targetClass");
