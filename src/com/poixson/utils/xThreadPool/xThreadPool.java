@@ -27,7 +27,6 @@ import com.poixson.utils.xLogger.xLog;
 
 
 public class xThreadPool implements xStartable {
-	private static final String LOG_NAME = "xThreadPool";
 	public static final boolean DETAILED_LOGGING = false;
 
 	// max threads
@@ -719,21 +718,22 @@ ThreadUtils.Sleep(1L);
 
 	// logger
 	private volatile SoftReference<xLog> _log = null;
+	private volatile String _className = null;
 	public xLog log() {
 		if (this._log != null) {
 			final xLog log = this._log.get();
-			if (log != null) {
+			if (log != null)
 				return log;
-			}
 		}
-		final xLog log = xLog.getRoot()
-			.get(
-				(new StringBuilder())
-					.append(LOG_NAME)
-					.append("|")
-					.append(this.poolName)
-					.toString()
-			);
+		if (this._className == null) {
+			this._className =
+				ReflectUtils.getClassName(
+					this.getClass()
+				);
+		}
+		final xLog log =
+			xLog.getRoot()
+				.get(this._className);
 		this._log = new SoftReference<xLog>(log);
 		return log;
 	}
