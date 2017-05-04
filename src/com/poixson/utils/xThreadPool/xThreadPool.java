@@ -105,6 +105,11 @@ public class xThreadPool implements xStartable {
 
 
 	//TODO:
+	// ------------------------------------------------------------------------------- //
+	// cast to task
+
+
+
 //	// warning: checking pools of more than 1 thread can hurt performance.
 //	public boolean isPoolThread() {
 //		if (this.threadCount.get() == 0)
@@ -207,6 +212,11 @@ public class xThreadPool implements xStartable {
 
 
 
+	// ------------------------------------------------------------------------------- //
+	// running and threads
+
+
+
 	@Override
 	public void Start() {
 //TODO:
@@ -250,6 +260,9 @@ public class xThreadPool implements xStartable {
 	public void Stop() {
 		this.stopping = true;
 	}
+
+
+
 	public boolean isStopping() {
 		return this.stopping;
 	}
@@ -526,6 +539,11 @@ return false;
 
 
 
+	// ------------------------------------------------------------------------------- //
+	// tasks
+
+
+
 	// run a task as soon as possible (generally less than 1ms)
 	public void runNow(final Runnable run) {
 		if (run == null) throw new RequiredArgumentException("run");
@@ -651,6 +669,11 @@ ThreadUtils.Sleep(1L);
 
 
 
+	// ------------------------------------------------------------------------------- //
+	// counts / stats
+
+
+
 	/**
 	 * Set the maximum number of threads for this pool.
 	 * @param size max number of threads allowed.
@@ -687,6 +710,10 @@ ThreadUtils.Sleep(1L);
 //	new xThreadPoolStats(this)
 //		.displayStats(xLevel.FINE);
 //}
+
+
+
+	// ------------------------------------------------------------------------------- //
 
 
 
