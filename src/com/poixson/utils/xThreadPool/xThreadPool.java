@@ -138,6 +138,72 @@ public class xThreadPool implements xStartable {
 			args
 		);
 	}
+	public boolean forcePoolThread(final Object targetClass,
+			final String methodName, final Object...args) {
+		if (targetClass == null)       throw new RequiredArgumentException("targetClass");
+		if (Utils.isEmpty(methodName)) throw new RequiredArgumentException("methodName");
+		final Method targetMethod =
+			ReflectUtils.getMethodByName(
+				targetClass,
+				methodName,
+				args
+			);
+		if (targetMethod == null)
+			throw new IllegalArgumentException("Invalid method name: "+methodName);
+		return forcePoolThread(
+			targetClass,
+			targetMethod,
+			args
+		);
+	}
+	public boolean forcePoolThread(final Object targetClass,
+			final Method targetMethod, final Object...args) {
+		if (targetClass == null)  throw new RequiredArgumentException("targetClass");
+		if (targetMethod == null) throw new RequiredArgumentException("targetMethod");
+//TODO:
+//		if (this.isPoolThread()) {
+//			return false;
+//		}
+		final String taskName =
+			(new StringBuilder())
+				.append("Force: ")
+				.append(targetClass.getClass().getName())
+				.append("->")
+				.append(targetMethod.getName())
+				.append("()")
+				.toString();
+
+		final xRunnable run = new xRunnable(taskName) {
+
+			private volatile Object targetClass  = null;
+			private volatile Method targetMethod = null;
+			private volatile Object[] args       = null;
+			public xRunnable init(final Object targetClass,
+					final Method targetMethod, final Object[] args) {
+				this.targetClass  = targetClass;
+				this.targetMethod = targetMethod;
+				this.args         = args;
+				return this;
+			}
+
+			@Override
+			public void run() {
+				ReflectUtils.InvokeMethod(
+					this.targetClass,
+					this.targetMethod,
+					this.args
+				);
+			}
+
+		}.init(
+			targetClass,
+			targetMethod,
+			args
+		);
+
+		this.runLater(run);
+		return true;
+	}
 
 
 
@@ -204,75 +270,6 @@ public class xThreadPool implements xStartable {
 	}
 	public boolean isMainPool() {
 		return this.isMainPool;
-	}
-
-
-
-	public boolean forcePoolThread(final Object targetClass,
-			final String methodName, final Object...args) {
-		if (targetClass == null)       throw new RequiredArgumentException("targetClass");
-		if (Utils.isEmpty(methodName)) throw new RequiredArgumentException("methodName");
-		final Method targetMethod =
-			ReflectUtils.getMethodByName(
-				targetClass,
-				methodName,
-				args
-			);
-		if (targetMethod == null)
-			throw new IllegalArgumentException("Invalid method name: "+methodName);
-		return forcePoolThread(
-			targetClass,
-			targetMethod,
-			args
-		);
-	}
-	public boolean forcePoolThread(final Object targetClass,
-			final Method targetMethod, final Object...args) {
-		if (targetClass == null)  throw new RequiredArgumentException("targetClass");
-		if (targetMethod == null) throw new RequiredArgumentException("targetMethod");
-//TODO:
-//		if (this.isPoolThread()) {
-//			return false;
-//		}
-		final String taskName =
-			(new StringBuilder())
-				.append("Force: ")
-				.append(targetClass.getClass().getName())
-				.append("->")
-				.append(targetMethod.getName())
-				.append("()")
-				.toString();
-
-		final xRunnable run = new xRunnable(taskName) {
-
-			private volatile Object targetClass  = null;
-			private volatile Method targetMethod = null;
-			private volatile Object[] args       = null;
-			public xRunnable init(final Object targetClass,
-					final Method targetMethod, final Object[] args) {
-				this.targetClass  = targetClass;
-				this.targetMethod = targetMethod;
-				this.args         = args;
-				return this;
-			}
-
-			@Override
-			public void run() {
-				ReflectUtils.InvokeMethod(
-					this.targetClass,
-					this.targetMethod,
-					this.args
-				);
-			}
-
-		}.init(
-			targetClass,
-			targetMethod,
-			args
-		);
-
-		this.runLater(run);
-		return true;
 	}
 
 
