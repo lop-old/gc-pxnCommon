@@ -29,12 +29,10 @@ import com.poixson.utils.xLogger.xLog;
 public class xThreadPool implements xStartable {
 	public static final boolean DETAILED_LOGGING = false;
 
-	// max threads
-	public static final int  POOL_LIMIT         = 20;
-	public static final int  GLOBAL_LIMIT       = 50;
+	protected static final int POOL_SIZE_LIMIT        = 20;
+	protected static final int GLOBAL_POOL_SIZE_LIMIT = 50;
 	public static final long THREAD_LIMIT_SLEEP = 10L;
 	public static final long POSTSTART_SLEEP    = 50L;
-	public static final int  QUEUE_SIZE         = 10;
 
 	// main thread pool
 	public static final String MAIN_POOL_NAME = "main";
@@ -51,9 +49,10 @@ public class xThreadPool implements xStartable {
 //	protected final Object runNowWaiter = new Object();
 
 	// pool state
-	protected final xThreadPoolStats stats;
 	protected final AtomicBoolean running  = new AtomicBoolean(false);
 	protected volatile boolean    stopping = false;
+
+	// counts/stats
 	protected final AtomicInteger threadCount = new AtomicInteger(0);
 	protected final AtomicInteger active      = new AtomicInteger(0);
 	protected final AtomicInteger runCount    = new AtomicInteger(0);
@@ -79,18 +78,11 @@ public class xThreadPool implements xStartable {
 	protected xThreadPool(final String poolName, final int poolSize) {
 		if (Utils.isEmpty(poolName)) throw new RequiredArgumentException("poolName");
 		if (poolSize < 1)            throw new IllegalArgumentException("Invalid pool size: "+Integer.toString(poolSize));
-		this.poolSize =
-			NumberUtils.MinMax(
-				poolSize,
-				1,
-				POOL_LIMIT
-			);
 		this.isMainPool = MAIN_POOL_NAME.equals(poolName);
 		if (this.isMainPool) {
 			// just to prevent gc
 			Keeper.add(this);
 		}
-		this.stats = new xThreadPoolStats(this);
 		this.poolName = poolName;
 		this.group = new ThreadGroup(poolName);
 		this.threadFactory = new xThreadFactory(
@@ -99,6 +91,19 @@ public class xThreadPool implements xStartable {
 			false,         // daemon
 			this.priority  // thread priority
 		);
+		// pool size
+//TODO:
+final int globalSize = 1000;
+		this.poolSize =
+			NumberUtils.MinMax(
+				poolSize,
+				1,
+				globalSize
+			);
+		// queue size
+//TODO:
+final int queueSize = 100;
+		this.queue = new ArrayBlockingQueue<xRunnable>(queueSize, true);
 	}
 
 
@@ -311,16 +316,14 @@ public class xThreadPool implements xStartable {
 //			if (DETAILED_LOGGING) {
 //				this.displayStats();
 //			}
-
-			final xThreadPoolStats stats = this.getStats();
-			final int currentThreads  = stats.getCurrentThreadCount();
-			final int inactiveThreads = stats.getInactiveThreadCount();
-			final int maxThreads      = stats.getMaxThreads();
 			// use existing inactive thread
+			final int inactiveThreads = this.getInactiveThreadCount();
 			if (inactiveThreads > 0) {
 				return Boolean.FALSE;
 			}
 			// check max threads (this pool)
+			final int currentThreads  = this.getCurrentThreadCount();
+			final int maxThreads      = this.getMaxThreadCount();
 			if (currentThreads >= maxThreads) {
 				if (maxThreads > 1) {
 					if (this.coolMaxReached.runAgain() || DETAILED_LOGGING) {
@@ -337,8 +340,8 @@ public class xThreadPool implements xStartable {
 				return null;
 			}
 			// check max threads (global)
-			final int globalThreads    = xThreadPoolStats.getGlobalThreadCount();
-			final int globalMaxThreads = xThreadPoolStats.getGlobalMaxThreads();
+			final int globalThreads    = getGlobalThreadCount();
+			final int globalMaxThreads = getGlobalMaxThreads();
 			if (globalThreads >= globalMaxThreads) {
 				if (this.coolMaxReached.runAgain() || DETAILED_LOGGING) {
 					this.log().warning(
@@ -673,42 +676,135 @@ ThreadUtils.Sleep(1L);
 
 
 
-	/**
-	 * Set the maximum number of threads for this pool.
-	 * @param size max number of threads allowed.
-	 */
 //TODO:
-//	public void setMaxThreads(final int size) {
-//		if (size < 1) throw new IllegalArgumentException("Invalid pool size: "+Integer.toString(size));
-//		if (size > POOL_LIMIT)
-//			this.poolSize = POOL_LIMIT;
-//		else
-//			this.poolSize = size;
+//	public void displayStats(final xLevel level) {
+//		this.pool.log()
+//			.publish(
+//				level,
+//				(new StringBuilder())
+//					.append("Queued: [")
+//						.append(this.getQueueCount())
+//						.append("]  ")
+//					.append("Threads: ")
+//						.append(this.getCurrentThreadCount())
+//						.append(" [")
+//						.append(this.getMaxThreads())
+//						.append("]  ")
+//					.append("Active/Free: ")
+//						.append(this.getActiveThreadCount())
+//						.append("/")
+//						.append(this.getInactiveThreadCount())
+//						.append("  ")
+//					.append("Global: ")
+//						.append(getGlobalThreadCount())
+//						.append(" [")
+//						.append(getGlobalMaxThreads())
+//						.append("]")
+//						.toString()
+//			);
 //	}
 
 
 
 	/**
-	 * Returns true if pool is not currently in use and queue is empty.
-	 * @return true if inactive and empty.
+	 * Is task queue empty.
+	 * @return true if task queue is empty.
 	 */
 	public boolean isEmpty() {
-		return (
-			this.queue.size() == 0 &&
-			this.active.get() == 0
-		);
+		return (this.getQueueCount() <= 0);
+	}
+	/**
+	 * Is thread pool busy.
+	 * @return true if pool contains active threads.
+	 */
+	public boolean isActive() {
+		return (this.getActiveThreadCount() > 0);
 	}
 
 
 
-	public xThreadPoolStats getStats() {
-		return this.stats;
+	// thread count
+
+
+
+	public int getCurrentThreadCount() {
+		return this.threadCount.get();
 	}
+	public int getActiveThreadCount() {
+		return this.active.get();
+	}
+	public int getInactiveThreadCount() {
+		final int count = this.getCurrentThreadCount() - this.getActiveThreadCount();
+		return
+			NumberUtils.MinMax(
+				count,
+				0,
+				this.getMaxThreadCount()
+			);
+	}
+	public int getThreadCount() {
+		return this.threadCount.get();
+	}
+	public int getThreadsFree() {
+		final int count = this.getMaxThreadCount() - this.getCurrentThreadCount();
+		return count;
+	}
+
+
+
+	public int getMaxThreadCount() {
+		return this.poolSize;
+	}
+	/**
+	 * Set the maximum number of threads for this pool.
+	 * @param size max number of threads allowed.
+	 */
+	//TODO:
+	public void setMaxThreads(final int size) {
+		this.poolSize =
+			NumberUtils.MinMax(
+				size,
+				0,
+				POOL_SIZE_LIMIT
+			);
+	}
+
+
+
+	// queue size
+
+
+
+	public int getQueueCount() {
+		return this.queue.size();
+	}
+	public int getMaxQueueSize() {
 //TODO:
-//	public void displayStats() {
-//	new xThreadPoolStats(this)
-//		.displayStats(xLevel.FINE);
-//}
+return 1000;
+	}
+
+
+
+	// global counts
+
+
+
+	public static int getGlobalThreadCount() {
+		if (xThreadPoolFactory.pools.isEmpty())
+			return 0;
+		int count = 0;
+		final Iterator<xThreadPool> it =
+			xThreadPoolFactory.pools
+				.values().iterator();
+		while (it.hasNext()) {
+			count += it.next()
+					.getCurrentThreadCount();
+		}
+		return count;
+	}
+	public static int getGlobalMaxThreads() {
+		return xThreadPool.GLOBAL_POOL_SIZE_LIMIT;
+	}
 
 
 
