@@ -228,17 +228,24 @@ public class xLog extends xLogPrinting {
 	// is level loggable
 	@Override
 	public boolean isLoggable(final xLevel lvl) {
-		if (lvl == null || this.level == null) {
+		if (lvl == null)
 			return true;
-		}
 		// forced debug mode
 		if (xVars.debug()) {
 			return true;
 		}
-		// local logger level
-		if (this.level.isLoggable(lvl)) {
-			return true;
+		// local level
+		final xLevel thisLevel;
+		{
+			final xLevel thisLvl = this.level;
+			thisLevel = (
+				thisLvl == null
+				? DEFAULT_LEVEL
+				: thisLvl
+			);
 		}
+		if (thisLevel.isLoggable(lvl))
+			return true;
 		return false;
 	}
 
