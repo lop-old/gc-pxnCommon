@@ -12,12 +12,12 @@ public final class SanUtils {
 
 
 
-	public static String AlphaNumOnly(final String text) {
+	public static String AlphaNum(final String text) {
 		if (text == null)   return null;
 		if (text.isEmpty()) return "";
 		return text.replaceAll("[^a-zA-Z0-9]+", "");
 	}
-	public static String AlphaNumSafe(final String text) {
+	public static String AlphaNumUnderscore(final String text) {
 		if (text == null)   return null;
 		if (text.isEmpty()) return "";
 		return text.replaceAll("[^a-zA-Z0-9\\-\\_\\.]+", "");

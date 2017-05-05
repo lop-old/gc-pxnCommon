@@ -18,7 +18,7 @@ public class FieldDAO {
 	public FieldDAO(final String fieldType, final String fieldName,
 			final String size, final String def, final boolean nullable) {
 		this.type = fieldType;
-		this.fieldName = SanUtils.AlphaNumSafe(fieldName);
+		this.fieldName = SanUtils.AlphaNumUnderscore(fieldName);
 		this.size = size;
 		this.def  = def;
 		this.nullable = nullable;

@@ -20,7 +20,7 @@ public class TableDAO {
 
 	// table dao
 	public TableDAO(final String tableName) {
-		this.tableName = SanUtils.AlphaNumSafe(tableName);
+		this.tableName = SanUtils.AlphaNumUnderscore(tableName);
 	}
 
 

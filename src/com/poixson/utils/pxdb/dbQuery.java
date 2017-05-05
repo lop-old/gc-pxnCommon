@@ -250,7 +250,7 @@ public class dbQuery {
 
 	// san string for sql
 	public static String san(final String text) {
-		return SanUtils.AlphaNumSafe(text);
+		return SanUtils.AlphaNumUnderscore(text);
 	}
 
 
