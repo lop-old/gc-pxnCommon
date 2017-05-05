@@ -3,6 +3,7 @@ package com.poixson.utils;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.lang.ref.SoftReference;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.channels.OverlappingFileLockException;
@@ -15,7 +16,6 @@ import com.poixson.utils.xLogger.xLog;
 
 
 public class LockFile {
-	private static final String LOG_NAME = "LOCKFILE";
 
 	private static final Map<String, LockFile> instances = new HashMap<String, LockFile>();
 	private static final Object instanceLock = new Object();
@@ -120,9 +120,25 @@ public class LockFile {
 
 
 	// logger
-	public static xLog log() {
-		return xLog.getRoot()
-				.get(LOG_NAME);
+	private volatile SoftReference<xLog> _log = null;
+	private volatile String _className = null;
+	public xLog log() {
+		if (this._log != null) {
+			final xLog log = this._log.get();
+			if (log != null)
+				return log;
+		}
+		if (this._className == null) {
+			this._className =
+				ReflectUtils.getClassName(
+					this.getClass()
+				);
+		}
+		final xLog log =
+			xLog.getRoot()
+				.get(this._className);
+		this._log = new SoftReference<xLog>(log);
+		return log;
 	}
 
 
