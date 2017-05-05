@@ -231,9 +231,9 @@ public abstract class xApp implements xStartable {
 						dao.invoke();
 						hasInvoked = true;
 					} catch (ReflectiveOperationException e) {
-						Failure.fail("Failed to invoke startup step!", e);
+						Failure.fail("Failed to invoke startup step: "+dao.title, e);
 					} catch (RuntimeException e) {
-						Failure.fail("Failed to invoke startup step!", e);
+						Failure.fail("Failed to invoke startup step: "+dao.title, e);
 					}
 				}
 				// finished step
@@ -318,9 +318,9 @@ public abstract class xApp implements xStartable {
 						dao.invoke();
 						hasInvoked = true;
 					} catch (ReflectiveOperationException e) {
-						Failure.fail("Failed to invoke shutdown step!", e);
+						Failure.fail("Failed to invoke shutdown step: "+dao.title, e);
 					} catch (RuntimeException e) {
-						Failure.fail("Failed to invoke shutdown step!", e);
+						Failure.fail("Failed to invoke shutdown step: "+dao.title, e);
 					}
 				}
 				// finished step
@@ -626,6 +626,8 @@ return "<uptime>";
 //		} else {
 //			log.finest("xScheduler has been unloaded");
 //		}
+		xVars.getOriginalOut()
+			.println();
 	}
 
 
