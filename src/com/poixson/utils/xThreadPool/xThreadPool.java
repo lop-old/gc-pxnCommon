@@ -23,7 +23,7 @@ import com.poixson.utils.xLogger.xLog;
 
 
 public class xThreadPool implements xStartable {
-	public static final boolean DETAILED_LOGGING = false;
+	protected static final boolean DETAILED_LOGGING = false;
 
 	protected static final xTime THREAD_LOOP_TIME        = xTime.get("1s");
 	protected static final xTime INACTIVE_THREAD_TIMEOUT = xTime.get("10s");
@@ -32,15 +32,15 @@ public class xThreadPool implements xStartable {
 
 	// main thread pool
 	public static final String MAIN_POOL_NAME = "main";
-	protected final boolean isMainPool;
+	private final boolean isMainPool;
 
-	// named thread pool
-	protected final String poolName;
-	protected volatile int poolSize;
+	// named pool
+	private final String poolName;
+	private volatile int poolSize;
 
 	// pool state
-	protected final AtomicBoolean running  = new AtomicBoolean(false);
-	protected volatile boolean    stopping = false;
+	private final AtomicBoolean running  = new AtomicBoolean(false);
+	private volatile boolean    stopping = false;
 
 	// counts/stats
 	protected final AtomicInteger workerCount = new AtomicInteger(0);
@@ -57,9 +57,9 @@ public class xThreadPool implements xStartable {
 	private final LinkedBlockingQueue<xThreadPoolTask> queueNorm;
 	private final ConcurrentLinkedQueue<xThreadPoolTask> queueHigh;
 	private final ConcurrentLinkedQueue<xThreadPoolTask> queueLow;
-	// warning cool-down
-	protected CoolDown coolMaxReached = CoolDown.get("5s");
 
+	// warning cool-down
+	private CoolDown coolMaxReached       = CoolDown.get("5s");
 	private CoolDown coolGlobalMaxReached = CoolDown.get("5s");
 
 
@@ -79,114 +79,24 @@ public class xThreadPool implements xStartable {
 				),
 				GLOBAL_POOL_SIZE_LIMIT
 			);
-	}
-
-
-
-	//TODO:
-	// ------------------------------------------------------------------------------- //
-	// cast to task
-
-
-
-//	// warning: checking pools of more than 1 thread can hurt performance.
-//	public boolean isPoolThread() {
-//		if (this.threadCount.get() == 0)
-//			return false;
-//		final Thread thread = Thread.currentThread();
-//		// main pool
-//		if (this.isMainPool())
-//			return thread.equals(mainPool);
-//		// check threads in this pool
-//		for (final Thread t : this.threads) {
-//			if (thread.equals(t))
-//				return true;
-//		}
-//		return false;
-//	}
-	public boolean forcePoolThread(final String className,
-			final String methodName, final Object...args) {
-		if (Utils.isEmpty(className))  throw new RequiredArgumentException("className");
-		if (Utils.isEmpty(methodName)) throw new RequiredArgumentException("methodName");
-		final Object targetClass;
-		try {
-			targetClass = Class.forName(className);
-		} catch (ClassNotFoundException e) {
-			throw new IllegalArgumentException("Invalid class: "+className, e);
+		this.group = new ThreadGroup(poolName);
+		// queues
+		this.queueNorm = new LinkedBlockingQueue<xThreadPoolTask>();
+		this.queueHigh = new ConcurrentLinkedQueue<xThreadPoolTask>();
+		this.queueLow  = new ConcurrentLinkedQueue<xThreadPoolTask>();
+		// just to prevent gc
+		if (this.isMainPool) {
+			Keeper.add(this);
 		}
-		if (targetClass == null)
-			throw new IllegalArgumentException("Invalid class: "+className);
-		return forcePoolThread(
-			targetClass,
-			methodName,
-			args
-		);
 	}
-	public boolean forcePoolThread(final Object targetClass,
-			final String methodName, final Object...args) {
-		if (targetClass == null)       throw new RequiredArgumentException("targetClass");
-		if (Utils.isEmpty(methodName)) throw new RequiredArgumentException("methodName");
-		final Method targetMethod =
-			ReflectUtils.getMethodByName(
-				targetClass,
-				methodName,
-				args
-			);
-		if (targetMethod == null)
-			throw new IllegalArgumentException("Invalid method name: "+methodName);
-		return forcePoolThread(
-			targetClass,
-			targetMethod,
-			args
-		);
+
+
+
+	public String getName() {
+		return this.poolName;
 	}
-	public boolean forcePoolThread(final Object targetClass,
-			final Method targetMethod, final Object...args) {
-		if (targetClass == null)  throw new RequiredArgumentException("targetClass");
-		if (targetMethod == null) throw new RequiredArgumentException("targetMethod");
-//TODO:
-//		if (this.isPoolThread()) {
-//			return false;
-//		}
-		final String taskName =
-			(new StringBuilder())
-				.append("Force: ")
-				.append(targetClass.getClass().getName())
-				.append("->")
-				.append(targetMethod.getName())
-				.append("()")
-				.toString();
-
-		final xRunnable run = new xRunnable(taskName) {
-
-			private volatile Object targetClass  = null;
-			private volatile Method targetMethod = null;
-			private volatile Object[] args       = null;
-			public xRunnable init(final Object targetClass,
-					final Method targetMethod, final Object[] args) {
-				this.targetClass  = targetClass;
-				this.targetMethod = targetMethod;
-				this.args         = args;
-				return this;
-			}
-
-			@Override
-			public void run() {
-				ReflectUtils.InvokeMethod(
-					this.targetClass,
-					this.targetMethod,
-					this.args
-				);
-			}
-
-		}.init(
-			targetClass,
-			targetMethod,
-			args
-		);
-
-		this.runLater(run);
-		return true;
+	public boolean isMainPool() {
+		return this.isMainPool;
 	}
 
 
@@ -198,24 +108,9 @@ public class xThreadPool implements xStartable {
 
 	@Override
 	public void Start() {
-//TODO:
-//		if (this.isMainPool()) {
-//			if (mainThread == null) {
-//				new Thread() {
-//					@Override
-//					public void run() {
-//						getMainPool().run();
-//					}
-//				}.start();
-//				this.log().fine("Started main thread internally..");
-//				utilsThread.Sleep(10L);
-//			}
-//			return;
-//		}
-		if (!this.running.compareAndSet(false, true)) {
+		if (!this.running.compareAndSet(false, true))
 			return;
-		}
-		// initial task
+		// initial task (creates the first thread)
 		this.runLater(
 			new xRunnable("xThreadPool-Startup") {
 				private volatile xLog log = null;
@@ -245,36 +140,6 @@ public class xThreadPool implements xStartable {
 
 
 
-	public boolean isStopping() {
-		return this.stopping;
-	}
-	@Override
-	public boolean isRunning() {
-		if (this.isStopping())
-			return false;
-		return this.running.get();
-	}
-	public boolean isActive() {
-		return ! this.threads.isEmpty();
-	}
-
-
-
-	public String getName() {
-		return this.poolName;
-	}
-	public boolean isMainPool() {
-		return this.isMainPool;
-	}
-
-
-
-	protected void checkTaskTimeouts(final long currentTime) {
-//TODO:
-	}
-
-
-
 	/**
 	 * Create a new thread if needed, skip if queue is empty.
 	 * @return true if new thread has been created,
@@ -288,7 +153,7 @@ public class xThreadPool implements xStartable {
 			}
 			return null;
 		}
-		// thread count limits
+		// check worker thread limits
 		{
 //TODO:
 //			if (DETAILED_LOGGING) {
@@ -320,7 +185,7 @@ public class xThreadPool implements xStartable {
 			final int globalThreads    = getGlobalThreadCount();
 			final int globalMaxThreads = getGlobalMaxThreads();
 			if (globalThreads >= globalMaxThreads) {
-				if (this.coolMaxReached.runAgain() || DETAILED_LOGGING) {
+				if (this.coolGlobalMaxReached.runAgain() || DETAILED_LOGGING) {
 					this.log().warning(
 						(new StringBuilder())
 							.append("Global max threads limit [ ")
@@ -332,11 +197,11 @@ public class xThreadPool implements xStartable {
 				return null;
 			}
 			// increment and final check
-			{
-				final int count = this.threadCount.incrementAndGet();
-				if (count > maxThreads) {
-					this.threadCount.decrementAndGet();
-					if (maxThreads > 1) {
+			final int count = this.workerCount.incrementAndGet();
+			if (count > maxThreads) {
+				this.workerCount.decrementAndGet();
+				if (maxThreads > 1) {
+					if (this.coolMaxReached.runAgain() || DETAILED_LOGGING) {
 						this.log().warning(
 							(new StringBuilder())
 								.append("Max threads limit [ ")
@@ -349,7 +214,7 @@ public class xThreadPool implements xStartable {
 				return null;
 			}
 		}
-		// start new thread
+		// start new worker thread
 		{
 			final xThreadPoolWorker worker =
 				new xThreadPoolWorker(this);
@@ -357,6 +222,7 @@ public class xThreadPool implements xStartable {
 				.add(worker);
 			worker.start();
 		}
+		// ok to create a new worker thread
 		return Boolean.TRUE;
 	}
 
@@ -426,33 +292,19 @@ public class xThreadPool implements xStartable {
 
 
 //TODO:
-//		if (this.runNow.get() != null) {
-//			this.active.incrementAndGet();
-//			final xRunnable task = this.runNow.get();
-//			if (task != null) {
-//				final int runIndex = this.runCount.incrementAndGet();
-//				currentThread.setName(
-//						(new StringBuilder())
-//						.append("run:").append(runIndex).append(" ")
-//						.append("name:").append(threadName).append(" ")
-//						.append("task:").append(task.getTaskName())
-//						.toString()
-//				);
-//				try {
-//					task.run();
-//				} catch (Exception e) {
-//					log.trace(e);
-//				}
-//				currentThread.setName(threadName);
-//				this.runNow.set(null);
-//			}
-//			synchronized(this.runNowWaiter) {
-//				this.runNowWaiter.notifyAll();
-//			}
-//			this.active.decrementAndGet();
-//			inactive.resetRun();
-//			continue;
-//		}
+	protected void checkTaskTimeouts(final long currentTime) {
+	}
+
+
+
+	@Override
+	public boolean isRunning() {
+		if (this.isStopping())
+			return false;
+		return this.running.get();
+	}
+	public boolean isStopping() {
+		return this.stopping;
 	}
 
 
@@ -462,7 +314,7 @@ public class xThreadPool implements xStartable {
 
 
 
-	// run a task as soon as possible (generally less than 1ms)
+	// run a task as soon as possible
 	public void runNow(final Runnable run) {
 		if (run == null) throw new RequiredArgumentException("run");
 		// run in main thread pool
@@ -486,90 +338,9 @@ public class xThreadPool implements xStartable {
 		// wait for task to finish
 		task.await();
 	}
-/*
-//TODO: if already in main thread, just run and return
 
-		// queue to run next
-//TODO:
-		while (true) {
-			if (this.runTaskNow.compareAndSet(null, task)) {
-				break;
-			}
-//TODO:
-//			try {
-//				synchronized(this.runNowWaiter) {
-//					this.runNowWaiter.wait(ThreadSleepTime.getMS());
-//				}
-//			} catch (InterruptedException e) {
-//				this.log().trace(e);
-//				return;
-//			}
-ThreadUtils.Sleep(1L);
-		}
 
-		// be sure there's a thread
-//TODO:
-//		this.newThread();
 
-//TODO:
-		// make sure there's a thread
-		if (this.isMainPool()) {
-			if (this.getActiveCount() < 1) {
-				try {
-					mainThread.interrupt();
-				} catch (Exception ignore) {}
-			}
-		} else {
-			this.newThread();
-			if (this.getActiveCount() < 1) {
-				try {
-					final Iterator<Thread> it = this.threads.iterator();
-					it.hasNext();
-					it.next().interrupt();
-				} catch (Exception ignore) {}
-			}
-		}
-		// wait until task finishes
-		try {
-			synchronized(this.runNowWaiter) {
-				this.runNowWaiter.wait(MaxTaskTime.getMS());
-			}
-		} catch (InterruptedException e) {
-			this.log().trace(e);
-		}
-
-		// already in main thread, run task
-		{
-			final Thread currentThread = Thread.currentThread();
-			final String threadName = currentThread.getName();
-			final int runIndex = this.runCount.incrementAndGet();
-			this.active.incrementAndGet();
-			currentThread.setName(
-				(new StringBuilder())
-					.append(runIndex)
-					.append(":")
-					.append(threadName)
-					.append(":")
-					.append(task.getTaskName())
-					.toString()
-			);
-			try {
-				task.run();
-			} catch (Exception e) {
-				this.log().getWeak(threadName)
-					.trace(e);
-			}
-			// restore thread name
-			currentThread.setName(
-				(new StringBuilder())
-					.append(threadName)
-					.append(":")
-					.append(task.getTaskName())
-					.toString()
-			);
-			this.active.decrementAndGet();
-		}
-*/
 	// queue a task
 	public void runLater(final Runnable run) {
 		if (run == null) throw new RequiredArgumentException("run");
@@ -609,7 +380,11 @@ ThreadUtils.Sleep(1L);
 				.trace(e);
 			return;
 		}
-		newThread();
+		if (DETAILED_LOGGING) {
+			this.log().finest("Task queued: "+task.getTaskName());
+		}
+		// make sure there's a thread
+		this.newThread();
 	}
 
 
@@ -650,8 +425,8 @@ ThreadUtils.Sleep(1L);
 
 
 	/**
-	 * Is task queue empty.
-	 * @return true if task queue is empty.
+	 * Are task queues empty.
+	 * @return true if all task queues are empty.
 	 */
 	public boolean isEmpty() {
 		if (!this.queueLow.isEmpty())
