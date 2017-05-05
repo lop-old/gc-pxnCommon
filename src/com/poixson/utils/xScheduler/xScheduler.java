@@ -8,6 +8,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.poixson.utils.Keeper;
+import com.poixson.utils.NumberUtils;
 import com.poixson.utils.ThreadUtils;
 import com.poixson.utils.Utils;
 import com.poixson.utils.xStartable;
@@ -102,10 +103,11 @@ public class xScheduler implements xStartable {
 		if (!this.running.compareAndSet(false, true))
 			return;
 		this.log().fine("Starting sched manager..");
+		final long threadSleep = this.threadSleepTime.getMS();
 		while (true) {
 			if (this.stopping || !this.isRunning())
 				break;
-			long sleep = this.threadSleepTime.getMS();
+			long sleep = threadSleep;
 			// check task triggers
 			final Iterator<xSchedulerTask> it = this.tasks.iterator();
 			while (it.hasNext()) {
@@ -124,17 +126,19 @@ public class xScheduler implements xStartable {
 			}
 			// calculate sleep
 			if (sleep > 0) {
-				final long sleepLess =
-					(long) Math.floor(
-						((double) sleep) * 0.95
-					);
+				final long sleepLess = (
+					sleep < threadSleep
+					? (long) Math.floor( ((double) sleep) * 0.95 )
+					: threadSleep
+				);
 				if (sleepLess > 0) {
 					if (DETAILED_LOGGING) {
+						final double sleepLessSec = ((double)sleepLess) / 1000.0;
 						log().finest(
 							(new StringBuilder())
 								.append("Sleeping: ")
-								.append(sleepLess)
-								.append(" ..")
+								.append(NumberUtils.FormatDecimal("#.###", sleepLessSec))
+								.append("s ..")
 								.toString()
 						);
 					}
