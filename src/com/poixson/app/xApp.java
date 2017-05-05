@@ -535,7 +535,8 @@ return "<uptime>";
 	@xAppStep(type=StepType.STARTUP, title="LockFile", priority=90)
 	public void __STARTUP_lockfile() {
 		final String filename = this.getName()+".lock";
-		if (LockFile.get(filename) == null) {
+		final LockFile lock = LockFile.get(filename);
+		if (!lock.acquire()) {
 			Failure.fail("Failed to get lock on file: "+filename);
 		}
 	}
@@ -606,12 +607,8 @@ return "<uptime>";
 	// release lock file
 	@xAppStep(type=StepType.SHUTDOWN, title="LockFile", priority=20)
 	public void __SHUTDOWN_lockfile() {
-//TODO:
-//		final String filename = this.getName()+".lock";
-//		final LockFile lock = LockFile.peak(filename);
-//		if (lock != null) {
-//			lock.release();
-//		}
+		final String filename = this.getName()+".lock";
+		LockFile.getRelease(filename);
 	}
 
 
