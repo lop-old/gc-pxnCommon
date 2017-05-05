@@ -101,6 +101,10 @@ public abstract class xLogPrinting {
 
 
 
+	// detail
+	public void detail(final String msg) {
+		this.publish(xLevel.DETAIL, msg);
+	}
 	// finest
 	public void finest(final String msg) {
 		this.publish(xLevel.FINEST, msg);

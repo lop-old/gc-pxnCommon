@@ -28,6 +28,7 @@ public class xLevel implements Serializable {
 	public static final transient xLevel FINE    = new xLevel("FINE",    500);
 	public static final transient xLevel FINER   = new xLevel("FINER",   400);
 	public static final transient xLevel FINEST  = new xLevel("FINEST",  300);
+	public static final transient xLevel DETAIL  = new xLevel("DETAIL",  100);
 	public static final transient xLevel ALL     = new xLevel("ALL",     Integer.MIN_VALUE);
 
 	public final String name;
