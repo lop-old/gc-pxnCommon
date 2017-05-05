@@ -170,13 +170,7 @@ public class xThreadPool implements xStartable {
 			if (currentThreads >= maxThreads) {
 				if (maxThreads > 1) {
 					if (this.coolMaxReached.runAgain() || DETAILED_LOGGING) {
-						this.log().warning(
-							(new StringBuilder())
-								.append("Max threads limit [ ")
-								.append(maxThreads)
-								.append(" ] reached!")
-								.toString()
-						);
+						this.msgLimitReached(false);
 					}
 				}
 				return null;
@@ -186,13 +180,7 @@ public class xThreadPool implements xStartable {
 			final int globalMaxThreads = getGlobalMaxThreads();
 			if (globalThreads >= globalMaxThreads) {
 				if (this.coolGlobalMaxReached.runAgain() || DETAILED_LOGGING) {
-					this.log().warning(
-						(new StringBuilder())
-							.append("Global max threads limit [ ")
-							.append(globalMaxThreads)
-							.append(" ] reached!")
-							.toString()
-					);
+					this.msgLimitReached(true);
 				}
 				return null;
 			}
@@ -202,13 +190,7 @@ public class xThreadPool implements xStartable {
 				this.workerCount.decrementAndGet();
 				if (maxThreads > 1) {
 					if (this.coolMaxReached.runAgain() || DETAILED_LOGGING) {
-						this.log().warning(
-							(new StringBuilder())
-								.append("Max threads limit [ ")
-								.append(maxThreads)
-								.append(" ] reached!")
-								.toString()
-						);
+						this.msgLimitReached(false);
 					}
 				}
 				return null;
@@ -224,6 +206,24 @@ public class xThreadPool implements xStartable {
 		}
 		// ok to create a new worker thread
 		return Boolean.TRUE;
+	}
+	protected void msgLimitReached(final boolean isGlobal) {
+		final int maxThreads =
+			isGlobal
+			? getGlobalMaxThreads()
+			: this.getMaxThreadCount();
+		this.log().warning(
+			(new StringBuilder())
+				.append(
+					isGlobal
+					? "Global max"
+					: "Max"
+				)
+				.append(" threads limit [ ")
+				.append(maxThreads)
+				.append(" ] reached!")
+				.toString()
+		);
 	}
 
 
