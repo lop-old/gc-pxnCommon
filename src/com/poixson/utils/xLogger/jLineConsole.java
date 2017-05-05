@@ -262,12 +262,13 @@ public class jLineConsole implements xConsole {
 				break;
 			if (thread.isInterrupted())
 				break;
-			out.print('\r');
 			String line = null;
 			try {
 				final ConsoleReader readr = getReader();
 				if (readr == null)
 					break;
+				out.print('\r');
+				readr.flush();
 				line = readr.readLine(
 					this.getPrompt(),
 					this.getMask()
