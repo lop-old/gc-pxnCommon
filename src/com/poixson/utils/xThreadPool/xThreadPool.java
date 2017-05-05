@@ -1,15 +1,12 @@
 package com.poixson.utils.xThreadPool;
 
 import java.lang.ref.SoftReference;
-import java.lang.reflect.Method;
 import java.util.Iterator;
-import java.util.Set;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 import com.poixson.utils.CoolDown;
 import com.poixson.utils.Keeper;
@@ -19,7 +16,6 @@ import com.poixson.utils.ThreadUtils;
 import com.poixson.utils.Utils;
 import com.poixson.utils.xRunnable;
 import com.poixson.utils.xStartable;
-import com.poixson.utils.xThreadFactory;
 import com.poixson.utils.xTime;
 import com.poixson.utils.xTimeU;
 import com.poixson.utils.exceptions.RequiredArgumentException;
@@ -29,10 +25,10 @@ import com.poixson.utils.xLogger.xLog;
 public class xThreadPool implements xStartable {
 	public static final boolean DETAILED_LOGGING = false;
 
-	protected static final int POOL_SIZE_LIMIT        = 20;
+	protected static final xTime THREAD_LOOP_TIME        = xTime.get("1s");
+	protected static final xTime INACTIVE_THREAD_TIMEOUT = xTime.get("10s");
 	protected static final int GLOBAL_POOL_SIZE_LIMIT = 50;
-	public static final long THREAD_LIMIT_SLEEP = 10L;
-	public static final long POSTSTART_SLEEP    = 50L;
+	protected static final int MAX_QUEUE_SIZE = 1000;
 
 	// main thread pool
 	public static final String MAIN_POOL_NAME = "main";
@@ -42,36 +38,29 @@ public class xThreadPool implements xStartable {
 	protected final String poolName;
 	protected volatile int poolSize;
 
-	// run now
-	protected final AtomicReference<xRunnable> runTaskNow =
-			new AtomicReference<xRunnable>();
-//TODO:
-//	protected final Object runNowWaiter = new Object();
-
 	// pool state
 	protected final AtomicBoolean running  = new AtomicBoolean(false);
 	protected volatile boolean    stopping = false;
 
 	// counts/stats
-	protected final AtomicInteger threadCount = new AtomicInteger(0);
-	protected final AtomicInteger active      = new AtomicInteger(0);
+	protected final AtomicInteger workerCount = new AtomicInteger(0);
+	protected final AtomicInteger activeCount = new AtomicInteger(0);
 	protected final AtomicInteger runCount    = new AtomicInteger(0);
 
-	protected final Set<Thread> threads = new CopyOnWriteArraySet<Thread>();
+	// worker threads
+	protected final CopyOnWriteArraySet<xThreadPoolWorker> workers =
+			new CopyOnWriteArraySet<xThreadPoolWorker>();
 	protected final ThreadGroup group;
 	protected volatile int priority = Thread.NORM_PRIORITY;
-	protected xThreadFactory threadFactory;
 
-	// pool timing
-	protected final xTime timeThreadSleep       = xTime.get("200n");
-	protected final xTime timeoutInactiveThread = xTime.get("10s");
-//TODO:
-//	protected final xTime maxTaskTime           = xTime.get("5s");
+	// queues
+	private final LinkedBlockingQueue<xThreadPoolTask> queueNorm;
+	private final ConcurrentLinkedQueue<xThreadPoolTask> queueHigh;
+	private final ConcurrentLinkedQueue<xThreadPoolTask> queueLow;
 	// warning cool-down
 	protected CoolDown coolMaxReached = CoolDown.get("5s");
 
-	protected final BlockingQueue<xRunnable> queue =
-			new ArrayBlockingQueue<xRunnable>(QUEUE_SIZE, true);
+	private CoolDown coolGlobalMaxReached = CoolDown.get("5s");
 
 
 
@@ -79,31 +68,17 @@ public class xThreadPool implements xStartable {
 		if (Utils.isEmpty(poolName)) throw new RequiredArgumentException("poolName");
 		if (poolSize < 1)            throw new IllegalArgumentException("Invalid pool size: "+Integer.toString(poolSize));
 		this.isMainPool = MAIN_POOL_NAME.equals(poolName);
-		if (this.isMainPool) {
-			// just to prevent gc
-			Keeper.add(this);
-		}
 		this.poolName = poolName;
-		this.group = new ThreadGroup(poolName);
-		this.threadFactory = new xThreadFactory(
-			this.poolName, // thread name
-			this.group,    // thread group
-			false,         // daemon
-			this.priority  // thread priority
-		);
-		// pool size
-//TODO:
-final int globalSize = 1000;
 		this.poolSize =
 			NumberUtils.MinMax(
 				poolSize,
-				1,
-				globalSize
+				(
+					this.isMainPool
+					? 1
+					: 0
+				),
+				GLOBAL_POOL_SIZE_LIMIT
 			);
-		// queue size
-//TODO:
-final int queueSize = 100;
-		this.queue = new ArrayBlockingQueue<xRunnable>(queueSize, true);
 	}
 
 
@@ -240,7 +215,6 @@ final int queueSize = 100;
 		if (!this.running.compareAndSet(false, true)) {
 			return;
 		}
-		final boolean firstThread = (this.threadCount.get() == 0);
 		// initial task
 		this.runLater(
 			new xRunnable("xThreadPool-Startup") {
@@ -255,14 +229,18 @@ final int queueSize = 100;
 				}
 			}.init(this.log())
 		);
-		// sleep if initial thread created
-		if (firstThread) {
-			ThreadUtils.Sleep(POSTSTART_SLEEP);
-		}
+		ThreadUtils.Sleep(20L);
 	}
 	@Override
 	public void Stop() {
 		this.stopping = true;
+		ThreadUtils.Sleep(50L);
+		final Iterator<xThreadPoolWorker> it =
+			this.workers.iterator();
+		while (it.hasNext()) {
+			it.next()
+				.Stop();
+		}
 	}
 
 
@@ -336,7 +314,6 @@ final int queueSize = 100;
 						);
 					}
 				}
-				ThreadUtils.Sleep(THREAD_LIMIT_SLEEP);
 				return null;
 			}
 			// check max threads (global)
@@ -352,7 +329,6 @@ final int queueSize = 100;
 							.toString()
 					);
 				}
-				ThreadUtils.Sleep(THREAD_LIMIT_SLEEP);
 				return null;
 			}
 			// increment and final check
@@ -369,16 +345,17 @@ final int queueSize = 100;
 								.toString()
 						);
 					}
-					ThreadUtils.Sleep(THREAD_LIMIT_SLEEP);
-					return null;
 				}
+				return null;
 			}
 		}
 		// start new thread
 		{
-			final Thread thread = this.threadFactory.newThread(this);
-			this.threads.add(thread);
-			thread.start();
+			final xThreadPoolWorker worker =
+				new xThreadPoolWorker(this);
+			this.workers
+				.add(worker);
+			worker.start();
 		}
 		return Boolean.TRUE;
 	}
@@ -390,9 +367,10 @@ final int queueSize = 100;
 		if (priority > this.group.getMaxPriority()) {
 			this.group.setMaxPriority(priority);
 		}
-		this.threadFactory.setPriority(priority);
 		this.priority = priority;
-		final Iterator<Thread> it = this.threads.iterator();
+		ThreadUtils.Sleep(20L);
+		final Iterator<xThreadPoolWorker> it =
+			this.workers.iterator();
 		while (it.hasNext()) {
 			it.next()
 				.setPriority(priority);
@@ -404,110 +382,49 @@ final int queueSize = 100;
 
 
 
-	// run loop
 	@Override
 	public void run() {
-		final Thread currentThread = Thread.currentThread();
-		final String threadName = currentThread.getName();
-		final xLog log = this.log().getWeak(threadName);
-		log.finer("Started thread..");
-		// inactive thread timer
-		final CoolDown inactive = CoolDown.get(this.timeoutInactiveThread);
-		inactive.resetRun();
-		// run loop
-		while (true) {
-			{
-				if (this.active.get() < 0) {
-					while (this.active.get() < 0) {
-						this.active.incrementAndGet();
-					}
-					log.trace(
-						new IllegalStateException(
-							(new StringBuilder())
-								.append("Invalid active count: ")
-								.append(active)
-								.toString()
-						)
-					);
-				}
-			}
-			// run task now
-			{
-				final boolean result = this.doRunTaskNow();
-				if (result) {
-					continue;
-				}
-			}
-			// pull from queue
-			final xRunnable task;
-			try {
-				task = this.queue.poll(
-						this.timeThreadSleep.getMS(),
-						xTimeU.MS
-				);
-			} catch (InterruptedException ignore) {
-				ThreadUtils.Sleep(250L);
-				continue;
-			}
-			// run queued task
-			if (task != null) {
-				final int runIndex = this.runCount.incrementAndGet();
-				this.active.incrementAndGet();
-				currentThread.setName(
-						(new StringBuilder())
-						.append(runIndex)
-						.append(":")
-						.append(threadName)
-						.append(":")
-						.append(task.getTaskName())
-						.toString()
-				);
-				try {
-					task.run();
-				} catch (Exception e) {
-					log.trace(e);
-				}
-				currentThread.setName(threadName);
-				this.active.decrementAndGet();
-				inactive.resetRun();
-				continue;
-			}
-			// inactive thread or stopping
-			if (this.isStopping() || inactive.runAgain()) {
-				// main pool
-				if (this.isMainPool()) {
-					// always leave one main pool thread
-					if (this.threadCount.get() > 1) {
-						if (this.threadCount.decrementAndGet() > 0) {
-							log.finer(
-								this.isStopping()
-								? "Stopping pool thread.."
-								: "Stopping inactive main thread.."
-							);
-							break;
-						}
-						this.threadCount.incrementAndGet();
-					}
-				// other (not main pool)
-				} else {
-					this.threadCount.decrementAndGet();
-					log.finer(
-						this.isStopping()
-						? "Stopping pool thread.."
-						: "Stopping inactive thread.."
-					);
-					break;
-				}
-			}
-			if (DETAILED_LOGGING) {
-				log.warning("Thread idle..");
-			}
-		}
-		// remove stopped thread
-		this.threads.remove(currentThread);
+		if (this.getMaxThreadCount() > 1)
+			throw new UnsupportedOperationException();
+		if (this.getCurrentThreadCount() > 0)
+			throw new IllegalStateException("Cannot run thread pool, already started?!");
+		this.running.set(true);
+		// create new worker
+		final xThreadPoolWorker worker =
+			new xThreadPoolWorker(this);
+		this.workers
+			.add(worker);
+		// pass current thread to worker
+		worker.run();
+		// stopping
+		this.stopping = true;
+		this.running.set(false);
 	}
-	// run task now
-	protected boolean doRunTaskNow() {
+
+
+
+	protected xThreadPoolTask getTaskToRun() throws InterruptedException {
+		xThreadPoolTask task = null;
+		// highest priority queue
+		task = this.queueHigh.poll();
+		if (task != null)
+			return task;
+		// normal priority queue
+		task = this.queueNorm.poll(
+			THREAD_LOOP_TIME.getMS(),
+			xTimeU.MS
+		);
+		if (task != null)
+			return task;
+		// low priority queue
+		task = this.queueLow.poll();
+		if (task != null)
+			return task;
+		return null;
+	}
+
+
+
 //TODO:
 //		if (this.runNow.get() != null) {
 //			this.active.incrementAndGet();
@@ -536,7 +453,6 @@ final int queueSize = 100;
 //			inactive.resetRun();
 //			continue;
 //		}
-return false;
 	}
 
 
@@ -549,16 +465,26 @@ return false;
 	// run a task as soon as possible (generally less than 1ms)
 	public void runNow(final Runnable run) {
 		if (run == null) throw new RequiredArgumentException("run");
-		final xRunnable task = xRunnable.cast(run);
-		final xThreadPoolStats stats = this.getStats();
+		// run in main thread pool
 		if (!this.isMainPool()) {
-			// pass to main thread pool
-			if (stats.getMaxThreads() <= 0) {
+			if (this.getMaxThreadCount() == 0) {
 				xThreadPoolFactory.getMainPool()
-					.runNow(task);
+					.runNow(run);
 				return;
 			}
 		}
+		// queue task to run
+		final xThreadPoolTask task =
+			new xThreadPoolTask(
+				this,
+				run
+			);
+		this.queueHigh
+			.offer(task);
+		// make sure there's a thread
+		this.newThread();
+		// wait for task to finish
+		task.await();
 	}
 /*
 //TODO: if already in main thread, just run and return
@@ -647,20 +573,37 @@ ThreadUtils.Sleep(1L);
 	// queue a task
 	public void runLater(final Runnable run) {
 		if (run == null) throw new RequiredArgumentException("run");
-		final xRunnable task = xRunnable.cast(run);
 //TODO:
 //		// pass to main pool
 //		if (this.getMaxThreads() < 1 && !this.isMainPool) {
 //			getMainPool().runLater(task);
 //			return;
 //		}
+		// run in main thread pool
+		if (!this.isMainPool()) {
+			if (this.getMaxThreadCount() == 0) {
+				xThreadPoolFactory.getMainPool()
+					.runLater(run);
+				return;
+			}
+		}
+		// queue task to run
+		final xThreadPoolTask task =
+			new xThreadPoolTask(
+				this,
+				run
+			);
 		try {
-			if (this.queue.offer(task, 5, xTimeU.S)) {
-				if (DETAILED_LOGGING) {
-					this.log().finest("Task queued: "+task.getTaskName());
-				}
-			} else
+			final boolean result =
+				this.queueNorm.offer(
+					task,
+					5L,
+					xTimeU.S
+				);
+			if (!result) {
 				this.log().warning("Thread queue jammed! "+task.getTaskName());
+				throw new InterruptedException("queue-jam");
+			}
 		} catch (InterruptedException e) {
 			this.log()
 				.trace(e);
@@ -711,7 +654,13 @@ ThreadUtils.Sleep(1L);
 	 * @return true if task queue is empty.
 	 */
 	public boolean isEmpty() {
-		return (this.getQueueCount() <= 0);
+		if (!this.queueLow.isEmpty())
+			return false;
+		if (!this.queueNorm.isEmpty())
+			return false;
+		if (!this.queueHigh.isEmpty())
+			return false;
+		return true;
 	}
 	/**
 	 * Is thread pool busy.
@@ -728,10 +677,10 @@ ThreadUtils.Sleep(1L);
 
 
 	public int getCurrentThreadCount() {
-		return this.threadCount.get();
+		return this.workerCount.get();
 	}
 	public int getActiveThreadCount() {
-		return this.active.get();
+		return this.activeCount.get();
 	}
 	public int getInactiveThreadCount() {
 		final int count = this.getCurrentThreadCount() - this.getActiveThreadCount();
@@ -743,7 +692,7 @@ ThreadUtils.Sleep(1L);
 			);
 	}
 	public int getThreadCount() {
-		return this.threadCount.get();
+		return this.workerCount.get();
 	}
 	public int getThreadsFree() {
 		final int count = this.getMaxThreadCount() - this.getCurrentThreadCount();
@@ -765,7 +714,7 @@ ThreadUtils.Sleep(1L);
 			NumberUtils.MinMax(
 				size,
 				0,
-				POOL_SIZE_LIMIT
+				getGlobalMaxThreads()
 			);
 	}
 
@@ -776,11 +725,14 @@ ThreadUtils.Sleep(1L);
 
 
 	public int getQueueCount() {
-		return this.queue.size();
+		int count = 0;
+		count += this.queueLow.size();
+		count += this.queueNorm.size();
+		count += this.queueHigh.size();
+		return count;
 	}
 	public int getMaxQueueSize() {
-//TODO:
-return 1000;
+		return MAX_QUEUE_SIZE;
 	}
 
 
@@ -803,7 +755,7 @@ return 1000;
 		return count;
 	}
 	public static int getGlobalMaxThreads() {
-		return xThreadPool.GLOBAL_POOL_SIZE_LIMIT;
+		return GLOBAL_POOL_SIZE_LIMIT;
 	}
 
 
@@ -829,7 +781,13 @@ return 1000;
 		}
 		final xLog log =
 			xLog.getRoot()
-				.get(this._className);
+				.get(
+					(new StringBuilder())
+						.append(this._className)
+						.append(':')
+						.append(this.getName())
+						.toString()
+				);
 		this._log = new SoftReference<xLog>(log);
 		return log;
 	}
