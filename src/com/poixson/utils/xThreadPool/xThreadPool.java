@@ -89,6 +89,10 @@ public class xThreadPool implements xStartable {
 			Keeper.add(this);
 		}
 	}
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		throw new CloneNotSupportedException();
+	}
 
 
 

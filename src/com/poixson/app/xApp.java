@@ -485,6 +485,7 @@ return "<uptime>";
 
 
 
+//TODO: move these functions to a new class
 	// ------------------------------------------------------------------------------- //
 	// startup steps
 
