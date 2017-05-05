@@ -1,43 +1,70 @@
-/*
-package com.poixson.commonjava.scheduler;
+package com.poixson.utils.xScheduler;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.lang.ref.SoftReference;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.atomic.AtomicLong;
 
-import com.poixson.commonjava.Utils.utils;
-import com.poixson.commonjava.Utils.xRunnable;
-import com.poixson.commonjava.Utils.threads.xThreadPool;
-import com.poixson.commonjava.scheduler.triggers.TriggerType;
-import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.utils.ReflectUtils;
+import com.poixson.utils.Utils;
+import com.poixson.utils.xRunnable;
+import com.poixson.utils.xLogger.xLog;
+import com.poixson.utils.xThreadPool.xThreadPool;
+import com.poixson.utils.xThreadPool.xThreadPoolFactory;
 
 
-public class xScheduledTask {
+public class xSchedulerTask implements xSchedulerTrigger {
 
+	protected final xScheduler sched;
+
+	// task config
 	protected volatile boolean repeating = false;
 	protected volatile boolean finished  = false;
-	protected volatile xRunnable run = null;
+
+	protected volatile xRunnable   run  = null;
 	protected volatile xThreadPool pool = null;
-	protected volatile TriggerType trigger = null;
+	protected volatile Set<xSchedulerTrigger> triggers =
+			new CopyOnWriteArraySet<xSchedulerTrigger>();
 
 	// task run count
-	protected final AtomicInteger count = new AtomicInteger(0);
+	protected final AtomicLong runCount = new AtomicLong(0L);
 
 
 
-	public static xScheduledTask get() {
-		return new xScheduledTask();
+	public static xSchedulerTask get() {
+		return new xSchedulerTask(null);
 	}
-	public xScheduledTask() {
+	public xSchedulerTask(final xScheduler sched) {
+		this.sched = (
+			sched == null
+			? xScheduler.getMainSched()
+			: sched
+		);
 	}
 
 
 
+	@Override
 	public long untilNextTrigger() {
 		if (this.finished)
 			return -1L;
-		final TriggerType trigger = this.trigger;
-		if (trigger == null)
+		if (this.triggers.isEmpty())
 			return -1L;
-		return trigger.untilNextTrigger();
+		final Iterator<xSchedulerTrigger> it = this.triggers.iterator();
+		long lowest = Long.MAX_VALUE;
+		while (it.hasNext()) {
+			final xSchedulerTrigger trigger = it.next();
+			final long untilNext = trigger.untilNextTrigger();
+			if (untilNext < lowest) {
+				lowest = untilNext;
+				if (lowest <= 0L)
+					break;
+			}
+		}
+		if (lowest == Long.MAX_VALUE)
+			return -1L;
+		return lowest;
 	}
 	public boolean hasFinished() {
 		return this.finished;
@@ -46,68 +73,164 @@ public class xScheduledTask {
 
 
 	public void trigger() {
-		if (!this.repeating) {
-			this.finished = true;
-		}
-		final xRunnable r = this.run;
+		final xRunnable r = this.getRunnable();
 		if (r == null) {
-			xLog.getRoot().warning("Scheduled task has null runnable");
+			this.log()
+				.warning("Scheduled task has null runnable");
 			return;
 		}
-		// get thread pool
-		xThreadPool p = this.pool;
-		// use main thread pool
-		if (p == null) {
-			p = xThreadPool.getMainPool();
-		}
 		// run task
-		p.runLater(r);
-		this.count.incrementAndGet();
+		final xThreadPool threadPool = this.getThreadPool();
+		threadPool.runLater(r);
+		final Iterator<xSchedulerTrigger> it = this.triggers.iterator();
+		while (it.hasNext()) {
+			it.next()
+				.hasTriggered();
+		}
+		this.runCount.incrementAndGet();
+		if (this.notRepeating()) {
+			this.finished = true;
+		}
 	}
 
 
 
-	public int getRunCount() {
-		return this.count.get();
+	@Override
+	public boolean hasTriggered() {
+		return (this.runCount.get() > 0);
 	}
 
 
 
-	public xScheduledTask setRunnable(final Runnable run) {
-		this.run = xRunnable.cast(run);
-		return this;
+	// task run count
+	public long getRunCount() {
+		return this.runCount
+				.get();
 	}
-	public xScheduledTask setRepeating(final boolean repeating) {
+	public long resetRunCount() {
+		return this.runCount
+				.getAndSet(0L);
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// task config
+
+
+
+	// repeating
+	public boolean isRepeating() {
+		return this.repeating;
+	}
+	public boolean notRepeating() {
+		return ! this.isRepeating();
+	}
+	public xSchedulerTask setRepeating(final boolean repeating) {
 		this.repeating = repeating;
 		return this;
 	}
-	public xScheduledTask setThreadPool(final xThreadPool pool) {
+
+
+
+	// runnable
+	public xRunnable getRunnable() {
+		return this.run;
+	}
+	public xSchedulerTask setRunnable(final Runnable run) {
+		this.run = xRunnable.cast(run);
+		return this;
+	}
+
+
+
+	// task name
+	public String getTaskName() {
+		final xRunnable run = this.run;
+		if (run == null)
+			return null;
+		return run.getTaskName();
+	}
+	public boolean taskNameEquals(final String name) {
+		final String thisName = this.getTaskName();
+		if (Utils.isEmpty(name))
+			return Utils.isEmpty(thisName);
+		return name.equals(thisName);
+	}
+	public xSchedulerTask setTaskName(final String name) {
+		final xRunnable run = this.run;
+		if (run == null)
+			throw new IllegalArgumentException("run not set!");
+		run.setTaskName(name);
+		return this;
+	}
+
+
+
+	// thread pool
+	public xThreadPool getThreadPool() {
+		final xThreadPool pool = this.pool;
+		return (
+			pool == null
+			? xThreadPoolFactory.getMainPool()
+			: pool
+		);
+	}
+	public xSchedulerTask setThreadPool(final String poolName) {
+		return
+			this.setThreadPool(
+				xThreadPoolFactory.get(poolName)
+			);
+	}
+	public xSchedulerTask setThreadPool(final xThreadPool pool) {
 		this.pool = pool;
 		return this;
 	}
-	public xScheduledTask setTrigger(final TriggerType trigger) {
-		this.trigger = trigger;
+
+
+
+	// trigger
+	public xSchedulerTrigger[] getTriggers() {
+		return this.triggers.toArray(new xSchedulerTrigger[0]);
+	}
+	public int getTriggersCount() {
+		return this.triggers.size();
+	}
+	public xSchedulerTask addTrigger(final xSchedulerTrigger trigger) {
+		if (trigger != null) {
+			this.triggers.add(trigger);
+		}
+		return this;
+	}
+	public xSchedulerTask clearTriggers() {
+		this.triggers.clear();
 		return this;
 	}
 
 
 
-	public String getTaskName() {
-		final xRunnable r = this.run;
-		if (r == null) {
-			return null;
+	// logger
+	private volatile SoftReference<xLog> _log = null;
+	private volatile String _className = null;
+	public xLog log() {
+		if (this._log != null) {
+			final xLog log = this._log.get();
+			if (log != null)
+				return log;
 		}
-		return r.getTaskName();
-	}
-	public boolean taskNameEquals(final String name) {
-		final String n = this.getTaskName();
-		if (utils.isEmpty(name)) {
-			return utils.isEmpty(n);
+		if (this._className == null) {
+			this._className =
+				ReflectUtils.getClassName(
+					this.getClass()
+				);
 		}
-		return name.equals(n);
+		final xLog log =
+			this.sched.log()
+				.getWeak(this.getTaskName());
+		this._log = new SoftReference<xLog>(log);
+		return log;
 	}
 
 
 
 }
-*/

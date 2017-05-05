@@ -1,12 +1,11 @@
-/*
-package com.poixson.commonjava.scheduler.triggers;
+package com.poixson.utils.xScheduler;
 
 
-public interface TriggerType {
+public interface xSchedulerTrigger {
 
 
 	public long untilNextTrigger();
+	public boolean hasTriggered();
 
 
 }
-*/
