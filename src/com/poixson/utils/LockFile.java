@@ -1,6 +1,7 @@
 package com.poixson.utils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.lang.ref.SoftReference;
@@ -10,7 +11,6 @@ import java.nio.channels.OverlappingFileLockException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.poixson.utils.exceptions.LockFileException;
 import com.poixson.utils.exceptions.RequiredArgumentException;
 import com.poixson.utils.xLogger.xLog;
 
@@ -18,90 +18,130 @@ import com.poixson.utils.xLogger.xLog;
 public class LockFile {
 
 	private static final Map<String, LockFile> instances = new HashMap<String, LockFile>();
-	private static final Object instanceLock = new Object();
 
 	public final String filename;
 	public final File   file;
 
-	private final FileLock         fileLock;
-	private final RandomAccessFile randFile;
-	private final FileChannel      channel;
+	private volatile FileLock         fileLock;
+	private volatile RandomAccessFile handle;
+	private volatile FileChannel      channel;
 
 
 
 	public static LockFile get(final String filename) {
-		if (Utils.isEmpty(filename)) {
+		if (Utils.isBlank(filename))
 			throw new RequiredArgumentException("filename");
-		}
-		if ( ! filename.equals(SanUtils.FileName(filename)) ) {
+		if (!SanUtils.safeFileName(filename))
 			throw new IllegalArgumentException("Invalid lock file name: "+filename);
-		}
-		synchronized(instanceLock) {
-			// existing lock
-			if (instances.containsKey(filename))
-				throw new LockFileException(filename);
-			// new lock
-			final LockFile lock;
-			try {
-				lock = new LockFile(filename);
-			} catch (LockFileException e) {
-				log().trace(e);
-				return null;
-			} catch (IOException e) {
-				log().trace(e);
-				return null;
+		synchronized(instances) {
+			// existing lock instance
+			{
+				final LockFile lock = instances.get(filename);
+				if (lock != null)
+					return lock;
 			}
-			// register shutdown hook
-			Runtime.getRuntime().addShutdownHook(
-					new Thread() {
-						private volatile LockFile lock = null;
-						public Thread init(final LockFile lock) {
-							this.lock = lock;
-							return this;
-						}
-						@Override
-						public void run() {
-							this.lock.release();
-						}
-					}.init(lock)
-			);
-			instances.put(filename, lock);
-			log().fine("Locked file: "+filename);
-			Keeper.add(lock);
-			return lock;
+			// new lock instance
+			{
+				final LockFile lock = new LockFile(filename);
+				instances.put(
+					filename,
+					lock
+				);
+				Keeper.add(lock);
+				return lock;
+			}
 		}
 	}
 	public static LockFile peak(final String filename) {
-		if (Utils.isEmpty(filename))
+		if (Utils.isBlank(filename))
 			throw new RequiredArgumentException("filename");
-		return instances.get(filename);
+		if (!SanUtils.safeFileName(filename))
+			throw new IllegalArgumentException("Invalid lock file name: "+filename);
+		synchronized(instances) {
+			return instances.get(filename);
+		}
 	}
-	public static void releaseLock(final String filename) {
+
+
+
+	public static LockFile getLock(final String filename) {
 		final LockFile lock = get(filename);
 		if (lock == null)
-			return;
-		lock.release();
+			return null;
+		if (lock.acquire())
+			return lock;
+		return null;
+	}
+	public static boolean getRelease(final String filename) {
+		final LockFile lock = get(filename);
+		if (lock == null)
+			return false;
+		return lock.release();
 	}
 
 
 
-	private LockFile(final String filename) throws LockFileException, IOException {
-		if (Utils.isEmpty(filename))
+	public boolean isLocked() {
+		return (this.fileLock != null);
+	}
+
+
+
+	private LockFile(final String filename) {
+		if (Utils.isBlank(filename))
 			throw new RequiredArgumentException("filename");
+		if (!SanUtils.safeFileName(filename))
+			throw new IllegalArgumentException("Invalid lock file name: "+filename);
 		this.filename = filename;
-		// get lock on file
 		this.file = new File(filename);
-		if (this.file.isFile())
-			throw new LockFileException(filename);
-		this.randFile = new RandomAccessFile(this.file, "rw");
-		this.channel  = this.randFile.getChannel();
+		// register shutdown hook
+		Runtime.getRuntime().addShutdownHook(
+			new Thread() {
+				private volatile LockFile lock = null;
+				public Thread init(final LockFile lock) {
+					this.lock = lock;
+					return this;
+				}
+				@Override
+				public void run() {
+					this.lock
+						.release();
+				}
+			}.init(this)
+		);
+	}
+
+
+
+	// get lock on file
+	public boolean acquire() {
+		if (this.fileLock != null)
+			return true;
+		try {
+			this.handle = new RandomAccessFile(this.file, "rw");
+		} catch (FileNotFoundException e) {
+			log().trace(e);
+			return false;
+		}
+		this.channel  = this.handle.getChannel();
 		try {
 			this.fileLock = this.channel.tryLock();
 		} catch (OverlappingFileLockException e) {
-			throw new LockFileException(filename);
+			log().trace(e);
+			return false;
+		} catch (IOException e) {
+			log().trace(e);
+			return false;
 		}
+		if (this.fileLock == null)
+			return false;
+		log().fine("Locked file: "+this.filename);
+		return true;
 	}
-	public void release() {
+	// release file lock
+	public boolean release() {
+		if (this.fileLock == null)
+			return false;
 		try {
 			this.fileLock.release();
 		} catch (Exception ignore) {}
@@ -109,12 +149,16 @@ public class LockFile {
 			this.fileLock.close();
 		} catch (Exception ignore) {}
 		Utils.safeClose(this.channel);
-		Utils.safeClose(this.randFile);
+		Utils.safeClose(this.handle);
+		this.fileLock = null;
+		this.channel = null;
+		this.handle  = null;
 		log().fine("Released file lock: "+this.filename);
-		Keeper.remove(this);
 		try {
 			this.file.delete();
 		} catch (Exception ignore) {}
+		Keeper.remove(this);
+		return true;
 	}
 
 
