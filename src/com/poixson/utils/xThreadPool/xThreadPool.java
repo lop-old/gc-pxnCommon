@@ -19,11 +19,11 @@ import com.poixson.utils.xStartable;
 import com.poixson.utils.xTime;
 import com.poixson.utils.xTimeU;
 import com.poixson.utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.xLogger.xLevel;
 import com.poixson.utils.xLogger.xLog;
 
 
 public class xThreadPool implements xStartable {
-	protected static final boolean DETAILED_LOGGING = false;
 
 	protected static final xTime THREAD_LOOP_TIME        = xTime.get("1s");
 	protected static final xTime INACTIVE_THREAD_TIMEOUT = xTime.get("10s");
@@ -151,8 +151,9 @@ public class xThreadPool implements xStartable {
 	 *         null if stopping or thread limit reached.
 	 */
 	protected Boolean newThread() {
+		final boolean detailed = this.log().isLoggable(xLevel.DETAIL);
 		if (this.isStopping()) {
-			if (DETAILED_LOGGING) {
+			if (detailed) {
 				this.log().warning("thread pool is stopping; cannot start new thread as requested");
 			}
 			return null;
@@ -160,7 +161,7 @@ public class xThreadPool implements xStartable {
 		// check worker thread limits
 		{
 //TODO:
-//			if (DETAILED_LOGGING) {
+//			if (detail) {
 //				this.displayStats();
 //			}
 			// use existing inactive thread
@@ -173,7 +174,7 @@ public class xThreadPool implements xStartable {
 			final int maxThreads      = this.getMaxThreadCount();
 			if (currentThreads >= maxThreads) {
 				if (maxThreads > 1) {
-					if (this.coolMaxReached.runAgain() || DETAILED_LOGGING) {
+					if (this.coolMaxReached.runAgain() || detailed) {
 						this.msgLimitReached(false);
 					}
 				}
@@ -183,7 +184,7 @@ public class xThreadPool implements xStartable {
 			final int globalThreads    = getGlobalThreadCount();
 			final int globalMaxThreads = getGlobalMaxThreads();
 			if (globalThreads >= globalMaxThreads) {
-				if (this.coolGlobalMaxReached.runAgain() || DETAILED_LOGGING) {
+				if (this.coolGlobalMaxReached.runAgain() || detailed) {
 					this.msgLimitReached(true);
 				}
 				return null;
@@ -193,7 +194,7 @@ public class xThreadPool implements xStartable {
 			if (count > maxThreads) {
 				this.workerCount.decrementAndGet();
 				if (maxThreads > 1) {
-					if (this.coolMaxReached.runAgain() || DETAILED_LOGGING) {
+					if (this.coolMaxReached.runAgain() || detailed) {
 						this.msgLimitReached(false);
 					}
 				}
@@ -385,9 +386,7 @@ public class xThreadPool implements xStartable {
 				.trace(e);
 			return;
 		}
-		if (DETAILED_LOGGING) {
-			this.log().finest("Task queued: "+task.getTaskName());
-		}
+		this.log().detail("Task queued: "+task.getTaskName());
 		// make sure there's a thread
 		this.newThread();
 	}

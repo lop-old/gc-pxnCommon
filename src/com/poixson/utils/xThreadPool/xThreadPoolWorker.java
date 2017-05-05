@@ -9,7 +9,6 @@ import com.poixson.utils.xLogger.xLog;
 
 
 public class xThreadPoolWorker extends Thread {
-	private static final boolean DETAILED_LOGGING = xThreadPool.DETAILED_LOGGING;
 
 	private final xThreadPool pool;
 
@@ -119,9 +118,7 @@ public class xThreadPoolWorker extends Thread {
 					break;
 				}
 			}
-			if (DETAILED_LOGGING) {
-				this.log().finest("Idle thread..");
-			}
+			this.log().detail("Idle thread..");
 		}
 		// remove stopped worker thread
 		this.pool.workers

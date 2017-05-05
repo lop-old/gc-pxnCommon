@@ -13,11 +13,11 @@ import com.poixson.utils.ThreadUtils;
 import com.poixson.utils.Utils;
 import com.poixson.utils.xStartable;
 import com.poixson.utils.xTime;
+import com.poixson.utils.xLogger.xLevel;
 import com.poixson.utils.xLogger.xLog;
 
 
 public class xScheduler implements xStartable {
-	protected static final boolean DETAILED_LOGGING = true;
 
 	private static final String MANAGER_THREAD_NAME = "xSched";
 	private static final String MAIN_SCHED_NAME     = "main";
@@ -132,7 +132,7 @@ public class xScheduler implements xStartable {
 					: threadSleep
 				);
 				if (sleepLess > 0) {
-					if (DETAILED_LOGGING) {
+					if (this.log().isLoggable(xLevel.DETAIL)) {
 						final double sleepLessSec = ((double)sleepLess) / 1000.0;
 						log().finest(
 							(new StringBuilder())
