@@ -124,9 +124,16 @@ public class StreamBridge implements xStartable {
 		Utils.safeClose(this.out);
 		Utils.safeClose(this.in);
 	}
+
+
+
 	@Override
 	public boolean isRunning() {
 		return this.running;
+	}
+	@Override
+	public boolean isStopping() {
+		return this.stopping;
 	}
 	public boolean isAlive() {
 		return this.isRunning();

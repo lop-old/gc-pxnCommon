@@ -419,6 +419,7 @@ public abstract class xApp implements xStartable {
 		final int step = this.step.get();
 		return (step > STEP_OFF && step < STEP_RUN);
 	}
+	@Override
 	public boolean isStopping() {
 		return (this.step.get() < STEP_OFF);
 	}

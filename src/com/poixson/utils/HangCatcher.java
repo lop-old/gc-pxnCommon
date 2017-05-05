@@ -90,10 +90,20 @@ public class HangCatcher implements xStartable {
 		this.cancel = true;
 		this.thread = null;
 	}
+
+
+
 	@Override
 	public boolean isRunning() {
 		return (this.thread != null);
 	}
+	@Override
+	public boolean isStopping() {
+		return ! this.isRunning();
+	}
+
+
+
 	public void resetTimeout() {
 		this.cool.resetRun();
 	}

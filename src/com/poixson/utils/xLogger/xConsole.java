@@ -15,6 +15,7 @@ public interface xConsole extends xStartable {
 	public void run();
 	@Override
 	public boolean isRunning();
+	@Override
 	public boolean isStopping();
 
 

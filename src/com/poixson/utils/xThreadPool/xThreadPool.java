@@ -303,6 +303,7 @@ public class xThreadPool implements xStartable {
 			return false;
 		return this.running.get();
 	}
+	@Override
 	public boolean isStopping() {
 		return this.stopping;
 	}
