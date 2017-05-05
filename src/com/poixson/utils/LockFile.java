@@ -135,6 +135,17 @@ public class LockFile {
 		}
 		if (this.fileLock == null)
 			return false;
+		final int pid = ProcUtils.getPid();
+		try {
+			this.handle.write(
+				Integer.toString(pid)
+					.getBytes()
+			);
+		} catch (IOException e) {
+			log().trace(e);
+			this.fileLock = null;
+			return false;
+		}
 		log().fine("Locked file: "+this.filename);
 		return true;
 	}
