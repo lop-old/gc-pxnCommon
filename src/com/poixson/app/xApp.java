@@ -33,6 +33,7 @@ import com.poixson.utils.xLogger.xLog;
 import com.poixson.utils.xLogger.xLogFormatter_Color;
 import com.poixson.utils.xLogger.xLogHandlerConsole;
 import com.poixson.utils.xLogger.xLogPrintStream;
+import com.poixson.utils.xScheduler.xScheduler;
 import com.poixson.utils.xThreadPool.xThreadPool;
 import com.poixson.utils.xThreadPool.xThreadPoolFactory;
 
@@ -558,9 +559,8 @@ return "<uptime>";
 	// start scheduler
 	@xAppStep(type=StepType.STARTUP, title="Scheduler", priority=150)
 	public void __STARTUP_scheduler() {
-//TODO:
-//		xScheduler.get()
-//			.Start();
+		xScheduler.getMainSched()
+			.Start();
 	}
 
 
@@ -573,9 +573,8 @@ return "<uptime>";
 	// stop scheduler
 	@xAppStep(type=StepType.SHUTDOWN, title="Scheduler", priority=150)
 	public void __SHUTDOWN_scheduler() {
-//TODO:
-//		xScheduler.get()
-//			.Stop();
+		xScheduler.getMainSched()
+			.Stop();
 	}
 
 
