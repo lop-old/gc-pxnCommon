@@ -28,7 +28,6 @@ import com.poixson.utils.xClock;
 import com.poixson.utils.xStartable;
 import com.poixson.utils.xTime;
 import com.poixson.utils.xVars;
-import com.poixson.utils.xLogger.xLevel;
 import com.poixson.utils.xLogger.xLog;
 import com.poixson.utils.xLogger.xLogFormatter_Color;
 import com.poixson.utils.xLogger.xLogHandlerConsole;
@@ -142,8 +141,7 @@ public abstract class xApp implements xStartable {
 
 		// init logger
 		{
-			final xLog log = xLog.getRoot();
-			log.setLevel(xLevel.ALL);
+			xLog.getRoot();
 			if (Failure.hasFailed()) {
 				xVars.getOriginalOut()
 					.println("Failure, pre-init!");
