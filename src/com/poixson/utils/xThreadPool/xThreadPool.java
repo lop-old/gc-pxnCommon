@@ -96,28 +96,6 @@ public class xThreadPool implements xStartable {
 
 
 
-	public String getName() {
-		return this.poolName;
-	}
-	public boolean isMainPool() {
-		return this.isMainPool;
-	}
-
-
-
-	@Override
-	public boolean isRunning() {
-		if (this.isStopping())
-			return false;
-		return this.running.get();
-	}
-	@Override
-	public boolean isStopping() {
-		return this.stopping;
-	}
-
-
-
 	// ------------------------------------------------------------------------------- //
 	// running and threads
 
@@ -398,33 +376,25 @@ public class xThreadPool implements xStartable {
 
 
 
-//TODO:
-//	public void displayStats(final xLevel level) {
-//		this.pool.log()
-//			.publish(
-//				level,
-//				(new StringBuilder())
-//					.append("Queued: [")
-//						.append(this.getQueueCount())
-//						.append("]  ")
-//					.append("Threads: ")
-//						.append(this.getCurrentThreadCount())
-//						.append(" [")
-//						.append(this.getMaxThreads())
-//						.append("]  ")
-//					.append("Active/Free: ")
-//						.append(this.getActiveThreadCount())
-//						.append("/")
-//						.append(this.getInactiveThreadCount())
-//						.append("  ")
-//					.append("Global: ")
-//						.append(getGlobalThreadCount())
-//						.append(" [")
-//						.append(getGlobalMaxThreads())
-//						.append("]")
-//						.toString()
-//			);
-//	}
+	public String getName() {
+		return this.poolName;
+	}
+	public boolean isMainPool() {
+		return this.isMainPool;
+	}
+
+
+
+	@Override
+	public boolean isRunning() {
+		if (this.isStopping())
+			return false;
+		return this.running.get();
+	}
+	@Override
+	public boolean isStopping() {
+		return this.stopping;
+	}
 
 
 
@@ -536,6 +506,36 @@ public class xThreadPool implements xStartable {
 	public static int getGlobalMaxThreads() {
 		return GLOBAL_POOL_SIZE_LIMIT;
 	}
+
+
+
+//TODO:
+//	public void displayStats(final xLevel level) {
+//		this.pool.log()
+//			.publish(
+//				level,
+//				(new StringBuilder())
+//					.append("Queued: [")
+//						.append(this.getQueueCount())
+//						.append("]  ")
+//					.append("Threads: ")
+//						.append(this.getCurrentThreadCount())
+//						.append(" [")
+//						.append(this.getMaxThreads())
+//						.append("]  ")
+//					.append("Active/Free: ")
+//						.append(this.getActiveThreadCount())
+//						.append("/")
+//						.append(this.getInactiveThreadCount())
+//						.append("  ")
+//					.append("Global: ")
+//						.append(getGlobalThreadCount())
+//						.append(" [")
+//						.append(getGlobalMaxThreads())
+//						.append("]")
+//						.toString()
+//			);
+//	}
 
 
 
