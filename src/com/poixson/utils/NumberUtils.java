@@ -2,7 +2,6 @@ package com.poixson.utils;
 
 import java.text.DecimalFormat;
 import java.util.Random;
-import java.util.regex.Pattern;
 
 
 public final class NumberUtils {
@@ -326,31 +325,6 @@ public final class NumberUtils {
 	}
 	public static boolean isMinMax(final float value, final float min, final float max) {
 		return (value == MinMax(value, min, max));
-	}
-
-
-
-	// compare version numbers
-	public static String compareVersions(final String oldVersion, final String newVersion) {
-		if (Utils.isEmpty(oldVersion)) return null;
-		if (Utils.isEmpty(newVersion)) return null;
-		final int cmp = normalisedVersion(oldVersion).compareTo(normalisedVersion(newVersion));
-		if (cmp < 0) return "<";
-		if (cmp > 0) return ">";
-		return "=";
-		//return cmp<0 ? "<" : cmp>0 ? ">" : "=";
-	}
-	public static String normalisedVersion(final String version) {
-		final String delim = ".";
-		final int maxWidth = 5;
-		final StringBuilder str = new StringBuilder();
-		final String[] split = Pattern.compile(delim, Pattern.LITERAL).split(version);
-		for (final String part : split) {
-			str.append(
-				String.format("%"+maxWidth+'s', part)
-			);
-		}
-		return str.toString();
 	}
 
 
