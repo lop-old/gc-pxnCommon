@@ -449,6 +449,23 @@ public class xThreadPool implements xStartable {
 			return false;
 		return (this.getActiveThreadCount() > 0);
 	}
+	/**
+	 * Is thread pool busy with a task.
+	 * @return true if queue contains a waiting task
+	 *         or if any worker threads are busy.
+	 */
+	public boolean isBusy() {
+		if (!this.isEmpty())
+			return true;
+		final Iterator<xThreadPoolWorker> it = this.workers.iterator();
+		while (it.hasNext()) {
+			final xThreadPoolWorker worker = it.next();
+			if (worker.isActive()) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 
 
