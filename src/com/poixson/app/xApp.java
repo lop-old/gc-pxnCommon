@@ -493,12 +493,16 @@ return "<uptime>";
 	// ensure not root
 	@xAppStep(type=StepType.STARTUP, title="RootCheck", priority=10)
 	public void __STARTUP_rootcheck() {
-		final String user = System.getProperty("user.name");
-		if ("root".equals(user)) {
-			this.log().warning("It is recommended to run as a non-root user");
-		} else
-		if ("administrator".equalsIgnoreCase(user) || "admin".equalsIgnoreCase(user)) {
-			this.log().warning("It is recommended to run as a non-administrator user");
+		try {
+			final String user = System.getProperty("user.name");
+			if ("root".equals(user)) {
+				this.log().warning("It is recommended to run as a non-root user");
+			} else
+			if ("administrator".equalsIgnoreCase(user) || "admin".equalsIgnoreCase(user)) {
+				this.log().warning("It is recommended to run as a non-administrator user");
+			}
+		} catch (Exception e) {
+			Failure.fail(e);
 		}
 	}
 
@@ -507,6 +511,11 @@ return "<uptime>";
 	// load configs
 	@xAppStep(type=StepType.STARTUP, title="Configs", priority=50)
 	public void __STARTUP_configs() {
+//TODO:
+//		try {
+//		} catch (Exception e) {
+//			Failure.fail(e);
+//		}
 	}
 
 
@@ -514,11 +523,15 @@ return "<uptime>";
 	// clock
 	@xAppStep(type=StepType.STARTUP, title="Clock", priority=60)
 	public void __STARTUP_clock() {
-		final xClock clock = xClock.get(true);
-		this.startTime =
-			xTime.get(
-				clock.millis()
-			);
+		try {
+			final xClock clock = xClock.get(true);
+			this.startTime =
+				xTime.get(
+					clock.millis()
+				);
+		} catch (Exception e) {
+			Failure.fail(e);
+		}
 	}
 
 
@@ -535,10 +548,14 @@ return "<uptime>";
 	// lock file
 	@xAppStep(type=StepType.STARTUP, title="LockFile", priority=90)
 	public void __STARTUP_lockfile() {
-		final String filename = this.getName()+".lock";
-		final LockFile lock = LockFile.get(filename);
-		if (!lock.acquire()) {
-			Failure.fail("Failed to get lock on file: "+filename);
+		try {
+			final String filename = this.getName()+".lock";
+			final LockFile lock = LockFile.get(filename);
+			if (!lock.acquire()) {
+				Failure.fail("Failed to get lock on file: "+filename);
+			}
+		} catch (Exception e) {
+			Failure.fail(e);
 		}
 	}
 
@@ -547,9 +564,13 @@ return "<uptime>";
 	// start thread pools
 	@xAppStep(type=StepType.STARTUP, title="ThreadPools", priority=100)
 	public void __STARTUP_threadpools() {
-		final xThreadPool pool =
+		try {
+			final xThreadPool pool =
 				xThreadPoolFactory.getMainPool();
-		pool.Start();
+			pool.Start();
+		} catch (Exception e) {
+			Failure.fail(e);
+		}
 	}
 
 
@@ -557,8 +578,12 @@ return "<uptime>";
 	// start scheduler
 	@xAppStep(type=StepType.STARTUP, title="Scheduler", priority=150)
 	public void __STARTUP_scheduler() {
-		xScheduler.getMainSched()
-			.Start();
+		try {
+			final xScheduler sched = xScheduler.getMainSched();
+			sched.Start();
+		} catch (Exception e) {
+			Failure.fail(e);
+		}
 	}
 
 
@@ -571,8 +596,12 @@ return "<uptime>";
 	// stop scheduler
 	@xAppStep(type=StepType.SHUTDOWN, title="Scheduler", priority=150)
 	public void __SHUTDOWN_scheduler() {
-		xScheduler.getMainSched()
-			.Stop();
+		try {
+			xScheduler.getMainSched()
+				.Stop();
+		} catch (Exception e) {
+			Failure.fail(e);
+		}
 	}
 
 
@@ -580,8 +609,12 @@ return "<uptime>";
 	// stop thread pools
 	@xAppStep(type=StepType.SHUTDOWN, title="ThreadPools", priority=100)
 	public void __SHUTDOWN_threadpools() {
-		xThreadPoolFactory
-			.ShutdownAll();
+		try {
+			xThreadPoolFactory
+				.ShutdownAll();
+		} catch (Exception e) {
+			Failure.fail(e);
+		}
 	}
 
 
@@ -598,7 +631,11 @@ return "<uptime>";
 	// stop console input
 	@xAppStep(type=StepType.SHUTDOWN, title="Console", priority=30)
 	public void __SHUTDOWN_console() {
-		xLog.Shutdown();
+		try {
+			xLog.Shutdown();
+		} catch (Exception e) {
+			Failure.fail(e);
+		}
 	}
 
 
@@ -606,8 +643,12 @@ return "<uptime>";
 	// release lock file
 	@xAppStep(type=StepType.SHUTDOWN, title="LockFile", priority=20)
 	public void __SHUTDOWN_lockfile() {
-		final String filename = this.getName()+".lock";
-		LockFile.getRelease(filename);
+		try {
+			final String filename = this.getName()+".lock";
+			LockFile.getRelease(filename);
+		} catch (Exception e) {
+			Failure.fail(e);
+		}
 	}
 
 
