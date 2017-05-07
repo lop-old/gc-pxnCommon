@@ -612,7 +612,7 @@ return "<uptime>";
 //			ticker.Stop();
 			// stop main scheduler
 			final xScheduler sched = xScheduler.getMainSched();
-			sched.Start();
+			sched.Stop();
 		} catch (Exception e) {
 			Failure.fail(e);
 		}
