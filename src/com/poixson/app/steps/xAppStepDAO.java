@@ -27,11 +27,7 @@ public class xAppStepDAO {
 		if (method == null) throw new RequiredArgumentException("method");
 		if (anno   == null) throw new RequiredArgumentException("annotation");
 		this.type = anno.type();
-		this.priority = (
-			anno.priority() < 0
-			? 0 - anno.priority()
-			: anno.priority()
-		);
+		this.priority = Math.abs(anno.priority());
 		this.app    = app;
 		this.method = method;
 		this.anno   = anno;

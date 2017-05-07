@@ -302,7 +302,12 @@ public abstract class xApp implements xStartable {
 			}
 			// invoke step
 			final int stepInt = this.step.get();
-			final List<xAppStepDAO> lst = orderedSteps.get( new Integer(0 - stepInt) );
+			final List<xAppStepDAO> lst =
+				orderedSteps.get(
+					new Integer(
+						Math.abs(stepInt)
+					)
+				);
 			if (lst != null) {
 //				this.log().fine(
 //					(new StringBuilder())
