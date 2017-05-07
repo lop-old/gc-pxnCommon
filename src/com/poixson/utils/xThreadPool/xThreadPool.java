@@ -343,11 +343,7 @@ public class xThreadPool implements xStartable {
 			);
 		try {
 			final boolean result =
-				this.queueNorm.offer(
-					task,
-					5L,
-					xTimeU.S
-				);
+				this.queueNorm.offer(task);
 			if (!result) {
 				this.log().warning("Thread queue jammed! "+task.getTaskName());
 				throw new InterruptedException("queue-jam");
