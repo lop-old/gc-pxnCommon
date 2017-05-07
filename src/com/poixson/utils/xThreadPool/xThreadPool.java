@@ -27,8 +27,11 @@ public class xThreadPool implements xStartable {
 
 	protected static final xTime THREAD_LOOP_TIME        = xTime.get("1s");
 	protected static final xTime INACTIVE_THREAD_TIMEOUT = xTime.get("10s");
-	protected static final int GLOBAL_POOL_SIZE_LIMIT = 50;
-	protected static final int MAX_QUEUE_SIZE = 1000;
+//TODO:
+//	protected static final xTime TASK_RUN_TIMEOUT        = xTime.get("5s");
+	protected static final xTime POST_START_SLEEP        = xTime.get("20n");
+	protected static final int   GLOBAL_POOL_SIZE_LIMIT  = 50;
+	protected static final int   MAX_QUEUE_SIZE          = 1000;
 
 	// main thread pool
 	public static final String MAIN_POOL_NAME = "main";
@@ -112,7 +115,7 @@ public class xThreadPool implements xStartable {
 				}
 			}.init(this.log())
 		);
-		ThreadUtils.Sleep(20L);
+		ThreadUtils.Sleep(POST_START_SLEEP);
 	}
 	@Override
 	public void Stop() {
@@ -286,6 +289,42 @@ public class xThreadPool implements xStartable {
 
 
 
+//TODO: use this
+//	public void waitUntilStopped() {
+//		throw new UnsupportedOperationException();
+//		if (!this.isStopping())
+//			this.Stop();
+//		final CoolDown cool = CoolDown.get("1s");
+//		while (true) {
+//			int count = 0;
+//			final Iterator<xThreadPoolWorker> it =
+//				this.workers.iterator();
+//			while (it.hasNext()) {
+//				if (it.next().isRunning()) {
+//					count++;
+//				}
+//			}
+//			if (this.isMainPool()) {
+//				count--;
+//			}
+//			if (count <= 0)
+//				break;
+//			if (cool.runAgain()) {
+//				this.log().fine(
+//					(new StringBuilder())
+//						.append("Waiting for [ ")
+//						.append(count)
+//						.append(" ] threads to finish..")
+//						.toString()
+//				);
+//			}
+//			ThreadUtils.Sleep(50L);
+//		}
+//		ThreadUtils.Sleep(50L);
+//	}
+
+
+
 	// ------------------------------------------------------------------------------- //
 	// tasks
 
@@ -308,8 +347,13 @@ public class xThreadPool implements xStartable {
 				this,
 				run
 			);
-		this.queueHigh
-			.offer(task);
+		final boolean result =
+			this.queueHigh.offer(task);
+		if (!result) {
+			this.log().getWeak(task.getTaskName())
+				.warning("Thread queue jammed!");
+			throw new RuntimeException("queue-jam");
+		}
 		// make sure there's a thread
 		this.newThread();
 		// wait for task to finish
@@ -336,22 +380,18 @@ public class xThreadPool implements xStartable {
 			}
 		}
 		// queue task to run
-		final xThreadPoolTask task =
-			new xThreadPoolTask(
-				this,
-				run
-			);
+		final xThreadPoolTask task;
 		try {
+			task = new xThreadPoolTask(this, run);
 			final boolean result =
 				this.queueNorm.offer(task);
 			if (!result) {
-				this.log().warning("Thread queue jammed! "+task.getTaskName());
-				throw new InterruptedException("queue-jam");
+				this.log().getWeak(task.getTaskName())
+					.warning("Thread queue jammed!");
+				this.queueNorm.put(task);
 			}
 		} catch (InterruptedException e) {
-			this.log()
-				.trace(e);
-			return;
+			throw new RuntimeException(e);
 		}
 		this.log().detail("Task queued: "+task.getTaskName());
 		// make sure there's a thread
@@ -405,6 +445,8 @@ public class xThreadPool implements xStartable {
 	 * @return true if pool contains active threads.
 	 */
 	public boolean isActive() {
+		if (!this.isRunning())
+			return false;
 		return (this.getActiveThreadCount() > 0);
 	}
 
