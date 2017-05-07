@@ -38,29 +38,30 @@ public class xThreadPoolFactory {
 	 * Get thread queue by name
 	 */
 	public static xThreadPool get(final String poolName) {
-		String name = poolName;
-		if (Utils.isEmpty(name) || MAIN_POOL_NAME.equalsIgnoreCase(name)) {
-			if (mainPool != null) {
+		// default to main pool
+		if (Utils.isEmpty(poolName)) {
+			if (mainPool != null)
 				return mainPool;
-			}
-			name = MAIN_POOL_NAME;
+			return get(MAIN_POOL_NAME);
 		}
-		if (MAIN_POOL_NAME.equalsIgnoreCase(name)) {
-			if (mainPool != null) {
+		if (MAIN_POOL_NAME.equalsIgnoreCase(poolName)) {
+			if (mainPool != null)
 				return mainPool;
+			if ( ! MAIN_POOL_NAME.equals(poolName)) {
+				return get(MAIN_POOL_NAME);
 			}
 		}
 		// use existing pool instance
 		{
-			final xThreadPool pool = pools.get(name);
+			final xThreadPool pool = pools.get(poolName);
 			if (pool != null) {
 				return pool;
 			}
 		}
 		// new pool instance
 		synchronized(pools) {
-			if (pools.containsKey(name)) {
-				return pools.get(name);
+			if (pools.containsKey(poolName)) {
+				return pools.get(poolName);
 			}
 			// start task hang monitor thread
 			if (hangMonitorThread == null) {
@@ -71,7 +72,7 @@ public class xThreadPoolFactory {
 			// create new pool instance
 			final xThreadPool pool = new xThreadPool(poolName);
 			pools.put(
-				name,
+				poolName,
 				pool
 			);
 			return pool;

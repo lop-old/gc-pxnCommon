@@ -66,9 +66,13 @@ public class xThreadPool implements xStartable {
 
 	protected xThreadPool(final String poolName) {
 		if (Utils.isEmpty(poolName)) throw new RequiredArgumentException("poolName");
-		this.isMainPool = MAIN_POOL_NAME.equals(poolName);
-		this.poolName = poolName;
-		this.group = new ThreadGroup(poolName);
+		this.isMainPool = MAIN_POOL_NAME.equalsIgnoreCase(poolName);
+		this.poolName = (
+			this.isMainPool
+			? MAIN_POOL_NAME
+			: poolName
+		);
+		this.group = new ThreadGroup(this.poolName);
 		// queues
 		this.queueNorm = new LinkedBlockingQueue<xThreadPoolTask>();
 		this.queueHigh = new ConcurrentLinkedQueue<xThreadPoolTask>();
@@ -450,8 +454,8 @@ public class xThreadPool implements xStartable {
 	public void setMaxThreads(final int size) {
 		this.poolSize =
 			NumberUtils.MinMax(
-				size,
-				0,
+				poolSize,
+				( this.isMainPool() ? 1 : 0 ),
 				getGlobalMaxThreads()
 			);
 	}
