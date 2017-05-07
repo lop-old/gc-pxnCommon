@@ -438,17 +438,17 @@ public final class Utils {
 
 
 
-	// compare versions
-	public static String compareVersions(final String versionA, final String versionB) {
+	// compare version numbers
+	public static String CompareVersions(final String versionA, final String versionB) {
 		if (Utils.isEmpty(versionA)) throw new RequiredArgumentException("versionA");
 		if (Utils.isEmpty(versionB)) throw new RequiredArgumentException("versionB");
-		final String[] norms = normalisedVersions(versionA, versionB);
+		final String[] norms = NormalizeVersions(versionA, versionB);
 		final int cmp = norms[0].compareTo(norms[1]);
 		if (cmp < 0) return "<";
 		if (cmp > 0) return ">";
 		return "=";
 	}
-	private static String[] normalisedVersions(final String versionA, final String versionB) {
+	private static String[] NormalizeVersions(final String versionA, final String versionB) {
 		if (Utils.isEmpty(versionA)) throw new RequiredArgumentException("versionA");
 		if (Utils.isEmpty(versionB)) throw new RequiredArgumentException("versionB");
 		// split string by .
@@ -483,6 +483,42 @@ public final class Utils {
 			outB.toString()
 		};
 	}
+
+
+
+	public static boolean isVersionEqual(final String versionA, final String versionB) {
+		final String result = CompareVersions(versionA, versionB);
+		if (Utils.isEmpty(result))
+			return false;
+		return result.equals("=");
+	}
+	public static boolean isVersionGreater(final String versionA, final String versionB) {
+		final String result = CompareVersions(versionA, versionB);
+		if (Utils.isEmpty(result))
+			return false;
+		return result.equals(">");
+	}
+	public static boolean isVersionLess(final String versionA, final String versionB) {
+		final String result = CompareVersions(versionA, versionB);
+		if (Utils.isEmpty(result))
+			return false;
+		return result.equals("<");
+	}
+	public static boolean isVersionGreaterOrEqual(final String versionA, final String versionB) {
+		final String result = CompareVersions(versionA, versionB);
+		if (Utils.isEmpty(result))
+			return false;
+		return result.equals(">") || result.equals("=");
+	}
+	public static boolean isVersionLessOrEqual(final String versionA, final String versionB) {
+		final String result = CompareVersions(versionA, versionB);
+		if (Utils.isEmpty(result))
+			return false;
+		return result.equals("<") || result.equals("=");
+	}
+
+
+
 	public static boolean checkJavaVersion(final String requiredVersion) {
 		final String javaVersion;
 		{
@@ -491,7 +527,7 @@ public final class Utils {
 				throw new RuntimeException("Failed to get java version");
 			javaVersion = vers.replace('_', '.');
 		}
-		return !(compareVersions(javaVersion, requiredVersion).equals("<"));
+		return isVersionGreaterOrEqual(javaVersion, requiredVersion);
 	}
 
 
