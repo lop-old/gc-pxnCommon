@@ -451,7 +451,7 @@ public class xThreadPool implements xStartable {
 	 * @param size max number of threads allowed.
 	 */
 	//TODO:
-	public void setMaxThreads(final int size) {
+	public void setPoolSize(final int poolSize) {
 		this.poolSize =
 			NumberUtils.MinMax(
 				poolSize,
