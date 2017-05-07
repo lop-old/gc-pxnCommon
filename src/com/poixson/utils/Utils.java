@@ -438,17 +438,17 @@ public final class Utils {
 
 
 
-	// compare versions
-	public static String compareVersions(final String versionA, final String versionB) {
+	// compare version numbers
+	public static String CompareVersions(final String versionA, final String versionB) {
 		if (Utils.isEmpty(versionA)) throw new RequiredArgumentException("versionA");
 		if (Utils.isEmpty(versionB)) throw new RequiredArgumentException("versionB");
-		final String[] norms = normalisedVersions(versionA, versionB);
+		final String[] norms = NormalizeVersions(versionA, versionB);
 		final int cmp = norms[0].compareTo(norms[1]);
 		if (cmp < 0) return "<";
 		if (cmp > 0) return ">";
 		return "=";
 	}
-	private static String[] normalisedVersions(final String versionA, final String versionB) {
+	private static String[] NormalizeVersions(final String versionA, final String versionB) {
 		if (Utils.isEmpty(versionA)) throw new RequiredArgumentException("versionA");
 		if (Utils.isEmpty(versionB)) throw new RequiredArgumentException("versionB");
 		// split string by .
