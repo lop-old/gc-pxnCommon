@@ -105,6 +105,19 @@ public class xThreadPool implements xStartable {
 
 
 
+	@Override
+	public boolean isRunning() {
+		if (this.isStopping())
+			return false;
+		return this.running.get();
+	}
+	@Override
+	public boolean isStopping() {
+		return this.stopping;
+	}
+
+
+
 	// ------------------------------------------------------------------------------- //
 	// running and threads
 
@@ -298,19 +311,6 @@ public class xThreadPool implements xStartable {
 
 //TODO:
 	protected void checkTaskTimeouts(final long currentTime) {
-	}
-
-
-
-	@Override
-	public boolean isRunning() {
-		if (this.isStopping())
-			return false;
-		return this.running.get();
-	}
-	@Override
-	public boolean isStopping() {
-		return this.stopping;
 	}
 
 
