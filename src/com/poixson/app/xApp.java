@@ -46,7 +46,9 @@ import com.poixson.utils.xThreadPool.xThreadPoolFactory;
  *   90  lock file
  *  100  start thread pools
  *  150  start scheduler
+ *  160  start ticker
  * Shutdown sequence
+ *  160  stop ticker
  *  150  stop scheduler
  *  100  stop thread pools
  *   60  display uptime
@@ -588,8 +590,34 @@ return "<uptime>";
 
 
 
+	// start ticker
+	@xAppStep(type=StepType.STARTUP, title="Ticker", priority=160)
+	public void __STARTUP_ticker() {
+//		try {
+//			final xTicker ticker = xTicker.get();
+//			ticker.Start();
+//		} catch (Exception e) {
+//			Failure.fail(e);
+//		}
+	}
+
+
+
 	// ------------------------------------------------------------------------------- //
 	// shutdown steps
+
+
+
+	// stop ticker
+	@xAppStep(type=StepType.SHUTDOWN, title="Ticker", priority=160)
+	public void __SHUTDOWN_ticker() {
+//		try {
+//			final xTicker ticker = xTicker.get();
+//			ticker.Stop();
+//		} catch (Exception e) {
+//			Failure.fail(e);
+//		}
+	}
 
 
 
