@@ -344,13 +344,14 @@ public class jLineConsole implements xConsole {
 	// clear screen
 	@Override
 	public void clear() {
+		final PrintStream out = getOriginalOut();
 		synchronized(this.printLock) {
-			AnsiConsole.out.println(
+			out.println(
 				Ansi.ansi()
 					.eraseScreen()
 					.cursor(0, 0)
 			);
-			this.flush();
+			out.flush();
 		}
 	}
 	@Override
@@ -386,9 +387,9 @@ public class jLineConsole implements xConsole {
 	@Override
 	public void flush() {
 		try {
+			final PrintStream out = getOriginalOut();
 			synchronized(this.printLock) {
-				getOriginalOut()
-					.flush();
+				out.flush();
 			}
 		} catch (Exception ignore) {}
 	}
