@@ -32,26 +32,12 @@ public class xThreadPoolFactory {
 	 * Get main thread queue
 	 */
 	public static xThreadPool getMainPool() {
-		return get(
-			(String)  null,
-			(Integer) null
-		);
+		return get(null);
 	}
 	/**
 	 * Get thread queue by name
 	 */
-	public static xThreadPool get(final String name) {
-		return get(
-			name,
-			(Integer) null
-		);
-	}
-	/**
-	 * Get thread queue by name or create with x threads
-	 * @param name Thread queue name to get or create.
-	 * @param size Number of threads which can be created for this queue.
-	 */
-	public static xThreadPool get(final String poolName, final Integer poolSize) {
+	public static xThreadPool get(final String poolName) {
 		String name = poolName;
 		if (Utils.isEmpty(name) || MAIN_POOL_NAME.equalsIgnoreCase(name)) {
 			if (mainPool != null) {
@@ -59,18 +45,6 @@ public class xThreadPoolFactory {
 			}
 			name = MAIN_POOL_NAME;
 		}
-		final int size = (
-			poolSize == null
-			? 1
-			: poolSize.intValue()
-		);
-		if (size == 0) {
-			if (mainPool != null) {
-				return mainPool;
-			}
-			name = MAIN_POOL_NAME;
-		}
-		if (size < 0) throw new IllegalArgumentException("Invalid pool size: "+Integer.toString(size));
 		if (MAIN_POOL_NAME.equalsIgnoreCase(name)) {
 			if (mainPool != null) {
 				return mainPool;
@@ -95,11 +69,7 @@ public class xThreadPoolFactory {
 				hangMonitorThread.start();
 			}
 			// create new pool instance
-			final xThreadPool pool =
-					new xThreadPool(
-						name,
-						size
-					);
+			final xThreadPool pool = new xThreadPool(poolName);
 			pools.put(
 				name,
 				pool

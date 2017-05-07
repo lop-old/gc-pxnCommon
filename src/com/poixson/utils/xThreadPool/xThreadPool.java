@@ -36,7 +36,7 @@ public class xThreadPool implements xStartable {
 
 	// named pool
 	private final String poolName;
-	private volatile int poolSize;
+	private volatile int poolSize = 1;
 
 	// pool state
 	private final AtomicBoolean running  = new AtomicBoolean(false);
@@ -64,21 +64,10 @@ public class xThreadPool implements xStartable {
 
 
 
-	protected xThreadPool(final String poolName, final int poolSize) {
+	protected xThreadPool(final String poolName) {
 		if (Utils.isEmpty(poolName)) throw new RequiredArgumentException("poolName");
-		if (poolSize < 1)            throw new IllegalArgumentException("Invalid pool size: "+Integer.toString(poolSize));
 		this.isMainPool = MAIN_POOL_NAME.equals(poolName);
 		this.poolName = poolName;
-		this.poolSize =
-			NumberUtils.MinMax(
-				poolSize,
-				(
-					this.isMainPool
-					? 1
-					: 0
-				),
-				GLOBAL_POOL_SIZE_LIMIT
-			);
 		this.group = new ThreadGroup(poolName);
 		// queues
 		this.queueNorm = new LinkedBlockingQueue<xThreadPoolTask>();
