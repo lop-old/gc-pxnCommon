@@ -105,7 +105,7 @@ public class jLineConsole implements xConsole {
 			history.setMaxSize(HISTORY_SIZE);
 			reader.setHistory(history);
 			reader.setHistoryEnabled(true);
-//TODO:
+//TODO: use --color --no-color
 //term.isAnsiSupported();
 		} catch (Exception e) {
 			jLineLog()
@@ -278,8 +278,9 @@ public class jLineConsole implements xConsole {
 					this.getMask()
 				);
 			} catch (Exception e) {
-				if ("Stream closed".equals(e.getMessage()))
-					break;
+//TODO: is this right?
+//				if ("Stream closed".equals(e.getMessage()))
+//					break;
 				log().trace(e);
 				break;
 			}
@@ -287,9 +288,13 @@ public class jLineConsole implements xConsole {
 				break;
 			if (Utils.isEmpty(line))
 				continue;
-			// pass event to command handler
-			final xCommandEvent event = new xCommandEvent(line);
+			// handle command
 			final xCommandHandler handler = this.getCommandHandler();
+			if (handler == null) {
+				log().severe("Command handler not set!");
+				continue;
+			}
+			final xCommandEvent event = new xCommandEvent(line);
 			handler.trigger(event);
 		}
 		if (!this.stopping) {
@@ -360,6 +365,7 @@ public class jLineConsole implements xConsole {
 			if (Utils.isEmpty(prompt)) {
 				out.print('\r');
 				this.flush();
+				return;
 			}
 			final ConsoleReader readr = getReader();
 			int wipeLen = prompt.length() + 2;
