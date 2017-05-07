@@ -253,9 +253,11 @@ public class jLineConsole implements xConsole {
 			);
 		{
 			final ConsoleReader readr = getReader();
-			readr.setPrompt(
-				this.getPrompt()
-			);
+			if (readr != null) {
+				readr.setPrompt(
+					this.getPrompt()
+				);
+			}
 		}
 		while (true) {
 			if (this.isStopping())
@@ -265,8 +267,11 @@ public class jLineConsole implements xConsole {
 			String line = null;
 			try {
 				final ConsoleReader readr = getReader();
-				if (readr == null)
+				if (readr == null) {
+					this.log()
+						.warning("reader not set");
 					break;
+				}
 				out.print('\r');
 				readr.flush();
 				line = readr.readLine(
