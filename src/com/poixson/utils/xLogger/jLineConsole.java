@@ -266,19 +266,17 @@ public class jLineConsole implements xConsole {
 				break;
 			String line = null;
 			try {
+				out.print('\r');
 				final ConsoleReader readr = getReader();
 				if (readr == null) {
 					this.log()
 						.warning("reader not set");
 					break;
 				}
-				out.print('\r');
-				readr.flush();
 				line = readr.readLine(
 					this.getPrompt(),
 					this.getMask()
 				);
-				readr.flush();
 			} catch (Exception e) {
 				if ("Stream closed".equals(e.getMessage()))
 					break;
