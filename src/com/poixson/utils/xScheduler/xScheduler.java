@@ -114,10 +114,10 @@ public class xScheduler implements xStartable {
 				final xSchedulerTask task = it.next();
 				final long untilNext = task.untilNextTrigger();
 				// disabled
-				if (untilNext == -1)
+				if (untilNext == -1L)
 					continue;
 				// trigger now
-				if (untilNext <= 0) {
+				if (untilNext <= 0L) {
 					task.trigger();
 				}
 				if (untilNext < sleep) {
@@ -125,13 +125,13 @@ public class xScheduler implements xStartable {
 				}
 			}
 			// calculate sleep
-			if (sleep > 0) {
+			if (sleep > 0L) {
 				final long sleepLess = (
 					sleep < threadSleep
 					? (long) Math.floor( ((double) sleep) * 0.95 )
 					: threadSleep
 				);
-				if (sleepLess > 0) {
+				if (sleepLess > 0L) {
 					if (this.log().isLoggable(xLevel.DETAIL)) {
 						final double sleepLessSec = ((double)sleepLess) / 1000.0;
 						log().finest(

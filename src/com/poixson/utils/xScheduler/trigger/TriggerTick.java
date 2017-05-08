@@ -9,7 +9,7 @@ public class TriggerTick implements TriggerType {
 
 	protected final xTime delay    = xTime.get();
 	protected final xTime interval = xTime.get();
-	protected volatile long last = -1;
+	protected volatile long last = -1L;
 
 
 
@@ -60,19 +60,19 @@ public class TriggerTick implements TriggerType {
 		final long now = getCurrentMillis();
 		final long delay    = this.delay.getMS();
 		final long interval = this.interval.getMS();
-		if (interval == 0)
-			return -1;
+		if (interval == 0L)
+			return -1L;
 		// first trigger
-		if (this.last == -1) {
+		if (this.last == -1L) {
 			this.last = now;
-			return (delay > 0 ? delay : 0);
+			return (delay > 0L ? delay : 0L);
 		}
 		final long until = this.interval.getMS() - (now - this.last);
 //xLog.getRoot().warning("UNTIL: "+Long.toString(until)+"   "+this.interval.getString());
 		// trigger now
-		if (until <= 0) {
+		if (until <= 0L) {
 			this.last = now;
-			return 0;
+			return 0L;
 		}
 		// sleep time
 		return until;

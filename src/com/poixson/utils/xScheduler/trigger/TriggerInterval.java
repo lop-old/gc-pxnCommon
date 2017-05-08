@@ -19,7 +19,7 @@ public class TriggerClock implements TriggerType {
 
 	@Override
 	public long untilNextTrigger() {
-		return -1;
+		return -1L;
 	}
 
 

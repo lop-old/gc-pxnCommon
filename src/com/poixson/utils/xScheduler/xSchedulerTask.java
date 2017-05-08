@@ -97,7 +97,7 @@ public class xSchedulerTask implements xSchedulerTrigger {
 
 	@Override
 	public boolean hasTriggered() {
-		return (this.runCount.get() > 0);
+		return (this.runCount.get() > 0L);
 	}
 
 
