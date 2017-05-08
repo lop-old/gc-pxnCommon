@@ -35,6 +35,9 @@ public class xScheduler implements xStartable {
 	private final AtomicBoolean running = new AtomicBoolean(false);
 	private volatile boolean stopping = false;
 
+	// manager thread sleep
+	private volatile boolean sleeping = false;
+	private volatile boolean changes  = false;
 
 
 	public static xScheduler getMainSched() {
@@ -110,6 +113,7 @@ public class xScheduler implements xStartable {
 			long sleep = threadSleep;
 			// check task triggers
 			final Iterator<xSchedulerTask> it = this.tasks.iterator();
+			this.changes = false;
 			while (it.hasNext()) {
 				final xSchedulerTask task = it.next();
 				final long untilNext = task.untilNextTrigger();
@@ -118,6 +122,7 @@ public class xScheduler implements xStartable {
 					continue;
 				// trigger now
 				if (untilNext <= 0L) {
+					Thread.interrupted();
 					task.trigger();
 				}
 				if (untilNext < sleep) {
@@ -131,7 +136,7 @@ public class xScheduler implements xStartable {
 					? (long) Math.floor( ((double) sleep) * 0.95 )
 					: threadSleep
 				);
-				if (sleepLess > 0L) {
+				if (sleepLess > 0L && !this.changes) {
 					if (this.log().isLoggable(xLevel.DETAIL)) {
 						final double sleepLessSec = ((double)sleepLess) / 1000.0;
 						log().finest(
@@ -142,7 +147,14 @@ public class xScheduler implements xStartable {
 								.toString()
 						);
 					}
-					ThreadUtils.Sleep(sleepLess);
+					// sleep until next check
+					if (!this.changes) {
+						this.sleeping = true;
+						if (!this.changes) {
+							ThreadUtils.Sleep(sleepLess);
+						}
+						this.sleeping = false;
+					}
 				}
 			}
 		}
@@ -152,9 +164,12 @@ public class xScheduler implements xStartable {
 		Keeper.remove(this);
 	}
 	public void wakeManager() {
-		try {
-			this.thread.interrupt();
-		} catch (Exception ignore) {}
+		this.changes = true;
+		if (this.sleeping) {
+			try {
+				this.thread.interrupt();
+			} catch (Exception ignore) {}
+		}
 	}
 
 
