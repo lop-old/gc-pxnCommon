@@ -75,8 +75,7 @@ public class jLineConsole implements xConsole {
 				);
 			} catch (IOException e) {
 				reader = null;
-				jLineLog()
-					.trace(e);
+				log().trace(e);
 			}
 		}
 		if (reader == null)
@@ -88,8 +87,7 @@ public class jLineConsole implements xConsole {
 				new OutputStreamLineRemapper() {
 					@Override
 					public void line(String line) {
-						jLineLog()
-							.publish(line);
+						log().publish(line);
 					}
 				}
 			)
@@ -108,8 +106,7 @@ public class jLineConsole implements xConsole {
 //TODO: use --color --no-color
 //term.isAnsiSupported();
 		} catch (Exception e) {
-			jLineLog()
-				.trace(e);
+			log().trace(e);
 		}
 	}
 	public jLineConsole() {
@@ -269,8 +266,7 @@ public class jLineConsole implements xConsole {
 				out.print('\r');
 				final ConsoleReader readr = getReader();
 				if (readr == null) {
-					this.log()
-						.warning("reader not set");
+					log().warning("reader not set");
 					break;
 				}
 				line = readr.readLine(
@@ -502,22 +498,10 @@ public class jLineConsole implements xConsole {
 				return log;
 			}
 		}
-		final xLog log = xLog.getRoot();
-		_log = new SoftReference<xLog>(log);
-		return log;
-	}
-
-	private static volatile SoftReference<xLog> _jline_log = null;
-	public static xLog jLineLog() {
-		if (_jline_log != null) {
-			final xLog log = _jline_log.get();
-			if (log != null)
-				return log;
-		}
 		final xLog log =
 			xLog.getRoot()
-				.get("jline");
-		_jline_log = new SoftReference<xLog>(log);
+				.get("jLine");
+		_log = new SoftReference<xLog>(log);
 		return log;
 	}
 
