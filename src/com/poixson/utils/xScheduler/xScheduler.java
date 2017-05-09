@@ -116,14 +116,14 @@ public class xScheduler implements xStartable {
 			this.changes = false;
 			while (it.hasNext()) {
 				final xSchedulerTask task = it.next();
-				final long untilNext = task.untilNextTrigger();
+				final long untilNext = task.untilSoonestTrigger();
 				// disabled
 				if (untilNext == -1L)
 					continue;
 				// trigger now
 				if (untilNext <= 0L) {
 					Thread.interrupted();
-					task.trigger();
+					task.doTrigger();
 				}
 				if (untilNext < sleep) {
 					sleep = untilNext;

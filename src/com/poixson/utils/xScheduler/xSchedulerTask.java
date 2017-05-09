@@ -14,7 +14,7 @@ import com.poixson.utils.xThreadPool.xThreadPool;
 import com.poixson.utils.xThreadPool.xThreadPoolFactory;
 
 
-public class xSchedulerTask implements xSchedulerTrigger {
+public class xSchedulerTask {
 
 	protected final xScheduler sched;
 
@@ -45,8 +45,7 @@ public class xSchedulerTask implements xSchedulerTrigger {
 
 
 
-	@Override
-	public long untilNextTrigger() {
+	public long untilSoonestTrigger() {
 		if (this.finished)
 			return -1L;
 		if (this.triggers.isEmpty())
@@ -72,7 +71,7 @@ public class xSchedulerTask implements xSchedulerTrigger {
 
 
 
-	public void trigger() {
+	public void doTrigger() {
 		final xRunnable r = this.getRunnable();
 		if (r == null) {
 			this.log()
