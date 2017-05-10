@@ -28,16 +28,17 @@ public class xScheduler implements xStartable {
 	private final String schedName;
 	private final Set<xSchedulerTask> tasks = new CopyOnWriteArraySet<xSchedulerTask>();
 
-	private final xTime threadSleepTime = xTime.get("5s");
-
 	// manager thread
 	private final Thread thread;
 	private final AtomicBoolean running = new AtomicBoolean(false);
 	private volatile boolean stopping = false;
 
 	// manager thread sleep
+	private final xTime threadSleepTime = xTime.get("5s");
+	private final double threadSleepInhibitPercent = 0.95;
 	private volatile boolean sleeping = false;
 	private volatile boolean changes  = false;
+
 
 
 	public static xScheduler getMainSched() {
@@ -118,45 +119,53 @@ public class xScheduler implements xStartable {
 				final xSchedulerTask task = it.next();
 				final long untilNext = task.untilSoonestTrigger();
 				// disabled
-				if (untilNext == -1L)
+				if (untilNext == Long.MIN_VALUE)
 					continue;
 				// trigger now
 				if (untilNext <= 0L) {
 					Thread.interrupted();
 					task.doTrigger();
+					if (task.notRepeating()) {
+						it.remove();
+					}
+					if (task.untilSoonestTrigger() < 0L) {
+						this.changes = true;
+						continue;
+					}
 				}
 				if (untilNext < sleep) {
 					sleep = untilNext;
 				}
 			}
+			// no sleep needed
+			if (this.changes || sleep <= 0L)
+				continue;
 			// calculate sleep
-			if (sleep > 0L) {
-				final long sleepLess = (
-					sleep < threadSleep
-					? (long) Math.floor( ((double) sleep) * 0.95 )
-					: threadSleep
+			final long sleepLess = (
+				sleep <= threadSleep
+				? (long) Math.ceil( ((double) sleep) * this.threadSleepInhibitPercent )
+				: threadSleep
+			);
+			// no sleep needed
+			if (this.changes || sleep <= 0L)
+				continue;
+			// log sleep time
+			if (this.log().isLoggable(xLevel.DETAIL)) {
+				final double sleepLessSec = ((double)sleepLess) / 1000.0;
+				log().finest(
+					(new StringBuilder())
+						.append("Sleeping.. ")
+						.append(NumberUtils.FormatDecimal("0.000", sleepLessSec))
+						.append('s')
+						.toString()
 				);
-				if (sleepLess > 0L && !this.changes) {
-					if (this.log().isLoggable(xLevel.DETAIL)) {
-						final double sleepLessSec = ((double)sleepLess) / 1000.0;
-						log().finest(
-							(new StringBuilder())
-								.append("Sleeping: ")
-								.append(NumberUtils.FormatDecimal("#.###", sleepLessSec))
-								.append("s ..")
-								.toString()
-						);
-					}
-					// sleep until next check
-					if (!this.changes) {
-						this.sleeping = true;
-						if (!this.changes) {
-							ThreadUtils.Sleep(sleepLess);
-						}
-						this.sleeping = false;
-					}
-				}
 			}
+			// sleep until next check
+			this.sleeping = true;
+			if (!this.changes) {
+				ThreadUtils.Sleep(sleepLess);
+			}
+			this.sleeping = false;
 		}
 		log().fine("Stopped sched manager thread");
 		this.stopping = true;
