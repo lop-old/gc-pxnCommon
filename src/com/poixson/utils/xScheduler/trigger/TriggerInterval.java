@@ -1,18 +1,18 @@
+package com.poixson.utils.xScheduler.trigger;
+
+import com.poixson.utils.xScheduler.xSchedulerTrigger;
+
+
+public class TriggerInterval extends xSchedulerTrigger {
+
+//	protected final xTime delay    = xTime.get();
+//	protected final xTime interval = xTime.get();
+//	protected volatile long last = -1L;
+
+
+
+//TODO:
 /*
-package com.poixson.commonjava.scheduler.triggers;
-
-import com.poixson.commonjava.Utils.xClock;
-import com.poixson.commonjava.Utils.xTime;
-
-
-public class TriggerTick implements TriggerType {
-
-	protected final xTime delay    = xTime.get();
-	protected final xTime interval = xTime.get();
-	protected volatile long last = -1L;
-
-
-
 	public static TriggerTick get(final String delay, final String interval) {
 		return
 			new TriggerTick(
@@ -52,11 +52,14 @@ public class TriggerTick implements TriggerType {
 		this.delay.set(delay);
 		this.interval.set(interval);
 	}
+*/
 
 
 
 	@Override
 	public long untilNextTrigger() {
+//TODO:
+/*
 		final long now = getCurrentMillis();
 		final long delay    = this.delay.getMS();
 		final long interval = this.interval.getMS();
@@ -76,17 +79,17 @@ public class TriggerTick implements TriggerType {
 		}
 		// sleep time
 		return until;
+*/
+return Long.MIN_VALUE;
 	}
 
 
 
-	public static long getCurrentMillis() {
-		return
-			xClock.get()
-				.millis();
+	@Override
+	public boolean hasTriggered() {
+return false;
 	}
 
 
 
 }
-*/

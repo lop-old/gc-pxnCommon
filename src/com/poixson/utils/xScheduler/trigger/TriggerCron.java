@@ -1,19 +1,18 @@
+package com.poixson.utils.xScheduler.trigger;
+
+import com.poixson.utils.xScheduler.xSchedulerTrigger;
+
+
+public class TriggerCron extends xSchedulerTrigger {
+
+//	protected final CronPredictor predictor;
+
+//	protected volatile long next = -1L;
+
+
+
+//TODO:
 /*
-package com.poixson.commonjava.scheduler.triggers;
-
-import com.poixson.commonjava.Utils.xClock;
-import com.poixson.commonjava.scheduler.cron.CronPattern;
-import com.poixson.commonjava.scheduler.cron.CronPredictor;
-
-
-public class TriggerCron implements TriggerType {
-
-	protected final CronPredictor predictor;
-
-	protected volatile long next = -1L;
-
-
-
 	public static TriggerCron get(final String pattern) {
 		return new TriggerCron(pattern);
 	}
@@ -39,24 +38,27 @@ public class TriggerCron implements TriggerType {
 	public TriggerCron(final CronPredictor predictor) {
 		this.predictor = predictor;
 	}
+*/
 
 
 
 	@Override
 	public long untilNextTrigger() {
-		final long now = getCurrentMillis();
-		long until = this.predictor.untilNextMatching(now);
+//TODO:
+//		long until = this.predictor.untilNextMatching(now);
 //xLog.getRoot().publish("until next: "+xTime.get(until, xTimeU.MS).toFullString());
-		return until;
+//		return until;
+return Long.MIN_VALUE;
 	}
 
 
 
-	public static long getCurrentMillis() {
-		return xClock.get().millis();
+	@Override
+	public boolean hasTriggered() {
+//TODO:
+return false;
 	}
 
 
 
 }
-*/
