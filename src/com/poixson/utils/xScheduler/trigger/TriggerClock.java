@@ -28,11 +28,9 @@ return Long.MIN_VALUE;
 
 
 
-	@Override
-	public boolean hasTriggered() {
-//TODO:
-return false;
-	}
+//	@Override
+//	public boolean hasTriggered() {
+//	}
 
 
 
