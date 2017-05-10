@@ -113,28 +113,30 @@ public class xScheduler implements xStartable {
 				break;
 			long sleep = threadSleep;
 			// check task triggers
-			final Iterator<xSchedulerTask> it = this.tasks.iterator();
-			this.changes = false;
-			while (it.hasNext()) {
-				final xSchedulerTask task = it.next();
-				final long untilNext = task.untilSoonestTrigger();
-				// disabled
-				if (untilNext == Long.MIN_VALUE)
-					continue;
-				// trigger now
-				if (untilNext <= 0L) {
-					Thread.interrupted();
-					task.doTrigger();
-					if (task.notRepeating()) {
-						it.remove();
-					}
-					if (task.untilSoonestTrigger() < 0L) {
-						this.changes = true;
+			{
+				final Iterator<xSchedulerTask> it = this.tasks.iterator();
+				this.changes = false;
+				while (it.hasNext()) {
+					final xSchedulerTask task = it.next();
+					final long untilNext = task.untilSoonestTrigger();
+					// disabled
+					if (untilNext == Long.MIN_VALUE)
 						continue;
+					// trigger now
+					if (untilNext <= 0L) {
+						Thread.interrupted();
+						task.doTrigger();
+						if (task.notRepeating()) {
+							it.remove();
+						}
+						if (task.untilSoonestTrigger() < 0L) {
+							this.changes = true;
+							continue;
+						}
 					}
-				}
-				if (untilNext < sleep) {
-					sleep = untilNext;
+					if (untilNext < sleep) {
+						sleep = untilNext;
+					}
 				}
 			}
 			// no sleep needed
