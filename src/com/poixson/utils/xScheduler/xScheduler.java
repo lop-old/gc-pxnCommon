@@ -148,6 +148,7 @@ public class xScheduler implements xStartable {
 				final Iterator<xSchedulerTask> it = finishedTasks.iterator();
 				while (it.hasNext()) {
 					final xSchedulerTask task = it.next();
+					task.unregister();
 					this.tasks.remove(task);
 				}
 			}
@@ -259,7 +260,11 @@ public class xScheduler implements xStartable {
 	public boolean cancel(final xSchedulerTask task) {
 		if (task == null)
 			return false;
-		return this.tasks.remove(task);
+		if (this.tasks.contains(task)) {
+			task.unregister();
+			return this.tasks.remove(task);
+		}
+		return false;
 	}
 
 

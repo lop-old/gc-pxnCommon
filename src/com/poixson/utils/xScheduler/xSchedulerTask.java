@@ -53,6 +53,22 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 
 
 
+	public void register() {
+		final xScheduler sched = this.sched;
+		if (sched == null)
+			throw new RequiredArgumentException("sched");
+		sched.add(this);
+	}
+	public void unregister() {
+		final Iterator<xSchedulerTrigger> it = this.triggers.iterator();
+		while (it.hasNext()) {
+			it.next()
+				.unregister();
+		}
+	}
+
+
+
 	public long untilSoonestTrigger() {
 		if (this.notEnabled())
 			return Long.MIN_VALUE;
@@ -263,7 +279,18 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 		return this;
 	}
 	public xSchedulerTask clearTriggers() {
-		this.triggers.clear();
+		if (!this.triggers.isEmpty()) {
+			final Iterator<xSchedulerTrigger> it = this.triggers.iterator();
+			final Set<xSchedulerTrigger> removing = new HashSet<xSchedulerTrigger>();
+			while (it.hasNext()) {
+				final xSchedulerTrigger trigger = it.next();
+				trigger.unregister();
+				removing.add(trigger);
+			}
+			for (final xSchedulerTrigger trigger : removing) {
+				this.triggers.remove(trigger);
+			}
+		}
 		return this;
 	}
 

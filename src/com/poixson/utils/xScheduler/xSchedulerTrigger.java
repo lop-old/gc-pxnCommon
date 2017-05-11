@@ -16,6 +16,12 @@ public abstract class xSchedulerTrigger implements xEnableable {
 
 
 
+	public void unregister() {
+		this.setDisabled();
+	}
+
+
+
 	@Override
 	public boolean isEnabled() {
 		return this.enabled;
