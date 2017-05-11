@@ -70,8 +70,9 @@ public class xRunnable implements Runnable {
 
 	@Override
 	public void run() {
-		if (this.task == null) throw new RequiredArgumentException("task");
-		this.task.run();
+		final Runnable task = this.task;
+		if (task == null) throw new RequiredArgumentException("task");
+		task.run();
 	}
 
 
