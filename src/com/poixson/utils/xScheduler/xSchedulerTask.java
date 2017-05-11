@@ -19,7 +19,6 @@ public class xSchedulerTask {
 	protected final xScheduler sched;
 
 	// task config
-	protected volatile boolean repeating = false;
 	protected volatile boolean finished  = false;
 
 	protected volatile xRunnable   run  = null;
@@ -87,9 +86,6 @@ public class xSchedulerTask {
 				.hasTriggered();
 		}
 		this.runCount.incrementAndGet();
-		if (this.notRepeating()) {
-			this.finished = true;
-		}
 	}
 
 
@@ -120,14 +116,15 @@ public class xSchedulerTask {
 
 	// repeating
 	public boolean isRepeating() {
-		return this.repeating;
+		final Iterator<xSchedulerTrigger> it = this.triggers.iterator();
+		while (it.hasNext()) {
+			if (it.next().isRepeating())
+				return true;
+		}
+		return false;
 	}
 	public boolean notRepeating() {
 		return ! this.isRepeating();
-	}
-	public xSchedulerTask setRepeating(final boolean repeating) {
-		this.repeating = repeating;
-		return this;
 	}
 
 
