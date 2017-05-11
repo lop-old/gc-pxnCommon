@@ -4,6 +4,7 @@ import java.lang.ref.SoftReference;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.poixson.utils.ReflectUtils;
@@ -17,6 +18,9 @@ import com.poixson.utils.xThreadPool.xThreadPoolFactory;
 public class xSchedulerTask {
 
 	private final xScheduler sched;
+
+	private static final AtomicInteger taskCount = new AtomicInteger(0);
+	private final int taskIndex;
 
 	// task config
 	protected volatile boolean finished  = false;
@@ -42,6 +46,7 @@ public class xSchedulerTask {
 			? xScheduler.getMainSched()
 			: sched
 		);
+		this.taskIndex = taskCount.incrementAndGet();
 	}
 
 
