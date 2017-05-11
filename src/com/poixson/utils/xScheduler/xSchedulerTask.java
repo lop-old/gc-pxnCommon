@@ -9,13 +9,14 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.poixson.utils.ReflectUtils;
 import com.poixson.utils.Utils;
+import com.poixson.utils.xEnableable;
 import com.poixson.utils.xRunnable;
 import com.poixson.utils.xLogger.xLog;
 import com.poixson.utils.xThreadPool.xThreadPool;
 import com.poixson.utils.xThreadPool.xThreadPoolFactory;
 
 
-public class xSchedulerTask extends xRunnable {
+public class xSchedulerTask extends xRunnable implements xEnableable {
 
 	private final xScheduler sched;
 
@@ -23,6 +24,7 @@ public class xSchedulerTask extends xRunnable {
 	private final int taskIndex;
 
 	// task config
+	private volatile boolean enabled   = true;
 	protected volatile boolean finished  = false;
 
 	private volatile xRunnable   run  = null;
@@ -52,6 +54,8 @@ public class xSchedulerTask extends xRunnable {
 
 
 	public long untilSoonestTrigger() {
+		if (this.notEnabled())
+			return Long.MIN_VALUE;
 		if (this.finished)
 			return -1L;
 		if (this.triggers.isEmpty())
@@ -82,6 +86,9 @@ public class xSchedulerTask extends xRunnable {
 		if (r == null) {
 			this.log()
 				.warning("Scheduled task has null runnable");
+		}
+		if (this.notEnabled()) {
+			this.log().warning("Skipping disabled task.. this should only happen rarely. ");
 			return;
 		}
 		// run task
@@ -118,6 +125,38 @@ public class xSchedulerTask extends xRunnable {
 
 	// ------------------------------------------------------------------------------- //
 	// task config
+
+
+
+	// task enabled
+	@Override
+	public boolean isEnabled() {
+		if (!this.enabled)
+			return false;
+		final Iterator<xSchedulerTrigger> it = this.triggers.iterator();
+		while (it.hasNext()) {
+			final xSchedulerTrigger trigger = it.next();
+			if (trigger.isEnabled())
+				return true;
+		}
+		return false;
+	}
+	@Override
+	public boolean notEnabled() {
+		return ! this.isEnabled();
+	}
+	@Override
+	public void setEnabled() {
+		this.setEnabled(true);
+	}
+	@Override
+	public void setDisabled() {
+		this.setEnabled(false);
+	}
+	@Override
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
 
 
 
