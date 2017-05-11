@@ -1,6 +1,7 @@
 package com.poixson.utils.xScheduler;
 
 import java.lang.ref.SoftReference;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -108,10 +109,12 @@ public class xScheduler implements xStartable {
 			return;
 		this.log().fine("Starting sched manager..");
 		final long threadSleep = this.threadSleepTime.getMS();
+		final Set<xSchedulerTask> finishedTasks = new HashSet<xSchedulerTask>();
 		while (true) {
 			if (this.stopping || !this.isRunning())
 				break;
 			long sleep = threadSleep;
+			finishedTasks.clear();
 			// check task triggers
 			{
 				final Iterator<xSchedulerTask> it = this.tasks.iterator();
@@ -126,8 +129,9 @@ public class xScheduler implements xStartable {
 					if (untilNext <= 0L) {
 						Thread.interrupted();
 						task.doTrigger();
+						// mark for removal
 						if (task.notRepeating()) {
-							it.remove();
+							finishedTasks.add(task);
 						}
 						if (task.untilSoonestTrigger() < 0L) {
 							this.changes = true;
@@ -137,6 +141,14 @@ public class xScheduler implements xStartable {
 					if (untilNext < sleep) {
 						sleep = untilNext;
 					}
+				}
+			}
+			// remove finished tasks
+			if (!finishedTasks.isEmpty()) {
+				final Iterator<xSchedulerTask> it = finishedTasks.iterator();
+				while (it.hasNext()) {
+					final xSchedulerTask task = it.next();
+					this.tasks.remove(task);
 				}
 			}
 			// no sleep needed
@@ -169,6 +181,7 @@ public class xScheduler implements xStartable {
 			}
 			this.sleeping = false;
 		}
+		finishedTasks.clear();
 		log().fine("Stopped sched manager thread");
 		this.stopping = true;
 		this.running.set(false);
