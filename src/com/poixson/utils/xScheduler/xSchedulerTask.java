@@ -98,24 +98,14 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 
 
 	public void doTrigger() {
-		final xRunnable r = this.getRunnable();
-		if (r == null) {
-			this.log()
-				.warning("Scheduled task has null runnable");
-		}
 		if (this.notEnabled()) {
 			this.log().warning("Skipping disabled task.. this should only happen rarely. ");
 			return;
 		}
 		// run task
-		final xThreadPool threadPool = this.getThreadPool();
-		threadPool.runLater(r);
-		final Iterator<xSchedulerTrigger> it = this.triggers.iterator();
-		while (it.hasNext()) {
-			it.next()
-				.hasTriggered();
-		}
 		this.runCount.incrementAndGet();
+		final xThreadPool threadPool = this.getThreadPool();
+		threadPool.runLater(this);
 	}
 
 
@@ -123,6 +113,22 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 	@Override
 	public boolean hasTriggered() {
 		return (this.runCount.get() > 0L);
+	}
+
+
+
+	// run task
+	@Override
+	public void run() {
+		if (this.run != null) {
+			final xRunnable run = this.run;
+			if (run != null) {
+				run.run();
+				return;
+			}
+		}
+		this.setDisabled();
+		throw new RequiredArgumentException("run");
 	}
 
 
