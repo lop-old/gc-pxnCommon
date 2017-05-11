@@ -15,7 +15,7 @@ import com.poixson.utils.xThreadPool.xThreadPool;
 import com.poixson.utils.xThreadPool.xThreadPoolFactory;
 
 
-public class xSchedulerTask {
+public class xSchedulerTask extends xRunnable {
 
 	private final xScheduler sched;
 
@@ -148,24 +148,42 @@ public class xSchedulerTask {
 
 
 	// task name
+	@Override
 	public String getTaskName() {
-		final xRunnable run = this.run;
-		if (run == null)
-			return null;
-		return run.getTaskName();
+		if (this.run != null) {
+			final xRunnable run = this.run;
+			if (run != null) {
+				final String runTaskName = run.getTaskName();
+				if (Utils.notEmpty(runTaskName)) {
+					return runTaskName;
+				}
+			}
+		}
+		final String taskName = super.getTaskName();
+		return (
+			Utils.isEmpty(taskName)
+			? "task"+Integer.toString(this.taskIndex)
+			: taskName
+		);
 	}
-	public boolean taskNameEquals(final String name) {
-		final String thisName = this.getTaskName();
-		if (Utils.isEmpty(name))
-			return Utils.isEmpty(thisName);
-		return name.equals(thisName);
-	}
-	public xSchedulerTask setTaskName(final String name) {
+	@Override
+	public void setTaskName(final String taskName) {
+		super.setTaskName(taskName);
 		final xRunnable run = this.run;
-		if (run == null)
-			throw new IllegalArgumentException("run not set!");
-		run.setTaskName(name);
-		return this;
+		if (run != null) {
+			run.setTaskName(taskName);
+		}
+	}
+	@Override
+	public boolean taskNameEquals(final String taskName) {
+		final xRunnable run = this.run;
+		if (run != null) {
+			final String runTaskName = run.getTaskName();
+			if (Utils.isEmpty(runTaskName))
+				return Utils.isEmpty(runTaskName);
+			return runTaskName.equals(taskName);
+		}
+		return super.taskNameEquals(taskName);
 	}
 
 
