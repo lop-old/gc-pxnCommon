@@ -1,6 +1,7 @@
 package com.poixson.utils.xScheduler;
 
 import java.lang.ref.SoftReference;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -11,6 +12,7 @@ import com.poixson.utils.ReflectUtils;
 import com.poixson.utils.Utils;
 import com.poixson.utils.xEnableable;
 import com.poixson.utils.xRunnable;
+import com.poixson.utils.exceptions.RequiredArgumentException;
 import com.poixson.utils.xLogger.xLog;
 import com.poixson.utils.xThreadPool.xThreadPool;
 import com.poixson.utils.xThreadPool.xThreadPoolFactory;
@@ -25,7 +27,6 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 
 	// task config
 	private volatile boolean enabled   = true;
-	protected volatile boolean finished  = false;
 
 	private volatile xRunnable   run  = null;
 	private volatile xThreadPool pool = null;
@@ -72,10 +73,14 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 	public long untilSoonestTrigger() {
 		if (this.notEnabled())
 			return Long.MIN_VALUE;
-		if (this.finished)
-			return -1L;
+		// run once has finished
+		if (this.notRepeating()) {
+			if (this.runCount.get() > 0) {
+				return Long.MIN_VALUE;
+			}
+		}
 		if (this.triggers.isEmpty())
-			return -1L;
+			return Long.MIN_VALUE;
 		final Iterator<xSchedulerTrigger> it = this.triggers.iterator();
 		long lowest = Long.MAX_VALUE;
 		while (it.hasNext()) {
@@ -88,11 +93,8 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 			}
 		}
 		if (lowest == Long.MAX_VALUE)
-			return -1L;
+			return Long.MIN_VALUE;
 		return lowest;
-	}
-	public boolean hasFinished() {
-		return this.finished;
 	}
 
 
@@ -106,13 +108,6 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 		this.runCount.incrementAndGet();
 		final xThreadPool threadPool = this.getThreadPool();
 		threadPool.runLater(this);
-	}
-
-
-
-	@Override
-	public boolean hasTriggered() {
-		return (this.runCount.get() > 0L);
 	}
 
 
@@ -182,7 +177,7 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 
 
 
-	// repeating
+	// repeating triggers
 	public boolean isRepeating() {
 		final Iterator<xSchedulerTrigger> it = this.triggers.iterator();
 		while (it.hasNext()) {

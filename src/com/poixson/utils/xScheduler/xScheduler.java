@@ -127,12 +127,14 @@ public class xScheduler implements xStartable {
 						continue;
 					// trigger now
 					if (untilNext <= 0L) {
+						// clear thread interrupt
 						Thread.interrupted();
 						task.doTrigger();
 						// mark for removal
 						if (task.notRepeating()) {
 							finishedTasks.add(task);
 						}
+						// running again soon
 						if (task.untilSoonestTrigger() < 0L) {
 							this.changes = true;
 							continue;
@@ -229,6 +231,8 @@ public class xScheduler implements xStartable {
 		this.tasks.add(task);
 		this.wakeManager();
 	}
+//TODO:
+/*
 	public boolean hasTask(final String taskName) {
 		if (Utils.isBlank(taskName))
 			return false;
@@ -243,6 +247,10 @@ public class xScheduler implements xStartable {
 		}
 		return false;
 	}
+*/
+
+
+
 	public boolean cancel(final String taskName) {
 		if (Utils.isBlank(taskName))
 			return false;

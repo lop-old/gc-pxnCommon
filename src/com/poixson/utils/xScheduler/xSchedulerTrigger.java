@@ -8,14 +8,18 @@ import com.poixson.utils.xEnableable;
 
 public abstract class xSchedulerTrigger implements xEnableable {
 
-	private volatile boolean enabled = false;
+	// trigger config
+	private volatile boolean enabled   = true;
 	private volatile boolean repeating = true;
 
 
 
+	public xSchedulerTrigger() {
+	}
+
+
+
 	public abstract long untilNextTrigger();
-//TODO: remove this?
-//	public abstract boolean hasTriggered();
 
 
 
@@ -25,17 +29,22 @@ public abstract class xSchedulerTrigger implements xEnableable {
 
 
 
+	// trigger enabled
 	@Override
 	public boolean isEnabled() {
 		return this.enabled;
 	}
 	@Override
 	public boolean notEnabled() {
-		return ! this.enabled;
+		return ! this.isEnabled();
 	}
 	@Override
 	public void setEnabled() {
 		this.setEnabled(true);
+	}
+	@Override
+	public void setDisabled() {
+		this.setEnabled(false);
 	}
 	@Override
 	public void setEnabled(final boolean enabled) {
@@ -44,6 +53,7 @@ public abstract class xSchedulerTrigger implements xEnableable {
 
 
 
+	// repeating trigger
 	public boolean isRepeating() {
 		return this.repeating;
 	}
