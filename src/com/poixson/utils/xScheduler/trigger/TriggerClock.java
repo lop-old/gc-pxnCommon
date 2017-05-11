@@ -31,8 +31,8 @@ public class TriggerClock extends xSchedulerTrigger {
 		return new TriggerClock();
 	}
 	// long
-	public static TriggerClock get(final long dateValue) {
-		return new TriggerClock(dateValue);
+	public static TriggerClock get(final long time) {
+		return new TriggerClock(time);
 	}
 	// string
 	public static TriggerClock get(final String dateStr, final String dateFormatStr) {
@@ -50,9 +50,9 @@ public class TriggerClock extends xSchedulerTrigger {
 
 	public TriggerClock() {
 	}
-	public TriggerClock(final long dateValue) {
+	public TriggerClock(final long time) {
 		this();
-		this.setDate(dateValue);
+		this.setDate(time);
 	}
 	public TriggerClock(final String dateStr, final String dateFormatStr) throws ParseException {
 		this();
@@ -77,7 +77,7 @@ public class TriggerClock extends xSchedulerTrigger {
 		synchronized(this.updateLock) {
 			final Date date = this.date;
 			if (date == null)
-				return Long.MIN_VALUE;
+				throw new RequiredArgumentException("date");
 			final long time = date.getTime();
 			final long now  = getCurrentMillis();
 			final long grace = this.getGraceTime();
@@ -101,8 +101,8 @@ xLog.getRoot().warning("Skipping old scheduled clock trigger..");
 
 
 	// scheduled date
-	public TriggerClock setDate(final long dateValue) {
-		final Date date = new Date(dateValue);
+	public TriggerClock setDate(final long time) {
+		final Date date = new Date(time);
 		return this.setDate(date);
 	}
 	public TriggerClock setDate(final String dateStr, final String dateFormatStr)
