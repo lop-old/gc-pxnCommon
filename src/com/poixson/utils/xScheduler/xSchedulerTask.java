@@ -16,18 +16,20 @@ import com.poixson.utils.xThreadPool.xThreadPoolFactory;
 
 public class xSchedulerTask {
 
-	protected final xScheduler sched;
+	private final xScheduler sched;
 
 	// task config
 	protected volatile boolean finished  = false;
 
-	protected volatile xRunnable   run  = null;
-	protected volatile xThreadPool pool = null;
-	protected volatile Set<xSchedulerTrigger> triggers =
+	private volatile xRunnable   run  = null;
+	private volatile xThreadPool pool = null;
+
+	// triggers
+	private final Set<xSchedulerTrigger> triggers =
 			new CopyOnWriteArraySet<xSchedulerTrigger>();
 
 	// task run count
-	protected final AtomicLong runCount = new AtomicLong(0L);
+	private final AtomicLong runCount = new AtomicLong(0L);
 
 
 
