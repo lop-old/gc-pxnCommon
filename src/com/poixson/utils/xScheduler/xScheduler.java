@@ -19,8 +19,8 @@ import com.poixson.utils.xLogger.xLog;
 
 public class xScheduler implements xStartable {
 
-	private static final String MANAGER_THREAD_NAME = "xSched";
-	private static final String MAIN_SCHED_NAME     = "main";
+	private static final String LOG_NAME        = "xSched";
+	private static final String MAIN_SCHED_NAME = "main";
 
 	private static final ConcurrentHashMap<String, xScheduler> instances =
 			new ConcurrentHashMap<String, xScheduler>();
@@ -75,7 +75,7 @@ public class xScheduler implements xStartable {
 		this.schedName = schedName;
 		this.thread = new Thread(this);
 		this.thread.setDaemon(false);
-		this.thread.setName(MANAGER_THREAD_NAME);
+		this.thread.setName(LOG_NAME);
 		Keeper.add(this);
 	}
 	@Override
@@ -261,7 +261,8 @@ public class xScheduler implements xStartable {
 		}
 		final xLog log =
 			xLog.getRoot()
-				.get(this.getName());
+				.get(LOG_NAME)
+				.getWeak(this.getName());
 		this._log = new SoftReference<xLog>(log);
 		return log;
 	}
