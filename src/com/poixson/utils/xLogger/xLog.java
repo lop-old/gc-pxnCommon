@@ -136,9 +136,8 @@ public class xLog extends xLogPrinting {
 	// new instance (weak reference)
 	@Override
 	public xLog getWeak(final String logName) {
-		if (Utils.isEmpty(logName)) {
-			return new xLog(logName, this.parent);
-		}
+		if (Utils.isEmpty(logName))
+			throw new RequiredArgumentException("logName");
 		return new xLog(logName, this);
 	}
 	@Override
