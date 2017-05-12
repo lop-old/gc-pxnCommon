@@ -30,21 +30,6 @@ public class TriggerClock extends xSchedulerTrigger {
 	public static TriggerClock builder() {
 		return new TriggerClock();
 	}
-	// long
-	public static TriggerClock get(final long time) {
-		return new TriggerClock(time);
-	}
-	// string
-	public static TriggerClock get(final String dateStr, final String dateFormatStr) {
-		try {
-			return new TriggerClock(dateStr, dateFormatStr);
-		} catch (ParseException ignore) {}
-		return null;
-	}
-	// date
-	public static TriggerClock get(final Date date) {
-		return new TriggerClock(date);
-	}
 
 
 

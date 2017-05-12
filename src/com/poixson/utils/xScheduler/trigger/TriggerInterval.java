@@ -18,6 +18,7 @@ public class TriggerInterval extends xSchedulerTrigger {
 
 
 
+	// builder
 	public static TriggerInterval builder() {
 		return new TriggerInterval();
 	}

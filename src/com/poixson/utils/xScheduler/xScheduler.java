@@ -101,6 +101,7 @@ public class xScheduler implements xStartable {
 
 
 
+//TODO: get list of tasks to run and trigger in proper order
 	// manager loop
 	@Override
 	public void run() {
@@ -276,6 +277,10 @@ public class xScheduler implements xStartable {
 		}
 		return false;
 	}
+
+
+
+	// ------------------------------------------------------------------------------- //
 
 
 

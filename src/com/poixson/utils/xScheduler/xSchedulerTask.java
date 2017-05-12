@@ -297,6 +297,10 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 
 
 
+	// ------------------------------------------------------------------------------- //
+
+
+
 	// logger
 	private volatile SoftReference<xLog> _log = null;
 	private volatile String _className = null;
