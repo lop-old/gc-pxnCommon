@@ -1,8 +1,5 @@
 package com.poixson.utils.xScheduler;
 
-import java.lang.ref.SoftReference;
-
-import com.poixson.utils.xClock;
 import com.poixson.utils.xEnableable;
 
 
@@ -19,7 +16,7 @@ public abstract class xSchedulerTrigger implements xEnableable {
 
 
 
-	public abstract long untilNextTrigger();
+	public abstract long untilNextTrigger(final long now);
 
 
 
@@ -86,25 +83,6 @@ public abstract class xSchedulerTrigger implements xEnableable {
 	public xSchedulerTrigger setRepeating(final boolean repeating) {
 		this.repeating = repeating;
 		return this;
-	}
-
-
-
-	private static volatile SoftReference<xClock> _clock = null;
-
-	public static long getCurrentMillis() {
-		return getClock()
-				.millis();
-	}
-	public static xClock getClock() {
-		if (_clock != null) {
-			final xClock clock = _clock.get();
-			if (clock != null)
-				return clock;
-		}
-		final xClock clock = xClock.get(false);
-		_clock = new SoftReference<xClock>(clock);
-		return clock;
 	}
 
 

@@ -12,6 +12,7 @@ import com.poixson.utils.Keeper;
 import com.poixson.utils.NumberUtils;
 import com.poixson.utils.ThreadUtils;
 import com.poixson.utils.Utils;
+import com.poixson.utils.xClock;
 import com.poixson.utils.xStartable;
 import com.poixson.utils.xTime;
 import com.poixson.utils.xLogger.xLevel;
@@ -119,9 +120,10 @@ public class xScheduler implements xStartable {
 			{
 				final Iterator<xSchedulerTask> it = this.tasks.iterator();
 				this.changes = false;
+				final long now = getClockMillis();
 				while (it.hasNext()) {
 					final xSchedulerTask task = it.next();
-					final long untilNext = task.untilSoonestTrigger();
+					final long untilNext = task.untilSoonestTrigger(now);
 					// disabled
 					if (untilNext == Long.MIN_VALUE)
 						continue;
@@ -135,7 +137,7 @@ public class xScheduler implements xStartable {
 							finishedTasks.add(task);
 						}
 						// running again soon
-						if (task.untilSoonestTrigger() < 0L) {
+						if (task.untilSoonestTrigger(now) < 0L) {
 							this.changes = true;
 							continue;
 						}
@@ -273,6 +275,25 @@ public class xScheduler implements xStartable {
 			return this.tasks.remove(task);
 		}
 		return false;
+	}
+
+
+
+	private static volatile SoftReference<xClock> _clock = null;
+
+	public static long getClockMillis() {
+		return getClock()
+				.millis();
+	}
+	public static xClock getClock() {
+		if (_clock != null) {
+			final xClock clock = _clock.get();
+			if (clock != null)
+				return clock;
+		}
+		final xClock clock = xClock.get(false);
+		_clock = new SoftReference<xClock>(clock);
+		return clock;
 	}
 
 

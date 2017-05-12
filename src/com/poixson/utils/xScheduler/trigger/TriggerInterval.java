@@ -66,7 +66,7 @@ public class TriggerInterval extends xSchedulerTrigger {
 
 
 
-	private void validateValues() {
+	private void validateValues(final long now) {
 		synchronized(this.updateLock) {
 			// check delay/interval values
 			{
@@ -91,7 +91,6 @@ public class TriggerInterval extends xSchedulerTrigger {
 			// first calculations
 			{
 				final long last     = this.last;
-				final long now      = getCurrentMillis();
 				final long delay    = this.delay.getMS();
 				final long interval = this.interval.getMS();
 				if (last == Long.MIN_VALUE) {
@@ -101,16 +100,15 @@ public class TriggerInterval extends xSchedulerTrigger {
 		}
 	}
 	@Override
-	public long untilNextTrigger() {
+	public long untilNextTrigger(final long now) {
 		if (this.notEnabled())
 			return Long.MIN_VALUE;
 		synchronized(this.updateLock) {
-			this.validateValues();
+			this.validateValues(now);
 			if (this.notEnabled())
 				return Long.MIN_VALUE;
 			// calculate time until next trigger
 			final long last     = this.last;
-			final long now      = getCurrentMillis();
 			final long interval = this.interval.getMS();
 			final long sinceLast = now - last;
 			final long untilNext = interval - sinceLast;

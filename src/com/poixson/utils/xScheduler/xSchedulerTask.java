@@ -70,7 +70,7 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 
 
 
-	public long untilSoonestTrigger() {
+	public long untilSoonestTrigger(final long now) {
 		if (this.notEnabled())
 			return Long.MIN_VALUE;
 		// run once has finished
@@ -85,7 +85,7 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 		long lowest = Long.MAX_VALUE;
 		while (it.hasNext()) {
 			final xSchedulerTrigger trigger = it.next();
-			final long untilNext = trigger.untilNextTrigger();
+			final long untilNext = trigger.untilNextTrigger(now);
 			if (untilNext < lowest) {
 				lowest = untilNext;
 				if (lowest <= 0L)

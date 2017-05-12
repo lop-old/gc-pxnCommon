@@ -69,7 +69,7 @@ public class TriggerClock extends xSchedulerTrigger {
 
 
 	@Override
-	public long untilNextTrigger() {
+	public long untilNextTrigger(final long now) {
 		if (this.notEnabled())
 			return Long.MIN_VALUE;
 		if (this.date == null)
@@ -79,7 +79,6 @@ public class TriggerClock extends xSchedulerTrigger {
 			if (date == null)
 				throw new RequiredArgumentException("date");
 			final long time = date.getTime();
-			final long now  = getCurrentMillis();
 			final long grace = this.getGraceTime();
 			// calculate time until trigger
 			final long untilNext = time - now;
