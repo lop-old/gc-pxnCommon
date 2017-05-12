@@ -1,61 +1,103 @@
 package com.poixson.utils.xScheduler.trigger;
 
+import java.text.ParseException;
+import java.util.Date;
+
+import org.quartz.CronExpression;
+import org.quartz.impl.triggers.CronTriggerImpl;
+
+import com.poixson.utils.exceptions.RequiredArgumentException;
 import com.poixson.utils.xScheduler.xSchedulerTrigger;
 
 
+/*
+1 | Seconds
+2 | Minutes
+3 | Hours
+4 | Day-of-Month
+5 | Month
+6 | Day-of-Week
+7 | Year (optional field)
+*/
 public class TriggerCron extends xSchedulerTrigger {
 
-//	protected final CronPredictor predictor;
+	private volatile CronTriggerImpl trigger = null;
 
-//	protected volatile long next = -1L;
+	private volatile long next = Long.MIN_VALUE;
+
+	private final Object updateLock = new Object();
 
 
 
-//TODO:
-/*
-	public static TriggerCron get(final String pattern) {
-		return new TriggerCron(pattern);
-	}
-	public static TriggerCron get(final CronPattern pattern) {
-		return new TriggerCron(pattern);
-	}
-	public static TriggerCron get(final CronPredictor pattern) {
-		return new TriggerCron(pattern);
+	// builder
+	public static TriggerCron builder() {
+		return new TriggerCron();
 	}
 
 
 
-	public TriggerCron(final String pattern) {
-		this(
-			new CronPattern(pattern)
-		);
+	public TriggerCron() {
 	}
-	public TriggerCron(final CronPattern pattern) {
-		this(
-			new CronPredictor(pattern)
-		);
+	public TriggerCron(final String patternStr) throws ParseException {
+		this();
+		this.setCronPattern(patternStr);
 	}
-	public TriggerCron(final CronPredictor predictor) {
-		this.predictor = predictor;
+	public TriggerCron(final CronExpression express) {
+		this();
+		this.setCronExpression(express);
 	}
-*/
+
+
+
+	public void update(final long now) {
+		if (this.trigger == null) throw new RequiredArgumentException("CronTrigger");
+		synchronized(this.updateLock) {
+			final CronTriggerImpl trigger = this.trigger;
+			if (trigger == null) throw new RequiredArgumentException("CronTrigger");
+			// calculate time until next trigger
+			final Date nowDate = new Date(now);
+			final Date nextDate = trigger.getFireTimeAfter(nowDate);
+			if (nextDate == null) {
+				this.setDisabled();
+				return;
+			}
+			this.next = nextDate.getTime();
+		}
+	}
 
 
 
 	@Override
-	public long untilNextTrigger() {
-//TODO:
-//		long until = this.predictor.untilNextMatching(now);
-//xLog.getRoot().publish("until next: "+xTime.get(until, xTimeU.MS).toFullString());
-//		return until;
-return Long.MIN_VALUE;
+	public long untilNextTrigger(final long now) {
+		if (this.notEnabled())
+			return Long.MIN_VALUE;
+		synchronized(this.updateLock) {
+			if (this.next == Long.MIN_VALUE)
+				this.update(now);
+			if (this.notEnabled())
+				return Long.MIN_VALUE;
+			final long next = this.next;
+			final long untilNext = next - now;
+			if (untilNext <= 0L) {
+				this.update(now + 1L);
+			}
+			return untilNext;
+		}
 	}
 
 
 
-//	@Override
-//	public boolean hasTriggered() {
-//	}
+	public TriggerCron setCronPattern(final String patternStr) throws ParseException {
+		final CronExpression express = new CronExpression(patternStr);
+		return this.setCronExpression(express);
+	}
+	public TriggerCron setCronExpression(final CronExpression express) {
+		if (express == null) throw new RequiredArgumentException("expression");
+		final CronTriggerImpl trigger = new CronTriggerImpl();
+		trigger.setCronExpression(express);
+		this.trigger = trigger;
+		return this;
+	}
 
 
 
