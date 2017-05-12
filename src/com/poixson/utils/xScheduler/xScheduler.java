@@ -128,7 +128,7 @@ public class xScheduler implements xStartable {
 					if (untilNext == Long.MIN_VALUE)
 						continue;
 					// trigger now
-					if (untilNext <= 0L) {
+					if (untilNext <= 1L) {
 						// clear thread interrupt
 						Thread.interrupted();
 						task.doTrigger();
