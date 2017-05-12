@@ -21,6 +21,11 @@
 			"GroupId": "org.xeustechnologies",
 			"ArtifactId": "jcl-core",
 			"Version": "2.8"
+		},
+		"quartz": {
+			"GroupId": "org.quartz-scheduler",
+			"ArtifactId": "quartz",
+			"Version": "2.3.0"
 		}
 	}
 }
