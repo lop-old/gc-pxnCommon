@@ -282,7 +282,7 @@ public class jLineConsole implements xConsole {
 			}
 			if (this.isStopping())
 				break;
-			if (Utils.isEmpty(line))
+			if (Utils.isBlank(line))
 				continue;
 			// handle command
 			final xCommandHandler handler = this.getCommandHandler();
