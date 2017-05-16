@@ -39,49 +39,6 @@ public final class ObjectUtils {
 
 
 	/**
-	 * Cast a collection object to a list.
-	 * @param data
-	 * @param clss
-	 * @return
-	 */
-	public static <T> List<T> castList(final Collection<?> data,
-			final Class<? extends T> clss) {
-		if (clss == null) throw new RequiredArgumentException("clss");
-		if (data == null) return null;
-		try {
-			final List<T> result = new ArrayList<T>(data.size());
-			for (final Object o : data) {
-				try {
-					result.add(clss.cast(o));
-				} catch (Exception ignore) {}
-			}
-			return result;
-		} catch (Exception ignore) {}
-		return null;
-	}
-	/**
-	 * Cast an object to a list.
-	 * @param clss
-	 * @param c
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> List<T> castList(final Object data,
-			final Class<? extends T> clss) {
-		if (clss == null) throw new RequiredArgumentException("clss");
-		if (data == null) return null;
-		try {
-			return castList(
-					(Collection<T>) data,
-					clss
-			);
-		} catch (Exception ignore) {}
-		return null;
-	}
-
-
-
-	/**
 	 * Cast a collection object to a set.
 	 * @param data
 	 * @param clss
@@ -115,6 +72,49 @@ public final class ObjectUtils {
 		if (data == null) return null;
 		try {
 			return castSet(
+					(Collection<T>) data,
+					clss
+			);
+		} catch (Exception ignore) {}
+		return null;
+	}
+
+
+
+	/**
+	 * Cast a collection object to a list.
+	 * @param data
+	 * @param clss
+	 * @return
+	 */
+	public static <T> List<T> castList(final Collection<?> data,
+			final Class<? extends T> clss) {
+		if (clss == null) throw new RequiredArgumentException("clss");
+		if (data == null) return null;
+		try {
+			final List<T> result = new ArrayList<T>(data.size());
+			for (final Object o : data) {
+				try {
+					result.add(clss.cast(o));
+				} catch (Exception ignore) {}
+			}
+			return result;
+		} catch (Exception ignore) {}
+		return null;
+	}
+	/**
+	 * Cast an object to a list.
+	 * @param clss
+	 * @param c
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> castList(final Object data,
+			final Class<? extends T> clss) {
+		if (clss == null) throw new RequiredArgumentException("clss");
+		if (data == null) return null;
+		try {
+			return castList(
 					(Collection<T>) data,
 					clss
 			);
