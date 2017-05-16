@@ -3,6 +3,7 @@ package com.poixson.utils.xLogger;
 import java.util.List;
 
 import com.poixson.utils.StringUtils;
+import com.poixson.utils.Utils;
 
 
 public abstract class xLogPrinting {
@@ -82,9 +83,19 @@ public abstract class xLogPrinting {
 
 	// exception
 	public void trace(final Throwable e) {
+		this.trace(e, null);
+	}
+	public void trace(final Throwable e, final String msg) {
+		final StringBuilder str = new StringBuilder();
+		if (Utils.notEmpty(msg)) {
+			str.append(msg).append(" - ");
+		}
+		str.append(
+			StringUtils.ExceptionToString(e)
+		);
 		this.publish(
 			xLevel.SEVERE,
-			StringUtils.ExceptionToString(e)
+			str.toString()
 		);
 	}
 
