@@ -161,7 +161,13 @@ public final class DirsFiles {
 	public static InputStream OpenResource(final Class<? extends Object> clss, final String fileStr) {
 		if (clss == null)           throw new RequiredArgumentException("clss");
 		if (Utils.isEmpty(fileStr)) throw new RequiredArgumentException("fileStr");
-		final InputStream in = clss.getResourceAsStream(fileStr);
+		final InputStream in =
+			clss.getResourceAsStream(
+				StringUtils.ForceStarts(
+					"/",
+					fileStr
+				)
+			);
 		return in;
 	}
 //TODO: is this useful?
