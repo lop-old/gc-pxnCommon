@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.SoftReference;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -16,6 +17,7 @@ import com.poixson.utils.exceptions.RequiredArgumentException;
 public final class DirsFiles {
 	private DirsFiles() {}
 
+	private static volatile SoftReference<String> cwd = null;
 
 
 	public static void init() {
@@ -26,11 +28,25 @@ public final class DirsFiles {
 
 	// get current working directory
 	public static String cwd() {
+		if (cwd != null) {
+			final SoftReference<String> ref = cwd;
+			if (ref != null) {
+				final String path = ref.get();
+				if (Utils.notEmpty(path))
+					return path;
+			}
+		}
+		String path = null;
 		try {
-			return (new File("."))
+			path =
+				(new File("."))
 					.getCanonicalPath()
 					.toString();
 		} catch (IOException ignore) {}
+		if (path != null) {
+			cwd = new SoftReference<String>(path);
+			return path;
+		}
 		return null;
 	}
 
