@@ -1,6 +1,5 @@
 package com.poixson.utils;
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -8,8 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 import com.poixson.utils.exceptions.RequiredArgumentException;
 
@@ -132,6 +129,13 @@ public final class DirsFiles {
 
 
 	// open file
+	public static InputStream OpenFile(final String fileStr) {
+		if (Utils.isEmpty(fileStr))
+			return null;
+		return OpenFile(
+				new File(fileStr)
+		);
+	}
 	public static InputStream OpenFile(final File file) {
 		if (file == null)   return null;
 		if (!file.exists()) return null;
@@ -140,6 +144,9 @@ public final class DirsFiles {
 		} catch (FileNotFoundException ignore) {}
 		return null;
 	}
+
+
+
 	// load resource
 	public static InputStream OpenResource(final String fileStr) {
 		if (Utils.isEmpty(fileStr)) return null;
@@ -157,9 +164,11 @@ public final class DirsFiles {
 		final InputStream in = clss.getResourceAsStream(fileStr);
 		return in;
 	}
+//TODO: is this useful?
+/*
 	// load yml from jar
 	public static InputJar OpenResource(final File jarFile, final String fileStr) {
-		if (jarFile == null)         throw new RequiredArgumentException("jarFile");
+		if (jarFile == null)        throw new RequiredArgumentException("jarFile");
 		if (Utils.isEmpty(fileStr)) throw new RequiredArgumentException("fileStr");
 		try {
 			final JarFile  jar   = new JarFile(jarFile);
@@ -194,6 +203,7 @@ public final class DirsFiles {
 			Utils.safeClose(this.fileInput);
 		}
 	}
+*/
 
 
 
@@ -201,27 +211,32 @@ public final class DirsFiles {
 
 
 
-	// build path+file
+	// build path+file+ext
 	public static String buildFilePath(final String pathStr,
 			final String fileName, final String extension) {
 		if (Utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
 		// file extension
-		final String ext;
-		if (Utils.isEmpty(extension)) {
-			ext = ".yml";
-		} else
-		if (!extension.startsWith(".")) {
-			ext = "."+extension;
-		} else {
-			ext = extension;
+		String ext = "";
+		if (Utils.notEmpty(extension)) {
+			ext = (
+				extension.startsWith(".")
+				? extension
+				: "."+extension
+			);
 		}
 		final String fileStr = StringUtils.ForceEnds(ext, fileName);
-		if (pathStr == null || pathStr.isEmpty())
+		if (Utils.isEmpty(pathStr))
 			return fileStr;
-		final boolean a = (pathStr.endsWith("/")  || pathStr.endsWith("\\"));
-		final boolean b = (fileStr.startsWith("/") || fileStr.startsWith("\\"));
+		final boolean a = ( pathStr.endsWith("/")   || pathStr.endsWith("\\")   );
+		final boolean b = ( fileStr.startsWith("/") || fileStr.startsWith("\\") );
 		if (a && b) return pathStr + fileStr.substring(1);
 		if (a || b) return pathStr + fileStr;
+		return
+			(new StringBuilder())
+				.append(pathStr)
+				.append(File.separator)
+				.append(fileStr)
+				.toString();
 	}
 
 
