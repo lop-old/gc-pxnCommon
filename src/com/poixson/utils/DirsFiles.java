@@ -134,20 +134,20 @@ public final class DirsFiles {
 		} catch(Exception ignore) {}
 		return null;
 	}
-	// load yml from jar reference
-	public static InputStream OpenResource(final Class<? extends Object> clss, final String fileName) {
-		if (clss == null)            throw new RequiredArgumentException("clss");
-		if (Utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
-		final InputStream in = clss.getResourceAsStream(fileName);
+	// load resource from jar reference
+	public static InputStream OpenResource(final Class<? extends Object> clss, final String fileStr) {
+		if (clss == null)           throw new RequiredArgumentException("clss");
+		if (Utils.isEmpty(fileStr)) throw new RequiredArgumentException("fileStr");
+		final InputStream in = clss.getResourceAsStream(fileStr);
 		return in;
 	}
 	// load yml from jar
-	public static InputJar OpenJarResource(final File jarFile, final String fileName) {
+	public static InputJar OpenResource(final File jarFile, final String fileStr) {
 		if (jarFile == null)         throw new RequiredArgumentException("jarFile");
-		if (Utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
+		if (Utils.isEmpty(fileStr)) throw new RequiredArgumentException("fileStr");
 		try {
-			final JarFile jar = new JarFile(jarFile);
-			final JarEntry entry = jar.getJarEntry(fileName);
+			final JarFile  jar   = new JarFile(jarFile);
+			final JarEntry entry = jar.getJarEntry(fileStr);
 			if (entry == null) {
 				Utils.safeClose(jar);
 				return null;
@@ -186,7 +186,7 @@ public final class DirsFiles {
 
 
 	// build path+file
-	public static String buildFilePath(final String filePath,
+	public static String buildFilePath(final String pathStr,
 			final String fileName, final String extension) {
 		if (Utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
 		// file extension
@@ -200,14 +200,14 @@ public final class DirsFiles {
 			ext = extension;
 		}
 		final String fileStr = StringUtils.ForceEnds(ext, fileName);
-		if (filePath == null || filePath.isEmpty())
+		if (pathStr == null || pathStr.isEmpty())
 			return fileStr;
-		final boolean a = (filePath.endsWith("/")  || filePath.endsWith("\\"));
+		final boolean a = (pathStr.endsWith("/")  || pathStr.endsWith("\\"));
 		final boolean b = (fileStr.startsWith("/") || fileStr.startsWith("\\"));
-		if (a && b) return filePath + fileStr.substring(1);
-		if (a || b) return filePath + fileStr;
+		if (a && b) return pathStr + fileStr.substring(1);
+		if (a || b) return pathStr + fileStr;
 		return (new StringBuilder())
-			.append(filePath)
+			.append(pathStr)
 			.append(File.separator)
 			.append(fileStr)
 			.toString();
