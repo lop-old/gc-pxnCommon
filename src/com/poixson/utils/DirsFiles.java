@@ -43,7 +43,7 @@ public final class DirsFiles {
 	 * To list all contents, set this to null.
 	 * @return
 	 */
-	public static File[] listContents(final File dir, final String[] extensions) {
+	public static File[] ListDirContents(final File dir, final String[] extensions) {
 		if (dir == null) throw new RequiredArgumentException("dir");
 		if (!dir.isDirectory()) return null;
 		return dir.listFiles(
@@ -67,11 +67,11 @@ public final class DirsFiles {
 			}.init(extensions)
 		);
 	}
-	public static File[] listContents(final File dir, final String extension) {
-		return listContents(dir, new String[] {extension});
+	public static File[] ListDirContents(final File dir, final String extension) {
+		return ListDirContents(dir, new String[] {extension});
 	}
-	public static File[] listContents(final File dir) {
-		return listContents(dir, (String[]) null);
+	public static File[] ListDirContents(final File dir) {
+		return ListDirContents(dir, (String[]) null);
 	}
 
 
