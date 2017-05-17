@@ -222,24 +222,6 @@ public final class DirsFiles {
 		final boolean b = (fileStr.startsWith("/") || fileStr.startsWith("\\"));
 		if (a && b) return pathStr + fileStr.substring(1);
 		if (a || b) return pathStr + fileStr;
-		return (new StringBuilder())
-			.append(pathStr)
-			.append(File.separator)
-			.append(fileStr)
-			.toString();
-	}
-	public static String buildFilePath(final File path, final File file) {
-		if (file == null) throw new RequiredArgumentException("file");
-		final String fileStr = file.getPath();
-		if (path == null) {
-			return fileStr;
-		}
-		final String pathStr = path.getPath();
-		return (new StringBuilder())
-			.append(pathStr)
-			.append(pathStr.endsWith("/") ? "" : "/")
-			.append(fileStr)
-			.toString();
 	}
 
 
