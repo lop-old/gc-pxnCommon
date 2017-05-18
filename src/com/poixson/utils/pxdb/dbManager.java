@@ -17,7 +17,7 @@ public final class dbManager {
 	private static final Map<String, dbConfig> configs = new HashMap<String, dbConfig>();
 
 	// db connection pools
-	private static final Map<dbConfig, dbPool> pools = new HashMap<dbConfig, dbPool>();
+	private static final Map<String, dbPool> pools = new HashMap<String, dbPool>();
 
 
 
@@ -60,9 +60,10 @@ public final class dbManager {
 		synchronized(pools) {
 			final dbConfig config = getConfig(dbKey);
 			if (config != null) {
-				if (pools.containsKey(config)) {
-					return pools.get(config);
-				}
+				final String key = config.dbKey();
+				final dbPool pool = pools.get(key);
+				if (pool != null)
+					return pool;
 			}
 			log().warning("db config not found for key: "+dbKey);
 			return null;
@@ -82,11 +83,12 @@ public final class dbManager {
 	protected static boolean register(final dbConfig config) {
 		if (config == null)
 			throw new RequiredArgumentException("config");
-		if (Utils.isEmpty(config.dbKey()))
+		final String key = config.dbKey();
+		if (Utils.isEmpty(key))
 			throw new RuntimeException("dbKey returned from dbConfig is empty!");
 		synchronized(pools) {
-			if (!configs.containsKey(config.dbKey())) {
-				configs.put(config.dbKey(), config);
+			if (!configs.containsKey(key)) {
+				configs.put(key, config);
 			}
 			if (pools.containsKey(config)) {
 				log().finest("Sharing an existing db pool :-)");
@@ -101,7 +103,7 @@ public final class dbManager {
 				}
 				worker.desc("Initial connection successful");
 				worker.free();
-				pools.put(config, pool);
+				pools.put(key, pool);
 			}
 		}
 		return true;
