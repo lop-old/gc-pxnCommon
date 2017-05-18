@@ -1,251 +1,345 @@
-/*
-package com.poixson.commonapp.config;
+package com.poixson.utils.xConfig;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.nodes.Tag;
 
-import com.poixson.commonjava.Utils.utils;
-import com.poixson.commonjava.Utils.utilsDirFile;
-import com.poixson.commonjava.Utils.utilsString;
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
-import com.poixson.commonjava.xLogger.xLog;
-
-
-class xConfigLoader {
-	public static final String LOG_NAME = "CONFIG";
+import com.poixson.utils.DirsFiles;
+import com.poixson.utils.StringUtils;
+import com.poixson.utils.Utils;
+import com.poixson.utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.xLogger.xLog;
 
 
+public class xConfigFactory {
 
-//TODO: these need to be updated
-//	// file
-//	public static xConfig Load(final String file) {
-//		return Load(
-//				file,
-//				xConfig.class
-//		);
-//	}
-//	// file, class
-//	public static xConfig Load(final String file, final Class<? extends xConfig> clss) {
-//		return Load(
-//				file,
-//				clss,
-//				(Class<? extends Object>) null
-//		);
-//	}
-//	// file, class, injar
-//	public static xConfig Load(final String file,
-//			final Class<? extends xConfig> clss,
-//			final Class<? extends Object>  checkInJar) {
-//		return Load(
-//				(String) null,
-//				file,
-//				clss,
-//				checkInJar
-//		);
-//	}
-//	// path, file, class, injar
-//	public static xConfig Load(final String path, final String file,
-//			final Class<? extends xConfig> clss,
-//			final Class<? extends Object> checkInJar) {
-//		return Load(
-//				log(),
-//				path,
-//				file,
-//				clss,
-//				checkInJar
-//		);
-//	}
-	/ **
-	 * Loads a .yml config file from the file system or a jar resource.
-	 * @param log The logger to use, or default to null
-	 * @param path File system path to the config file
-	 * @param file Name of the config file to load
-	 * @param clss xConfig class to create to handle loading the config
-	 * @param checkInJar A class contained in the jar in which to look
-	 *        for a default config file
-	 * @return xConfig instance containing the loaded yaml data
-	 * @throws xConfigException
-	 * /
-	public static xConfig Load(final xLog log,
-			final String path, final String file,
-			final Class<? extends xConfig> clss,
-			final Class<? extends Object> checkInJar)
-			throws xConfigException {
-		if(utils.isEmpty(file)) throw new RequiredArgumentException("file");
-		if(clss == null)        throw new RequiredArgumentException("clss");
-		// load file.yml
-		{
-			final String fullpath = (utils.isEmpty(path) ? "" : utilsString.ensureEnds(File.separator, path))+file;
-			(log == null ? getLogger() : log)
-				.fine("Loading config file: "+fullpath);
-			final InputStream in = utilsDirFile.OpenFile(
-					new File(fullpath)
-			);
-			if(in != null) {
-				return LoadStream(
-						in,
-						clss
-				);
-			}
-		}
-		// try loading as resource
-		if(checkInJar != null) {
-			final String filepath = utilsString.ensureStarts(File.separator, file);
-			(log == null ? getLogger() : log)
-				.fine("Looking in jar for file: "+filepath+"  "+checkInJar.getName());
-			final InputStream in = utilsDirFile.OpenResource(
-					checkInJar,
-					filepath
-			);
-			if(in != null) {
-				(log == null ? getLogger() : log)
-					.fine("Loaded config from jar: "+filepath);
-				final xConfig config = LoadStream(
-						in,
-						clss
-				);
-				if(config != null) {
-					config.loadedFromResource = true;
-					Save(
-							(utils.isEmpty(path) ? null : new File(path)),
-							new File(file),
-							config.datamap
-					);
-					return config;
-				}
-			}
-		}
-		(log == null ? getLogger() : log)
-			.fine("Config file not found! "+file);
-		return null;
-	}
+	private xLog log = null;
+
+	private String fileName    = null;
+	private String filePath    = null;
+	private String packagePath = null;
+
+	private Class<? extends xConfig> cfgClass    = null;
+	private Class<? extends Object>  jarResClass = null;
+
+	public static enum FileSource {
+		FILESYSTEM,
+		RESOURCE,
+		AUTO
+	};
+	private FileSource source = FileSource.AUTO;
 
 
 
-	// load from jar
-	public static xConfig LoadJar(final File jarFile, final String ymlFile) {
-		return LoadJar(jarFile, ymlFile, xConfig.class);
-	}
-	public static xConfig LoadJar(final File jarFile, final String ymlFile, final Class<? extends xConfig> clss) {
-		if(jarFile == null)        throw new RequiredArgumentException("jarFile");
-		if(utils.isEmpty(ymlFile)) throw new RequiredArgumentException("yamlFile");
-		if(clss == null)           throw new RequiredArgumentException("clss");
-		final utilsDirFile.InputJar in = utilsDirFile.OpenJarResource(jarFile, ymlFile);
-		if(in == null) return null;
-		try {
-			return LoadStream(
-					in.fileInput,
-					clss
-			);
-		} finally {
-			utils.safeClose(in);
-		}
-	}
-
-
-
-	public static <T> xConfig LoadStream(final InputStream in, final Class<? extends xConfig> clss) {
-		if(in   == null) throw new RequiredArgumentException("in");
-		if(clss == null) throw new RequiredArgumentException("clss");
-		try {
-			final Yaml yml = new Yaml();
-			@SuppressWarnings("unchecked")
-			final Map<String, Object> datamap = (HashMap<String, Object>) yml.load(in);
-			if(utils.isEmpty(datamap))
-				return null;
-			@SuppressWarnings("unchecked")
-			final Constructor<? extends Map<String, Object>> construct =
-				(Constructor<? extends Map<String, Object>>) clss.getDeclaredConstructor(Map.class);
-			return (xConfig) construct.newInstance(datamap);
-		} catch (InstantiationException e) {
-			getLogger().trace(e);
-		} catch (IllegalAccessException e) {
-			getLogger().trace(e);
-		} catch (IllegalArgumentException e) {
-			getLogger().trace(e);
-		} catch (InvocationTargetException e) {
-			getLogger().trace(e);
-		} catch (NoSuchMethodException e) {
-			getLogger().trace(e);
-		} catch (SecurityException e) {
-			getLogger().trace(e);
-		} finally {
-			utils.safeClose(in);
-		}
-		return null;
-	}
-
-
-
-	public static boolean Save(final File file,
+	// new xConfig child instance
+	public static xConfig newConfigInstance(
 			final Map<String, Object> datamap) {
-		return Save(
-				(File) null,
-				file,
-				datamap
+		return newConfigInstance(null, datamap);
+	}
+	public static xConfig newConfigInstance(
+			final Class<? extends xConfig> cfgClass,
+			final Map<String, Object> datamap) {
+		if (datamap == null)  throw new RequiredArgumentException("datamap");
+		// get constructor
+		final Constructor<? extends xConfig> construct;
+		try {
+			final Class<? extends xConfig> clss = (
+				cfgClass == null
+				? xConfig.class
+				: cfgClass
+			);
+			construct = clss.getDeclaredConstructor(Map.class);
+		} catch (NoSuchMethodException e) {
+			throw new RuntimeException(e);
+		} catch (SecurityException e) {
+			throw new RuntimeException(e);
+		}
+		if (construct == null)
+			throw new RuntimeException("xConfig constructor not found!");
+		// get new instance
+		final xConfig config;
+		try {
+			config = construct.newInstance(datamap);
+		} catch (InstantiationException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalArgumentException e) {
+			throw new RuntimeException(e);
+		} catch (InvocationTargetException e) {
+			throw new RuntimeException(e);
+		}
+		return config;
+	}
+
+
+
+	public static xConfigFactory builder() {
+		return new xConfigFactory();
+	}
+	public xConfigFactory() {
+	}
+	@Override
+	public xConfigFactory clone() {
+		final xConfigFactory factory = builder();
+		{
+			final xLog   log         = this.log;
+			final String fileName    = this.fileName;
+			final String filePath    = this.filePath;
+			final String packagePath = this.packagePath;
+			final Class<? extends xConfig> cfgClass    = this.cfgClass;
+			final Class<? extends Object>  jarResClass = this.jarResClass;
+			if (log != null)
+				factory.setLog(log);
+			if (Utils.notEmpty(fileName))
+				factory.setFileName(fileName);
+			if (Utils.notEmpty(filePath))
+				factory.setFilePath(filePath);
+			if (Utils.notEmpty(packagePath))
+				factory.setPackagePath(packagePath);
+			if (cfgClass != null)
+				factory.setConfigClass(cfgClass);
+			if (jarResClass != null)
+				factory.setJarResourceClass(jarResClass);
+		}
+		return factory;
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// loaders
+
+
+
+	// quick helpers
+	public xConfig loadFile() {
+		this.setFileSource(FileSource.FILESYSTEM);
+		return this.load();
+	}
+	public xConfig loadResource() {
+		this.setFileSource(FileSource.RESOURCE);
+		return this.load();
+	}
+	public xConfig loadAuto() {
+		this.setFileSource(FileSource.AUTO);
+		return this.load();
+	}
+
+
+
+	public xConfig load() {
+		final FileSource source = this.source;
+		final String fileName   = this.fileName;
+		if (source == null)          throw new RequiredArgumentException("source");
+		if (Utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
+		// load from file
+		if (source.equals(FileSource.FILESYSTEM) || source.equals(FileSource.AUTO)) {
+			final Map<String, Object> datamap =
+				this._loadFromFile();
+			if (datamap != null) {
+				final xConfig cfg =
+					newConfigInstance(
+						this.cfgClass,
+						datamap
+					);
+				return cfg;
+			}
+		}
+		// load from jar resource
+		if (source.equals(FileSource.RESOURCE) || source.equals(FileSource.AUTO)) {
+			final Map<String, Object> datamap =
+				this._loadFromJar();
+			if (datamap != null) {
+				final xConfig cfg =
+					newConfigInstance(
+						this.cfgClass,
+						datamap
+					);
+				return cfg;
+			}
+		}
+		return null;
+	}
+	private Map<String, Object> _loadFromFile() {
+		final xLog log = this.log();
+		final String path =
+			DirsFiles.buildFilePath(
+				this.filePath,
+				this.fileName,
+				"yml"
+			);
+		InputStream in = null;
+		try {
+			in = DirsFiles.OpenFile(path);
+			if (in != null) {
+				if (log != null) {
+					log.finer("Loaded config file: "+path);
+				}
+				return this._loadFromStream(in);
+			}
+		} finally {
+			Utils.safeClose(in);
+		}
+		return null;
+	}
+	private Map<String, Object> _loadFromJar() {
+		final xLog log = this.log();
+		final Class<? extends Object> jarResClass = this.getJarResourceClass();
+		final String path =
+			StringUtils.ForceStarts(
+				"/",
+				DirsFiles.buildFilePath(
+					this.packagePath,
+					this.fileName,
+					"yml"
+				)
+			);
+		InputStream in = null;
+		try {
+			in = DirsFiles.OpenResource(
+				jarResClass,
+				path
+			);
+			if (in != null) {
+				if (log != null) {
+					log.fine("Loaded config from jar: "+path);
+				}
+				return this._loadFromStream(in);
+			}
+		} finally {
+			Utils.safeClose(in);
+		}
+		return null;
+//			final xConfig cfg = this.loadFromStream(in);
+//cfg.setFromResource();
+//			if (this.source.equals(FileSource.AUTO)) {
+//				Save(
+//					(utils.isEmpty(path) ? null : new File(path)),
+//					new File(file),
+//					config.datamap
+//				);
+//			}
+	}
+	private Map<String, Object> _loadFromStream(final InputStream in) {
+		if (in == null) throw new NullPointerException();
+		final Yaml yml = new Yaml();
+		try {
+			@SuppressWarnings("unchecked")
+			final Map<String, Object> datamap =
+				(HashMap<String, Object>)
+				yml.load(in);
+			return datamap;
+		} finally {
+			Utils.safeClose(in);
+		}
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// factory configs
+
+
+
+	// file name
+	public xConfigFactory setFileName(final String fileStr) {
+		this.fileName = fileStr;
+		return this;
+	}
+	// file path
+	public xConfigFactory setFilePath(final String pathStr) {
+		this.filePath = pathStr;
+		return this;
+	}
+	// jar package path
+	public xConfigFactory setPackagePath(final String packagePath) {
+		this.packagePath = packagePath;
+		return this;
+	}
+
+
+
+	// definition class
+	public xConfigFactory setConfigClass(final Class<? extends xConfig> cfgClass) {
+		this.cfgClass = cfgClass;
+		return this;
+	}
+	public Class<? extends xConfig> getConfigClass() {
+		final Class<? extends xConfig> cfgClass = this.cfgClass;
+		return (
+			cfgClass == null
+			? xConfig.class
+			: cfgClass
 		);
 	}
-	public static boolean Save(final File path, final File file,
-			final Map<String, Object> datamap) {
-		if(file == null)           throw new RequiredArgumentException("file");
-		if(utils.isEmpty(datamap)) throw new RequiredArgumentException("datamap");
-		if(path != null && !path.isDirectory()) {
-			if(path.mkdirs()) {
-				getLogger().info("Created directory: "+path.toString());
-			} else {
-				getLogger().severe("Failed to create directory: "+path.toString());
-				return false;
-			}
-		}
-		final String filePath = utilsDirFile.buildFilePath(path, file);
-		PrintWriter out = null;
-		try {
-			final Yaml yml = new Yaml();
-			out = new PrintWriter(filePath);
-			out.print(
-					yml.dumpAs(datamap, Tag.MAP, FlowStyle.BLOCK)
-			);
-			getLogger().fine("Saved config file: "+filePath);
-			return true;
-		} catch (FileNotFoundException e) {
-			getLogger().trace(e);
-			return false;
-		} finally {
-			utils.safeClose(out);
-		}
+
+
+
+	// class contained in source jar
+	public xConfigFactory setJarResourceClass(final Class<? extends Object> jarResClass) {
+		this.jarResClass = jarResClass;
+		return this;
+	}
+	public Class<? extends Object> getJarResourceClass() {
+		final Class<? extends Object> jarResClass = this.jarResClass;
+		return (
+			jarResClass == null
+			? xConfig.class
+			: jarResClass
+		);
 	}
 
 
 
-	// logger
-	private volatile xLog _log         = null;
-	private static   xLog _log_default = null;
+	// config file source
+	public xConfigFactory setFileSource(final FileSource source) {
+		if (source == null) throw new RequiredArgumentException("source");
+		this.source = source;
+		return this;
+	}
+	public xConfigFactory enableFilesystemSource() {
+		final FileSource source = this.source;
+		if (source == null) {
+			return this.setFileSource(FileSource.FILESYSTEM);
+		}
+		if (source.equals(FileSource.RESOURCE)) {
+			return this.setFileSource(FileSource.AUTO);
+		}
+		return this;
+	}
+	public xConfigFactory enableResource() {
+		final FileSource source = this.source;
+		if (source == null) {
+			return this.setFileSource(FileSource.RESOURCE);
+		}
+		if (source.equals(FileSource.FILESYSTEM)) {
+			return this.setFileSource(FileSource.AUTO);
+		}
+		return this;
+	}
+	public xConfigFactory disableFilesystem() {
+		return this.setFileSource(FileSource.RESOURCE);
+	}
+	public xConfigFactory disableResource() {
+		return this.setFileSource(FileSource.FILESYSTEM);
+	}
+
+
+
+	// optional logger
+	public xConfigFactory setLog(final xLog log) {
+		this.log = log;
+		return this;
+	}
 	public xLog log() {
-		final xLog local = this._log;
-		if(local != null)
-			return local;
-		return getLogger();
-	}
-	public void setLog(final xLog log) {
-		this._log = log;
-	}
-	public static xLog getLogger() {
-		if(_log_default == null)
-			_log_default = xLog.getRoot(LOG_NAME);
-		return _log_default;
+		return this.log;
 	}
 
 
 
 }
-*/
