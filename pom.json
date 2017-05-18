@@ -17,15 +17,25 @@
 			"ArtifactId": "snakeyaml",
 			"Version": "1.18"
 		},
+		"quartz": {
+			"GroupId": "org.quartz-scheduler",
+			"ArtifactId": "quartz",
+			"Version": "2.3.0"
+		},
 		"jcl": {
 			"GroupId": "org.xeustechnologies",
 			"ArtifactId": "jcl-core",
 			"Version": "2.8"
 		},
-		"quartz": {
-			"GroupId": "org.quartz-scheduler",
-			"ArtifactId": "quartz",
-			"Version": "2.3.0"
+		"slf4j": {
+			"GroupId": "org.slf4j",
+			"ArtifactId": "slf4j-api",
+			"Version": "1.7.25"
+		},
+		"commons-logging": {
+			"GroupId": "commons-logging",
+			"ArtifactId": "commons-logging",
+			"Version": "1.1.1"
 		}
 	}
 }
