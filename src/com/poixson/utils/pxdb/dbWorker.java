@@ -1,5 +1,6 @@
 package com.poixson.utils.pxdb;
 
+import java.lang.ref.SoftReference;
 import java.sql.Connection;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -15,6 +16,7 @@ public class dbWorker implements xCloseable {
 	private final String dbKey;
 	private final int    index;
 	private final AtomicReference<String> desc = new AtomicReference<String>(null);
+	private volatile SoftReference<String> tablePrefix = null;
 
 	private volatile Connection conn = null;
 	private final AtomicBoolean inUse = new AtomicBoolean(false);
@@ -44,10 +46,24 @@ public class dbWorker implements xCloseable {
 		return this.dbKey;
 	}
 	public String getTablePrefix() {
-		final dbConfig config = dbManager.getConfig(this.dbKey);
-		if (config == null)
-			return null;
-		return config.getTablePrefix();
+		// cached
+		{
+			final SoftReference<String> ref = this.tablePrefix;
+			if (ref != null) {
+				final String tablePrefix = ref.get();
+				return tablePrefix;
+			}
+		}
+		// get from config
+		{
+			final dbPool pool = dbManager.getPool(this.dbKey());
+			if (pool == null)
+				return null;
+			final dbConfig config = pool.getConfig();
+			final String tablePrefix = config.getTablePrefix();
+			this.tablePrefix = new SoftReference<String>(tablePrefix);
+			return tablePrefix;
+		}
 	}
 
 
