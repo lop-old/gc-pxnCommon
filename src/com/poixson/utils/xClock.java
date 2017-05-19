@@ -9,6 +9,10 @@ import java.net.UnknownHostException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.poixson.utils.xLogger.xLog;
 
@@ -17,6 +21,9 @@ public class xClock {
 
 	public static final String DEFAULT_TIMESERVER = "pool.ntp.org";
 
+	private static final AtomicReference<xClock> instance =
+			new AtomicReference<xClock>(null);
+
 	private volatile String timeserver = null;
 	private volatile boolean enableNTP = false;
 
@@ -24,29 +31,24 @@ public class xClock {
 	private volatile double lastChecked = 0.0;
 
 	// update thread
-	private volatile Thread thread = null;
-	private volatile boolean blocking = true;
-	private volatile boolean running = false;
-	private final Object runLock = new Object();
+	private final AtomicReference<Thread> thread = new AtomicReference<Thread>(null);
+	private final AtomicBoolean running = new AtomicBoolean(false);
 
-	// clock instance
-	private static volatile xClock instance = null;
-	private static final Object lock = new Object();
+	private final AtomicReference<Condition> blockingLock = new AtomicReference<Condition>(null);
 
 
 
 	public static xClock get(final boolean blocking) {
-		if (instance == null) {
-			synchronized(lock) {
-				if (instance == null) {
-					instance = new xClock(blocking);
-					// just to prevent gc
-					Keeper.add(instance);
-				}
-			}
-		}
-		instance.update();
-		return instance;
+		if (instance.get() != null)
+			return instance.get();
+		// new instance
+		final xClock clock = new xClock();
+		if (!instance.compareAndSet(null, clock))
+			return instance.get();
+		clock.update(blocking);
+		// just to prevent gc
+		Keeper.add(clock);
+		return clock;
 	}
 	public static xClock get() {
 		return get(true);
@@ -55,8 +57,7 @@ public class xClock {
 
 
 	// new instance
-	private xClock(final boolean blocking) {
-		this.blocking = blocking;
+	private xClock() {
 	}
 	@Override
 	public Object clone() throws CloneNotSupportedException {
@@ -67,24 +68,31 @@ public class xClock {
 
 	public void update() {
 		if (!this.enableNTP) return;
-		if (this.running)    return;
-		synchronized(this.runLock) {
-			if (this.running) return;
-			this.running = true;
-			// wait for update
-			if (this.blocking) {
-				doUpdate();
-			// update threaded
-			} else {
-				if (this.thread == null) {
-					this.thread = new Thread() {
-						@Override
-						public void run() {
-							doUpdate();
-						}
-					};
-					this.thread.start();
+		// wait for update
+		if (blocking) {
+			this.doUpdate(blocking);
+			return;
+		}
+		// update in a new thread
+		if (this.thread.get() == null) {
+			final Thread thread = new Thread() {
+				private volatile xClock  clock    = null;
+				private volatile boolean blocking = false;
+				public Thread init(final xClock clock, final boolean blocking) {
+					this.clock    = clock;
+					this.blocking = blocking;
+					return this;
 				}
+				@Override
+				public void run() {
+					this.clock
+						.doUpdate(this.blocking);
+				}
+			}.init(this, blocking);
+			if (this.thread.compareAndSet(null, thread)) {
+				thread.setDaemon(true);
+				thread.setName("xClock Update");
+				thread.start();
 			}
 		}
 	}
@@ -93,7 +101,29 @@ public class xClock {
 
 	protected void doUpdate() {
 		if (!this.enableNTP) return;
-		if (!this.running)   return;
+		// already running
+		if (!this.running.compareAndSet(false, true)) {
+			// wait until finished
+			if (blocking) {
+				Condition lock = this.blockingLock.get();
+				if (lock == null) {
+					lock = (new ReentrantLock()).newCondition();
+					if (!this.blockingLock.compareAndSet(null, lock)) {
+						lock = this.blockingLock.get();
+					}
+					try {
+						while (true) {
+							if (!this.running.get())
+								break;
+							if (this.blockingLock.get() == null)
+								break;
+							lock.await(100L, xTimeU.MS);
+						}
+					} catch (InterruptedException ignore) {}
+				}
+			}
+			return;
+		}
 		long time = getSystemTime();
 		// checked in last 60 seconds
 		if ( this.lastChecked != 0.0) {
@@ -180,16 +210,22 @@ public class xClock {
 			log.trace(e);
 		} finally {
 			Utils.safeClose(socket);
-			this.thread = null;
 			this.lastChecked = time;
-			this.running = false;
+			this.running.set(false);
+			this.thread.set(null);
+			// signal waiting threads
+			final Condition lock = this.blockingLock.get();
+			if (lock != null) {
+				lock.signalAll();
+				this.blockingLock.set(null);
+			}
 		}
 	}
 
 
 
 	public boolean isRunning() {
-		return this.running;
+		return this.running.get();
 	}
 
 
@@ -204,12 +240,10 @@ public class xClock {
 		this.timeserver = host;
 	}
 	public void setEnabled(final boolean enabled) {
-		synchronized(this.runLock) {
-			this.enableNTP = enabled;
-			if (!enabled) {
-				this.localOffset = 0.0;
-				this.lastChecked = 0.0;
-			}
+		this.enableNTP = enabled;
+		if (!enabled) {
+			this.localOffset = 0.0;
+			this.lastChecked = 0.0;
 		}
 	}
 

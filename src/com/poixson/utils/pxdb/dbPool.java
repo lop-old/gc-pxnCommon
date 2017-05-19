@@ -2,17 +2,21 @@ package com.poixson.utils.pxdb;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.poixson.utils.CoolDown;
 import com.poixson.utils.ThreadUtils;
+import com.poixson.utils.xTime;
 import com.poixson.utils.exceptions.RequiredArgumentException;
 import com.poixson.utils.xLogger.xLog;
 
 
 public class dbPool {
+
+	private static final xTime MAX_HARD_BLOCKING = xTime.get("5s");
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		throw new CloneNotSupportedException();
@@ -22,7 +26,8 @@ public class dbPool {
 	private final dbConfig config;
 
 	// workers/connections
-	private final List<dbWorker> workers = new ArrayList<dbWorker>();
+	private final CopyOnWriteArraySet<dbWorker> workers =
+			new CopyOnWriteArraySet<dbWorker>();
 	// hard/soft pool size limits
 	private final dbPoolSize poolSize;
 
@@ -81,50 +86,52 @@ public class dbPool {
 
 	// get unused worker
 	public dbWorker getWorkerLock() {
-		dbWorker worker = null;
-		synchronized(this.workers) {
-			final CoolDown maxHardBlocking = CoolDown.get("5s");
-			maxHardBlocking.resetRun();
-			int count = 0;
-			while (true) {
-				count = getWorkerCount();
-				// get existing connection
-				if (count > 0) {
-					worker = getExisting();
-					if (worker != null)
-						break;
-					count = getWorkerCount();
-				}
-				// soft max
-				if (count >= this.poolSize.getSoft()) {
-					this.poolSize.StartWarningThread();
-				}
-				// hard max
-				if (count >= this.poolSize.getHard()) {
-					this.poolSize.HardLimitWarningMessage();
-					// stop waiting
-					if (maxHardBlocking.runAgain()) {
-						log().severe("Failed to get a db connection! Blocked for "+maxHardBlocking.getDuration().toFullString()+".. Giving up.");
-						return null;
-					}
-					// wait for a free worker
-					ThreadUtils.Sleep(100L);
-					continue;
-				}
-				// new worker/connection
-				worker = newWorker();
-				if (worker == null)
+		final CoolDown maxHardBlocking = CoolDown.get(MAX_HARD_BLOCKING);
+		maxHardBlocking.resetRun();
+		while (true) {
+			// use existing connection
+			if (!this.workers.isEmpty()) {
+				final dbWorker worker = this.getLockedFromExisting();
+				if (worker != null)
+					return worker;
+			}
+			// soft max
+			final int count = this.getWorkerCount();
+			if (count >= this.poolSize.getSoft()) {
+				this.poolSize.StartWarningThread();
+			}
+			// hard max
+			if (count >= this.poolSize.getHard()) {
+				this.poolSize.HardLimitWarningMessage();
+				// give up waiting
+				if (maxHardBlocking.runAgain()) {
+					log().severe(
+						(new StringBuilder())
+							.append("Failed to get a db connection! Blocked for ")
+							.append(maxHardBlocking.getDuration().toFullString())
+							.append(".. Giving up!")
+							.toString()
+					);
 					return null;
-				return worker;
+				}
+				// wait for a free worker
+				ThreadUtils.Sleep(100L);
+				continue;
+			}
+			// new worker/connection
+			{
+				final dbWorker worker = this.newLockedWorker();
+				if (worker != null)
+					return worker;
 			}
 		}
-		return worker;
 	}
 	public dbWorker getExisting() {
-		synchronized(this.workers) {
-			if (this.workers.isEmpty())
-				return null;
-			// workers in pool
+		if (this.workers.isEmpty())
+			return null;
+		dbWorker output = null;
+		final Set<dbWorker> removing = new HashSet<dbWorker>();
+		{
 			final Iterator<dbWorker> it = this.workers.iterator();
 			while (it.hasNext()) {
 				final dbWorker worker = it.next();
@@ -168,11 +175,9 @@ public class dbPool {
 			return null;
 		// successful connection
 		final dbWorker worker = new dbWorker(this.config.dbKey(), conn);
-		synchronized(this.workers) {
-			this.workers.add(worker);
-			if (!worker.getLock())
-				return null;
-		}
+		this.workers.add(worker);
+		if (!worker.getLock())
+			return null;
 		return worker;
 	}
 

@@ -14,7 +14,7 @@ import com.poixson.utils.xLogger.xLog;
 
 public abstract class xHandler {
 
-	protected volatile Set<xListenerDAO> listeners = null;
+	protected final CopyOnWriteArraySet<xListenerDAO> listeners = new CopyOnWriteArraySet<>();
 
 
 
@@ -66,7 +66,6 @@ public abstract class xHandler {
 
 
 	protected xHandler() {
-		this.listeners = new CopyOnWriteArraySet<xListenerDAO>();
 	}
 
 
@@ -140,9 +139,7 @@ public abstract class xHandler {
 	public void unregisterAll() {
 		if (this.listeners.isEmpty())
 			return;
-		synchronized(this.listeners) {
-			this.listeners.clear();
-		}
+		this.listeners.clear();
 	}
 
 

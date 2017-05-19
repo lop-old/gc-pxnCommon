@@ -1,6 +1,8 @@
 package com.poixson.utils.pxdb;
 
 import java.sql.Connection;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.sql.SQLException;
 
 import com.poixson.utils.Utils;
@@ -12,11 +14,10 @@ public class dbWorker implements xCloseable {
 
 	private final String dbKey;
 	private final int id;
-	private volatile String desc = null;
+	private final AtomicReference<String> desc = new AtomicReference<String>(null);
 
 	private volatile Connection conn = null;
-	private volatile boolean inUse = false;
-	private final Object useLock = new Object();
+	private final AtomicBoolean inUse = new AtomicBoolean(false);
 
 
 
@@ -69,25 +70,32 @@ public class dbWorker implements xCloseable {
 
 	// in-use lock
 	public boolean inUse() {
-		return this.inUse;
+		return this.inUse.get();
 	}
 	public boolean getLock() {
-		if (this.inUse)
-			return false;
-		synchronized(this.useLock) {
-			if (this.inUse) {
-				return false;
-			}
-			this.inUse = true;
+		final boolean result = this.inUse.compareAndSet(false, true);
+		if (result) {
+			log().finest(
+				(new StringBuilder())
+					.append("Locked #")
+					.append(this.getIndex())
+					.toString()
+			);
 		}
-		log().finest("Locked #"+Integer.toString(this.id));
-		return true;
+		return result;
 	}
 	public void free() {
-		if (Utils.notEmpty(this.desc))
-			this.logDesc();
-		log().finest("Released #"+Integer.toString(this.id));
-		this.inUse = false;
+		// flush desc
+		this.logDesc();
+		// release lock
+		if (this.inUse.compareAndSet(true, false)) {
+			log().finest(
+				(new StringBuilder())
+					.append("Released #")
+					.append(this.getIndex())
+					.toString()
+			);
+		}
 	}
 //TODO:
 //	/**
@@ -106,13 +114,24 @@ public class dbWorker implements xCloseable {
 
 	// query description
 	public void desc(final String descStr) {
-		this.desc = descStr;
+		this.desc.set(
+			Utils.isBlank(descStr)
+			? null
+			: descStr
+		);
 	}
 	public void logDesc() {
-		if (Utils.isEmpty(this.desc))
+		final String desc = this.desc.get();
+		if (Utils.isBlank(desc))
 			return;
-		log().fine("Query: "+this.desc);
-		this.desc = null;
+		if (!this.desc.compareAndSet(desc, null))
+			return;
+		log().fine(
+			(new StringBuilder())
+				.append("Query: ")
+				.append(desc)
+				.toString()
+		);
 	}
 
 

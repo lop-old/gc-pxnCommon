@@ -8,8 +8,8 @@ import java.lang.ref.SoftReference;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.channels.OverlappingFileLockException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import com.poixson.utils.exceptions.RequiredArgumentException;
 import com.poixson.utils.xLogger.xLog;
@@ -17,7 +17,8 @@ import com.poixson.utils.xLogger.xLog;
 
 public class LockFile {
 
-	private static final Map<String, LockFile> instances = new HashMap<String, LockFile>();
+	private static final ConcurrentMap<String, LockFile> instances =
+			new ConcurrentHashMap<String, LockFile>();
 
 	public final String filename;
 	public final File   file;
@@ -29,37 +30,28 @@ public class LockFile {
 
 
 	public static LockFile get(final String filename) {
-		if (Utils.isBlank(filename))
-			throw new RequiredArgumentException("filename");
-		if (!SanUtils.safeFileName(filename))
-			throw new IllegalArgumentException("Invalid lock file name: "+filename);
-		synchronized(instances) {
-			// existing lock instance
-			{
-				final LockFile lock = instances.get(filename);
-				if (lock != null)
-					return lock;
-			}
-			// new lock instance
-			{
-				final LockFile lock = new LockFile(filename);
-				instances.put(
-					filename,
-					lock
-				);
-				Keeper.add(lock);
+		if (Utils.isBlank(filename))          throw new RequiredArgumentException("filename");
+		if (!SanUtils.safeFileName(filename)) throw new IllegalArgumentException("Invalid lock file name: "+filename);
+		// existing lock instance
+		{
+			final LockFile lock = instances.get(filename);
+			if (lock != null)
 				return lock;
-			}
+		}
+		// new lock instance
+		{
+			final LockFile lock = new LockFile(filename);
+			final LockFile existing = instances.putIfAbsent(filename, lock);
+			if (existing != null)
+				return existing;
+			Keeper.add(lock);
+			return lock;
 		}
 	}
 	public static LockFile peak(final String filename) {
-		if (Utils.isBlank(filename))
-			throw new RequiredArgumentException("filename");
-		if (!SanUtils.safeFileName(filename))
-			throw new IllegalArgumentException("Invalid lock file name: "+filename);
-		synchronized(instances) {
-			return instances.get(filename);
-		}
+		if (Utils.isBlank(filename))          throw new RequiredArgumentException("filename");
+		if (!SanUtils.safeFileName(filename)) throw new IllegalArgumentException("Invalid lock file name: "+filename);
+		return instances.get(filename);
 	}
 
 

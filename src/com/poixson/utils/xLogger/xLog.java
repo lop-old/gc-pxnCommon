@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.poixson.utils.Keeper;
 import com.poixson.utils.Utils;
@@ -77,7 +78,7 @@ import com.poixson.utils.exceptions.RequiredArgumentException;
 public class xLog extends xLogPrinting {
 
 	// root logger
-	protected static volatile xLog root = null;
+	protected static final AtomicReference<xLog> root = new AtomicReference<xLog>(null);
 	protected static final Object lock = new Object();
 	public static final xLevel DEFAULT_LEVEL = xLevel.FINEST;
 
@@ -95,17 +96,26 @@ public class xLog extends xLogPrinting {
 
 	// get root logger
 	public static xLog getRoot() {
-		if (root == null)
-			init();
-		return root;
+		if (root.get() != null)
+			return root.get();
+		final xLog log = new xLog(null, null);
+		log.setLevel(DEFAULT_LEVEL);
+		if (!root.compareAndSet(null, log)) {
+			return root.get();
+		}
+		Keeper.add(log);
+		return log;
 	}
 	public static xLog peekRoot() {
-		return root;
+		return root.get();
 	}
 	// is root logger
 	@Override
 	public boolean isRoot() {
-		return (this == root);
+		final xLog log = root.get();
+		if (log == null)
+			return false;
+		return this.equals(log);
 	}
 
 
@@ -124,13 +134,18 @@ public class xLog extends xLogPrinting {
 			}
 		}
 		// new logger instance
-		synchronized(this.loggers) {
-			if (this.loggers.containsKey(logName)) {
-				return this.loggers.get(logName);
-			}
+		{
 			final xLog log = new xLog(logName, this);
-			this.loggers.put(logName, log);
-			return log;
+			final xLog existing =
+				this.loggers.putIfAbsent(
+					logName,
+					log
+				);
+			return (
+				existing == null
+				? log
+				: existing
+			);
 		}
 	}
 	// new instance (weak reference)

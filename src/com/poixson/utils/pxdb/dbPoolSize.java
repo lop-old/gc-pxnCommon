@@ -1,5 +1,7 @@
 package com.poixson.utils.pxdb;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import com.poixson.utils.CoolDown;
 import com.poixson.utils.NumberUtils;
 import com.poixson.utils.ThreadUtils;
@@ -19,8 +21,7 @@ public class dbPoolSize extends Thread {
 
 	private final dbPool pool;
 
-	private volatile boolean running = false;
-	private final Object lock = new Object();
+	private final AtomicBoolean running = new AtomicBoolean(false);
 
 
 
@@ -36,15 +37,10 @@ public class dbPoolSize extends Thread {
 
 	// pool size warnings
 	public void StartWarningThread() {
-		synchronized(this.lock) {
-			if (this.running)
-				return;
-			this.running = true;
-//TODO: is this needed here?
-//			this.setName(pool.getKey()+" Warning Thread");
-			if (!this.isAlive()) {
-				this.start();
-			}
+		if (!this.running.compareAndSet(false, true))
+			return;
+		if (!this.isAlive()) {
+			this.start();
 		}
 //TODO:
 //switch (thread.getState()) {
@@ -59,14 +55,7 @@ public class dbPoolSize extends Thread {
 	}
 	@Override
 	public void run() {
-		log().finer("Started warning thread.. "+this.getName());
-		this.running = true;
-//TODO:
-//		synchronized(thread) {
-//			if (running)
-//				return;
-//			running = true;
-//		}
+		log().finest("Started warning thread.. "+this.getName());
 		this.coolSoftLimit.reset();
 		this.coolHardLimit.reset();
 		int count = getWorkerCount();
@@ -96,7 +85,7 @@ public class dbPoolSize extends Thread {
 			ThreadUtils.Sleep(250L);
 		}
 		log().finer("Stopped warning thread. "+this.getName());
-		this.running = false;
+		this.running.set(false);
 	}
 
 

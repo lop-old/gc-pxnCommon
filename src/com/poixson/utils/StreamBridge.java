@@ -21,8 +21,8 @@ package com.poixson.utils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.poixson.utils.exceptions.RequiredArgumentException;
@@ -37,11 +37,12 @@ import com.poixson.utils.xLogger.xLog;
  */
 public class StreamBridge implements xStartable {
 
-	protected static final Set<StreamBridge> instances = new HashSet<StreamBridge>();
+	protected static final CopyOnWriteArraySet<StreamBridge> instances =
+			new CopyOnWriteArraySet<StreamBridge>();
 	protected static final AtomicInteger nextIndex = new AtomicInteger(0);
 
 	protected final Thread thread;
-	protected volatile boolean running  = false;
+	protected final AtomicBoolean running = new AtomicBoolean(false);
 	protected volatile boolean stopping = false;
 
 	protected final InputStream  in;
@@ -52,31 +53,23 @@ public class StreamBridge implements xStartable {
 	public StreamBridge(final InputStream in, final OutputStream out) {
 		if (in  == null) throw new RequiredArgumentException("in");
 		if (out == null) throw new RequiredArgumentException("out");
-		synchronized(instances) {
-			instances.add(this);
-		}
+		instances.add(this);
 		this.in  = in;
 		this.out = out;
 		this.thread = new Thread(this);
 		this.thread.setName("StreamBridge"+Integer.toString(nextIndex.incrementAndGet()));
 	}
 	protected void remove() {
-		synchronized(instances) {
-			instances.remove(this);
-		}
+		instances.remove(this);
 	}
 
 
 
 	@Override
 	public void run() {
-		if (this.running)  throw new RuntimeException("StreamBridge already running");
 		if (this.stopping) throw new RuntimeException("StreamBridge already stopped");
-		synchronized(this.thread) {
-			if (this.running)  throw new RuntimeException("StreamBridge already running");
-			if (this.stopping) throw new RuntimeException("StreamBridge already stopped");
-			this.running = true;
-		}
+		if (!this.running.compareAndSet(false, true))
+			throw new RuntimeException("StreamBridge already running");
 		while (!this.stopping) {
 			final int b;
 			try {
@@ -107,7 +100,7 @@ public class StreamBridge implements xStartable {
 		Utils.safeClose(this.out);
 		Utils.safeClose(this.in);
 		this.stopping = true;
-		this.running = false;
+		this.running.set(false);
 		this.remove();
 	}
 
@@ -129,7 +122,7 @@ public class StreamBridge implements xStartable {
 
 	@Override
 	public boolean isRunning() {
-		return this.running;
+		return this.running.get();
 	}
 	@Override
 	public boolean isStopping() {

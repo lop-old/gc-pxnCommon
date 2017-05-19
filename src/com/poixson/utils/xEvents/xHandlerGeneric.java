@@ -102,9 +102,7 @@ public abstract class xHandlerGeneric extends xHandler {
 				);
 			}
 		}
-		synchronized(this.listeners) {
-			this.listeners.addAll(listeners);
-		}
+		this.listeners.addAll(listeners);
 	}
 
 

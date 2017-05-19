@@ -3,6 +3,7 @@ package com.poixson.utils.xThreadPool;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.poixson.utils.ThreadUtils;
 import com.poixson.utils.Utils;
@@ -19,12 +20,14 @@ public class xThreadPoolFactory {
 	protected static final ConcurrentMap<String, xThreadPool> pools =
 			new ConcurrentHashMap<String, xThreadPool>();
 
-	protected static final xThreadPool mainPool = getMainPool();
+	protected static final AtomicReference<xThreadPool> mainPool =
+			new AtomicReference<xThreadPool>(null);
 
 	// task hang monitor
 	protected static final HangMonitorThread hangMonitor =
 			new HangMonitorThread();
-	protected static volatile Thread hangMonitorThread = null;
+	protected static final AtomicReference<Thread> hangMonitorThread =
+			new AtomicReference<Thread>(null);
 
 
 
@@ -32,25 +35,35 @@ public class xThreadPoolFactory {
 	 * Get main thread queue
 	 */
 	public static xThreadPool getMainPool() {
-		return get(null);
+		// existing instance
+		{
+			final xThreadPool pool = mainPool.get();
+			if (pool != null)
+				return pool;
+		}
+		// new instance
+		{
+			final xThreadPool pool = new xThreadPool(MAIN_POOL_NAME);
+			final xThreadPool existing = pools.putIfAbsent(MAIN_POOL_NAME, pool);
+			if (existing != null)
+				return existing;
+			if (!mainPool.compareAndSet(null, pool)) {
+				final xThreadPool p = pools.get(MAIN_POOL_NAME);
+				mainPool.set(p);
+				return p;
+			}
+			return pool;
+		}
 	}
 	/**
 	 * Get thread queue by name
 	 */
 	public static xThreadPool get(final String poolName) {
 		// default to main pool
-		if (Utils.isEmpty(poolName)) {
-			if (mainPool != null)
-				return mainPool;
-			return get(MAIN_POOL_NAME);
-		}
-		if (MAIN_POOL_NAME.equalsIgnoreCase(poolName)) {
-			if (mainPool != null)
-				return mainPool;
-			if ( ! MAIN_POOL_NAME.equals(poolName)) {
-				return get(MAIN_POOL_NAME);
-			}
-		}
+		if (Utils.isEmpty(poolName))
+			return getMainPool();
+		if (MAIN_POOL_NAME.equalsIgnoreCase(poolName))
+			return getMainPool();
 		// use existing pool instance
 		{
 			final xThreadPool pool = pools.get(poolName);
@@ -59,24 +72,24 @@ public class xThreadPoolFactory {
 			}
 		}
 		// new pool instance
-		synchronized(pools) {
-			if (pools.containsKey(poolName)) {
-				return pools.get(poolName);
+		final xThreadPool pool;
+		{
+			pool = new xThreadPool(poolName);
+			final xThreadPool existing =
+				pools.putIfAbsent(poolName, pool);
+			if (existing != null) {
+				return existing;
 			}
-			// start task hang monitor thread
-			if (hangMonitorThread == null) {
-				hangMonitorThread = new Thread(hangMonitor);
-				hangMonitorThread.setDaemon(true);
-				hangMonitorThread.start();
-			}
-			// create new pool instance
-			final xThreadPool pool = new xThreadPool(poolName);
-			pools.put(
-				poolName,
-				pool
-			);
-			return pool;
 		}
+		// start task hang monitor thread
+		if (hangMonitorThread.get() == null) {
+			final Thread thread = new Thread(hangMonitor);
+			if (hangMonitorThread.compareAndSet(null, thread)) {
+				thread.setDaemon(true);
+				thread.start();
+			}
+		}
+		return pool;
 	}
 
 
@@ -130,13 +143,11 @@ public class xThreadPoolFactory {
 			new xRunnable("xThreadPool-Shutdown") {
 				@Override
 				public void run() {
-					synchronized(pools) {
-						// stop threads
-						final Iterator<xThreadPool> it = pools.values().iterator();
-						while (it.hasNext()) {
-							final xThreadPool pool = it.next();
-							pool.Stop();
-						}
+					// stop threads
+					final Iterator<xThreadPool> it = pools.values().iterator();
+					while (it.hasNext()) {
+						final xThreadPool pool = it.next();
+						pool.Stop();
 					}
 				}
 			}

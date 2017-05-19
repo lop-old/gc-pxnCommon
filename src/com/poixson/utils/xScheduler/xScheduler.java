@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -24,7 +25,7 @@ public class xScheduler implements xStartable {
 	private static final String LOG_NAME        = "xSched";
 	private static final String MAIN_SCHED_NAME = "main";
 
-	private static final ConcurrentHashMap<String, xScheduler> instances =
+	private static final ConcurrentMap<String, xScheduler> instances =
 			new ConcurrentHashMap<String, xScheduler>();
 
 	private final String schedName;
@@ -52,22 +53,23 @@ public class xScheduler implements xStartable {
 			? MAIN_SCHED_NAME
 			: schedName
 		);
+		// existing scheduler
 		{
 			final xScheduler sched = instances.get(name);
 			if (sched != null)
 				return sched;
 		}
-		synchronized (instances) {
-			if (instances.containsKey(name))
-				return instances.get(name);
+		// new scheduler instance
+		{
 			final xScheduler sched = new xScheduler(name);
-			instances.put(
-				name,
-				sched
-			);
+			final xScheduler existing =
+				instances.putIfAbsent(name, sched);
+			if (existing != null) {
+				Keeper.remove(sched);
+				return existing;
+			}
 			return sched;
 		}
-
 	}
 
 

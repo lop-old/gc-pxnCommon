@@ -1,8 +1,9 @@
 package com.poixson.utils.pxdb;
 
 import java.lang.ref.SoftReference;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.poixson.utils.Keeper;
 import com.poixson.utils.Utils;
@@ -13,26 +14,31 @@ import com.poixson.utils.xLogger.xLog;
 public final class dbManager {
 	private static final String LOG_NAME = "DB";
 
-	// db configs
-	private static final Map<String, dbConfig> configs = new HashMap<String, dbConfig>();
+	private static final AtomicReference<dbManager> instance =
+			new AtomicReference<dbManager>(null);
 
 	// db connection pools
-	private static final Map<String, dbPool> pools = new HashMap<String, dbPool>();
+	private final ConcurrentMap<String, dbPool> pools =
+			new ConcurrentHashMap<String, dbPool>();
 
 
 
 	// db manager instance
-	private static volatile dbManager manager = null;
-	private static final Object lock = new Object();
 	public static dbManager get() {
-		if (manager == null) {
-			synchronized(lock) {
-				if (manager == null) {
-					manager = new dbManager();
-				}
+		// existing manager instance
+		{
+			final dbManager manager = instance.get();
+			if (manager != null)
+				return manager;
+		}
+		// new manager instance
+		{
+			final dbManager manager = new dbManager();
+			if (instance.compareAndSet(null, manager)) {
+				return manager;
 			}
 		}
-		return manager;
+		return instance.get();
 	}
 	private dbManager() {
 		Keeper.add(this);
@@ -56,18 +62,19 @@ public final class dbManager {
 		return null;
 	}
 	// get pool
-	public static dbPool getPool(final String dbKey) {
-		synchronized(pools) {
-			final dbConfig config = getConfig(dbKey);
-			if (config != null) {
-				final String key = config.dbKey();
-				final dbPool pool = pools.get(key);
-				if (pool != null)
-					return pool;
-			}
-			log().warning("db config not found for key: "+dbKey);
+	public static dbPool getPool(final String key) {
+		if (Utils.isEmpty(key)) throw new RequiredArgumentException("dbKey");
+		final dbManager manager = get();
+		return manager.pool(key);
+	}
+	public dbPool pool(final String key) {
+		if (Utils.isEmpty(key)) throw new RequiredArgumentException("dbKey");
+		final dbPool pool = this.pools.get(key);
+		if (pool == null) {
+			log().warning("db config not found for key: "+key);
 			return null;
 		}
+		return pool;
 	}
 	// get worker
 	public static dbWorker getWorkerLock(final String dbKey) {
@@ -79,34 +86,53 @@ public final class dbManager {
 
 
 
+	/**
+	 * Register a new db config as a new pool.
+	 * @param config
+	 * @return null if successful; on failure, returns an instance of the existing pool.
+	 */
 	// new db connection pool and initial connection
-	protected static boolean register(final dbConfig config) {
-		if (config == null)
-			throw new RequiredArgumentException("config");
+	protected static dbPool register(final dbConfig config) {
+		final dbManager manager = get();
+		return manager.reg(config);
+	}
+	/**
+	 * Register a new db config as a new pool.
+	 * @param config
+	 * @return null if successful; on failure, returns an instance of the existing pool.
+	 */
+	protected dbPool reg(final dbConfig config) {
+		if (config == null) throw new RequiredArgumentException("config");
 		final String key = config.dbKey();
 		if (Utils.isEmpty(key))
 			throw new RuntimeException("dbKey returned from dbConfig is empty!");
-		synchronized(pools) {
-			if (!configs.containsKey(key)) {
-				configs.put(key, config);
-			}
-			if (pools.containsKey(config)) {
-				log().finest("Sharing an existing db pool :-)");
-			} else {
-				// initial connection
-				log().finest("Starting new db pool..");
-				final dbPool pool = new dbPool(config);
-				final dbWorker worker = pool.getWorkerLock();
-				if (worker == null) {
-					log().severe("Failed to start db conn pool");
-					return false;
-				}
-				worker.desc("Initial connection successful");
-				worker.free();
-				pools.put(key, pool);
+		// use existing pool
+		{
+			final dbPool pool = this.pools.get(key);
+			if (pool != null) {
+				log().finest("Sharing existing db pool with matching config :-)");
+				return pool;
 			}
 		}
-		return true;
+		// new pool
+		{
+			final dbPool pool = new dbPool(config);
+			final dbPool existing =
+				this.pools.putIfAbsent(key, pool);
+			if (existing != null) {
+				log().finest("Sharing existing db pool with matching config :-)");
+				return existing;
+			}
+			log().finer("Starting new db pool..");
+			final dbWorker worker = pool.getLockedWorker();
+			if (worker == null) {
+				log().severe("Failed to start db conn pool");
+				throw new RuntimeException("Failed to start db conn pool");
+			}
+			worker.desc("Initial connection successful");
+			worker.free();
+			return pool;
+		}
 	}
 
 

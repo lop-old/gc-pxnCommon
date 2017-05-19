@@ -94,9 +94,7 @@ public abstract class xHandlerSimple extends xHandler {
 				.append(listener.getClass().getName())
 				.toString()
 		);
-		synchronized(this.listeners) {
-			this.listeners.add(dao);
-		}
+		this.listeners.add(dao);
 	}
 
 

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.fusesource.jansi.Ansi;
 
@@ -62,8 +63,8 @@ public abstract class xApp implements xStartable {
 	private static final String APP_INCONSISTENT_STOP_EXCEPTION  = "Failed to stop, inconsistent state!";
 
 	// app instance
-	protected static volatile xApp instance = null;
-	protected static final Object instanceLock = new Object();
+	protected static final AtomicReference<xApp> instance =
+			new AtomicReference<xApp>(null);
 
 	// state
 	protected final AtomicInteger step = new AtomicInteger(0);
@@ -84,33 +85,21 @@ public abstract class xApp implements xStartable {
 
 
 	public static xApp get() {
-		return instance;
+		return instance.get();
 	}
 	public static xApp peak() {
-		return instance;
+		return get();
 	}
 
 
 
 	public xApp() {
-		if (instance != null) {
+		if (!instance.compareAndSet(null, this)) {
+			final RuntimeException e =
+				new RuntimeException(APP_ALREADY_STARTED_EXCEPTION);
 			xLog.getRoot()
-				.trace(new RuntimeException(APP_ALREADY_STARTED_EXCEPTION));
-			Failure.fail(
-				APP_ALREADY_STARTED_EXCEPTION,
-				new RuntimeException(APP_ALREADY_STARTED_EXCEPTION)
-			);
-		}
-		synchronized(instanceLock) {
-			if (instance != null) {
-				xLog.getRoot()
-					.trace(new RuntimeException(APP_ALREADY_STARTED_EXCEPTION));
-				Failure.fail(
-					APP_ALREADY_STARTED_EXCEPTION,
-					new RuntimeException(APP_ALREADY_STARTED_EXCEPTION)
-				);
-			}
-			instance = this;
+				.trace(e);
+			Failure.fail(APP_ALREADY_STARTED_EXCEPTION, e);
 		}
 		this.props = new AppProps(this.getClass());
 	}
@@ -123,20 +112,20 @@ public abstract class xApp implements xStartable {
 		if (this.isRunning() || this.isStarting()) {
 			return;
 		}
-		synchronized(instanceLock) {
-			if (this.isRunning() || this.isStarting()) {
-				return;
-			}
-			// already stopping
-			if (this.isStopping()) {
-				this.log().warning(APP_ALREADY_STOPPING_EXCEPTION);
-				return;
-			}
-			// set starting state
-			if (!this.step.compareAndSet(STEP_OFF, STEP_START)) {
-				this.log().warning(APP_INVALID_STATE_EXCEPTION+this.step.get());
-				return;
-			}
+		// already stopping
+		if (this.isStopping()) {
+			this.log().warning(APP_ALREADY_STOPPING_EXCEPTION);
+			return;
+		}
+		// set starting state
+		if (!this.step.compareAndSet(STEP_OFF, STEP_START)) {
+			this.log().warning(
+				(new StringBuilder())
+					.append(APP_INVALID_STATE_EXCEPTION)
+					.append(this.step.get())
+					.toString()
+			);
+			return;
 		}
 
 		// init logger
@@ -263,12 +252,8 @@ public abstract class xApp implements xStartable {
 		// already stopping or stopped
 		if (this.isStopped())  return;
 		if (this.isStopping()) return;
-		synchronized(instanceLock) {
-			if (this.isStopped())  return;
-			if (this.isStopping()) return;
-			// set stopping state
-			this.step.set(STEP_STOP);
-		}
+		// set stopping state
+		this.step.set(STEP_STOP);
 		this.log().title(
 			new String[] {
 				(new StringBuilder())
@@ -375,7 +360,8 @@ public abstract class xApp implements xStartable {
 		return orderedSteps;
 	}
 	protected static List<xAppStepDAO> FindAllSteps() {
-		final Class<? extends xApp> clss = instance.getClass();
+		final xApp app = get();
+		final Class<? extends xApp> clss = app.getClass();
 		if (clss == null) throw new RuntimeException("Failed to get app class!");
 		// get method annotations
 		final Method[] methods = clss.getMethods();
@@ -388,7 +374,7 @@ public abstract class xApp implements xStartable {
 			// found step method
 			final xAppStepDAO dao =
 				new xAppStepDAO(
-					instance,
+					app,
 					m,
 					anno
 				);

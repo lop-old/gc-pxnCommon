@@ -3,6 +3,7 @@ package com.poixson.utils;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.poixson.utils.exceptions.RequiredArgumentException;
 import com.poixson.utils.xLogger.xLog;
@@ -12,22 +13,22 @@ public class Keeper {
 	private static final String LOG_NAME = "KEEPER";
 	private static final boolean DEBUG_EXTRA = false;
 
-	private static volatile Keeper instance = null;
-	private static final Object instanceLock = new Object();
+	private static final AtomicReference<Keeper> instance =
+			new AtomicReference<Keeper>(null);
 
 	private static final Set<Object> holder = new CopyOnWriteArraySet<Object>();
 
 
 
 	public static Keeper get() {
-		if (instance == null) {
-			synchronized(instanceLock) {
-				if (instance == null)
-					instance = new Keeper();
-			}
-			Utils.InitAll();
-		}
-		return instance;
+		if (instance.get() != null)
+			return instance.get();
+		// new instance
+		final Keeper keeper = new Keeper();
+		if (!instance.compareAndSet(null, keeper))
+			return instance.get();
+		Utils.InitAll();
+		return keeper;
 	}
 
 
