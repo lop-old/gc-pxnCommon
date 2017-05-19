@@ -2,6 +2,7 @@ package com.poixson.utils.xEvents;
 
 import java.lang.ref.SoftReference;
 import java.lang.reflect.Method;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -90,18 +91,32 @@ public abstract class xHandler {
 	 * @param listener
 	 */
 	public void unregister(final xEventListener listener) {
-		if (listener == null)
-			throw new RequiredArgumentException("listener");
-		final Iterator<xListenerDAO> it = this.listeners.iterator();
-		while (it.hasNext()) {
-			final xListenerDAO dao = it.next();
-			if (listener.equals(dao.listener)) {
-				it.remove();
-				this.log().finest("Removed listener: "+listener.getClass().getName());
-				return;
+		if (listener == null) throw new RequiredArgumentException("listener");
+		final Set<xListenerDAO> removing = new HashSet<xListenerDAO>();
+		{
+			final Iterator<xListenerDAO> it = this.listeners.iterator();
+			while (it.hasNext()) {
+				final xListenerDAO dao = it.next();
+				if (listener.equals(dao.listener)) {
+					this.log().finest(
+						(new StringBuilder())
+							.append("Removed listener: ")
+							.append(listener.getClass().getName())
+							.toString()
+					);
+					removing.add(dao);
+					return;
+				}
 			}
 		}
-		this.log().finest("Listener not found to remove");
+		if (removing.isEmpty()) {
+			this.log().finest("Listener not found to remove");
+		} else {
+			final Iterator<xListenerDAO> it = removing.iterator();
+			while (it.hasNext()) {
+				this.listeners.remove(it.next());
+			}
+		}
 	}
 	/**
 	 * Unregister an event listener by class type.
