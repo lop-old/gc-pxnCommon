@@ -39,6 +39,7 @@ public class xClock {
 
 
 
+//TODO: add cooldown to update again
 	public static xClock get(final boolean blocking) {
 		if (instance.get() != null)
 			return instance.get();

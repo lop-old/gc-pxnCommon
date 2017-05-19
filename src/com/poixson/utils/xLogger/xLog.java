@@ -14,6 +14,7 @@ import com.poixson.utils.Utils;
 import com.poixson.utils.xVars;
 import com.poixson.utils.exceptions.RequiredArgumentException;
 
+
 // ------------------------------------------------------------------------------- //
 
 
@@ -100,6 +101,15 @@ public class xLog extends xLogPrinting {
 			return root.get();
 		final xLog log = new xLog(null, null);
 		log.setLevel(DEFAULT_LEVEL);
+//TODO:
+//		initDefaultHandlers();
+//		// default log handlers
+//		private static void initDefaultHandlers() {
+//			// console handler
+//			final xLogHandler handler = new logHandlerConsole();
+//			handler.setFormatter(new xLogFormatter_Default());
+//			root.addHandler(handler);
+//		}
 		if (!root.compareAndSet(null, log)) {
 			return root.get();
 		}
@@ -162,42 +172,13 @@ public class xLog extends xLogPrinting {
 
 
 
-	// default logger initializer
-	public static void init() {
-		if (root == null) {
-			synchronized(lock) {
-				if (root == null) {
-					root = new xLog(null, null);
-//TODO:
-//					initDefaultHandlers();
-				}
-			}
-		}
-	}
-//TODO:
-//	// default log handlers
-//	private static void initDefaultHandlers() {
-//		// console handler
-//		final xLogHandler handler = new logHandlerConsole();
-//		handler.setFormatter(new xLogFormatter_Default());
-//		root.addHandler(handler);
-//	}
-
-
-
 	// new logger instance
 	protected xLog(final String logName, final xLog parentLogger) {
-		if (Utils.isEmpty(logName) && parentLogger != null)
-			throw new RequiredArgumentException("name");
+		if (parentLogger != null) {
+			if (Utils.isEmpty(logName)) throw new RequiredArgumentException("name");
+		}
 		this.name   = logName;
 		this.parent = parentLogger;
-		// new root logger
-		if (this.isRoot()) {
-			if (this.level == null) {
-				this.level = DEFAULT_LEVEL;
-			}
-			Keeper.add(this);
-		}
 	}
 	@Override
 	public xLog clone() {

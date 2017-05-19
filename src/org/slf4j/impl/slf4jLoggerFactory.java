@@ -26,9 +26,6 @@ public class slf4jLoggerFactory implements ILoggerFactory {
 		}
 		// new logger instance
 		{
-//			final org.apache.commons.logging.Log apacheLogger =
-//					LogFactory.getLog(name);
-//			final Logger newLogger = new slf4jLoggerAdapter(apacheLogger, name);
 			final xLog log = xLog.getRoot().get("slf4j-wrapper");
 			final Logger newlogger = new slf4jLoggerAdapter(name, log);
 			final Logger existing = this.loggers.putIfAbsent(name, newlogger);

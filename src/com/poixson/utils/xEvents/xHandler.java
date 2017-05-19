@@ -43,14 +43,13 @@ public abstract class xHandler {
 				final boolean filterHandled, final boolean filterCancelled) {
 			if (listener == null) throw new RequiredArgumentException("listener");
 			if (method   == null) throw new RequiredArgumentException("method");
-			if (priority == null) throw new RequiredArgumentException("priority");
 			this.index    = getNextIndex();
 			this.listener = listener;
 			this.method   = method;
 			this.priority = (
-					priority == null
-					? ListenerPriority.NORMAL
-					: priority
+				priority == null
+				? ListenerPriority.NORMAL
+				: priority
 			);
 //TODO:
 //			this.async           = async;
@@ -123,8 +122,7 @@ public abstract class xHandler {
 	 * @param clss
 	 */
 	public void unregisterType(final Class<?> listenerClass) {
-		if (listenerClass == null)
-			throw new RequiredArgumentException("listenerClass");
+		if (listenerClass == null) throw new RequiredArgumentException("listenerClass");
 		final Iterator<xListenerDAO> it = this.listeners.iterator();
 		int count = 0;
 		while (it.hasNext()) {
@@ -132,7 +130,12 @@ public abstract class xHandler {
 			if (listenerClass.equals(dao.listener.getClass())) {
 				this.listeners.remove(dao);
 				count++;
-				this.log().finest("Removed listener: "+dao.listener.getClass().getName());
+				this.log().finest(
+					(new StringBuilder())
+						.append("Removed listener: ")
+						.append(dao.listener.getClass().getName())
+						.toString()
+				);
 			}
 		}
 		if (count == 0) {
@@ -186,11 +189,12 @@ public abstract class xHandler {
 					this.log().finest("Triggering events: "+event.toString());
 				}
 				// run event
-				final xRunnableEvent run = new xRunnableEvent(
+				final xRunnableEvent run =
+					new xRunnableEvent(
 						dao,
 						event,
 						p
-				);
+					);
 //TODO:
 //				waitFor.add(run);
 //				xThreadPool.getMainPool()
@@ -221,9 +225,8 @@ public abstract class xHandler {
 	public xLog log() {
 		if (this._log != null) {
 			final xLog log = this._log.get();
-			if (log != null) {
+			if (log != null)
 				return log;
-			}
 		}
 		final xLog log = xLog.getRoot();
 		this._log = new SoftReference<xLog>(log);

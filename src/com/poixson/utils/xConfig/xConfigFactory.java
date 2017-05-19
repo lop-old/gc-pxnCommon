@@ -215,6 +215,7 @@ public class xConfigFactory {
 			Utils.safeClose(in);
 		}
 		return null;
+//TODO: is this useful?
 //			final xConfig cfg = this.loadFromStream(in);
 //cfg.setFromResource();
 //			if (this.source.equals(FileSource.AUTO)) {
@@ -238,6 +239,63 @@ public class xConfigFactory {
 			Utils.safeClose(in);
 		}
 	}
+
+
+
+//TODO:
+/*
+	/ **
+	 * Loads a .yml config file from the file system or a jar resource.
+	 * @param log The logger to use, or default to null
+	 * @param path File system path to the config file
+	 * @param file Name of the config file to load
+	 * @param clss xConfig class to create to handle loading the config
+	 * @param checkInJar A class contained in the jar in which to look
+	 *        for a default config file
+	 * @return xConfig instance containing the loaded yaml data
+	 * @throws xConfigException
+	 * /
+
+
+
+	public static boolean Save(final File file,
+			final Map<String, Object> datamap) {
+		return Save(
+				(File) null,
+				file,
+				datamap
+		);
+	}
+	public static boolean Save(final File path, final File file,
+			final Map<String, Object> datamap) {
+		if(file == null)           throw new RequiredArgumentException("file");
+		if(utils.isEmpty(datamap)) throw new RequiredArgumentException("datamap");
+		if(path != null && !path.isDirectory()) {
+			if(path.mkdirs()) {
+				getLogger().info("Created directory: "+path.toString());
+			} else {
+				getLogger().severe("Failed to create directory: "+path.toString());
+				return false;
+			}
+		}
+		final String filePath = utilsDirFile.buildFilePath(path, file);
+		PrintWriter out = null;
+		try {
+			final Yaml yml = new Yaml();
+			out = new PrintWriter(filePath);
+			out.print(
+					yml.dumpAs(datamap, Tag.MAP, FlowStyle.BLOCK)
+			);
+			getLogger().fine("Saved config file: "+filePath);
+			return true;
+		} catch (FileNotFoundException e) {
+			getLogger().trace(e);
+			return false;
+		} finally {
+			utils.safeClose(out);
+		}
+	}
+*/
 
 
 

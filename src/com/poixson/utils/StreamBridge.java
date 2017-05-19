@@ -57,7 +57,12 @@ public class StreamBridge implements xStartable {
 		this.in  = in;
 		this.out = out;
 		this.thread = new Thread(this);
-		this.thread.setName("StreamBridge"+Integer.toString(nextIndex.incrementAndGet()));
+		this.thread.setName(
+			(new StringBuilder())
+				.append("StreamBridge")
+				.append(nextIndex.incrementAndGet())
+				.toString()
+		);
 	}
 	protected void remove() {
 		instances.remove(this);
@@ -67,7 +72,7 @@ public class StreamBridge implements xStartable {
 
 	@Override
 	public void run() {
-		if (this.stopping) throw new RuntimeException("StreamBridge already stopped");
+		if (this.stopping) throw new RuntimeException("StreamBridge already stopping");
 		if (!this.running.compareAndSet(false, true))
 			throw new RuntimeException("StreamBridge already running");
 		while (!this.stopping) {
@@ -97,9 +102,9 @@ public class StreamBridge implements xStartable {
 				break;
 			}
 		}
+		this.stopping = true;
 		Utils.safeClose(this.out);
 		Utils.safeClose(this.in);
-		this.stopping = true;
 		this.running.set(false);
 		this.remove();
 	}
@@ -122,6 +127,8 @@ public class StreamBridge implements xStartable {
 
 	@Override
 	public boolean isRunning() {
+		if (this.stopping)
+			return false;
 		return this.running.get();
 	}
 	@Override

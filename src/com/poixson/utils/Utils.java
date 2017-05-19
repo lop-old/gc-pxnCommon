@@ -1,7 +1,6 @@
 package com.poixson.utils;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.util.Collection;
 import java.util.Map;
@@ -328,7 +327,7 @@ public final class Utils {
 		if (obj == null) return;
 		try {
 			obj.close();
-		} catch (IOException ignore) {}
+		} catch (Exception ignore) {}
 	}
 	public static void safeClose(AutoCloseable obj) {
 		if (obj == null) return;
