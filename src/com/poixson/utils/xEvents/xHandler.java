@@ -24,8 +24,8 @@ public abstract class xHandler {
 	 */
 	protected static class xListenerDAO {
 
-		private static final AtomicLong listenerIdCounter = new AtomicLong(0);
-		public final long id;
+		private static final AtomicLong nextIndex = new AtomicLong(0);
+		public final long index;
 
 		public final xEventListener   listener;
 		public final Method           method;
@@ -44,7 +44,7 @@ public abstract class xHandler {
 			if (listener == null) throw new RequiredArgumentException("listener");
 			if (method   == null) throw new RequiredArgumentException("method");
 			if (priority == null) throw new RequiredArgumentException("priority");
-			this.id = getNextId();
+			this.index    = getNextIndex();
 			this.listener = listener;
 			this.method   = method;
 			this.priority = (
@@ -58,8 +58,8 @@ public abstract class xHandler {
 			this.filterCancelled = filterCancelled;
 		}
 
-		private static long getNextId() {
-			return listenerIdCounter.incrementAndGet();
+		private static long getNextIndex() {
+			return nextIndex.incrementAndGet();
 		}
 
 	}
