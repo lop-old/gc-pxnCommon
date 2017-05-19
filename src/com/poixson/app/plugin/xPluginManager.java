@@ -52,27 +52,6 @@ public class xPluginManager {
 
 
 
-	protected class PluginDAO {
-
-		public final String name;
-		public final File file;
-		public final xPluginYML yml;
-		public volatile xJavaPlugin plugin = null;
-		public final Map<String, String> classes = new HashMap<String, String>();
-		public final xLog log;
-
-		public PluginDAO(final String name, final File file, final xPluginYML yml) {
-			this.name = name;
-			this.file = file;
-			this.yml  = yml;
-			this.log  = xLog.getRoot()
-					.getWeak(name);
-		}
-
-	}
-
-
-
 	// get jar class loader
 	protected JarClassLoader getJarClassLoader() {
 		// independent
