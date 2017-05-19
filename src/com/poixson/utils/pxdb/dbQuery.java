@@ -123,7 +123,7 @@ public class dbQuery {
 					log().finest(
 						(new StringBuilder())
 							.append("(")
-							.append(this.worker.getId())
+							.append(this.worker.getIndex())
 							.append(") QUERY: ")
 							.append(
 								StringUtils.replaceWith(

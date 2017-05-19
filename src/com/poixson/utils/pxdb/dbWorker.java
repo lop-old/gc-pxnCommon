@@ -13,18 +13,20 @@ import com.poixson.utils.xLogger.xLog;
 public class dbWorker implements xCloseable {
 
 	private final String dbKey;
-	private final int id;
+	private final int    index;
 	private final AtomicReference<String> desc = new AtomicReference<String>(null);
 
 	private volatile Connection conn = null;
 	private final AtomicBoolean inUse = new AtomicBoolean(false);
 
+	private static final AtomicInteger nextIndex = new AtomicInteger(0);
+
 
 
 	protected dbWorker(final String dbKey, final Connection conn) {
 		this.dbKey = dbKey;
-		this.conn = conn;
-		this.id = getNextId();
+		this.conn  = conn;
+		this.index = getNextIndex();
 	}
 	@Override
 	public Object clone() throws CloneNotSupportedException {
@@ -136,16 +138,11 @@ public class dbWorker implements xCloseable {
 
 
 
-	// connection id
-	private static volatile int nextId = 0;
-	private static final Object nextLock = new Object();
-	private static int getNextId() {
-		synchronized(nextLock) {
-			return ++nextId;
-		}
+	private static int getNextIndex() {
+		return nextIndex.incrementAndGet();
 	}
-	public int getId() {
-		return this.id;
+	public int getIndex() {
+		return this.index;
 	}
 
 
