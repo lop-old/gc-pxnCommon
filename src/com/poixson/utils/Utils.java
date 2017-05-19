@@ -330,6 +330,12 @@ public final class Utils {
 			obj.close();
 		} catch (IOException ignore) {}
 	}
+	public static void safeClose(AutoCloseable obj) {
+		if (obj == null) return;
+		try {
+			obj.close();
+		} catch (Exception ignore) {}
+	}
 
 
 
