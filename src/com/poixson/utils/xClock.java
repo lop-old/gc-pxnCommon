@@ -20,6 +20,7 @@ import com.poixson.utils.xLogger.xLog;
 public class xClock {
 
 	public static final String DEFAULT_TIMESERVER = "pool.ntp.org";
+	public static final boolean DEFAULT_BLOCKING = true;
 
 	private static final AtomicReference<xClock> instance =
 			new AtomicReference<xClock>(null);
@@ -51,7 +52,7 @@ public class xClock {
 		return clock;
 	}
 	public static xClock get() {
-		return get(true);
+		return get(DEFAULT_BLOCKING);
 	}
 
 
@@ -66,7 +67,7 @@ public class xClock {
 
 
 
-	public void update() {
+	public void update(final boolean blocking) {
 		if (!this.enableNTP) return;
 		// wait for update
 		if (blocking) {
@@ -99,7 +100,7 @@ public class xClock {
 
 
 
-	protected void doUpdate() {
+	protected void doUpdate(final boolean blocking) {
 		if (!this.enableNTP) return;
 		// already running
 		if (!this.running.compareAndSet(false, true)) {
