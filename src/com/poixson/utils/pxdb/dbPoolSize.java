@@ -19,6 +19,9 @@ public class dbPoolSize extends Thread {
 	private volatile int SOFT = 5;
 	private volatile int HARD = 8;
 
+	private final CoolDown coolSoftLimit = CoolDown.get("10s");
+	private final CoolDown coolHardLimit = CoolDown.get("2s");
+
 	private final dbPool pool;
 
 	private final AtomicBoolean running = new AtomicBoolean(false);
@@ -27,8 +30,7 @@ public class dbPoolSize extends Thread {
 
 	// hard/soft pool size limits
 	protected dbPoolSize(final dbPool pool) {
-		if (pool == null)
-			throw new RequiredArgumentException("pool");
+		if (pool == null) throw new RequiredArgumentException("pool");
 		this.pool = pool;
 		this.setName(pool.dbKey()+" Warning Thread");
 	}
@@ -84,14 +86,13 @@ public class dbPoolSize extends Thread {
 			// sleep thread
 			ThreadUtils.Sleep(250L);
 		}
-		log().finer("Stopped warning thread. "+this.getName());
+		log().finest("Stopped warning thread. "+this.getName());
 		this.running.set(false);
 	}
 
 
 
 	// warning messages (with cooldown)
-	private final CoolDown coolSoftLimit = CoolDown.get("10s");
 	protected void SoftLimitWarningMessage() {
 		final int count = getWorkerCount();
 		if (count <= this.SOFT)
@@ -110,7 +111,6 @@ public class dbPoolSize extends Thread {
 			);
 		}
 	}
-	private final CoolDown coolHardLimit = CoolDown.get("2s");
 	protected void HardLimitWarningMessage() {
 		final int count = getWorkerCount();
 		if (count < this.HARD)

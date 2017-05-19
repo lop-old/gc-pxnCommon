@@ -50,17 +50,13 @@ public final class dbManager {
 
 
 
-	// get config object
-	public static dbConfig getConfig(final String dbKey) {
-		if (Utils.isEmpty(dbKey))
-			return null;
-		synchronized(configs) {
-			if (configs.containsKey(dbKey)) {
-				return configs.get(dbKey);
-			}
-		}
-		return null;
-	}
+//TODO: is this useful?
+//	// get config object
+//	public static dbConfig getConfig(final String dbKey) {
+//		if (Utils.isEmpty(dbKey))
+//			return null;
+//		return configs.get(dbKey);
+//	}
 	// get pool
 	public static dbPool getPool(final String key) {
 		if (Utils.isEmpty(key)) throw new RequiredArgumentException("dbKey");
@@ -157,7 +153,8 @@ public final class dbManager {
 				return log;
 			}
 		}
-		final xLog log = xLog.getRoot()
+		final xLog log =
+			xLog.getRoot()
 				.get(LOG_NAME);
 		_log = new SoftReference<xLog>(log);
 		return log;

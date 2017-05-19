@@ -17,10 +17,6 @@ import com.poixson.utils.xLogger.xLog;
 public class dbPool {
 
 	private static final xTime MAX_HARD_BLOCKING = xTime.get("5s");
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		throw new CloneNotSupportedException();
-	}
 
 	// connection config
 	private final dbConfig config;
@@ -35,7 +31,7 @@ public class dbPool {
 
 	protected dbPool(final dbConfig config) {
 		if (config == null) throw new RequiredArgumentException("config");
-		this.config = config;
+		this.config   = config;
 		this.poolSize = new dbPoolSize(this);
 		this.poolSize.setSoft(config.getPoolSizeWarn());
 		this.poolSize.setHard(config.getPoolSizeHard());
@@ -52,9 +48,11 @@ public class dbPool {
 
 	// get db key
 	public String dbKey() {
-		if (this.config == null)
-			throw new RequiredArgumentException("config");
 		return this.config.dbKey();
+	}
+	// db config
+	public dbConfig getConfig() {
+		return this.config;
 	}
 
 
@@ -75,10 +73,8 @@ public class dbPool {
 			return false;
 		try {
 			return worker.getConnection().isValid(1);
-		} catch (SQLException ignore) {
-		} finally {
-			worker.free();
-		}
+		} catch (SQLException ignore) {}
+		worker.free();
 		return false;
 	}
 
@@ -138,7 +134,13 @@ public class dbPool {
 				// errored or disconnected
 				if (worker == null || worker.isClosed()) {
 					if (worker != null) {
-						log().warning("Connection [ "+Integer.toString(worker.getId())+" ] dropped");
+						log().warning(
+							(new StringBuilder())
+								.append("Connection [ ")
+								.append(worker.getIndex())
+								.append(" ] dropped")
+								.toString()
+						);
 						worker.close();
 					}
 					removing.add(worker);
@@ -182,7 +184,11 @@ public class dbPool {
 		if (conn == null)
 			return null;
 		// successful connection
-		final dbWorker worker = new dbWorker(this.config.dbKey(), conn);
+		final dbWorker worker =
+			new dbWorker(
+				this.dbKey(),
+				conn
+			);
 		this.workers.add(worker);
 		if (!worker.getLock())
 			return null;

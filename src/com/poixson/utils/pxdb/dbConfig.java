@@ -45,25 +45,49 @@ public class dbConfig {
 		final String key = BuildKey(hostStr, portInt, db, user, prefix);
 		// find existing config
 		{
-			final dbConfig config = dbManager.getConfig(key);
-			if (config != null) {
-				return config;
+			final dbPool pool = dbManager.getPool(key);
+			if (pool != null) {
+				final dbConfig config = pool.getConfig();
+				if (config != null)
+					return config;
 			}
 		}
 		// new config
 		{
-			final dbConfig config = new dbConfig(key, hostStr, portInt, user, pass, db, prefix);
+			final dbConfig config =
+				new dbConfig(
+					key,
+					hostStr,
+					portInt,
+					user,
+					pass,
+					db,
+					prefix
+				);
 			// hook back to db manager (register config)
-			if (dbManager.register(config)) {
-				return config;
+			final dbPool existingPool =
+				dbManager.register(config);
+			if (existingPool != null) {
+				final dbConfig existingConfig =
+					existingPool.getConfig();
+				if (existingConfig != null)
+					return existingConfig;
 			}
+			return config;
 		}
-		return null;
 	}
 	public static dbConfig load(final String host, final int port,
 			final String user, final String pass, final String db, final String prefix,
 			final int poolSizeWarn, final int poolSizeHard) {
-		final dbConfig dbconfig = load(host, port, db, user, pass, prefix);
+		final dbConfig dbconfig =
+			load(
+				host,
+				port,
+				db,
+				user,
+				pass,
+				prefix
+			);
 		if (dbconfig == null)
 			return null;
 		dbconfig.poolSizeWarn = poolSizeWarn;
@@ -110,8 +134,8 @@ public class dbConfig {
 					return conn;
 				}
 				final xTime sleepTime = xTime.get(
-						(i * 2L) + 1L,
-						xTimeU.S
+					(i * 2L) + 1L,
+					xTimeU.S
 				);
 				log().warning(
 					(new StringBuilder())
@@ -155,6 +179,7 @@ public class dbConfig {
 			} catch (SQLException ignore) {}
 			this.connection = null;
 		}
+//TODO: should this be here?
 		Class.forName("com.mysql.jdbc.Driver").newInstance();
 		final Connection conn = DriverManager.getConnection(
 			BuildKey(this.host, this.port, this.db),
@@ -204,15 +229,12 @@ public class dbConfig {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (!(obj instanceof dbConfig)) {
+		if (!(obj instanceof dbConfig))
 			return false;
-		}
-		if (Utils.isEmpty(this.key)) {
+		if (Utils.isEmpty(this.key))
 			return false;
-		}
 		return this.key.equals(
 			((dbConfig) obj).dbKey()
 		);
@@ -232,10 +254,11 @@ public class dbConfig {
 
 	// get table prefix
 	public String getTablePrefix() {
-		if (Utils.isEmpty(this.prefix)) {
-			return "";
-		}
-		return this.prefix;
+		return (
+			Utils.isEmpty(this.prefix)
+			? ""
+			: this.prefix
+		);
 	}
 
 

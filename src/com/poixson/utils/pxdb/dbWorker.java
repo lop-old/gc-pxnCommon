@@ -3,8 +3,8 @@ package com.poixson.utils.pxdb;
 import java.lang.ref.SoftReference;
 import java.sql.Connection;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-import java.sql.SQLException;
 
 import com.poixson.utils.Utils;
 import com.poixson.utils.xCloseable;
@@ -72,9 +72,10 @@ public class dbWorker implements xCloseable {
 	@Override
 	public void close() {
 		if (this.conn != null) {
+			Utils.safeClose(this.conn);
 			try {
 				this.conn.close();
-			} catch (SQLException ignore) {}
+			} catch (Exception ignore) {}
 		}
 		this.conn = null;
 	}
@@ -147,6 +148,9 @@ public class dbWorker implements xCloseable {
 		log().fine(
 			(new StringBuilder())
 				.append("Query: ")
+//TODO:
+//				.append(duration)
+//				.append(" ")
 				.append(desc)
 				.toString()
 		);
