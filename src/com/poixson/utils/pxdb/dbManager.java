@@ -77,11 +77,12 @@ public final class dbManager {
 		return pool;
 	}
 	// get worker
-	public static dbWorker getWorkerLock(final String dbKey) {
+	public static dbWorker getLockedWorker(final String dbKey) {
 		final dbPool pool = getPool(dbKey);
-		if (pool == null)
-			return null;
-		return pool.getWorkerLock();
+		if (pool != null) {
+			return pool.getLockedWorker();
+		}
+		return null;
 	}
 
 

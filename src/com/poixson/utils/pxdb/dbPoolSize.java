@@ -61,7 +61,7 @@ public class dbPoolSize extends Thread {
 		int count = getWorkerCount();
 		while (count > this.SOFT) {
 			// try to close unused
-			final dbWorker worker = this.pool.getExisting();
+			final dbWorker worker = this.pool.getLockedFromExisting();
 			// check again after dropping closed workers
 			count = getWorkerCount();
 			if (count <= this.SOFT) {

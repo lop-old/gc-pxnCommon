@@ -62,7 +62,7 @@ public class dbPool {
 	// pool is connected
 	public boolean isConnected() {
 // TODO: this get a lock and releases. can probably be improved using isLocked()
-		final dbWorker worker = getExisting();
+		final dbWorker worker = this.getLockedFromExisting();
 		if (worker == null)
 			return false;
 		worker.free();
@@ -70,7 +70,7 @@ public class dbPool {
 	}
 	// ping the db server
 	public boolean isConnectionValid() {
-		final dbWorker worker = getExisting();
+		final dbWorker worker = this.getLockedFromExisting();
 		if (worker == null)
 			return false;
 		try {
@@ -85,7 +85,7 @@ public class dbPool {
 
 
 	// get unused worker
-	public dbWorker getWorkerLock() {
+	public dbWorker getLockedWorker() {
 		final CoolDown maxHardBlocking = CoolDown.get(MAX_HARD_BLOCKING);
 		maxHardBlocking.resetRun();
 		while (true) {
@@ -126,7 +126,7 @@ public class dbPool {
 			}
 		}
 	}
-	public dbWorker getExisting() {
+	public dbWorker getLockedFromExisting() {
 		if (this.workers.isEmpty())
 			return null;
 		dbWorker output = null;
@@ -157,7 +157,7 @@ public class dbPool {
 	}
 	// new worker/connection
 //	private final CoolDown coolFail = CoolDown.get("2s");
-	private dbWorker newWorker() {
+	private dbWorker newLockedWorker() {
 		// hard limit reached
 		if (getWorkerCount() >= this.poolSize.getHard())
 			return null;

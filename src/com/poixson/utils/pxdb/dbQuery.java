@@ -36,7 +36,7 @@ public class dbQuery {
 
 	// new query
 	public static dbQuery get(final String dbKey) {
-		final dbWorker worker = dbManager.getWorkerLock(dbKey);
+		final dbWorker worker = dbManager.getLockedWorker(dbKey);
 		if (worker == null)
 			return null;
 		return new dbQuery(worker);
