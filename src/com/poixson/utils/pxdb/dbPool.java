@@ -141,7 +141,7 @@ public class dbPool {
 						log().warning("Connection [ "+Integer.toString(worker.getId())+" ] dropped");
 						worker.close();
 					}
-					it.remove();
+					removing.add(worker);
 					continue;
 				}
 				// in use
@@ -149,11 +149,19 @@ public class dbPool {
 					continue;
 				// get lock
 				if (worker.getLock()) {
-					return worker;
+					output = worker;
+					break;
 				}
 			}
-			return null;
 		}
+		// removed workers
+		if (!removing.isEmpty()) {
+			final Iterator<dbWorker> it = removing.iterator();
+			while (it.hasNext()) {
+				this.workers.remove(it.next());
+			}
+		}
+		return output;
 	}
 	// new worker/connection
 //	private final CoolDown coolFail = CoolDown.get("2s");
