@@ -8,14 +8,14 @@ import java.lang.ref.SoftReference;
 import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
-public final class DirsFiles {
-	private DirsFiles() {}
+public final class FileUtils {
+	private FileUtils() {}
 
 	private static volatile SoftReference<String> cwd = null;
 
 
 	public static void init() {
-		Keeper.add(new DirsFiles());
+		Keeper.add(new FileUtils());
 	}
 
 
@@ -130,7 +130,7 @@ public final class DirsFiles {
 
 
 	// build path+file+ext
-	public static String buildFilePath(final String pathStr,
+	public static String BuildFilePath(final String pathStr,
 			final String fileName, final String extension) {
 		if (Utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
 		// file extension
@@ -159,7 +159,7 @@ public final class DirsFiles {
 
 
 
-	public static String mergePaths(final String...strings) {
+	public static String MergePaths(final String...strings) {
 		final StringBuilder merged = new StringBuilder();
 		for (String path : strings) {
 			if (Utils.isEmpty(path)) continue;

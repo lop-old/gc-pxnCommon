@@ -33,7 +33,7 @@ public final class Utils {
 		xThreadPoolFactory
 			.getMainPool();
 		Failure.init();
-		DirsFiles.init();
+		FileUtils.init();
 		NumberUtils.init();
 		ProcUtils.init();
 		SanUtils.init();
