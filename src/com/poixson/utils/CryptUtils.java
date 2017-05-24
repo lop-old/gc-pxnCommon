@@ -26,12 +26,6 @@ public final class CryptUtils {
 
 
 
-	public static void init() {
-		Keeper.add(new CryptUtils());
-	}
-
-
-
 	// md5
 	public static String MD5(final String data) {
 		return crypt(CRYPT_MD5, data);

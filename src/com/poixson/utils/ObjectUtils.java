@@ -17,12 +17,6 @@ public final class ObjectUtils {
 
 
 
-	public static void init() {
-		Keeper.add(new ObjectUtils());
-	}
-
-
-
 	@SuppressWarnings("unchecked")
 	public static <T> T cast(final Object object,
 			final Class<? extends T> clss) {

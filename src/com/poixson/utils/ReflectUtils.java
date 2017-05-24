@@ -10,12 +10,6 @@ public final class ReflectUtils {
 
 
 
-	public static void init() {
-		Keeper.add(new ReflectUtils());
-	}
-
-
-
 	public static String getClassName(final Class<?> clss) {
 		return clss.getSimpleName();
 	}
