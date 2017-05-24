@@ -10,6 +10,8 @@ import com.poixson.utils.Utils;
 public final class ProcUtils {
 	private ProcUtils() {}
 
+	private static volatile int pid = Integer.MIN_VALUE;
+
 
 
 	public static void init() {
@@ -23,6 +25,8 @@ public final class ProcUtils {
 	 * @return process id number (pid)
 	 */
 	public static int getPid() {
+		if (pid != Integer.MIN_VALUE)
+			return pid;
 		final String str = ManagementFactory.getRuntimeMXBean().getName();
 		if (Utils.isEmpty(str))
 			return -1;
@@ -31,7 +35,7 @@ public final class ProcUtils {
 			return -1;
 		if (parts.length != 2)
 			return -1;
-		final int pid = NumberUtils.toInteger(parts[0], -1);
+		pid = NumberUtils.toInteger(parts[0], -1);
 		return pid;
 //TODO:
 //another option to try
