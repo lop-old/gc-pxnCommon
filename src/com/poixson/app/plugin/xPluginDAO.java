@@ -18,7 +18,7 @@ public class xPluginDAO {
 
 
 
-	public PluginDAO(final String name, final File file, final xPluginYML yml) {
+	public xPluginDAO(final String name, final File file, final xPluginYML yml) {
 		this.name = name;
 		this.file = file;
 		this.yml  = yml;

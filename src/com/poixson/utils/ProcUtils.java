@@ -2,10 +2,6 @@ package com.poixson.utils;
 
 import java.lang.management.ManagementFactory;
 
-import com.poixson.utils.Keeper;
-import com.poixson.utils.NumberUtils;
-import com.poixson.utils.Utils;
-
 
 public final class ProcUtils {
 	private ProcUtils() {}

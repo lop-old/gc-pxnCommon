@@ -17,6 +17,8 @@ import com.poixson.utils.xThreadPool.xThreadPoolFactory;
 public final class Utils {
 	private Utils() {}
 
+	private static AtomicBoolean inited = new AtomicBoolean(false);
+
 	public enum jLineVersion {
 		version2x,
 		version3x
@@ -24,15 +26,17 @@ public final class Utils {
 	public static final jLineVersion JLINE_VERSION = jLineVersion.version2x;
 
 
-	private static AtomicBoolean inited = new AtomicBoolean(false);
+
 	public static void InitAll() {
 		if (!inited.compareAndSet(false, true))
 			return;
 		xVars.init();
-		Keeper.add(new Utils());
-		xThreadPoolFactory
-			.getMainPool();
 		Failure.init();
+		Keeper.add(new Utils());
+		Keeper.add(
+			xThreadPoolFactory
+				.getMainPool()
+		);
 		FileUtils.init();
 		NumberUtils.init();
 		ProcUtils.init();
