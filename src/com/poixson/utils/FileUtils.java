@@ -3,7 +3,6 @@ package com.poixson.utils;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.lang.ref.SoftReference;
 
 import com.poixson.utils.exceptions.RequiredArgumentException;
 
@@ -11,7 +10,8 @@ import com.poixson.utils.exceptions.RequiredArgumentException;
 public final class FileUtils {
 	private FileUtils() {}
 
-	private static volatile SoftReference<String> cwd = null;
+	private static volatile String cwd = null;
+
 
 
 	public static void init() {
@@ -22,25 +22,14 @@ public final class FileUtils {
 
 	// get current working directory
 	public static String cwd() {
-		if (cwd != null) {
-			final SoftReference<String> ref = cwd;
-			if (ref != null) {
-				final String path = ref.get();
-				if (Utils.notEmpty(path))
-					return path;
-			}
-		}
-		String path = null;
+		if (Utils.notEmpty(cwd))
+			return cwd;
 		try {
-			path =
+			cwd =
 				(new File("."))
 					.getCanonicalPath()
 					.toString();
 		} catch (IOException ignore) {}
-		if (path != null) {
-			cwd = new SoftReference<String>(path);
-			return path;
-		}
 		return null;
 	}
 
