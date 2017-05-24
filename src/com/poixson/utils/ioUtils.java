@@ -3,7 +3,13 @@ package com.poixson.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+
+import org.yaml.snakeyaml.Yaml;
 
 import com.poixson.utils.exceptions.RequiredArgumentException;
 
@@ -13,88 +19,82 @@ public final class ioUtils {
 
 
 
-	// open file
-	public static InputStream OpenFile(final String fileStr) {
-		if (Utils.isEmpty(fileStr))
-			return null;
-		return OpenFile(
-				new File(fileStr)
-		);
-	}
-	public static InputStream OpenFile(final File file) {
-		if (file == null)   return null;
-		if (!file.exists()) return null;
-		try {
-			return new FileInputStream(file);
-		} catch (FileNotFoundException ignore) {}
-		return null;
-	}
-
-
-
-	// load resource
-	public static InputStream OpenResource(final String fileStr) {
-		if (Utils.isEmpty(fileStr)) return null;
-		try {
-			return DirsFiles.class.getResourceAsStream(
-				StringUtils.ForceStarts("/", fileStr)
-			);
-		} catch(Exception ignore) {}
-		return null;
-	}
-	// load resource from jar reference
-	public static InputStream OpenResource(final Class<? extends Object> clss, final String fileStr) {
-		if (clss == null)           throw new RequiredArgumentException("clss");
+	/**
+	 * Open a file and provide the InputStream.
+	 * @param fileStr Path to the file.
+	 * @return InputStream of the open file, or null on failure.
+	 * @throws FileNotFoundException
+	 */
+	public static InputStream OpenFile(final String fileStr)
+			throws FileNotFoundException {
 		if (Utils.isEmpty(fileStr)) throw new RequiredArgumentException("fileStr");
+		final File file = new File(fileStr);
+		if (!file.exists()) return null;
+		final InputStream in =
+			new FileInputStream(file);
+		return in;
+	}
+
+
+
+	/**
+	 * Open a resource file which has been compiled into the app jar.
+	 * @param clss Reference class contained in the same jar.
+	 * @param fileStr Package path to the file.
+	 * @return InputStream of the open file, or null on failure.
+	 */
+	public static InputStream OpenResource(final Class<? extends Object> clssRef, final String fileStr) {
+		if (Utils.isEmpty(fileStr)) throw new RequiredArgumentException("fileStr");
+		final Class<? extends Object> clss = (
+			clssRef == null
+			? ioUtils.class
+			: clssRef
+		);
 		final InputStream in =
 			clss.getResourceAsStream(
-				StringUtils.ForceStarts(
-					"/",
-					fileStr
-				)
+				StringUtils.ForceStarts("/", fileStr)
 			);
 		return in;
 	}
-//TODO: is this useful?
-/*
-	// load yml from jar
-	public static InputJar OpenResource(final File jarFile, final String fileStr) {
+
+
+
+	/**
+	 * Open a file contained in an external jar.
+	 * @param jarFile The jar file containing the file to open.
+	 * @param fileStr Package path to the file.
+	 * @return InputStream of the open file, or null on failure.
+	 * note: The jarFile object must be closed when no longer needed.
+	 * @throws IOException
+	 */
+	public static InputStream OpenFileFromJar(final JarFile jarFile, final String fileStr)
+			throws IOException {
 		if (jarFile == null)        throw new RequiredArgumentException("jarFile");
 		if (Utils.isEmpty(fileStr)) throw new RequiredArgumentException("fileStr");
-		try {
-			final JarFile  jar   = new JarFile(jarFile);
-			final JarEntry entry = jar.getJarEntry(fileStr);
-			if (entry == null) {
-				Utils.safeClose(jar);
-				return null;
-			}
-			final InputStream in = jar.getInputStream(entry);
-			if (in == null) {
-				Utils.safeClose(jar);
-				return null;
-			}
-			return new InputJar(jar, in);
-		} catch (IOException ignore) {}
-		return null;
+		final JarEntry jarEntry =
+			jarFile.getJarEntry(fileStr);
+		if (jarEntry == null)
+			return null;
+		final InputStream in =
+			jarFile.getInputStream(jarEntry);
+		return in;
 	}
-	public static class InputJar implements Closeable {
-		public final JarFile jar;
-		public final InputStream fileInput;
-		public InputJar(final JarFile jar, final InputStream fileInput) {
-			this.jar       = jar;
-			this.fileInput = fileInput;
-		}
-		@Override
-		public void finalize() {
-			this.close();
-		}
-		@Override
-		public void close() {
-			Utils.safeClose(this.jar);
-			Utils.safeClose(this.fileInput);
-		}
+
+
+
+	/**
+	 * Load and parse yaml data from an input stream. 
+	 * @param in InputStream to read from.
+	 * @return Map<String, Object> datamap contents of yml file.
+	 */
+	@SuppressWarnings("unchecked")
+	public static Map<String, Object> LoadYamlFromStream(final InputStream in) {
+		if (in == null) throw new RequiredArgumentException("in");
+		final Yaml yml = new Yaml();
+		final Map<String, Object> datamap =
+			yml.loadAs(in, Map.class);
+		return datamap;
 	}
-*/
 
 
 
