@@ -10,7 +10,6 @@ import com.poixson.utils.exceptions.RequiredArgumentException;
 
 public class xConfig extends xConfigValues {
 
-	private volatile boolean fromResource = false;
 	private volatile String fileName = null;
 
 
@@ -70,18 +69,6 @@ public class xConfig extends xConfigValues {
 
 
 	// ------------------------------------------------------------------------------- //
-
-
-
-	public boolean isFromResource() {
-		return this.fromResource;
-	}
-	void setFromResource() {
-		this.setFromResource(true);
-	}
-	void setFromResource(final boolean fromResource) {
-		this.fromResource = fromResource;
-	}
 
 
 
