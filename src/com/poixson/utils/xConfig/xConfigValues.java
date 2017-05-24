@@ -338,11 +338,10 @@ public abstract class xConfigValues {
 			if (datamap == null)
 				throw new RuntimeException("Failed to get Map constructor for class: "+clss.getName());
 			final xConfig cfg =
-				xConfigFactory
-					.newConfigInstance(
-						clss,
-						datamap
-					);
+				xConfig.newConfig(
+					datamap,
+					clss
+				);
 			output.add(cfg);
 		}
 		return output;
