@@ -8,35 +8,45 @@ import java.io.OutputStream;
 public class xLogOutputStream extends OutputStream {
 
 	private final xLog   log;
-	private final xLevel level;
+	private final xLevel printLevel;
 
 	private StringBuilder buffer = new StringBuilder();
 
 
 
-	public xLogOutputStream(final xLog log, final xLevel level) {
-		this.log   = log;
-		this.level = level;
+	public xLogOutputStream() {
+		this(null, null);
+	}
+	public xLogOutputStream(final xLog outputLog) {
+		this(outputLog, null);
+	}
+	public xLogOutputStream(final xLevel printLevel) {
+		this(null, printLevel);
+	}
+	public xLogOutputStream(final xLog outputLog, final xLevel printLevel) {
+		this.log = (
+			outputLog == null
+			? xLog.getRoot()
+			: outputLog
+		);
+		this.printLevel = printLevel;
 	}
 
 
 
 	@Override
 	public void write(final int b) throws IOException {
+		if (b == '\r')
+			return;
 		// flush buffer
 		if (b == '\n') {
-			xLog log = this.log;
-			if (log == null) {
-				log = xLog.getRoot();
-			}
-			synchronized(this) {
-				log.publish(
-					this.level,
+			this.log
+				.publish(
+					this.printLevel,
 					this.buffer.toString()
 				);
-				// reset buffer
-				this.buffer = new StringBuilder();
-			}
+			// reset buffer
+			this.buffer = new StringBuilder();
 			return;
 		}
 		// append to buffer

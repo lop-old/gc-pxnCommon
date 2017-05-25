@@ -9,11 +9,24 @@ public class xLogPrintStream extends PrintStream {
 
 
 
-	public xLogPrintStream(final xLog log, final xLevel level) {
+	public xLogPrintStream() {
+		this(null, null);
+	}
+	public xLogPrintStream(final xLog outputLog) {
+		this(outputLog, null);
+	}
+	public xLogPrintStream(final xLevel printLevel) {
+		this(null, printLevel);
+	}
+	public xLogPrintStream(final xLog outputLog, final xLevel printLevel) {
 		super(
-			new xLogOutputStream(log, level)
+			new xLogOutputStream(outputLog, printLevel)
 		);
-		this.log = log;
+		this.log = (
+			outputLog == null
+			? xLog.getRoot()
+			: outputLog
+		);
 	}
 
 
