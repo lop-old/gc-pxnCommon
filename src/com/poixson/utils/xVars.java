@@ -16,8 +16,7 @@ public class xVars {
 	public static void init() {
 		Keeper.add(new xVars());
 	}
-	private xVars() {
-	}
+	private xVars() {}
 
 
 

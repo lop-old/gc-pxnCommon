@@ -81,7 +81,6 @@ public class xLog extends xLogPrinting {
 
 	// root logger
 	protected static final AtomicReference<xLog> root = new AtomicReference<xLog>(null);
-	protected static final Object lock = new Object();
 	public static final xLevel DEFAULT_LEVEL = xLevel.FINEST;
 
 	// logger instance

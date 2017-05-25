@@ -730,11 +730,14 @@ return "<uptime>";
 		if (hasColor) {
 			buffer.append("|@");
 		}
-		out.println(
-			Ansi.ansi().a(" ")
-				.render(buffer.toString())
-				.reset().a(" ")
-		);
+		{
+			final String str =
+				Ansi.ansi().a(" ")
+					.render(buffer.toString())
+					.reset().a(" ")
+					.toString();
+			out.println(str);
+		}
 	}
 
 
@@ -890,10 +893,7 @@ return "<uptime>";
 
 		// build lines
 		final String version = StringUtils.padCenter(15, this.getVersion(), ' ');
-		final PrintStream out = new xLogPrintStream(
-				xLog.getRoot(),
-				null
-		);
+		final PrintStream out = new xLogPrintStream();
 		out.println();
 		DisplayLineColors(out, colors1, "                                     _/\\_                        "    );
 		DisplayLineColors(out, colors2, "         |`-.__     PoiXson          (('>         _   _          "     );
