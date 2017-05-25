@@ -5,7 +5,7 @@ import java.lang.ref.SoftReference;
 
 public class xNoConsole implements xConsole {
 
-	private static final Object printLock = new Object();
+	private final Object printLock = new Object();
 
 	private volatile boolean running = false;
 
@@ -46,6 +46,13 @@ public class xNoConsole implements xConsole {
 
 
 	@Override
+	public Object getPrintLockObject() {
+		return this.printLock;
+	}
+
+
+
+	@Override
 	public void clear() {
 	}
 	@Override
@@ -75,7 +82,7 @@ public class xNoConsole implements xConsole {
 			tmp.append(str.substring(posC+2));
 			str = tmp.toString();
 		}
-		synchronized(printLock) {
+		synchronized(this.printLock) {
 			System.out.println(str);
 			System.out.flush();
 		}

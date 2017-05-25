@@ -340,6 +340,13 @@ public class jLineConsole implements xConsole {
 
 
 
+	@Override
+	public Object getPrintLockObject() {
+		return this.printLock;
+	}
+
+
+
 	// clear screen
 	@Override
 	public void clear() {

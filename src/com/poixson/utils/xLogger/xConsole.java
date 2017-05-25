@@ -18,6 +18,7 @@ public interface xConsole extends xStartable {
 	@Override
 	public boolean isStopping();
 
+	public Object getPrintLockObject();
 
 	public void clear();
 	public void clearLine();
