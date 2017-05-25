@@ -1,6 +1,8 @@
 package com.poixson.utils;
 
 import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
+import java.util.List;
 
 
 public final class ProcUtils {
@@ -21,17 +23,28 @@ public final class ProcUtils {
 	 * @return process id number (pid)
 	 */
 	public static int getPid() {
-		if (pid != Integer.MIN_VALUE)
-			return pid;
-		final String str = ManagementFactory.getRuntimeMXBean().getName();
-		if (Utils.isEmpty(str))
-			return -1;
-		final String[] parts = str.split("@", 2);
-		if (parts == null)
-			return -1;
-		if (parts.length != 2)
-			return -1;
-		pid = NumberUtils.toInteger(parts[0], -1);
+		if (pid == Integer.MIN_VALUE) {
+			final RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
+			if (bean == null) {
+				pid = -1;
+				return pid;
+			}
+			final String procName = bean.getName();
+			if (Utils.isEmpty(procName)) {
+				pid = -1;
+				return pid;
+			}
+			final String[] parts = procName.split("@", 2);
+			if (parts == null) {
+				pid = -1;
+				return pid;
+			}
+			if (parts.length != 2) {
+				pid = -1;
+				return pid;
+			}
+			pid = NumberUtils.toInteger(parts[0], -1);
+		}
 		return pid;
 //TODO:
 //another option to try
