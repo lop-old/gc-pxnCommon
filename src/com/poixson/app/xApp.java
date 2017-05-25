@@ -22,6 +22,7 @@ import com.poixson.utils.Failure;
 import com.poixson.utils.HangCatcher;
 import com.poixson.utils.Keeper;
 import com.poixson.utils.LockFile;
+import com.poixson.utils.ProcUtils;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.ThreadUtils;
 import com.poixson.utils.Utils;
@@ -192,11 +193,16 @@ public abstract class xApp implements xStartable {
 				getSteps(StepType.STARTUP);
 		final int highestStep = findHighestPriorityStep(orderedSteps);
 		// hang catcher
-		final HangCatcher hangCatcher = new HangCatcher(
-			"10s",
-			"100n"
-		);
-		hangCatcher.Start();
+		final HangCatcher hangCatcher;
+		if (ProcUtils.isDebugWireEnabled()) {
+			hangCatcher = null;
+		} else {
+			hangCatcher = new HangCatcher(
+				"10s",
+				"100n"
+			);
+			hangCatcher.Start();
+		}
 		// startup loop
 		final PrintStream out = xVars.getOriginalOut();
 		while (true) {
@@ -241,7 +247,9 @@ public abstract class xApp implements xStartable {
 			}
 			this.step.incrementAndGet();
 		}
-		hangCatcher.Stop();
+		if (hangCatcher != null) {
+			hangCatcher.Stop();
+		}
 		if (!this.isStarting()) {
 			Failure.fail(APP_INCONSISTENT_STATE_EXCEPTION,
 					new RuntimeException(APP_INCONSISTENT_STATE_EXCEPTION));
