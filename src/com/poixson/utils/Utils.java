@@ -39,7 +39,6 @@ public final class Utils {
 		);
 		FileUtils.init();
 		NumberUtils.init();
-		ProcUtils.init();
 		SanUtils.init();
 		StringUtils.init();
 		ThreadUtils.init();
