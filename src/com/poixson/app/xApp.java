@@ -130,7 +130,7 @@ public abstract class xApp implements xStartable {
 
 		// init logger
 		{
-			xLog.getRoot();
+			final xLog log = xLog.getRoot();
 			if (Failure.hasFailed()) {
 				xVars.getOriginalOut()
 					.println("Failure, pre-init!");
@@ -142,12 +142,14 @@ public abstract class xApp implements xStartable {
 					Failure.fail("jline library not found");
 				}
 //TODO: detect when no console color is supported
+				log.setHandler(
+					new xLogHandlerConsole()
+				);
 				// enable console color
-				xLog.getRoot()
-					.setFormatter(
-						new xLogFormatter_Color(),
-						xLogHandlerConsole.class
-					);
+				log.setFormatter(
+					new xLogFormatter_Color(),
+					xLogHandlerConsole.class
+				);
 			}
 		}
 //		// process command line arguments
