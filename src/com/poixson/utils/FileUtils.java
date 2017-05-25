@@ -150,20 +150,31 @@ public final class FileUtils {
 
 	public static String MergePaths(final String...strings) {
 		final StringBuilder merged = new StringBuilder();
+		boolean fromRoot = false;
+		if (strings.length > 0) {
+			if (".".equals(strings[0])) {
+				fromRoot = true;
+				merged
+					.append(cwd())
+					.append(File.separatorChar);
+			} else
+			if ("/".equals(strings[0])) {
+				fromRoot = true;
+			}
+		}
 		for (String path : strings) {
 			if (Utils.isEmpty(path)) continue;
-			if (path.equals(".")) {
-				path = cwd();
-			}
+			if (path.equals("."))    continue;
 			path = StringUtils.trims(path, "/", "\\", " ", "\t", "\r", "\n");
-			if (Utils.isEmpty(path))
-				continue;
+			if (Utils.isBlank(path)) continue;
 			merged
 				.append(path)
 				.append(File.separatorChar);
 		}
 		if (merged.length() == 0)
 			return null;
+		if (fromRoot)
+			return File.separatorChar+merged.toString();
 		return merged.toString();
 	}
 
