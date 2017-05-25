@@ -32,6 +32,10 @@ public abstract class xLogPrinting {
 	public abstract void publish(final xLogRecord record);
 	public abstract void publish(final String msg);
 	public void publish(final xLevel level, final String msg) {
+		if (level == null) {
+			this.publish(msg);
+			return;
+		}
 		this.publish(
 			new xLogRecord(
 				(xLog) this,

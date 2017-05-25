@@ -341,8 +341,10 @@ public class xLog extends xLogPrinting {
 	@Override
 	public void publish(final String msg) {
 		if (msg == null) {
-			publish("");
+			this.publish("");
+			return;
 		}
+		// give msg to parent
 		if (this.parent != null) {
 			this.parent.publish(msg);
 		}
