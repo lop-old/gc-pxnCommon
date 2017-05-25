@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 
+//not thread safe - variables not volatile, assuming only used in one thread
 public class xLogOutputStream extends OutputStream {
 
 	private final xLog   log;
 	private final xLevel level;
 
-	private final StringBuilder buffer = new StringBuilder();
+	private StringBuilder buffer = new StringBuilder();
 
 
 
@@ -33,7 +34,8 @@ public class xLogOutputStream extends OutputStream {
 					this.level,
 					this.buffer.toString()
 				);
-				this.buffer.setLength(0);
+				// reset buffer
+				this.buffer = new StringBuilder();
 			}
 			return;
 		}
