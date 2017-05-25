@@ -3,6 +3,7 @@ package com.poixson.utils.xLogger;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -212,8 +213,10 @@ public class xLog extends xLogPrinting {
 	public void setLevel(final xLevel lvl) {
 		this.level = lvl;
 		// handlers
-		for (final xLogHandler handler : this.handlers) {
-			handler.setLevel(lvl);
+		final Iterator<xLogHandler> it = this.handlers.iterator();
+		while (it.hasNext()) {
+			it.next()
+				.setLevel(lvl);
 		}
 	}
 	@Override
@@ -249,7 +252,9 @@ public class xLog extends xLogPrinting {
 	// formatter
 	public void setFormatter(final xLogFormatter formatter, final Class<?> handlerType) {
 		if (formatter == null) throw new RequiredArgumentException("formatter");
-		for (final xLogHandler handler : this.handlers) {
+		final Iterator<xLogHandler> it = this.handlers.iterator();
+		while (it.hasNext()) {
+			final xLogHandler handler = it.next();
 			if (handlerType == null) {
 				handler.setFormatter(formatter);
 			} else
@@ -323,7 +328,9 @@ public class xLog extends xLogPrinting {
 					);
 			}
 		} else {
-			for (final xLogHandler handler : this.handlers) {
+			final Iterator<xLogHandler> it = this.handlers.iterator();
+			while (it.hasNext()) {
+				final xLogHandler handler = it.next();
 				if (handler.isLoggable(lvl)) {
 					handler.publish(record);
 				}
@@ -340,8 +347,12 @@ public class xLog extends xLogPrinting {
 			this.parent.publish(msg);
 		}
 		// publish to handlers
-		for (final xLogHandler handler : this.handlers) {
-			handler.publish(msg);
+		if (!this.handlers.isEmpty()) {
+			final Iterator<xLogHandler> it = this.handlers.iterator();
+			while (it.hasNext()) {
+				it.next()
+					.publish(msg);
+			}
 		}
 	}
 
