@@ -8,12 +8,38 @@ import java.util.List;
 public final class ProcUtils {
 	private ProcUtils() {}
 
+	private static volatile Boolean debugWireEnabled = null;
+
 	private static volatile int pid = Integer.MIN_VALUE;
 
 
 
 	public static void init() {
 		Keeper.add(new ProcUtils());
+	}
+
+
+
+	public static boolean isDebugWireEnabled() {
+		if (debugWireEnabled == null) {
+			final RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
+			if (bean == null) {
+				debugWireEnabled = Boolean.FALSE;
+				return false;
+			}
+			final List<String> args = bean.getInputArguments();
+			if (args == null) {
+				debugWireEnabled = Boolean.FALSE;
+				return false;
+			}
+			final String argsStr = args.toString();
+			if (argsStr.indexOf("jdwp") >= 0) {
+				debugWireEnabled = Boolean.TRUE;
+			} else {
+				debugWireEnabled = Boolean.FALSE;
+			}
+		}
+		return debugWireEnabled.booleanValue();
 	}
 
 
