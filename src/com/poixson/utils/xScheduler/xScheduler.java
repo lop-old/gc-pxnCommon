@@ -172,7 +172,7 @@ public class xScheduler implements xStartable {
 			if (this.changes || sleep <= 0L)
 				continue;
 			// log sleep time
-			if (this.log().isLoggable(xLevel.DETAIL)) {
+			if (this.isDetailedLogging()) {
 				final double sleepLessSec = ((double)sleepLess) / 1000.0;
 				log().finest(
 					(new StringBuilder())
@@ -319,6 +319,23 @@ public class xScheduler implements xStartable {
 				.getWeak(this.getName());
 		this._log = new SoftReference<xLog>(log);
 		return log;
+	}
+
+
+
+	// cached log level
+	private volatile SoftReference<Boolean> _detail = null;
+	public boolean isDetailedLogging() {
+		if (this._detail != null) {
+			final Boolean detail = this._detail.get();
+			if (detail != null)
+				return detail.booleanValue();
+		}
+		final boolean detail =
+			this.log()
+				.isLoggable(xLevel.DETAIL);
+		this._detail = new SoftReference<Boolean>(Boolean.valueOf(detail));
+		return detail;
 	}
 
 

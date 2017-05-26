@@ -139,7 +139,7 @@ public class xThreadPool implements xStartable {
 	 *         null if stopping or thread limit reached.
 	 */
 	protected Boolean newThread() {
-		final boolean detailed = this.log().isLoggable(xLevel.DETAIL);
+		final boolean detailed = this.isDetailedLogging();
 		if (this.isStopping()) {
 			if (detailed) {
 				this.log()
@@ -390,8 +390,10 @@ public class xThreadPool implements xStartable {
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
 		}
-		this.log()
-			.detail("Task queued: {}", task.getTaskName());
+		if (this.isDetailedLogging()) {
+			this.log()
+				.detail("Task queued: {}", task.getTaskName());
+		}
 		// make sure there's a thread
 		this.newThread();
 	}
@@ -615,6 +617,23 @@ public class xThreadPool implements xStartable {
 				);
 		this._log = new SoftReference<xLog>(log);
 		return log;
+	}
+
+
+
+	// cached log level
+	private volatile SoftReference<Boolean> _detail = null;
+	public boolean isDetailedLogging() {
+		if (this._detail != null) {
+			final Boolean detail = this._detail.get();
+			if (detail != null)
+				return detail.booleanValue();
+		}
+		final boolean detail =
+			this.log()
+				.isLoggable(xLevel.DETAIL);
+		this._detail = new SoftReference<Boolean>(Boolean.valueOf(detail));
+		return detail;
 	}
 
 

@@ -1,5 +1,6 @@
 package com.poixson.utils;
 
+import java.lang.ref.SoftReference;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -36,7 +37,7 @@ public class Keeper {
 	public static void add(final Object obj) {
 		if (obj == null) throw new RequiredArgumentException("obj");
 		holder.add(obj);
-		if (log().isLoggable(xLevel.DETAIL)) {
+		if (isDetailedLogging()) {
 			log().detail(
 				"Added: {}",
 				obj.getClass()
@@ -47,7 +48,7 @@ public class Keeper {
 	public static void remove(final Object obj) {
 		if (obj == null) throw new RequiredArgumentException("obj");
 		holder.remove(obj);
-		if (log().isLoggable(xLevel.DETAIL)) {
+		if (isDetailedLogging()) {
 			log().detail(
 				"Removed: ",
 				obj.getClass()
@@ -78,6 +79,23 @@ public class Keeper {
 	private static xLog log() {
 		return xLog.getRoot()
 				.get(LOG_NAME);
+	}
+
+
+
+	// cached log level
+	private static volatile SoftReference<Boolean> _detail = null;
+	public static boolean isDetailedLogging() {
+		if (_detail != null) {
+			final Boolean detail = _detail.get();
+			if (detail != null)
+				return detail.booleanValue();
+		}
+		final boolean detail =
+			log()
+				.isLoggable(xLevel.DETAIL);
+		_detail = new SoftReference<Boolean>(Boolean.valueOf(detail));
+		return detail;
 	}
 
 

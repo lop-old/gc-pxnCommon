@@ -75,6 +75,26 @@ import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
 
+/* cached detail logging
+
+	// cached log level
+	private volatile SoftReference<Boolean> _detail = null;
+	public boolean isDetailedLogging() {
+		if (this._detail != null) {
+			final Boolean detail = this._detail.get();
+			if (detail != null)
+				return detail.booleanValue();
+		}
+		final boolean detail =
+			this.log()
+				.isLoggable(xLevel.DETAIL);
+		this._detail = new SoftReference<Boolean>(Boolean.valueOf(detail));
+		return detail;
+	}
+*/
+
+
+
 // ------------------------------------------------------------------------------- //
 
 public class xLog extends xLogPrinting {

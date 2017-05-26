@@ -8,6 +8,7 @@ import com.poixson.utils.byref.BoolRef;
 import com.poixson.utils.exceptions.RequiredArgumentException;
 import com.poixson.utils.xEvents.xEventListener.ListenerPriority;
 import com.poixson.utils.xEvents.xHandler.xListenerDAO;
+import com.poixson.utils.xLogger.xLevel;
 import com.poixson.utils.xLogger.xLog;
 
 
@@ -35,13 +36,15 @@ public class xRunnableEvent extends xRunnable {
 
 	@Override
 	public void run() {
-		this.log().finest(
-			"Invoking event: {}  {}",
-			this.priority.name(),
-			this.dao.listener
-				.getClass()
-					.getName()
-		);
+		if (this.isFinestLogging()) {
+			this.log().finest(
+				"Invoking event: {}  {}",
+				this.priority.name(),
+				this.dao.listener
+					.getClass()
+						.getName()
+			);
+		}
 		try {
 			this.dao.method.invoke(
 				this.dao.listener,
@@ -95,6 +98,23 @@ public class xRunnableEvent extends xRunnable {
 		final xLog log = xLog.getRoot();
 		this._log = new SoftReference<xLog>(log);
 		return log;
+	}
+
+
+
+	// cached log level
+	private volatile SoftReference<Boolean> _finest = null;
+	public boolean isFinestLogging() {
+		if (this._finest != null) {
+			final Boolean finest = this._finest.get();
+			if (finest != null)
+				return finest.booleanValue();
+		}
+		final boolean finest =
+			this.log()
+				.isLoggable(xLevel.FINEST);
+		this._finest = new SoftReference<Boolean>(Boolean.valueOf(finest));
+		return finest;
 	}
 
 

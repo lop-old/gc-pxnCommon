@@ -1,5 +1,6 @@
 package com.poixson.utils.pxdb;
 
+import java.lang.ref.SoftReference;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -118,7 +119,7 @@ public class dbQuery {
 			try {
 				// log query
 				this.worker.logDesc();
-				if (log().isLoggable(xLevel.FINEST)) {
+				if (isFinestLogging()) {
 					// replace ? with values
 					log().finest(
 						"({}) QUERY: {}",
@@ -622,6 +623,23 @@ public class dbQuery {
 	// logger
 	public static xLog log() {
 		return dbManager.log();
+	}
+
+
+
+	// cached log level
+	private static volatile SoftReference<Boolean> _finest = null;
+	public static boolean isFinestLogging() {
+		if (_finest != null) {
+			final Boolean finest = _finest.get();
+			if (finest != null)
+				return finest.booleanValue();
+		}
+		final boolean finest =
+			log()
+				.isLoggable(xLevel.FINEST);
+		_finest = new SoftReference<Boolean>(Boolean.valueOf(finest));
+		return finest;
 	}
 
 
