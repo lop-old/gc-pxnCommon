@@ -3,6 +3,7 @@ package com.poixson.app.plugin;
 import java.util.Map;
 import java.util.Set;
 
+import com.poixson.commonapp.appDefines;
 import com.poixson.utils.Utils;
 import com.poixson.utils.xConfig.xConfig;
 
@@ -19,10 +20,10 @@ public class xPluginYML extends xConfig {
 
 	public xPluginYML(final Map<String, Object> datamap) {
 		super(datamap);
-		this.name    = this.getString("Plugin Name");
-		this.version = this.getString("Plugin Version");
-		this.author  = this.getString("Plugin Author");
-		this.website = this.getString("Plugin Website");
+		this.name    = this.getString(appDefines.PLUGIN_NAME);
+		this.version = this.getString(appDefines.PLUGIN_VERSION);
+		this.author  = this.getString(appDefines.PLUGIN_AUTHOR);
+		this.website = this.getString(appDefines.PLUGIN_WEBSITE);
 		{
 			final String mainClass = this.getStr("Main Class", null);
 			if (Utils.notBlank(mainClass)) {
@@ -40,10 +41,6 @@ public class xPluginYML extends xConfig {
 				);
 			}
 		}
-//		this.name    = this.getString(appDefines.PLUGIN_NAME);
-//		this.version = this.getString(appDefines.PLUGIN_VERSION);
-//		this.author  = this.getString(appDefines.PLUGIN_AUTHOR);
-//		this.website = this.getString(appDefines.PLUGIN_WEBSITE);
 	}
 	@Override
 	public xPluginYML clone() {
