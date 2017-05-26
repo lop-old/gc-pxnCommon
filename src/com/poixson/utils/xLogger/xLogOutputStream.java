@@ -8,7 +8,7 @@ import java.io.OutputStream;
 public class xLogOutputStream extends OutputStream {
 
 	private final xLog   log;
-	private final xLevel printLevel;
+	private final xLevel level;
 
 	private StringBuilder buffer;
 
@@ -24,8 +24,8 @@ public class xLogOutputStream extends OutputStream {
 		this(null, printLevel);
 	}
 	public xLogOutputStream(final xLog outputLog, final xLevel printLevel) {
-		this.log = outputLog;
-		this.printLevel = printLevel;
+		this.log   = outputLog;
+		this.level = printLevel;
 		this.buffer = (
 			outputLog == null
 			? null
@@ -45,7 +45,7 @@ public class xLogOutputStream extends OutputStream {
 		if (b == '\n') {
 			this.log
 				.publish(
-					this.printLevel,
+					this.level,
 					this.buffer.toString()
 				);
 			// reset buffer
