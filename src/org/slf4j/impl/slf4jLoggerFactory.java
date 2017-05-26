@@ -29,9 +29,17 @@ public class slf4jLoggerFactory implements ILoggerFactory {
 		// new logger instance
 		{
 			// wrap the logger
-			final Logger newlogger = new slf4jLoggerAdapter(name, log);
+			final Logger newlogger =
+				new slf4jLoggerAdapter(
+					name,
+					getLog()
+				);
 			// cache wrapped logger
-			final Logger existing = this.loggers.putIfAbsent(name, newlogger);
+			final Logger existing =
+				this.loggers.putIfAbsent(
+					name,
+					newlogger
+				);
 			return (
 				existing == null
 				? newlogger
