@@ -38,4 +38,10 @@ public class xLogPrintStream extends PrintStream {
 
 
 
+	public xLog getLog() {
+		return this.log;
+	}
+
+
+
 }

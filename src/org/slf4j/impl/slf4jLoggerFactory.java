@@ -28,15 +28,6 @@ public class slf4jLoggerFactory implements ILoggerFactory {
 		}
 		// new logger instance
 		{
-			final xLog log = xLog.getRoot().get(LOG_NAME);
-			// disable logging if not detail mode
-			if (!xLog.getRoot().isLoggable(xLevel.DETAIL)) {
-				log.setLevel(xLevel.WARNING);
-			} else
-			// default to info log level
-			if (log.peekLevel() == null) {
-				log.setLevel(xLevel.INFO);
-			}
 			// wrap the logger
 			final Logger newlogger = new slf4jLoggerAdapter(name, log);
 			// cache wrapped logger
@@ -47,6 +38,23 @@ public class slf4jLoggerFactory implements ILoggerFactory {
 				: existing
 			);
 		}
+	}
+
+
+
+	public static xLog getLog() {
+		final xLog log =
+			xLog.getRoot()
+				.get(LOG_NAME);
+		// disable logging if not detail mode
+		if (!xLog.getRoot().isLoggable(xLevel.DETAIL)) {
+			log.setLevel(xLevel.WARNING);
+		} else
+		// default to info log level
+		if (log.peekLevel() == null) {
+			log.setLevel(xLevel.INFO);
+		}
+		return log;
 	}
 
 
