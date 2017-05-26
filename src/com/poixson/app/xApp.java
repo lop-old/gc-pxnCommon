@@ -85,6 +85,10 @@ public abstract class xApp implements xStartable {
 
 
 
+	/**
+	 * Get the app class instance.
+	 * @return xApp instance object.
+	 */
 	public static xApp get() {
 		return instance.get();
 	}
@@ -246,6 +250,7 @@ public abstract class xApp implements xStartable {
 		// finished starting
 		this.step.set(STEP_RUN);
 	}
+//TODO: ThreadUtils.displayStillRunning();
 	@Override
 	public void Stop() {
 		// already stopping or stopped
@@ -478,6 +483,7 @@ return "<uptime>";
 	// ensure not root
 	@xAppStep(type=StepType.STARTUP, title="RootCheck", priority=10)
 	public void __STARTUP_rootcheck() {
+//TODO: move try/catch to calling function
 		try {
 			final String user = System.getProperty("user.name");
 			if ("root".equals(user)) {
@@ -777,6 +783,8 @@ return "<uptime>";
 	// ascii header
 	protected void displayLogo() {
 		// colors
+//TODO:
+//		final Ansi.Color bgcolor = Ansi.Color.BLACK;
 		final String COLOR_PXN_P       = "bold,green";
 		final String COLOR_PXN_OI      = "bold,blue";
 		final String COLOR_PXN_X       = "bold,green";
