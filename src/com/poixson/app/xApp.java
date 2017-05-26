@@ -888,7 +888,11 @@ return "<uptime>";
 
 		// build lines
 		final String version = StringUtils.padCenter(15, this.getVersion(), ' ');
-		final PrintStream out = new xLogPrintStream();
+		final PrintStream out =
+			new xLogPrintStream(
+				xLog.getRoot(),
+				null
+			);
 		out.println();
 		DisplayLineColors(out, colors1, "                                     _/\\_                        "    );
 		DisplayLineColors(out, colors2, "         |`-.__     PoiXson          (('>         _   _          "     );
@@ -899,8 +903,8 @@ return "<uptime>";
 		DisplayLineColors(out, colors7, " \\ /`    \\\\\\             (----)                  /  0    \\       ");
 		DisplayLineColors(out, colors8, "  `\\     /_\\\\           ( >__< )                /        \\__     " );
 		DisplayLineColors(out, colors9, "   `~~~~~~``~`          ^^ ~~ ^^                \\_(_|_)___  \\    "   );
-		DisplayLineColors(out, colors10,"^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^(____//^/^"    );
-		DisplayLineColors(out, colors11,"/////////////////////////////////////////////////////////////////"    );
+		DisplayLineColors(out, colors10,"^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^(____//^/^"     );
+		DisplayLineColors(out, colors11,"/////////////////////////////////////////////////////////////////"     );
 		out.println();
 		out.println(" This program comes with absolutely no warranty. This is free");
 		out.println(" software and you are welcome to modify it or redistribute it");
