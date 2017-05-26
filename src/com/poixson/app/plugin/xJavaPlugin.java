@@ -1,15 +1,22 @@
-/*
-package com.poixson.commonapp.plugin;
-
-import com.poixson.commonjava.Failure;
-import com.poixson.commonjava.Utils.utils;
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
-import com.poixson.commonjava.xEvents.xEventListener;
-import com.poixson.commonjava.xLogger.xLog;
+package com.poixson.app.plugin;
 
 
 public abstract class xJavaPlugin {
 
+
+
+	public xJavaPlugin() {
+	}
+
+
+
+	protected abstract void onEnable();
+	protected abstract void onDisable();
+
+
+
+//TODO:
+/*
 	private volatile xPluginManager manager = null;
 	private volatile xPluginYML yml = null;
 
@@ -134,8 +141,8 @@ public abstract class xJavaPlugin {
 			this._log = xLog.getRoot(getPluginName());
 		return this._log;
 	}
+*/
 
 
 
 }
-*/
