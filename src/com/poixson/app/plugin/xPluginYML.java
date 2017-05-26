@@ -1,11 +1,10 @@
-/*
-package com.poixson.commonapp.plugin;
+package com.poixson.app.plugin;
 
 import java.util.Map;
+import java.util.Set;
 
-import com.poixson.commonapp.appDefines;
-import com.poixson.commonapp.config.xConfig;
-import com.poixson.commonapp.config.xConfigException;
+import com.poixson.utils.Utils;
+import com.poixson.utils.xConfig.xConfig;
 
 
 public class xPluginYML extends xConfig {
@@ -14,16 +13,41 @@ public class xPluginYML extends xConfig {
 	private final String version;
 	private final String author;
 	private final String website;
+	private final String[] mainClasses;
 
 
 
-	public xPluginYML(final Map<String, Object> data)
-			throws xConfigException {
-		super(data);
-		this.name    = this.getString(appDefines.PLUGIN_NAME);
-		this.version = this.getString(appDefines.PLUGIN_VERSION);
-		this.author  = this.getString(appDefines.PLUGIN_AUTHOR);
-		this.website = this.getString(appDefines.PLUGIN_WEBSITE);
+	public xPluginYML(final Map<String, Object> datamap) {
+		super(datamap);
+		this.name    = this.getString("Plugin Name");
+		this.version = this.getString("Plugin Version");
+		this.author  = this.getString("Plugin Author");
+		this.website = this.getString("Plugin Website");
+		{
+			final String mainClass = this.getStr("Main Class", null);
+			if (Utils.notBlank(mainClass)) {
+				this.mainClasses =
+					new String[] {
+						mainClass
+					};
+			} else {
+				final Set<String> mainClassSet =
+					this.getStringSet("Main Class");
+				this.mainClasses = (
+					mainClassSet == null
+					? null
+					: mainClassSet.toArray(new String[0])
+				);
+			}
+		}
+//		this.name    = this.getString(appDefines.PLUGIN_NAME);
+//		this.version = this.getString(appDefines.PLUGIN_VERSION);
+//		this.author  = this.getString(appDefines.PLUGIN_AUTHOR);
+//		this.website = this.getString(appDefines.PLUGIN_WEBSITE);
+	}
+	@Override
+	public xPluginYML clone() {
+		return new xPluginYML(super.datamap);
 	}
 
 
@@ -44,8 +68,11 @@ public class xPluginYML extends xConfig {
 	public String getPluginWebsite() {
 		return this.website;
 	}
+	// main classes
+	public String[] getMainClasses() {
+		return this.mainClasses;
+	}
 
 
 
 }
-*/
