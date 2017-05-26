@@ -19,6 +19,7 @@ public abstract class xLogPrinting {
 
 	public abstract void setLevel(final xLevel lvl);
 	public abstract xLevel getLevel();
+	public abstract xLevel peekLevel();
 	public abstract boolean isLoggable(final xLevel lvl);
 
 	public abstract List<String> getNameTree();

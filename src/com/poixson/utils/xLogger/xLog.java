@@ -222,6 +222,10 @@ public class xLog extends xLogPrinting {
 	public xLevel getLevel() {
 		return this.level;
 	}
+	@Override
+	public xLevel peekLevel() {
+		return this.level;
+	}
 	// is level loggable
 	@Override
 	public boolean isLoggable(final xLevel lvl) {
