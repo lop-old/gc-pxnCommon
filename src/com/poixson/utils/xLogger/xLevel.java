@@ -19,6 +19,7 @@ public class xLevel implements Serializable {
 	public static final transient xLevel OFF     = new xLevel("OFF",     Integer.MAX_VALUE);
 	public static final transient xLevel STDERR  = new xLevel("ERR",     9000);
 	public static final transient xLevel STDOUT  = new xLevel("OUT",     8000);
+	public static final transient xLevel TITLE   = new xLevel("TITLE",   7000);
 	public static final transient xLevel FATAL   = new xLevel("FATAL",   2000);
 	public static final transient xLevel SEVERE  = new xLevel("SEVERE",  1000);
 	public static final transient xLevel NOTICE  = new xLevel("NOTICE",  900);

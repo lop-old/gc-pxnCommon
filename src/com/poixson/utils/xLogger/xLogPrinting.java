@@ -62,6 +62,10 @@ public abstract class xLogPrinting {
 			this.publish(msg);
 			return;
 		}
+		if (xLevel.TITLE.equals(level)) {
+			this.title(msg);
+			return;
+		}
 		this.publish(
 			new xLogRecord(
 				(xLog) this,
