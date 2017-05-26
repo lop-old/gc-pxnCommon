@@ -1,6 +1,6 @@
 {
 	"Name": "pxnCommon",
-	"ArtifactId": "pxncommon",
+	"ArtifactId": "common",
 	"GroupId": "com.poixson",
 	"Version": "3.6.1",
 	"URL": "http://poixson.com",
