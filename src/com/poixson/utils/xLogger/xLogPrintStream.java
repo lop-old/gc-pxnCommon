@@ -22,11 +22,7 @@ public class xLogPrintStream extends PrintStream {
 		super(
 			new xLogOutputStream(outputLog, printLevel)
 		);
-		this.log = (
-			outputLog == null
-			? xLog.getRoot()
-			: outputLog
-		);
+		this.log = outputLog;
 	}
 
 
