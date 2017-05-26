@@ -94,10 +94,7 @@ public class dbWorker implements xCloseable {
 	public boolean getLock() {
 		final boolean result = this.inUse.compareAndSet(false, true);
 		if (result) {
-			log().finest(
-				"Locked #{}",
-				Integer.toString(this.getIndex())
-			);
+			log().finest( "Locked #"+Integer.toString(this.getIndex()) );
 		}
 		return result;
 	}
@@ -106,10 +103,7 @@ public class dbWorker implements xCloseable {
 		this.logDesc();
 		// release lock
 		if (this.inUse.compareAndSet(true, false)) {
-			log().finest(
-				"Released #{}",
-				Integer.toString(this.getIndex())
-			);
+			log().finest( "Released #"+Integer.toString(this.getIndex()) );
 		}
 	}
 //TODO:
@@ -141,7 +135,7 @@ public class dbWorker implements xCloseable {
 			return;
 		if (!this.desc.compareAndSet(desc, null))
 			return;
-		log().fine("Query: {}", desc);
+		log().fine("Query: "+desc);
 //TODO:
 //		.append(duration)
 	}

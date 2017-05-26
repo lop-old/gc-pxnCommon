@@ -182,7 +182,8 @@ public abstract class xHandler {
 				}
 				if (isFirst) {
 					isFirst = false;
-					this.log().finest("Triggering events: {}", event.toString());
+					this.log()
+						.finest("Triggering events: "+event.toString());
 				}
 				// run event
 				final xRunnableEvent run =
@@ -200,7 +201,7 @@ public abstract class xHandler {
 		} /* priorities loop */
 		if (isFirst) {
 			this.log()
-				.finest("Event ignored: {}", event.toString());
+				.finest("Event ignored: "+event.toString());
 		}
 //TODO:
 //		// wait for event tasks to complete
@@ -209,11 +210,11 @@ public abstract class xHandler {
 //		}
 		if (event.isCancelled()) {
 			this.log()
-				.fine("Event was cancelled: {}", event.toString());
+				.fine("Event was cancelled: "+event.toString());
 		}
 		if (!event.isHandled()) {
 			this.log()
-				.fine("Event was not handled: {}", event.toString());
+				.fine("Event was not handled: "+event.toString());
 		}
 	}
 
