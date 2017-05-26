@@ -59,7 +59,7 @@ import com.poixson.utils.xThreadPool.xThreadPoolFactory;
 public abstract class xApp implements xStartable {
 	private static final String APP_ALREADY_STARTED_EXCEPTION    = "Cannot init app, already inited!";
 	private static final String APP_ALREADY_STOPPING_EXCEPTION   = "Cannot start app, already stopping!";
-	private static final String APP_INVALID_STATE_EXCEPTION      = "Invalid state, cannot start: ";
+	private static final String APP_INVALID_STATE_EXCEPTION      = "Invalid state, cannot start: {}";
 	private static final String APP_INCONSISTENT_STATE_EXCEPTION = "Failed to start, inconsistent state!";
 	private static final String APP_INCONSISTENT_STOP_EXCEPTION  = "Failed to stop, inconsistent state!";
 
@@ -120,12 +120,11 @@ public abstract class xApp implements xStartable {
 		}
 		// set starting state
 		if (!this.step.compareAndSet(STEP_OFF, STEP_START)) {
-			this.log().warning(
-				(new StringBuilder())
-					.append(APP_INVALID_STATE_EXCEPTION)
-					.append(this.step.get())
-					.toString()
-			);
+			this.log()
+				.warning(
+					APP_INVALID_STATE_EXCEPTION,
+					Integer.toString(this.step.get())
+				);
 			return;
 		}
 
@@ -181,13 +180,7 @@ public abstract class xApp implements xStartable {
 //		System.exit(1);
 
 		this.log().publish();
-		this.log().title(
-			(new StringBuilder())
-				.append("Starting ")
-				.append(this.getTitle())
-				.append("..")
-				.toString()
-		);
+		this.log().title("Starting {}..", this.getTitle());
 		// prepare startup steps
 		final Map<Integer, List<xAppStepDAO>> orderedSteps =
 				getSteps(StepType.STARTUP);
@@ -214,13 +207,8 @@ public abstract class xApp implements xStartable {
 			final int stepInt = this.step.get();
 			final List<xAppStepDAO> lst = orderedSteps.get( new Integer(stepInt) );
 			if (lst != null) {
-//				this.log().fine(
-//					(new StringBuilder())
-//						.append("Startup Step ")
-//						.append(stepInt)
-//						.append(" ..")
-//						.toString()
-//				);
+				this.log()
+					.detail("Startup Step {}..", Integer.toString(stepInt));
 				boolean hasInvoked = false;
 				for (final xAppStepDAO dao : lst) {
 					try {
@@ -304,13 +292,8 @@ public abstract class xApp implements xStartable {
 					)
 				);
 			if (lst != null) {
-//				this.log().fine(
-//					(new StringBuilder())
-//						.append("Shutdown Step ")
-//						.append(stepInt)
-//						.append(" ..")
-//						.toString()
-//				);
+				this.log()
+					.detail("Shutdown Step ", Integer.toString(stepInt));
 				boolean hasInvoked = false;
 				for (final xAppStepDAO dao : lst) {
 					try {

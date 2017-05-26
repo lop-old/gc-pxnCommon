@@ -87,12 +87,10 @@ public abstract class xHandlerSimple extends xHandler {
 		);
 		// log results
 		this.log().finest(
-			(new StringBuilder())
-				.append("Registered listener ")
-				.append(methodName)
-				.append("() in class: ")
-				.append(listener.getClass().getName())
-				.toString()
+			"Registered listener {}() in class: {}",
+			methodName,
+			listener.getClass()
+				.getName()
 		);
 		this.listeners.add(dao);
 	}

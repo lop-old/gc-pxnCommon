@@ -57,7 +57,7 @@ public class dbPoolSize extends Thread {
 	}
 	@Override
 	public void run() {
-		log().finest("Started warning thread.. "+this.getName());
+		log().finest("Started warning thread.. {}", this.getName());
 		this.coolSoftLimit.reset();
 		this.coolHardLimit.reset();
 		int count = getWorkerCount();
@@ -86,7 +86,7 @@ public class dbPoolSize extends Thread {
 			// sleep thread
 			ThreadUtils.Sleep(250L);
 		}
-		log().finest("Stopped warning thread. "+this.getName());
+		log().finest("Stopped warning thread. {}", this.getName());
 		this.running.set(false);
 	}
 
@@ -100,14 +100,10 @@ public class dbPoolSize extends Thread {
 		// don't spam/flood console
 		if (this.coolSoftLimit.runAgain()) {
 			log().warning(
-				(new StringBuilder())
-					.append("DB connection pool nearing limit! [ ")
-					.append(count)
-					.append(" max: ")
-					.append(this.HARD)
-					.append(" ] ")
-					.append(this.pool.dbKey())
-					.toString()
+				"DB connection pool nearing limit! [ {} max: {} ] {}",
+				Integer.toString(count),
+				Integer.toString(this.HARD),
+				this.pool.dbKey()
 			);
 		}
 	}
@@ -118,14 +114,10 @@ public class dbPoolSize extends Thread {
 		// don't spam/flood console
 		if (this.coolHardLimit.runAgain()) {
 			log().severe(
-				(new StringBuilder())
-					.append("DB connection pool HARD LIMIT REACHED!! [ ")
-					.append(count)
-					.append(" max: ")
-					.append(this.HARD)
-					.append(" ] ")
-					.append(this.pool.dbKey())
-					.toString()
+				"DB connection pool HARD LIMIT REACHED!! [ {} max: {} ] {}",
+				Integer.toString(count),
+				Integer.toString(this.HARD),
+				this.pool.dbKey()
 			);
 		}
 	}

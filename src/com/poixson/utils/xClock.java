@@ -155,51 +155,35 @@ public class xClock {
 			// less than 100ms
 			if (this.localOffset < 0.1 && this.localOffset > -0.1) {
 				log.info(
-					(new StringBuilder())
-						.append("System time only off by ")
-						.append(
-							NumberUtils.FormatDecimal(
-								"0.000",
-								this.localOffset
-							)
-						)
-						.append(", ignoring adjustment.")
-						.toString()
+					"System time only off by {}, ignoring adjustment.",
+					NumberUtils.FormatDecimal(
+						"0.000",
+						this.localOffset
+					)
 				);
 				this.localOffset = 0.0;
 			} else {
 				log.info(
-					(new StringBuilder())
-						.append("Internal time adjusted by ")
-						.append(
-							this.localOffset > 0
-							? "+"
-							: "-"
-						)
-						.append(
-							NumberUtils.FormatDecimal(
-								"0.000",
-								this.localOffset
-							)
-						)
-						.append(" seconds")
-						.toString()
+					"Internal time adjusted by {}{} seconds",
+					(
+						this.localOffset > 0
+						? "+"
+						: "-"
+					),
+					NumberUtils.FormatDecimal(
+						"0.000",
+						this.localOffset
+					)
 				);
 				log.info(
-					(new StringBuilder())
-						.append("System time:   ")
-						.append(
-							timestampToString(
-								time / 1000.0
-							)
-						)
-						.toString()
+					"System time:   {}",
+					timestampToString(
+						time / 1000.0
+					)
 				);
 				log.info(
-					(new StringBuilder())
-						.append("Internal time: ")
-						.append(getString())
-						.toString()
+					"Internal time: {}",
+					this.getString()
 				);
 			}
 		} catch (SocketException e) {

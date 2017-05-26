@@ -102,11 +102,8 @@ public class dbPool {
 				// give up waiting
 				if (maxHardBlocking.runAgain()) {
 					log().severe(
-						(new StringBuilder())
-							.append("Failed to get a db connection! Blocked for ")
-							.append(maxHardBlocking.getDuration().toFullString())
-							.append(".. Giving up!")
-							.toString()
+						"Failed to get a db connection! Blocked for {}.. Giving up!",
+						maxHardBlocking.getDuration().toFullString()
 					);
 					return null;
 				}
@@ -135,11 +132,8 @@ public class dbPool {
 				if (worker == null || worker.isClosed()) {
 					if (worker != null) {
 						log().warning(
-							(new StringBuilder())
-								.append("Connection [ ")
-								.append(worker.getIndex())
-								.append(" ] dropped")
-								.toString()
+							"Connection [ {} ] dropped",
+							Integer.toString(worker.getIndex())
 						);
 						worker.close();
 					}
@@ -177,7 +171,7 @@ public class dbPool {
 //		// failed to connect
 //		if (conn == null) {
 //			if (this.coolFail.runAgain()) {
-//				log().severe("Failed to connect to database! "+this.config.dbKey());
+//				log().severe("Failed to connect to database! {}", this.config.dbKey());
 //			}
 //			return null;
 //		}

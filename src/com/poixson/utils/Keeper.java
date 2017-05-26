@@ -37,14 +37,22 @@ public class Keeper {
 		if (obj == null) throw new RequiredArgumentException("obj");
 		holder.add(obj);
 		if (DEBUG_EXTRA) {
-			log().finest("Added: "+obj.getClass().getName());
+			log().finest(
+				"Added: {}",
+				obj.getClass()
+					.getName()
+			);
 		}
 	}
 	public static void remove(final Object obj) {
 		if (obj == null) throw new RequiredArgumentException("obj");
 		holder.remove(obj);
 		if (DEBUG_EXTRA) {
-			log().finest("Removed: "+obj.getClass().getName());
+			log().finest(
+				"Removed: ",
+				obj.getClass()
+					.getName()
+			);
 		}
 	}
 	public static int removeAll(final Class<? extends Object> clss) {

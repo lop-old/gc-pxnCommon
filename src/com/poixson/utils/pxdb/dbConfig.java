@@ -138,16 +138,13 @@ public class dbConfig {
 					xTimeU.S
 				);
 				log().warning(
-					(new StringBuilder())
-						.append("Failed to connect to database, waiting ")
-						.append(sleepTime.toFullString())
-						.append(" to try again.. ")
-						.append(this.key)
-						.toString()
+					"Failed to connect to database, waiting {} to try again.. {}",
+					sleepTime.toFullString(),
+					this.key
 				);
 				ThreadUtils.Sleep(sleepTime);
 			} catch (SQLException e) {
-				log().severe("Failed to connect to db server: "+this.key);
+				log().severe("Failed to connect to db server: {}", this.key);
 				final String msg = e.getMessage();
 				if (msg.startsWith("Communications link failure")) {
 					Failure.fail("Failed to connect to database server");
@@ -189,7 +186,7 @@ public class dbConfig {
 		if (conn.isClosed()) return null;
 		// connection ok
 		this.connection = conn;
-		log().info("Connected to db: "+this.key);
+		log().info("Connected to db: {}", this.key);
 		return this.connection;
 	}
 

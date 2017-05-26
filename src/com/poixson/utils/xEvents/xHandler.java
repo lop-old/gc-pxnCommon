@@ -98,10 +98,8 @@ public abstract class xHandler {
 				final xListenerDAO dao = it.next();
 				if (listener.equals(dao.listener)) {
 					this.log().finest(
-						(new StringBuilder())
-							.append("Removed listener: ")
-							.append(listener.getClass().getName())
-							.toString()
+						"Removed listener: {}",
+						listener.getClass().getName()
 					);
 					removing.add(dao);
 					return;
@@ -130,24 +128,21 @@ public abstract class xHandler {
 			if (listenerClass.equals(dao.listener.getClass())) {
 				this.listeners.remove(dao);
 				count++;
-				this.log().finest(
-					(new StringBuilder())
-						.append("Removed listener: ")
-						.append(dao.listener.getClass().getName())
-						.toString()
-				);
+				this.log()
+					.finest(
+						"Removed listener: {}",
+						dao.listener.getClass()
+							.getName()
+					);
 			}
 		}
 		if (count == 0) {
 			this.log().finest("Listener not found to remove");
 		} else {
 			this.log().finest(
-				(new StringBuilder())
-					.append("Removed [ ")
-					.append(count)
-					.append(" ] listeners of type: ")
-					.append(listenerClass.getName())
-					.toString()
+				"Removed [ {} ] listeners of type: {}",
+				Integer.toString(count),
+				listenerClass.getName()
 			);
 		}
 	}
@@ -186,7 +181,7 @@ public abstract class xHandler {
 				}
 				if (isFirst) {
 					isFirst = false;
-					this.log().finest("Triggering events: "+event.toString());
+					this.log().finest("Triggering events: {}", event.toString());
 				}
 				// run event
 				final xRunnableEvent run =
@@ -203,7 +198,8 @@ public abstract class xHandler {
 			} /* listeners loop */
 		} /* priorities loop */
 		if (isFirst) {
-			this.log().finest("Event ignored: "+event.toString());
+			this.log()
+				.finest("Event ignored: {}", event.toString());
 		}
 //TODO:
 //		// wait for event tasks to complete
@@ -211,10 +207,12 @@ public abstract class xHandler {
 //			run.waitUntilRun();
 //		}
 		if (event.isCancelled()) {
-			this.log().fine("Event was cancelled: "+event.toString());
+			this.log()
+				.fine("Event was cancelled: {}", event.toString());
 		}
 		if (!event.isHandled()) {
-			this.log().fine("Event was not handled: "+event.toString());
+			this.log()
+				.fine("Event was not handled: {}", event.toString());
 		}
 	}
 

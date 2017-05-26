@@ -121,18 +121,15 @@ public class dbQuery {
 				if (log().isLoggable(xLevel.FINEST)) {
 					// replace ? with values
 					log().finest(
-						(new StringBuilder())
-							.append("(")
-							.append(this.worker.getIndex())
-							.append(") QUERY: ")
-							.append(
-								StringUtils.replaceWith(
-									"?",
-									this.args,
-									str
-								)
-							)
-							.toString()
+						"({}) QUERY: {}",
+						Integer.toString(
+							this.worker.getIndex()
+						),
+						StringUtils.replaceWith(
+							"?",
+							this.args,
+							str
+						)
 					);
 				}
 				// execute query
@@ -597,7 +594,7 @@ public class dbQuery {
 					.append(readable ? "READ" : "WRITE")
 					.append(" /"+"* lock table *"+"/");
 			if (!Prep(str.toString()) || !Exec()) {
-				log().severe("Failed to lock table "+tableName);
+				log().severe("Failed to lock table {}", tableName);
 				return false;
 			}
 		}

@@ -90,15 +90,19 @@ public abstract class xHandlerGeneric extends xHandler {
 		{
 			final int size = listeners.size();
 			if (size == 1) {
-				this.log().finest("Registered listener in class: "+listener.getClass().getName());
+				this.log()
+					.finest(
+						"Registered listener in class: {}",
+						listener.getClass()
+							.getName()
+					);
 			} else {
-				this.log().finest(
-					(new StringBuilder())
-						.append("Registered [ ")
-						.append(Long.toString(size))
-						.append(" ] listeners in class: ")
-						.append(listener.getClass().getName())
-						.toString()
+				this.log()
+					.finest(
+						"Registered [ {} ] listeners in class: {}",
+						Long.toString(size),
+						listener.getClass()
+							.getName()
 				);
 			}
 		}

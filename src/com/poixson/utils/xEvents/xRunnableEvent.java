@@ -36,12 +36,11 @@ public class xRunnableEvent extends xRunnable {
 	@Override
 	public void run() {
 		this.log().finest(
-			(new StringBuilder())
-				.append("Invoking event: ")
-				.append(this.priority.name())
-				.append("  ")
-				.append(this.dao.listener.getClass().getName())
-				.toString()
+			"Invoking event: {}  {}",
+			this.priority.name(),
+			this.dao.listener
+				.getClass()
+					.getName()
 		);
 		try {
 			this.dao.method.invoke(

@@ -205,16 +205,9 @@ public class xThreadPool implements xStartable {
 			? getGlobalMaxThreads()
 			: this.getMaxThreadCount();
 		this.log().warning(
-			(new StringBuilder())
-				.append(
-					isGlobal
-					? "Global max"
-					: "Max"
-				)
-				.append(" threads limit [ ")
-				.append(maxThreads)
-				.append(" ] reached!")
-				.toString()
+			"{}ax threads limit [ {} ] reached!",
+			( isGlobal ? "Global m" : "M" ),
+			Integer.toString(maxThreads)
 		);
 	}
 
@@ -393,7 +386,8 @@ public class xThreadPool implements xStartable {
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
 		}
-		this.log().detail("Task queued: "+task.getTaskName());
+		this.log()
+			.detail("Task queued: {}", task.getTaskName());
 		// make sure there's a thread
 		this.newThread();
 	}

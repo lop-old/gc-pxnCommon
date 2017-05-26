@@ -364,11 +364,11 @@ public final class Utils {
 				longest = str[i].length();
 			}
 		}
-		log.publish(level, "##### Heap utilization statistics [MB] #####");
-		log.publish(level, "Used Memory:  "+StringUtils.padFront(longest, str[0], ' ')+" MB");
-		log.publish(level, "Free Memory:  "+StringUtils.padFront(longest, str[1], ' ')+" MB");
-		log.publish(level, "Total Memory: "+StringUtils.padFront(longest, str[2], ' ')+" MB");
-		log.publish(level, "Max Memory:   "+StringUtils.padFront(longest, str[3], ' ')+" MB");
+		log.publish( level, "##### Heap utilization statistics [MB] #####" );
+		log.publish( level, "Used Memory:  {} MB", StringUtils.padFront(longest, str[0], ' ') );
+		log.publish( level, "Free Memory:  {} MB", StringUtils.padFront(longest, str[1], ' ') );
+		log.publish( level, "Total Memory: {} MB", StringUtils.padFront(longest, str[2], ' ') );
+		log.publish( level, "Max Memory:   {} MB", StringUtils.padFront(longest, str[3], ' ') );
 	}
 	public static int[] getMemoryStats() {
 		final int MB = 1024 * 1024;

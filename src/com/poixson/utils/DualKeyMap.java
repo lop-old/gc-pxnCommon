@@ -146,17 +146,11 @@ public class DualKeyMap<K, J, V> {
 			if ( ! entryK.getValue().equals(entryJ.getValue()) ) {
 				xLog.getRoot()
 					.severe(
-						(new StringBuilder())
-							.append("Missmatched values in DualKeyMap object! [ ")
-							.append(entryK.getKey().toString())
-							.append(" : ")
-							.append(entryK.getValue().toString())
-							.append(" ] != [ ")
-							.append(entryJ.getKey().toString())
-							.append(" : ")
-							.append(entryJ.getValue().toString())
-							.append(" ] ")
-							.toString()
+						"Missmatched values in DualKeyMap object! [ {} : {} ] != [ {} : {} ]",
+						entryK.getKey().toString(),
+						entryK.getValue().toString(),
+						entryJ.getKey().toString(),
+						entryJ.getValue().toString()
 					);
 				continue;
 			}

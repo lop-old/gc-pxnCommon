@@ -67,7 +67,7 @@ public final class dbManager {
 		if (Utils.isEmpty(key)) throw new RequiredArgumentException("dbKey");
 		final dbPool pool = this.pools.get(key);
 		if (pool == null) {
-			log().warning("db config not found for key: "+key);
+			log().warning("db config not found for key: {}", key);
 			return null;
 		}
 		return pool;

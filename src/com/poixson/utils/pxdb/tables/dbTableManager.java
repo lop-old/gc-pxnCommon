@@ -41,7 +41,7 @@ public abstract class dbTableManager {
 	// create if needed
 	public void createIfMissing(final TableDAO table) throws SQLException {
 		if (!tableExists(table.tableName)) {
-			log().info("Creating db table: "+table.tableName);
+			log().info("Creating db table: {}", table.tableName);
 			// create table
 			final dbQuery db = getDB();
 			try {
