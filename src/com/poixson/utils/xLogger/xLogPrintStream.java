@@ -29,7 +29,8 @@ public class xLogPrintStream extends PrintStream {
 
 	@Override
 	public void println() {
-		this.log.publish();
+		if (this.log != null)
+			this.log.publish();
 	}
 
 

@@ -10,7 +10,7 @@ public class xLogOutputStream extends OutputStream {
 	private final xLog   log;
 	private final xLevel printLevel;
 
-	private StringBuilder buffer = new StringBuilder();
+	private StringBuilder buffer;
 
 
 
@@ -24,18 +24,21 @@ public class xLogOutputStream extends OutputStream {
 		this(null, printLevel);
 	}
 	public xLogOutputStream(final xLog outputLog, final xLevel printLevel) {
-		this.log = (
-			outputLog == null
-			? xLog.getRoot()
-			: outputLog
-		);
+		this.log = outputLog;
 		this.printLevel = printLevel;
+		this.buffer = (
+			outputLog == null
+			? null
+			: new StringBuilder()
+		);
 	}
 
 
 
 	@Override
 	public void write(final int b) throws IOException {
+		if (this.log == null)
+			return;
 		if (b == '\r')
 			return;
 		// flush buffer
