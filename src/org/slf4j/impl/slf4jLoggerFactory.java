@@ -6,10 +6,12 @@ import java.util.concurrent.ConcurrentMap;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 
+import com.poixson.utils.xLogger.xLevel;
 import com.poixson.utils.xLogger.xLog;
 
 
 public class slf4jLoggerFactory implements ILoggerFactory {
+	public static final String LOG_NAME = "slf4j-wrapper";
 
 	private final ConcurrentMap<String, Logger> loggers =
 			new ConcurrentHashMap<String, Logger>();
@@ -26,8 +28,18 @@ public class slf4jLoggerFactory implements ILoggerFactory {
 		}
 		// new logger instance
 		{
-			final xLog log = xLog.getRoot().get("slf4j-wrapper");
+			final xLog log = xLog.getRoot().get(LOG_NAME);
+			// disable logging if not detail mode
+			if (!xLog.getRoot().isLoggable(xLevel.DETAIL)) {
+				log.setLevel(xLevel.WARNING);
+			} else
+			// default to info log level
+			if (log.peekLevel() == null) {
+				log.setLevel(xLevel.INFO);
+			}
+			// wrap the logger
 			final Logger newlogger = new slf4jLoggerAdapter(name, log);
+			// cache wrapped logger
 			final Logger existing = this.loggers.putIfAbsent(name, newlogger);
 			return (
 				existing == null
