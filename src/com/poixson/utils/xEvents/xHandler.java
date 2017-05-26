@@ -107,7 +107,8 @@ public abstract class xHandler {
 			}
 		}
 		if (removing.isEmpty()) {
-			this.log().finest("Listener not found to remove");
+			this.log()
+				.finest("Listener not found to remove");
 		} else {
 			final Iterator<xListenerDAO> it = removing.iterator();
 			while (it.hasNext()) {

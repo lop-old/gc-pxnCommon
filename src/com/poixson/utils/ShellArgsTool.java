@@ -42,7 +42,8 @@ public class ShellArgsTool {
 //TODO:
 		// clear screen
 		if (xVars.isConsoleColorEnabled()) {
-			xLog.getConsole().clear();
+			xLog.getConsole()
+				.clear();
 		}
 		return argsTool;
 	}

@@ -111,7 +111,8 @@ public class xThreadPool implements xStartable {
 				}
 				@Override
 				public void run() {
-					this.log.fine("Thread queue is running..");
+					this.log
+						.fine("Thread queue is running..");
 				}
 			}.init(this.log())
 		);
@@ -141,7 +142,8 @@ public class xThreadPool implements xStartable {
 		final boolean detailed = this.log().isLoggable(xLevel.DETAIL);
 		if (this.isStopping()) {
 			if (detailed) {
-				this.log().warning("thread pool is stopping; cannot start new thread as requested");
+				this.log()
+					.warning("thread pool is stopping; cannot start new thread as requested");
 			}
 			return null;
 		}
@@ -343,8 +345,9 @@ public class xThreadPool implements xStartable {
 		final boolean result =
 			this.queueHigh.offer(task);
 		if (!result) {
-			this.log().getWeak(task.getTaskName())
-				.warning("Thread queue jammed!");
+			this.log()
+				.getWeak(task.getTaskName())
+					.warning("Thread queue jammed!");
 			throw new RuntimeException("queue-jam");
 		}
 		// make sure there's a thread
@@ -379,8 +382,9 @@ public class xThreadPool implements xStartable {
 			final boolean result =
 				this.queueNorm.offer(task);
 			if (!result) {
-				this.log().getWeak(task.getTaskName())
-					.warning("Thread queue jammed!");
+				this.log()
+					.getWeak(task.getTaskName())
+						.warning("Thread queue jammed!");
 				this.queueNorm.put(task);
 			}
 		} catch (InterruptedException e) {

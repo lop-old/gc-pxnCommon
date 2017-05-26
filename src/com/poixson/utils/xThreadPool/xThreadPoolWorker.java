@@ -64,7 +64,8 @@ public class xThreadPoolWorker extends Thread {
 	public void run() {
 		if (!this.running.compareAndSet(false, true))
 			return;
-		this.log().finer("Started worker thread..");
+		this.log()
+			.finer("Started worker thread..");
 		// inactive thread timer
 		final CoolDown inactive =
 			CoolDown.get(
@@ -98,11 +99,12 @@ public class xThreadPoolWorker extends Thread {
 					// always leave one main pool thread
 					if (this.pool.workerCount.get() > 1) {
 						if (this.pool.workerCount.decrementAndGet() > 0) {
-							this.log().finer(
-								this.isStopping()
-								? "Stopping pool thread.."
-								: "Stopping inactive main thread.."
-							);
+							this.log()
+								.finer(
+									this.isStopping()
+									? "Stopping pool thread.."
+									: "Stopping inactive main thread.."
+								);
 							break;
 						}
 						this.pool.workerCount.incrementAndGet();
@@ -110,15 +112,17 @@ public class xThreadPoolWorker extends Thread {
 				// other (not main pool)
 				} else {
 					this.pool.workerCount.decrementAndGet();
-					this.log().finer(
-						this.isStopping()
-						? "Stopping pool thread.."
-						: "Stopping inactive thread.."
-					);
+					this.log()
+						.finer(
+							this.isStopping()
+							? "Stopping pool thread.."
+							: "Stopping inactive thread.."
+						);
 					break;
 				}
 			}
-			this.log().detail("Idle thread..");
+			this.log()
+				.detail("Idle thread..");
 		}
 		// remove stopped worker thread
 		this.pool.workers

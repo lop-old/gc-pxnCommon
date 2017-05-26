@@ -6,12 +6,12 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.poixson.utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.xLogger.xLevel;
 import com.poixson.utils.xLogger.xLog;
 
 
 public class Keeper {
 	private static final String LOG_NAME = "KEEPER";
-	private static final boolean DEBUG_EXTRA = false;
 
 	private static final AtomicReference<Keeper> instance =
 			new AtomicReference<Keeper>(null);
@@ -36,8 +36,8 @@ public class Keeper {
 	public static void add(final Object obj) {
 		if (obj == null) throw new RequiredArgumentException("obj");
 		holder.add(obj);
-		if (DEBUG_EXTRA) {
-			log().finest(
+		if (log().isLoggable(xLevel.DETAIL)) {
+			log().detail(
 				"Added: {}",
 				obj.getClass()
 					.getName()
@@ -47,8 +47,8 @@ public class Keeper {
 	public static void remove(final Object obj) {
 		if (obj == null) throw new RequiredArgumentException("obj");
 		holder.remove(obj);
-		if (DEBUG_EXTRA) {
-			log().finest(
+		if (log().isLoggable(xLevel.DETAIL)) {
+			log().detail(
 				"Removed: ",
 				obj.getClass()
 					.getName()

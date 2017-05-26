@@ -115,7 +115,8 @@ public abstract class xApp implements xStartable {
 		}
 		// already stopping
 		if (this.isStopping()) {
-			this.log().warning(APP_ALREADY_STOPPING_EXCEPTION);
+			this.log()
+				.warning(APP_ALREADY_STOPPING_EXCEPTION);
 			return;
 		}
 		// set starting state
@@ -480,10 +481,13 @@ return "<uptime>";
 		try {
 			final String user = System.getProperty("user.name");
 			if ("root".equals(user)) {
-				this.log().warning("It is recommended to run as a non-root user");
+				this.log()
+					.warning("It is recommended to run as a non-root user");
 			} else
-			if ("administrator".equalsIgnoreCase(user) || "admin".equalsIgnoreCase(user)) {
-				this.log().warning("It is recommended to run as a non-administrator user");
+			if ("administrator".equalsIgnoreCase(user)
+			|| "admin".equalsIgnoreCase(user)) {
+				this.log()
+					.warning("It is recommended to run as a non-administrator user");
 			}
 		} catch (Exception e) {
 			Failure.fail(e);

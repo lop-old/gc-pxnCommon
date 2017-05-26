@@ -101,6 +101,12 @@ public abstract class xLogPrinting {
 	}
 	// multi-lined title
 	public void title(final String[] msgs) {
+		if (msgs.length == 0)
+			return;
+		if (msgs.length == 1) {
+			this.title(msgs[0]);
+			return;
+		}
 		// find max length
 		int len = 0;
 		for (final String line : msgs) {

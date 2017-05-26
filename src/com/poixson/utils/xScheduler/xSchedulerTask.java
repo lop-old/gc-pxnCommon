@@ -101,7 +101,8 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 
 	public void doTrigger() {
 		if (this.notEnabled()) {
-			this.log().warning("Skipping disabled task.. this should only happen rarely. ");
+			this.log()
+				.warning("Skipping disabled task.. this should only happen rarely.");
 			return;
 		}
 		// run task

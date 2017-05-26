@@ -56,10 +56,7 @@ public class xRunnableEvent extends xRunnable {
 			this.log().trace(e);
 			this.log().severe("This may be caused by using an anonymous xEventListener class. ");
 			this.log().severe("Try extending with a new class file.");
-		} catch (IllegalArgumentException e) {
-			this.event.setCancelled();
-			this.log().trace(e);
-		} catch (InvocationTargetException e) {
+		} catch (IllegalArgumentException | InvocationTargetException e) {
 			this.event.setCancelled();
 			this.log().trace(e);
 		}
@@ -78,7 +75,8 @@ public class xRunnableEvent extends xRunnable {
 			try {
 				this.hasRun.wait();
 			} catch (InterruptedException e) {
-				this.log().trace(e);
+				this.log()
+					.trace(e);
 			}
 		}
 	}

@@ -349,10 +349,15 @@ public final class Utils {
 
 
 	public static void MemoryStats() {
-		MemoryStats(xLog.getRoot());
+		MemoryStats(
+			xLog.getRoot()
+		);
 	}
 	public static void MemoryStats(final xLog log) {
-		MemoryStats(null, log);
+		MemoryStats(
+			null,
+			log
+		);
 	}
 	public static void MemoryStats(final xLevel level, final xLog log) {
 		final int[] stats = getMemoryStats();

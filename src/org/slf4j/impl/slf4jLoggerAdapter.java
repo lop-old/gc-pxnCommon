@@ -17,7 +17,7 @@ public class slf4jLoggerAdapter extends MarkerIgnoringBase {
 
 	public slf4jLoggerAdapter(final String name, final xLog log) {
 		this.name = name;
-		this.log = log;
+		this.log  = log;
 	}
 
 
@@ -31,7 +31,8 @@ public class slf4jLoggerAdapter extends MarkerIgnoringBase {
 	// trace
 	@Override
 	public boolean isTraceEnabled() {
-		return this.getXLog()
+		return
+			this.getXLog()
 				.isLoggable(xLevel.FINEST);
 	}
 	@Override
@@ -75,7 +76,8 @@ public class slf4jLoggerAdapter extends MarkerIgnoringBase {
 	// debug
 	@Override
 	public boolean isDebugEnabled() {
-		return this.getXLog()
+		return
+			this.getXLog()
 				.isLoggable(xLevel.FINE);
 	}
 	@Override
@@ -119,7 +121,8 @@ public class slf4jLoggerAdapter extends MarkerIgnoringBase {
 	// info
 	@Override
 	public boolean isInfoEnabled() {
-		return this.getXLog()
+		return
+			this.getXLog()
 				.isLoggable(xLevel.INFO);
 	}
 	@Override
@@ -163,7 +166,8 @@ public class slf4jLoggerAdapter extends MarkerIgnoringBase {
 	// warning
 	@Override
 	public boolean isWarnEnabled() {
-		return this.getXLog()
+		return
+			this.getXLog()
 				.isLoggable(xLevel.WARNING);
 	}
 	@Override
@@ -207,7 +211,8 @@ public class slf4jLoggerAdapter extends MarkerIgnoringBase {
 	// error
 	@Override
 	public boolean isErrorEnabled() {
-		return this.getXLog()
+		return
+			this.getXLog()
 				.isLoggable(xLevel.SEVERE);
 	}
 	@Override
