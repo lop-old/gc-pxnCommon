@@ -46,7 +46,11 @@ public class xLogOutputStream extends OutputStream {
 					this.buffer.toString()
 				);
 			// reset buffer
-			this.buffer = new StringBuilder();
+			if (this.buffer.length() > 40) {
+				this.buffer = new StringBuilder();
+			} else {
+				this.buffer.setLength(0);
+			}
 			return;
 		}
 		// append to buffer
