@@ -695,12 +695,23 @@ return "<uptime>";
 
 
 
-	protected static void DisplayLineColors(final PrintStream out,
+	protected static void DisplayLineColors(
+			final PrintStream out, final String bgColor,
 			final Map<Integer, String> colors, final String line) {
 		final StringBuilder buffer = new StringBuilder();
 		int last = 0;
 		boolean hasColor = false;
-		for (final Entry<Integer, String> entry : colors.entrySet()) {
+		final Map<Integer, String> cols;
+		final boolean hasBgColor = Utils.notBlank(bgColor);
+		if (hasBgColor) {
+			// prepend background color
+			cols = new LinkedHashMap<Integer, String>();
+			cols.put(Integer.valueOf(1), "bg_"+bgColor);
+			cols.putAll(colors);
+		} else {
+			cols = colors;
+		}
+		for (final Entry<Integer, String> entry : cols.entrySet()) {
 			final int pos = entry.getKey().intValue() - 1;
 			if (pos > last) {
 				buffer.append(
@@ -712,8 +723,14 @@ return "<uptime>";
 				buffer.append("|@");
 			}
 			hasColor = true;
+			buffer.append("@|");
+			if (hasBgColor) {
+				buffer
+					.append("bg_")
+					.append(bgColor)
+					.append(',');
+			}
 			buffer
-				.append("@|")
 				.append(entry.getValue())
 				.append(" ");
 		}
@@ -783,8 +800,7 @@ return "<uptime>";
 	// ascii header
 	protected void displayLogo() {
 		// colors
-//TODO:
-//		final Ansi.Color bgcolor = Ansi.Color.BLACK;
+		final String COLOR_BG = "blue";
 		final String COLOR_PXN_P       = "bold,green";
 		final String COLOR_PXN_OI      = "bold,blue";
 		final String COLOR_PXN_X       = "bold,green";
@@ -894,17 +910,17 @@ return "<uptime>";
 				null
 			);
 		out.println();
-		DisplayLineColors(out, colors1, "                                     _/\\_                        "    );
-		DisplayLineColors(out, colors2, "         |`-.__     PoiXson          (('>         _   _          "     );
-		DisplayLineColors(out, colors3, "         / ' _/    Software     _    /^|         /\\\\_/ \\         "  );
-		DisplayLineColors(out, colors4, "       -****\\\"  "+version+" =>--/_\\|m---    / 0  0  \\        "     );
-		DisplayLineColors(out, colors5, "      /    }                         ^^        /_   v   _\\       "    );
-		DisplayLineColors(out, colors6, "     /    \\               @..@                   \\__^___/        "   );
-		DisplayLineColors(out, colors7, " \\ /`    \\\\\\             (----)                  /  0    \\       ");
-		DisplayLineColors(out, colors8, "  `\\     /_\\\\           ( >__< )                /        \\__     " );
-		DisplayLineColors(out, colors9, "   `~~~~~~``~`          ^^ ~~ ^^                \\_(_|_)___  \\    "   );
-		DisplayLineColors(out, colors10,"^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^(____//^/^"     );
-		DisplayLineColors(out, colors11,"/////////////////////////////////////////////////////////////////"     );
+		DisplayLineColors(out, COLOR_BG, colors1, "                                     _/\\_                        "    );
+		DisplayLineColors(out, COLOR_BG, colors2, "         |`-.__     PoiXson          (('>         _   _          "     );
+		DisplayLineColors(out, COLOR_BG, colors3, "         / ' _/    Software     _    /^|         /\\\\_/ \\         "  );
+		DisplayLineColors(out, COLOR_BG, colors4, "       -****\\\"  "+version+" =>--/_\\|m---    / 0  0  \\        "     );
+		DisplayLineColors(out, COLOR_BG, colors5, "      /    }                         ^^        /_   v   _\\       "    );
+		DisplayLineColors(out, COLOR_BG, colors6, "     /    \\               @..@                   \\__^___/        "   );
+		DisplayLineColors(out, COLOR_BG, colors7, " \\ /`    \\\\\\             (----)                  /  0    \\       ");
+		DisplayLineColors(out, COLOR_BG, colors8, "  `\\     /_\\\\           ( >__< )                /        \\__     " );
+		DisplayLineColors(out, COLOR_BG, colors9, "   `~~~~~~``~`          ^^ ~~ ^^                \\_(_|_)___  \\    "   );
+		DisplayLineColors(out, COLOR_BG, colors10,"^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^(____//^/^"     );
+		DisplayLineColors(out, COLOR_BG, colors11,"/////////////////////////////////////////////////////////////////"     );
 		out.println();
 		out.println(" This program comes with absolutely no warranty. This is free");
 		out.println(" software and you are welcome to modify it or redistribute it");
