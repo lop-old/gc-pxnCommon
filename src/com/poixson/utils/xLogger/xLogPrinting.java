@@ -39,7 +39,12 @@ public abstract class xLogPrinting {
 		}
 		String str = msg;
 		for (final Object arg : args) {
-			str = str.replaceFirst("\\{\\}", arg.toString());
+			final String argStr = (
+				arg == null
+				? "<null>"
+				: arg.toString()
+			);
+			str = str.replaceFirst("\\{\\}", argStr);
 		}
 		return str;
 	}
