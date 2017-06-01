@@ -413,7 +413,7 @@ public class xLog extends xLogPrinting {
 		// stop prompt ticker
 		{
 //TODO:
-//			final xTickHandler tickHandler = xTickHandler.peak();
+//			final xTickHandler tickHandler = xTickHandler.peek();
 //			if (tickHandler != null) {
 //				tickHandler.unregisterType(xTickPrompt.class);
 //			}

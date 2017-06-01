@@ -106,7 +106,7 @@ public final class ProcUtils {
 	public static boolean lockInstance(final String filepath) {
 		String path = filepath;
 		if (Utils.isEmpty(path)) {
-			final xApp app = xApp.peak();
+			final xApp app = xApp.peek();
 			if (app != null) {
 				final String appName = app.getName();
 				path = appName+".lock";

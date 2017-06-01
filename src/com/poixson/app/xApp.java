@@ -92,7 +92,7 @@ public abstract class xApp implements xStartable {
 	public static xApp get() {
 		return instance.get();
 	}
-	public static xApp peak() {
+	public static xApp peek() {
 		return get();
 	}
 

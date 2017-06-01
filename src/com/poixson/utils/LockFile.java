@@ -48,7 +48,7 @@ public class LockFile {
 			return lock;
 		}
 	}
-	public static LockFile peak(final String filename) {
+	public static LockFile peek(final String filename) {
 		if (Utils.isBlank(filename))          throw new RequiredArgumentException("filename");
 		if (!SanUtils.safeFileName(filename)) throw new IllegalArgumentException("Invalid lock file name: "+filename);
 		return instances.get(filename);

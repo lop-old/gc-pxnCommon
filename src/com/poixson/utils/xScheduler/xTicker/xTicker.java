@@ -39,7 +39,7 @@ public class xTickHandler extends xHandlerSimple implements xStartable {
 		}
 		return instance;
 	}
-	public static xTickHandler peak() {
+	public static xTickHandler peek() {
 		return instance;
 	}
 	protected xTickHandler() {
