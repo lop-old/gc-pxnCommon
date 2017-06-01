@@ -25,6 +25,13 @@ public class ShellArgsTool {
 
 	public static ShellArgsTool init(final String[] argsArray) {
 		final ShellArgsTool argsTool = new ShellArgsTool(argsArray);
+		// debug flag
+		{
+			final Boolean debugVal = argsTool.getFlagBoolean("-d", "--debug");
+			if (debugVal != null) {
+				xVars.debug( debugVal.booleanValue() );
+			}
+		}
 		// ansi color flags
 		{
 			final Boolean colorVal = argsTool.getFlagBoolean("--color");
