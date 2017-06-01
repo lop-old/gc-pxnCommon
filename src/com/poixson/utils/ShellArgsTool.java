@@ -25,18 +25,16 @@ public class ShellArgsTool {
 
 	public static ShellArgsTool init(final String[] argsArray) {
 		final ShellArgsTool argsTool = new ShellArgsTool(argsArray);
-		// ansi color enabled
-		if (argsTool.hasFlag("--color")) {
-			final Boolean bool = argsTool.getFlagBoolean("--color");
-			if (bool != null) {
-				xVars.setConsoleColor(
-						bool.booleanValue()
-				);
+		// ansi color flags
+		{
+			final Boolean colorVal = argsTool.getFlagBoolean("--color");
+			final Boolean nocolVal = argsTool.getFlagBoolean("--no-color");
+			if (nocolVal != null) {
+				xVars.setConsoleColor( ! nocolVal.booleanValue() );
+			} else
+			if (colorVal != null) {
+				xVars.setConsoleColor( colorVal.booleanValue() );
 			}
-		}
-		// ansi color disabled
-		if (argsTool.hasFlag("--no-color")) {
-			xVars.setConsoleColor(false);
 		}
 		// detect color support
 //TODO:
