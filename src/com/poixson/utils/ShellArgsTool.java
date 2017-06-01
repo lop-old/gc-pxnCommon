@@ -90,14 +90,30 @@ public class ShellArgsTool {
 				}
 				// --flag value
 				if (it.hasNext()) {
-					final String val = it.next();
-					if (Utils.notEmpty(val)) {
+					// peek next arg
+					final String nextArg = it.next();
+					// blank value
+					if (Utils.isBlank(nextArg)) {
 						flags.put(
 							arg,
-							val
+							"true"
 						);
-						continue;
+					} else
+					// next arg is a flag
+					if (nextArg.startsWith("-")) {
+						flags.put(
+							arg,
+							"true"
+						);
+						it.previous();
+					// flag has a value
+					} else {
+						flags.put(
+							arg,
+							nextArg
+						);
 					}
+					continue;
 				}
 				// --flag
 				if (!flags.containsKey(arg)) {
