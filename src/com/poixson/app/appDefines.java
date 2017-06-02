@@ -1,4 +1,4 @@
-package com.poixson.commonapp;
+package com.poixson.app;
 
 import com.poixson.utils.Keeper;
 

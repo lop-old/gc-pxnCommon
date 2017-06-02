@@ -3,7 +3,7 @@ package com.poixson.app.plugin;
 import java.util.Map;
 import java.util.Set;
 
-import com.poixson.commonapp.appDefines;
+import com.poixson.app.appDefines;
 import com.poixson.utils.Utils;
 import com.poixson.utils.xConfig.xConfig;
 
