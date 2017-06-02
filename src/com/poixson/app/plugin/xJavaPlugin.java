@@ -1,7 +1,11 @@
 package com.poixson.app.plugin;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 
 public abstract class xJavaPlugin {
+
+	private final AtomicBoolean state = new AtomicBoolean(false);
 
 
 
@@ -10,8 +14,32 @@ public abstract class xJavaPlugin {
 
 
 
+	protected void onInit() {}
+	protected void onUnload() {}
+
 	protected abstract void onEnable();
 	protected abstract void onDisable();
+
+
+
+	public boolean doEnable() {
+		if (!this.state.compareAndSet(false, true))
+			return false;
+		this.onEnable();
+		return true;
+	}
+	public boolean doDisable() {
+		if (!this.state.compareAndSet(true, false))
+			return false;
+		this.onDisable();
+		return true;
+	}
+
+
+
+	public boolean getPluginState() {
+		return this.state.get();
+	}
 
 
 
@@ -101,10 +129,6 @@ public abstract class xJavaPlugin {
 
 
 
-	protected void onInit() {}
-	protected void onUnload() {}
-	protected abstract void onEnable();
-	protected abstract void onDisable();
 
 	public abstract void unregister(final Class<? extends xEventListener> listenerClass);
 
