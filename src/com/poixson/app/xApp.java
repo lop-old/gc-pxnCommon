@@ -224,8 +224,20 @@ public abstract class xApp implements xStartable {
 			final int stepInt = this.step.get();
 			final List<xAppStepDAO> lst = orderedSteps.get( new Integer(stepInt) );
 			if (lst != null) {
-				this.log()
-					.detail("Startup Step {}..", Integer.toString(stepInt));
+				if (this.log().isLoggable(xLevel.DETAIL)) {
+					final StringBuilder stepNames = new StringBuilder();
+					for (final xAppStepDAO dao : lst) {
+						if (stepNames.length() > 0)
+							stepNames.append(", ");
+						stepNames.append(dao.title);
+					}
+					this.log()
+						.detail(
+							"Startup Step {}.. {}",
+							stepInt,
+							stepNames.toString()
+						);
+				}
 				boolean hasInvoked = false;
 				for (final xAppStepDAO dao : lst) {
 					try {
@@ -310,8 +322,20 @@ public abstract class xApp implements xStartable {
 					)
 				);
 			if (lst != null) {
-				this.log()
-					.detail("Shutdown Step ", Integer.toString(stepInt));
+				if (this.log().isLoggable(xLevel.DETAIL)) {
+					final StringBuilder stepNames = new StringBuilder();
+					for (final xAppStepDAO dao : lst) {
+						if (stepNames.length() > 0)
+							stepNames.append(", ");
+						stepNames.append(dao.title);
+					}
+					this.log()
+						.detail(
+							"Shutdown Step {}.. {}",
+							stepInt,
+							stepNames.toString()
+						);
+				}
 				boolean hasInvoked = false;
 				for (final xAppStepDAO dao : lst) {
 					try {
