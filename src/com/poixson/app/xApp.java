@@ -222,7 +222,10 @@ public abstract class xApp implements xStartable {
 			}
 			// invoke step
 			final int stepInt = this.step.get();
-			final List<xAppStepDAO> lst = orderedSteps.get( new Integer(stepInt) );
+			final List<xAppStepDAO> lst =
+				orderedSteps.get(
+					new Integer(stepInt)
+				);
 			if (lst != null) {
 				if (this.log().isLoggable(xLevel.DETAIL)) {
 					final StringBuilder stepNames = new StringBuilder();
@@ -768,7 +771,7 @@ return "<uptime>";
 			}
 			buffer
 				.append(entry.getValue())
-				.append(" ");
+				.append(' ');
 		}
 		if (last < line.length()) {
 			buffer.append(line.substring(last));
@@ -778,9 +781,9 @@ return "<uptime>";
 		}
 		{
 			final String str =
-				Ansi.ansi().a(" ")
+				Ansi.ansi().a(' ')
 					.render(buffer.toString())
-					.reset().a(" ")
+					.reset().a(' ')
 					.toString();
 			out.println(str);
 		}

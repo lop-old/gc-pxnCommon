@@ -158,7 +158,7 @@ public class Dumper {
 				.append( "}"                          );
 		}
 		ctx.callCount--;
-		return buffer.toString();
+		return buffer.toString().trim();
 	}
 
 
