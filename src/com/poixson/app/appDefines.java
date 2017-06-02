@@ -15,6 +15,11 @@ public final class appDefines {
 //	// defaults
 //	public static final xTime DEFAULT_TICK_INTERVAL = xTime.get("60s");
 
+
+
+	// plugins
+	public static final String DEFAULT_PLUGIN_CLASS_KEY = "Main Class";
+
 	// plugin.yml keys
 	public static final String PLUGIN_NAME    = "Plugin Name";
 	public static final String PLUGIN_VERSION = "Plugin Version";
