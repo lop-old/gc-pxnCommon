@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.fusesource.jansi.Ansi;
+import org.slf4j.impl.slf4jLoggerFactory;
 
 import com.poixson.app.steps.xAppStep;
 import com.poixson.app.steps.xAppStep.StepType;
@@ -30,6 +31,7 @@ import com.poixson.utils.xClock;
 import com.poixson.utils.xStartable;
 import com.poixson.utils.xTime;
 import com.poixson.utils.xVars;
+import com.poixson.utils.xLogger.xLevel;
 import com.poixson.utils.xLogger.xLog;
 import com.poixson.utils.xLogger.xLogFormatter_Color;
 import com.poixson.utils.xLogger.xLogHandlerConsole;
@@ -156,6 +158,16 @@ public abstract class xApp implements xStartable {
 					xLogHandlerConsole.class
 				);
 			}
+		}
+		// slf4j logger
+		{
+			final xLog slf4jLog = slf4jLoggerFactory.getLog();
+			slf4jLog
+				.setLevel(
+					this.log().isLoggable(xLevel.DETAIL)
+					? xLevel.DETAIL
+					: xLevel.OFF
+				);
 		}
 //		// process command line arguments
 //		final List<String> argsList = new LinkedList<String>();
