@@ -2,14 +2,20 @@ package com.poixson.app.plugin;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.poixson.utils.exceptions.RequiredArgumentException;
+
 
 public abstract class xJavaPlugin {
+
+	private final xPluginYML yml;
 
 	private final AtomicBoolean state = new AtomicBoolean(false);
 
 
 
-	public xJavaPlugin() {
+	public xJavaPlugin(final xPluginYML yml) {
+		if (yml == null) throw new RequiredArgumentException("yml");
+		this.yml = yml;
 	}
 
 
@@ -39,6 +45,21 @@ public abstract class xJavaPlugin {
 
 	public boolean getPluginState() {
 		return this.state.get();
+	}
+
+
+
+	public String getPluginName() {
+		return this.yml.getPluginName();
+	}
+	public String getPluginVersion() {
+		return this.yml.getPluginVersion();
+	}
+	public String getPluginAuthor() {
+		return this.yml.getPluginAuthor();
+	}
+	public String getPluginWebsite() {
+		return this.yml.getPluginWebsite();
 	}
 
 
