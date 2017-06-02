@@ -1,6 +1,6 @@
 package com.poixson.app.plugin;
 
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.poixson.utils.exceptions.RequiredArgumentException;
 
@@ -10,7 +10,15 @@ public abstract class xJavaPlugin {
 	protected final xPluginManager<?> manager;
 	protected final xPluginYML yml;
 
-	private final AtomicBoolean state = new AtomicBoolean(false);
+	public static enum PLUGIN_STATE {
+		INITED,
+		RUNNING,
+		STOPPED
+//		UNLOADED,
+//		FAILED
+	}
+	protected final AtomicReference<PLUGIN_STATE> state =
+		new AtomicReference<PLUGIN_STATE>(null);
 
 
 
@@ -32,13 +40,13 @@ public abstract class xJavaPlugin {
 
 
 	public boolean doEnable() {
-		if (!this.state.compareAndSet(false, true))
+		if (!this.state.compareAndSet(PLUGIN_STATE.INITED, PLUGIN_STATE.RUNNING))
 			return false;
 		this.onEnable();
 		return true;
 	}
 	public boolean doDisable() {
-		if (!this.state.compareAndSet(true, false))
+		if (!this.state.compareAndSet(PLUGIN_STATE.RUNNING, PLUGIN_STATE.STOPPED))
 			return false;
 		this.onDisable();
 		return true;
@@ -46,8 +54,13 @@ public abstract class xJavaPlugin {
 
 
 
-	public boolean getPluginState() {
+	public PLUGIN_STATE getPluginState() {
 		return this.state.get();
+	}
+	public boolean isPluginRunning() {
+		return
+			PLUGIN_STATE.RUNNING
+				.equals(this.state);
 	}
 
 
