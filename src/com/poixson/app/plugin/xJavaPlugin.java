@@ -7,15 +7,18 @@ import com.poixson.utils.exceptions.RequiredArgumentException;
 
 public abstract class xJavaPlugin {
 
-	private final xPluginYML yml;
+	protected final xPluginManager<?> manager;
+	protected final xPluginYML yml;
 
 	private final AtomicBoolean state = new AtomicBoolean(false);
 
 
 
-	public xJavaPlugin(final xPluginYML yml) {
-		if (yml == null) throw new RequiredArgumentException("yml");
-		this.yml = yml;
+	public xJavaPlugin(final xPluginManager<?> manager, final xPluginYML yml) {
+		if (manager == null) throw new RequiredArgumentException("manager");
+		if (yml     == null) throw new RequiredArgumentException("yml");
+		this.manager = manager;
+		this.yml     = yml;
 	}
 
 

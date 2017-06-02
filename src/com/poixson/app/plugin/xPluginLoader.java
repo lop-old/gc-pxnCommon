@@ -160,6 +160,7 @@ public class xPluginLoader<T extends xJavaPlugin> {
 		try {
 			construct =
 				clss.getConstructor(
+					xPluginManager.class,
 					xPluginYML.class
 				);
 		} catch (NoSuchMethodException | SecurityException e) {
@@ -170,7 +171,11 @@ public class xPluginLoader<T extends xJavaPlugin> {
 		// new plugin class instance
 		final T plugin;
 		try {
-			plugin = construct.newInstance(yml);
+			plugin =
+				construct.newInstance(
+					this.manager,
+					yml
+				);
 		} catch (InstantiationException | IllegalAccessException
 		| IllegalArgumentException | InvocationTargetException e) {
 			this.log()
