@@ -38,7 +38,7 @@ public class xPluginManager<T extends xJavaPlugin> {
 				.warning("Plugin already loaded: {}", pluginName);
 			return false;
 		}
-		plugin.onInit();
+		plugin.doInit();
 		return true;
 	}
 
@@ -48,7 +48,11 @@ public class xPluginManager<T extends xJavaPlugin> {
 		if (Utils.isBlank(pluginName))
 			return false;
 		final T existing = this.plugins.remove(pluginName);
-		return (existing != null);
+		if (existing != null) {
+			existing.doUnload();
+			return true;
+		}
+		return false;
 	}
 	public boolean unregister(final T plugin) {
 		if (plugin == null)

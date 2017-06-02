@@ -13,9 +13,9 @@ public abstract class xJavaPlugin {
 	public static enum PLUGIN_STATE {
 		INITED,
 		RUNNING,
-		STOPPED
-//		UNLOADED,
-//		FAILED
+		STOPPED,
+		UNLOADED,
+		FAILED
 	}
 	protected final AtomicReference<PLUGIN_STATE> state =
 		new AtomicReference<PLUGIN_STATE>(null);
@@ -31,11 +31,35 @@ public abstract class xJavaPlugin {
 
 
 
-	protected void onInit() {}
+	protected void onInit()   {}
 	protected void onUnload() {}
+	protected void onFailed() {}
 
 	protected abstract void onEnable();
 	protected abstract void onDisable();
+
+
+
+	public void doInit() {
+		this.state.compareAndSet(null, PLUGIN_STATE.INITED);
+		this.onInit();
+	}
+	public void doUnload() {
+		this.state.set(PLUGIN_STATE.UNLOADED);
+		this.onUnload();
+	}
+	public void setFailed() {
+		final PLUGIN_STATE state = this.state.get();
+		switch (state) {
+		case RUNNING:
+			this.doDisable();
+		case INITED:
+			this.doUnload();
+		default:
+			break;
+		}
+		this.state.set(PLUGIN_STATE.FAILED);
+	}
 
 
 
