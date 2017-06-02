@@ -1,54 +1,19 @@
-/*
-package com.poixson.commonapp.plugin;
-
-import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.xeustechnologies.jcl.JarClassLoader;
-import org.xeustechnologies.jcl.context.DefaultContextLoader;
-
-import com.poixson.commonapp.config.xConfig;
-import com.poixson.commonapp.config.xConfigException;
-import com.poixson.commonjava.Utils.utils;
-import com.poixson.commonjava.Utils.utilsDirFile;
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
-import com.poixson.commonjava.xLogger.xLog;
+package com.poixson.app.plugin;
 
 
 public class xPluginManager {
 //	private static final String LOG_NAME = "PluginManager";
 	private static final boolean INDEPENDENT_CLASS_LOADERS = false;
 
-	private static volatile xPluginManager manager = null;
-	private static final Object lock = new Object();
-
 	private volatile JarClassLoader jcl = null;
 	private final Object jclLock = new Object();
 
-
-
-	public static xPluginManager get() {
-		if(manager == null) {
-			synchronized(lock) {
-				if(manager == null)
-					manager = new xPluginManager();
-			}
-		}
-		return manager;
-	}
-	protected xPluginManager() {
-	}
-
-
-
 	private final Map<String, PluginDAO> plugins = new HashMap<String, PluginDAO>();
 	private volatile String classFieldName = null;
+
+
+
+	public xPluginManager() {}
 
 
 
@@ -341,4 +306,3 @@ public class xPluginManager {
 
 
 }
-*/
