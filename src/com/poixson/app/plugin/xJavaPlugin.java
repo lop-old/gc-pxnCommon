@@ -1,8 +1,10 @@
 package com.poixson.app.plugin;
 
+import java.lang.ref.SoftReference;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.poixson.utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.xLogger.xLog;
 
 
 public abstract class xJavaPlugin {
@@ -220,13 +222,19 @@ public abstract class xJavaPlugin {
 
 
 	// logger
-	private volatile xLog _log = null;
+	private volatile SoftReference<xLog> _log = null;
 	public xLog log() {
-		if(this._log == null)
-			this._log = xLog.getRoot(getPluginName());
-		return this._log;
+		if (this._log != null) {
+			final xLog log = this._log.get();
+			if (log != null)
+				return log;
+		}
+		final xLog log =
+			xLog.getRoot()
+				.get("Plugin:"+this.getPluginName());
+		this._log = new SoftReference<xLog>(log);
+		return log;
 	}
-*/
 
 
 
