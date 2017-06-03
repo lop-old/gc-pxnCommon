@@ -7,6 +7,7 @@ import com.poixson.utils.xLogger.xLog;
 
 public final class ThreadUtils {
 	private ThreadUtils() {}
+	{ Keeper.add(new ThreadUtils()); }
 
 	public static final String[] ignoreThreadNames = new String[] {
 //		"Main-Server-Thread",
@@ -21,12 +22,6 @@ public final class ThreadUtils {
 //		"Finalizer",
 //		"Exit"
 	};
-
-
-
-	public static void init() {
-		Keeper.add(new ThreadUtils());
-	}
 
 
 

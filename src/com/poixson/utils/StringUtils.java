@@ -11,12 +11,7 @@ import com.poixson.utils.exceptions.RequiredArgumentException;
 
 public final class StringUtils {
 	private StringUtils() {}
-
-
-
-	public static void init() {
-		Keeper.add(new StringUtils());
-	}
+	{ Keeper.add(new StringUtils()); }
 
 
 

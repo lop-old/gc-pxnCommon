@@ -28,7 +28,6 @@ public class Keeper {
 		final Keeper keeper = new Keeper();
 		if (!instance.compareAndSet(null, keeper))
 			return instance.get();
-		Utils.InitAll();
 		return keeper;
 	}
 

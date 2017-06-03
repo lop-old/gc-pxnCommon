@@ -81,9 +81,7 @@ public class xThreadPool implements xStartable {
 		this.queueHigh = new ConcurrentLinkedQueue<xThreadPoolTask>();
 		this.queueLow  = new ConcurrentLinkedQueue<xThreadPoolTask>();
 		// just to prevent gc
-		if (this.isMainPool) {
-			Keeper.add(this);
-		}
+		Keeper.add(this);
 	}
 	@Override
 	public Object clone() throws CloneNotSupportedException {

@@ -9,14 +9,9 @@ import com.poixson.utils.exceptions.RequiredArgumentException;
 
 public final class FileUtils {
 	private FileUtils() {}
+	{ Keeper.add(new FileUtils()); }
 
 	private static volatile String cwd = null;
-
-
-
-	public static void init() {
-		Keeper.add(new FileUtils());
-	}
 
 
 

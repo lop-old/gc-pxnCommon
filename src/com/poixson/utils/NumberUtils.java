@@ -6,17 +6,12 @@ import java.util.Random;
 
 public final class NumberUtils {
 	private NumberUtils() {}
+	{ Keeper.add(new NumberUtils()); }
 
 	/**
 	 * Max valid tcp/udp port number.
 	 */
 	public static final int MAX_PORT = 65535;
-
-
-
-	public static void init() {
-		Keeper.add(new NumberUtils());
-	}
 
 
 

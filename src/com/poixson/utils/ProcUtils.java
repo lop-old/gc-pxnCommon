@@ -7,6 +7,7 @@ import java.util.List;
 
 public final class ProcUtils {
 	private ProcUtils() {}
+	{ Keeper.add(new ProcUtils()); }
 
 	private static volatile Boolean debugWireEnabled = null;
 
@@ -14,15 +15,8 @@ public final class ProcUtils {
 
 
 
-	private static void init() {
-		Keeper.add(new ProcUtils());
-	}
-
-
-
 	public static boolean isDebugWireEnabled() {
 		if (debugWireEnabled == null) {
-			init();
 			final RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
 			if (bean == null) {
 				debugWireEnabled = Boolean.FALSE;
@@ -51,7 +45,6 @@ public final class ProcUtils {
 	 */
 	public static int getPid() {
 		if (pid == Integer.MIN_VALUE) {
-			init();
 			final RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
 			if (bean == null) {
 				pid = -1;

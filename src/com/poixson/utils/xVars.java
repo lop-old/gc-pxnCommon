@@ -8,15 +8,10 @@ import com.poixson.utils.xLogger.xLog;
 
 
 public class xVars {
+	private xVars() {}
+	{ Keeper.add(new xVars()); }
 
 	private static final boolean DEFAULT_DEBUG = false;
-
-
-
-	public static void init() {
-		Keeper.add(new xVars());
-	}
-	private xVars() {}
 
 
 

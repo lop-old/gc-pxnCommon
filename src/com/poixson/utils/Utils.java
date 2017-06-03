@@ -5,44 +5,22 @@ import java.lang.ref.SoftReference;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
 import com.poixson.utils.exceptions.RequiredArgumentException;
 import com.poixson.utils.xLogger.xLevel;
 import com.poixson.utils.xLogger.xLog;
-import com.poixson.utils.xThreadPool.xThreadPoolFactory;
 
 
 public final class Utils {
 	private Utils() {}
-
-	private static AtomicBoolean inited = new AtomicBoolean(false);
+	{ Keeper.add(new Utils()); }
 
 	public enum jLineVersion {
 		version2x,
 		version3x
 	}
 	public static final jLineVersion JLINE_VERSION = jLineVersion.version2x;
-
-
-
-	public static void InitAll() {
-		if (!inited.compareAndSet(false, true))
-			return;
-		xVars.init();
-		Failure.init();
-		Keeper.add(new Utils());
-		Keeper.add(
-			xThreadPoolFactory
-				.getMainPool()
-		);
-		FileUtils.init();
-		NumberUtils.init();
-		SanUtils.init();
-		StringUtils.init();
-		ThreadUtils.init();
-	}
 
 
 

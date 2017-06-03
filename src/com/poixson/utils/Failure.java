@@ -10,6 +10,7 @@ import com.poixson.utils.xLogger.xLog;
 
 public final class Failure {
 	private Failure() {}
+	{ Keeper.add(new Failure()); }
 
 	public static final xTime EXIT_TIMEOUT = xTime.get("300n");
 
@@ -17,12 +18,6 @@ public final class Failure {
 	private static volatile boolean failed = false;
 
 	private static final Set<xRunnable> actions = new CopyOnWriteArraySet<xRunnable>();
-
-
-
-	public static void init() {
-		Keeper.add(new Failure());
-	}
 
 
 

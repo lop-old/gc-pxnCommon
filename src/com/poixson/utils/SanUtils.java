@@ -3,12 +3,7 @@ package com.poixson.utils;
 
 public final class SanUtils {
 	private SanUtils() {}
-
-
-
-	public static void init() {
-		Keeper.add(new SanUtils());
-	}
+	{ Keeper.add(new SanUtils()); }
 
 
 
