@@ -9,8 +9,8 @@ import com.poixson.utils.xLogger.xLog;
 
 public abstract class xJavaPlugin {
 
-	protected final xPluginManager<?> manager;
-	protected final xPluginYML yml;
+	private volatile  xPluginManager<?> manager = null;
+	private volatile xPluginYML yml= null;
 
 	public static enum PLUGIN_STATE {
 		INITED,
@@ -24,7 +24,9 @@ public abstract class xJavaPlugin {
 
 
 
-	public xJavaPlugin(final xPluginManager<?> manager, final xPluginYML yml) {
+	public xJavaPlugin() {
+	}
+	public void init(final xPluginManager<?> manager, final xPluginYML yml) {
 		if (manager == null) throw new RequiredArgumentException("manager");
 		if (yml     == null) throw new RequiredArgumentException("yml");
 		this.manager = manager;

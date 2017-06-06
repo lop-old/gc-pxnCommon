@@ -158,11 +158,7 @@ public class xPluginLoader<T extends xJavaPlugin> {
 		// get plugin class constructor
 		final Constructor<T> construct;
 		try {
-			construct =
-				clss.getConstructor(
-					xPluginManager.class,
-					xPluginYML.class
-				);
+			construct = clss.getConstructor();
 		} catch (NoSuchMethodException | SecurityException e) {
 			this.log()
 				.trace(e);
@@ -171,17 +167,14 @@ public class xPluginLoader<T extends xJavaPlugin> {
 		// new plugin class instance
 		final T plugin;
 		try {
-			plugin =
-				construct.newInstance(
-					this.manager,
-					yml
-				);
+			plugin = construct.newInstance();
 		} catch (InstantiationException | IllegalAccessException
 		| IllegalArgumentException | InvocationTargetException e) {
 			this.log()
 				.trace(e);
 			return null;
 		}
+		plugin.init(this.manager, yml);
 		// register with manager
 		if (this.manager != null) {
 			this.manager.register(plugin);
