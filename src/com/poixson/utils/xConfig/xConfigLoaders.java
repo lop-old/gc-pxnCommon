@@ -15,16 +15,12 @@ public final class xConfigLoaders {
 	// new xConfig child instance
 	public static <T extends xConfig> T newConfig(
 			final Map<String, Object> datamap, final Class<T> cfgClass) {
-		if (datamap == null) throw new RequiredArgumentException("datamap");
+		if (datamap == null)  throw new RequiredArgumentException("datamap");
+		if (cfgClass == null) throw new RequiredArgumentException("cfgClass");
 		// get construct
 		final Constructor<? extends xConfig> construct;
-		final Class<? extends xConfig> clss = (
-			cfgClass == null
-			? xConfig.class
-			: cfgClass
-		);
 		try {
-			construct = clss.getDeclaredConstructor(Map.class);
+			construct = cfgClass.getDeclaredConstructor(Map.class);
 		} catch (NoSuchMethodException e) {
 			throw new RuntimeException(e);
 		} catch (SecurityException e) {
