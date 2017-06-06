@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -78,6 +79,26 @@ public final class ioUtils {
 		final InputStream in =
 			jarFile.getInputStream(jarEntry);
 		return in;
+	}
+
+
+
+	// copy jar resource to file
+	public static void ExportResource(
+			final String targetFileStr, final InputStream in)
+			throws IOException {
+		if (Utils.isEmpty(targetFileStr))
+			throw new RequiredArgumentException("outputFileStr");
+		if (in == null) throw new RequiredArgumentException("in");
+		final File file = new File(targetFileStr);
+		try {
+			Files.copy(
+				in,
+				file.toPath()
+			);
+		} finally {
+			Utils.safeClose(in);
+		}
 	}
 
 
