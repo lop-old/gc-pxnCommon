@@ -108,24 +108,18 @@ public class xPluginManager<T extends xJavaPlugin> {
 		while (it.hasNext()) {
 			final Entry<String, T> entry = it.next();
 			final T plugin = entry.getValue();
-			if (!plugin.isPluginRunning()) {
-				plugin.doEnable();
-			}
-		}
-	}
-	public void enable(final T plugin) {
-		if (plugin == null) throw new RequiredArgumentException("plugin");
-		if (!plugin.isPluginRunning()) {
-			plugin.doEnable();
+			this.enable(plugin);
 		}
 	}
 	public void enable(final String pluginName) {
 		if (Utils.isEmpty(pluginName)) throw new RequiredArgumentException("pluginName");
 		final T plugin = this.getPlugin(pluginName);
 		if (plugin == null) throw new RuntimeException("Unknown plugin: "+pluginName);
-		if (!plugin.isPluginRunning()) {
-			this.enable(plugin);
-		}
+		this.enable(plugin);
+	}
+	public void enable(final T plugin) {
+		if (plugin == null) throw new RequiredArgumentException("plugin");
+		plugin.doEnable();
 	}
 
 
@@ -135,24 +129,18 @@ public class xPluginManager<T extends xJavaPlugin> {
 		while (it.hasNext()) {
 			final Entry<String, T> entry = it.next();
 			final T plugin = entry.getValue();
-			if (plugin.isPluginRunning()) {
-				plugin.doDisable();
-			}
-		}
-	}
-	public void disable(final T plugin) {
-		if (plugin == null) throw new RequiredArgumentException("plugin");
-		if (plugin.isPluginRunning()) {
-			plugin.doDisable();
+			this.disable(plugin);
 		}
 	}
 	public void disable(final String pluginName) {
 		if (Utils.isEmpty(pluginName)) throw new RequiredArgumentException("pluginName");
 		final T plugin = this.getPlugin(pluginName);
 		if (plugin == null) throw new RuntimeException("Unknown plugin: "+pluginName);
-		if (plugin.isPluginRunning()) {
-			this.disable(plugin);
-		}
+		this.disable(plugin);
+	}
+	public void disable(final T plugin) {
+		if (plugin == null) throw new RequiredArgumentException("plugin");
+		plugin.doDisable();
 	}
 
 
