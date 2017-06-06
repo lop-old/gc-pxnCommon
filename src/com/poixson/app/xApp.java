@@ -739,7 +739,6 @@ return "<uptime>";
 			final Map<Integer, String> colors, final String line) {
 		final StringBuilder buffer = new StringBuilder();
 		int last = 0;
-		boolean hasColor = false;
 		final Map<Integer, String> cols;
 		final boolean hasBgColor = Utils.notBlank(bgColor);
 		if (hasBgColor) {
@@ -750,6 +749,7 @@ return "<uptime>";
 		} else {
 			cols = colors;
 		}
+		boolean withinColorTag = false;
 		for (final Entry<Integer, String> entry : cols.entrySet()) {
 			final int pos = entry.getKey().intValue() - 1;
 			if (pos > last) {
@@ -758,10 +758,10 @@ return "<uptime>";
 				);
 			}
 			last = pos;
-			if (hasColor) {
+			if (withinColorTag) {
 				buffer.append("|@");
 			}
-			hasColor = true;
+			withinColorTag = true;
 			buffer.append("@|");
 			if (hasBgColor) {
 				buffer
@@ -776,7 +776,7 @@ return "<uptime>";
 		if (last < line.length()) {
 			buffer.append(line.substring(last));
 		}
-		if (hasColor) {
+		if (withinColorTag) {
 			buffer.append("|@");
 		}
 		{

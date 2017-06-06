@@ -111,7 +111,7 @@ public class xScheduler implements xStartable {
 			return;
 		if (!this.running.compareAndSet(false, true))
 			return;
-		this.log().fine("Starting sched manager..");
+		this.log().fine("Starting schedule manager..");
 		final long threadSleep = this.threadSleepTime.getMS();
 		final Set<xSchedulerTask> finishedTasks = new HashSet<xSchedulerTask>();
 		while (true) {
@@ -190,7 +190,7 @@ public class xScheduler implements xStartable {
 			this.sleeping = false;
 		}
 		finishedTasks.clear();
-		log().fine("Stopped sched manager thread");
+		log().fine("Stopped scheduler manager thread");
 		this.stopping = true;
 		this.running.set(false);
 		Keeper.remove(this);
