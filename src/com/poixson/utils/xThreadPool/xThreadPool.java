@@ -130,6 +130,21 @@ public class xThreadPool implements xStartable {
 
 
 
+	public boolean isCurrentThread() {
+		if (this.workerCount.get() < 1)
+			return false;
+		final Thread thread = Thread.currentThread();
+		final Iterator<xThreadPoolWorker> it =
+			this.workers.iterator();
+		while (it.hasNext()) {
+			if (thread.equals(it.next()))
+				return true;
+		}
+		return false;
+	}
+
+
+
 	/**
 	 * Create a new thread if needed, skip if queue is empty.
 	 * @return true if new thread has been created,
