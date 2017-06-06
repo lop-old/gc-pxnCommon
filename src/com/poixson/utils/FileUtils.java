@@ -145,16 +145,11 @@ public final class FileUtils {
 
 	public static String MergePaths(final String...strings) {
 		final StringBuilder merged = new StringBuilder();
-		boolean fromRoot = false;
 		if (strings.length > 0) {
 			if (".".equals(strings[0])) {
-				fromRoot = true;
 				merged
 					.append(cwd())
 					.append(File.separatorChar);
-			} else
-			if ("/".equals(strings[0])) {
-				fromRoot = true;
 			}
 		}
 		for (String path : strings) {
@@ -168,8 +163,6 @@ public final class FileUtils {
 		}
 		if (merged.length() == 0)
 			return null;
-		if (fromRoot)
-			return File.separatorChar+merged.toString();
 		return merged.toString();
 	}
 
