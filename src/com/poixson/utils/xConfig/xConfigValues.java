@@ -316,8 +316,8 @@ public abstract class xConfigValues {
 
 
 
-	public List<? extends xConfig> getConfigList(final String key,
-			final Class<? extends xConfig> cfgClass) {
+	public <T extends xConfig> List<T> getConfigList(final String key,
+			final Class<T> cfgClass) {
 		final List<Object> datalist =
 			this.getList(
 				key,
@@ -325,7 +325,7 @@ public abstract class xConfigValues {
 			);
 		if (datalist == null)
 			return null;
-		final List<xConfig> list = new ArrayList<xConfig>();
+		final List<T> list = new ArrayList<T>();
 		final Iterator<Object> it = datalist.iterator();
 		while (it.hasNext()) {
 			final Object o = it.next();
@@ -337,7 +337,7 @@ public abstract class xConfigValues {
 				);
 			if (datamap == null)
 				throw new RuntimeException("Failed to get Map constructor for class: "+cfgClass.getName());
-			final xConfig cfg =
+			final T cfg =
 				xConfigLoaders.newConfig(
 					datamap,
 					cfgClass
