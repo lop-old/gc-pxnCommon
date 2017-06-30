@@ -3,6 +3,11 @@ package com.poixson.utils;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.poixson.utils.exceptions.RequiredArgumentException;
 
@@ -33,6 +38,45 @@ public final class FileUtils {
 			cwd = null;
 		}
 		return cwd;
+	}
+
+
+
+	public static boolean isDir(final String pathStr) {
+		if (Utils.isEmpty(pathStr))
+			return false;
+		final File path = new File(pathStr);
+		return (
+			path.exists() &&
+			path.isDirectory()
+		);
+	}
+	public static boolean isFile(final String fileStr) {
+		if (Utils.isEmpty(fileStr))
+			return false;
+		final File file = new File(fileStr);
+		return (
+			file.exists() &&
+			file.isFile()
+		);
+	}
+	public static boolean isReadable(final String pathStr) {
+		if (Utils.isEmpty(pathStr))
+			return false;
+		final File path = new File(pathStr);
+		return (
+			path.exists() &&
+			path.canRead()
+		);
+	}
+	public static boolean isWritable(final String pathStr) {
+		if (Utils.isEmpty(pathStr))
+			return false;
+		final File path = new File(pathStr);
+		return (
+			path.exists() &&
+			path.canWrite()
+		);
 	}
 
 
