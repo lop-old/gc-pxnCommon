@@ -164,6 +164,7 @@ public final class FileUtils {
 
 
 
+/*
 	// build path+file+ext
 	public static String BuildFilePath(final String pathStr,
 			final String fileName, final String extension) {
@@ -187,10 +188,11 @@ public final class FileUtils {
 		return
 			(new StringBuilder())
 				.append(pathStr)
-				.append(File.separator)
+				.append(File.separatorChar)
 				.append(fileStr)
 				.toString();
 	}
+*/
 
 
 
@@ -262,13 +264,6 @@ public final class FileUtils {
 				array.toArray(new String[0])
 			);
 	}
-
-
-
-//	// logger
-//	public static xLog log() {
-//		return Utils.log();
-//	}
 
 
 
