@@ -151,26 +151,72 @@ public final class FileUtils {
 
 
 	public static String MergePaths(final String...strings) {
-		final StringBuilder merged = new StringBuilder();
-		if (strings.length > 0) {
-			if (".".equals(strings[0])) {
-				merged
-					.append(cwd())
-					.append(File.separatorChar);
-			}
-		}
-		for (String path : strings) {
-			if (Utils.isEmpty(path)) continue;
-			if (path.equals("."))    continue;
-			path = StringUtils.trims(path, "/", "\\", " ", "\t", "\r", "\n");
-			if (Utils.isBlank(path)) continue;
-			merged
-				.append(path)
-				.append(File.separatorChar);
-		}
-		if (merged.length() == 0)
+		if (strings.length == 0)
 			return null;
-		return merged.toString();
+		final LinkedList<String> list =
+			new LinkedList<String>(
+				Arrays.asList(strings)
+			);
+		final String first = list.getFirst();
+		// relative to cwd
+		if (".".equals(first)) {
+			list.removeFirst();
+			list.addFirst(cwd());
+			return MergePaths(
+				list.toArray(new String[0])
+			);
+		}
+		// absolute path
+		if ("/".equals(first) || "\\".equals(first)) {
+			list.removeFirst();
+			final String path =
+				MergePaths(
+					list.toArray(new String[0])
+				);
+			return
+				StringUtils.ForceStarts(
+					File.separator,
+					path
+				);
+		}
+		if (first.startsWith("/") || first.startsWith("\\")) {
+			final String part =
+				StringUtils.trims(
+					list.getFirst(),
+					"/", "\\", " ", "\t", "\r", "\n"
+				);
+			list.removeFirst();
+			if (Utils.notEmpty(part)) {
+				list.addFirst(part);
+			}
+			final String path =
+				MergePaths(
+					list.toArray(new String[0])
+				);
+			return
+				StringUtils.ForceStarts(
+					File.separator,
+					path
+				);
+		}
+		// build path
+		final List<String> array = new ArrayList<String>();
+		final Iterator<String> it = list.iterator();
+		while (it.hasNext()) {
+			final String part =
+				StringUtils.trims(
+					it.next(),
+					"/", "\\", " ", "\t", "\r", "\n"
+				);
+			if (Utils.isEmpty(part))
+				continue;
+			array.add(part);
+		}
+		return
+			StringUtils.addStrings(
+				File.separator,
+				array.toArray(new String[0])
+			);
 	}
 
 
