@@ -19,13 +19,20 @@ public final class FileUtils {
 	public static String cwd() {
 		if (Utils.notEmpty(cwd))
 			return cwd;
+		{
+			final String path = System.getProperty("user.dir");
+			if (Utils.notEmpty(path)) {
+				cwd = path;
+				return path;
+			}
+		}
 		try {
-			cwd =
-				(new File("."))
-					.getCanonicalPath()
-					.toString();
-		} catch (IOException ignore) {}
-		return null;
+			final File dir = new File(".");
+			cwd = dir.getCanonicalPath();
+		} catch (IOException ignore) {
+			cwd = null;
+		}
+		return cwd;
 	}
 
 
