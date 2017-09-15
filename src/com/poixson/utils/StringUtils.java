@@ -517,7 +517,7 @@ public final class StringUtils {
 
 
 
-	public static String pad(final int width, final int value) {
+	public static String Pad(final int width, final int value) {
 		return
 			Pad(
 				width,
@@ -525,7 +525,7 @@ public final class StringUtils {
 				'0'
 			);
 	}
-	public static String padFront(final int width, final int value) {
+	public static String PadFront(final int width, final int value) {
 		return
 			PadFront(
 				width,
@@ -533,7 +533,7 @@ public final class StringUtils {
 				'0'
 			);
 	}
-	public static String padEnd(final int width, final int value) {
+	public static String PadEnd(final int width, final int value) {
 		return
 			PadEnd(
 				width,
@@ -541,7 +541,7 @@ public final class StringUtils {
 				'0'
 			);
 	}
-	public static String padCenter(final int width, final int value) {
+	public static String PadCenter(final int width, final int value) {
 		return
 			PadCenter(
 				width,
