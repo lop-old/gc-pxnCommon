@@ -520,6 +520,27 @@ public final class Utils {
 
 
 
+	public static void SleepDot(final String msg) {
+		SleepDot(msg, 1.0);
+	}
+	public static void SleepDot(final String msg, final double time) {
+		String str = msg;
+		str = StringUtils.TrimEnd(str, "\r", "\n", " ", ".");
+		str = StringUtils.ForceStarts(" ", str);
+		System.out.print(str);
+		final long dotTime = (long) (((time - 0.1) / 3.0) * 1000.0);
+		ThreadUtils.Sleep("0.1s");
+		System.out.print(".");
+		ThreadUtils.Sleep(dotTime);
+		System.out.print(".");
+		ThreadUtils.Sleep(dotTime);
+		System.out.print(".");
+		ThreadUtils.Sleep(dotTime);
+		System.out.println();
+	}
+
+
+
 	// logger
 	private static volatile SoftReference<xLog> _log = null;
 	public static xLog log() {
