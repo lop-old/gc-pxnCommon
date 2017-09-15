@@ -16,6 +16,8 @@ public final class Utils {
 	private Utils() {}
 	{ Keeper.add(new Utils()); }
 
+
+
 	public enum jLineVersion {
 		version2x,
 		version3x
@@ -399,12 +401,15 @@ public final class Utils {
 		}
 		return false;
 	}
+/*
 	public static boolean isRxtxAvailable() {
 		return isLibAvailable("gnu.io.CommPortIdentifier");
 	}
+*/
 
 
 
+/*
 	public static boolean validBaud(final int baud) {
 		switch (baud) {
 		case 300:
@@ -423,6 +428,7 @@ public final class Utils {
 		}
 		return false;
 	}
+*/
 
 
 
