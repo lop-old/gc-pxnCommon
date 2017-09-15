@@ -56,7 +56,7 @@ public class xString {
 
 	public xString remove(final String...strip) {
 		if (this.data != null) {
-			this.data = StringUtils.removeFromStr(
+			this.data = StringUtils.RemoveFromStr(
 					this.data,
 					strip
 			);
@@ -89,7 +89,7 @@ public class xString {
 	}
 	public xString trims(final String...strip) {
 		if (this.data != null) {
-			this.data = StringUtils.trims(this.data, strip);
+			this.data = StringUtils.Trim(this.data, strip);
 		}
 		return this;
 	}
@@ -128,7 +128,7 @@ public class xString {
 
 	public xString replaceWith(final String replaceWhat, final String[] withWhat) {
 		if (this.data != null) {
-			this.data = StringUtils.replaceWith(replaceWhat, withWhat, this.data);
+			this.data = StringUtils.ReplaceWith(replaceWhat, withWhat, this.data);
 		}
 		return this;
 	}
@@ -137,19 +137,19 @@ public class xString {
 
 	public xString pad(final int width, final char padding) {
 		if (this.data != null) {
-			this.data = StringUtils.pad(width, this.data, padding);
+			this.data = StringUtils.Pad(width, this.data, padding);
 		}
 		return this;
 	}
 	public xString padFront(final int width, final char padding) {
 		if (this.data != null) {
-			this.data = StringUtils.padFront(width, this.data, padding);
+			this.data = StringUtils.PadFront(width, this.data, padding);
 		}
 		return this;
 	}
 	public xString padCenter(final int width, final char padding) {
 		if (this.data != null) {
-			this.data = StringUtils.padCenter(width, this.data, padding);
+			this.data = StringUtils.PadCenter(width, this.data, padding);
 		}
 		return this;
 	}

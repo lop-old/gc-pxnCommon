@@ -126,7 +126,7 @@ public abstract class xLogPrinting {
 		}
 		// print lines
 		for (final String line : msgs) {
-			this.title( line + StringUtils.repeat(len - line.length(), " ") );
+			this.title( line + StringUtils.Repeat(len - line.length(), " ") );
 		}
 	}
 	public void title(final List<String> list) {

@@ -126,7 +126,7 @@ public class dbQuery {
 						Integer.toString(
 							this.worker.getIndex()
 						),
-						StringUtils.replaceWith(
+						StringUtils.ReplaceWith(
 							"?",
 							this.args,
 							str

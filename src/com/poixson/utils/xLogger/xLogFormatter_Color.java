@@ -52,7 +52,7 @@ public class xLogFormatter_Color extends xLogFormatter_Default {
 			.append(color)
 			.append(" ")
 			.append(
-				StringUtils.padCenter(
+				StringUtils.PadCenter(
 					7,
 					level.toString(),
 					' '

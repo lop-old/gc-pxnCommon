@@ -42,7 +42,7 @@ public class xLogFormatter_Default implements xLogFormatter {
 		if (record == null) throw new RequiredArgumentException("record");
 		return (new StringBuilder())
 			.append("[")
-			.append(StringUtils.padCenter(
+			.append(StringUtils.PadCenter(
 				7,
 				record.level().toString(),
 				' '

@@ -348,10 +348,10 @@ public final class Utils {
 			}
 		}
 		log.publish( level, "##### Heap utilization statistics [MB] #####" );
-		log.publish( level, "Used Memory:  {} MB", StringUtils.padFront(longest, str[0], ' ') );
-		log.publish( level, "Free Memory:  {} MB", StringUtils.padFront(longest, str[1], ' ') );
-		log.publish( level, "Total Memory: {} MB", StringUtils.padFront(longest, str[2], ' ') );
-		log.publish( level, "Max Memory:   {} MB", StringUtils.padFront(longest, str[3], ' ') );
+		log.publish( level, "Used Memory:  {} MB", StringUtils.PadFront(longest, str[0], ' ') );
+		log.publish( level, "Free Memory:  {} MB", StringUtils.PadFront(longest, str[1], ' ') );
+		log.publish( level, "Total Memory: {} MB", StringUtils.PadFront(longest, str[2], ' ') );
+		log.publish( level, "Max Memory:   {} MB", StringUtils.PadFront(longest, str[3], ' ') );
 	}
 	public static int[] getMemoryStats() {
 		final int MB = 1024 * 1024;
@@ -460,11 +460,11 @@ public final class Utils {
 		// build padded string
 		final StringBuilder outA = new StringBuilder();
 		for (final String part : splitA) {
-			outA.append( StringUtils.padFront(width, part, '0') );
+			outA.append( StringUtils.PadFront(width, part, '0') );
 		}
 		final StringBuilder outB = new StringBuilder();
 		for (final String part : splitB) {
-			outB.append( StringUtils.padFront(width, part, '0') );
+			outB.append( StringUtils.PadFront(width, part, '0') );
 		}
 		return new String[] {
 			outA.toString(),

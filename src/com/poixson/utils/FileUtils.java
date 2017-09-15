@@ -227,7 +227,7 @@ public final class FileUtils {
 		}
 		if (first.startsWith("/") || first.startsWith("\\")) {
 			final String part =
-				StringUtils.trims(
+				StringUtils.Trim(
 					list.getFirst(),
 					"/", "\\", " ", "\t", "\r", "\n"
 				);
@@ -250,7 +250,7 @@ public final class FileUtils {
 		final Iterator<String> it = list.iterator();
 		while (it.hasNext()) {
 			final String part =
-				StringUtils.trims(
+				StringUtils.Trim(
 					it.next(),
 					"/", "\\", " ", "\t", "\r", "\n"
 				);

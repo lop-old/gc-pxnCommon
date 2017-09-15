@@ -33,7 +33,7 @@ public class xAppStepDAO {
 		this.anno   = anno;
 		{
 			String name = method.getName();
-			name = StringUtils.trims(
+			name = StringUtils.Trim(
 				name,
 				"_",
 				"startup",
@@ -43,7 +43,7 @@ public class xAppStepDAO {
 			);
 			this.name =
 				Utils.isEmpty(name)
-				? StringUtils.trims(this.method.getName(), "_")
+				? StringUtils.Trim(this.method.getName(), "_")
 				: name;
 		}
 		this.title = (

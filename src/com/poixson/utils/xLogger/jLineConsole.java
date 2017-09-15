@@ -380,7 +380,7 @@ public class jLineConsole implements xConsole {
 				(new StringBuilder())
 					.append('\r')
 					.append(
-						StringUtils.repeat(
+						StringUtils.Repeat(
 							wipeLen,
 							' '
 						)
