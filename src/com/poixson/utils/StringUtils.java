@@ -108,6 +108,7 @@ public final class StringUtils {
 
 
 	public static String FormatMessage(final String format, final Object... args) {
+		if (Utils.isEmpty(format)) return format;
 		String msg = format;
 		for (final Object obj : args) {
 			msg = msg.replaceFirst(
