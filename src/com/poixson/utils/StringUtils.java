@@ -134,14 +134,15 @@ public final class StringUtils {
 
 
 
-	public static String trimToNull(final String str) {
-		if (str == null)
-			return null;
-		if (str.length() == 0)
-			return null;
-		final String result = str.trim();
+	public static String TrimToNull(final String str, final String...strip) {
+		final String result =
+			doTrim(
+				true, true,
+				str,
+				strip
+			);
 		return (
-			result.length() == 0
+			Utils.isEmpty(result)
 			? null
 			: result
 		);
@@ -150,9 +151,37 @@ public final class StringUtils {
 
 
 	// trim from string
-	public static String trims(final String str, final String...strip) {
-		if (Utils.isEmpty(str))  return null;
-		if (Utils.isEmpty(strip)) return null;
+	public static String Trim(final String str, final String...strip) {
+		return
+			doTrim(
+				true, true,
+				str,
+				strip
+			);
+	}
+	public static String TrimFront(final String str, final String...strip) {
+		return
+			doTrim(
+				true, false,
+				str,
+				strip
+			);
+	}
+	public static String TrimEnd(final String str, final String...strip) {
+		return
+			doTrim(
+				false, true,
+				str,
+				strip
+			);
+	}
+
+	private static String doTrim(
+			final boolean trimFront, final boolean trimEnd,
+			final String str, final String...strip) {
+		if (!trimFront && !trimEnd) return str;
+		if (Utils.isEmpty(str))     return str;
+		if (Utils.isEmpty(strip))   return str;
 		final int stripCount = strip.length;
 		final int[] stripLen = new int[stripCount];
 		for (int i = 0; i < stripCount; i++) {
@@ -166,13 +195,17 @@ public final class StringUtils {
 			innerloop:
 			for (int index = 0; index < stripCount; index++) {
 				if (stripLen[index] == 0) continue innerloop;
-				while (out.startsWith(strip[index])) {
-					out = out.substring(stripLen[index]);
-					changed = true;
+				if (trimFront) {
+					while (out.startsWith(strip[index])) {
+						out = out.substring(stripLen[index]);
+						changed = true;
+					}
 				}
-				while (out.endsWith(strip[index])) {
-					out = out.substring(0, out.length() - stripLen[index]);
-					changed = true;
+				if (trimEnd) {
+					while (out.endsWith(strip[index])) {
+						out = out.substring(0, out.length() - stripLen[index]);
+						changed = true;
+					}
 				}
 			}
 			if (out.length() == 0) {
