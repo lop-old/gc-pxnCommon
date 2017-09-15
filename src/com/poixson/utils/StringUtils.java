@@ -217,7 +217,7 @@ public final class StringUtils {
 
 
 
-	public static String removeFromStr(final String str, final String...strip) {
+	public static String RemoveFromStr(final String str, final String...strip) {
 		if (Utils.isEmpty(strip)) return str;
 		String dat = str;
 		for (final String s : strip) {
@@ -360,7 +360,7 @@ public final class StringUtils {
 
 
 	// replace with array
-	public static String replaceWith(final String replaceWhat, final String[] withWhat, final String data) {
+	public static String ReplaceWith(final String replaceWhat, final String[] withWhat, final String data) {
 		if (Utils.isEmpty(replaceWhat)) return data;
 		if (Utils.isEmpty(withWhat))    return data;
 		if (Utils.isEmpty(data))        return data;
@@ -386,10 +386,10 @@ public final class StringUtils {
 
 
 	// repeat string with deliminator
-	public static String repeat(final int count, final String str) {
-		return repeat(count, str, null);
+	public static String Repeat(final int count, final String str) {
+		return Repeat(count, str, null);
 	}
-	public static String repeat(final int count, final String str, final String delim) {
+	public static String Repeat(final int count, final String str, final String delim) {
 		if (Utils.isEmpty(str)) throw new RequiredArgumentException("str");
 		if (count < 1) return "";
 		final StringBuilder buf = new StringBuilder();
@@ -409,7 +409,7 @@ public final class StringUtils {
 		}
 		return buf.toString();
 	}
-	public static String repeat(final int count, final char chr) {
+	public static String Repeat(final int count, final char chr) {
 		if (count < 1) return "";
 		final StringBuilder buf = new StringBuilder();
 		// repeat string
@@ -469,48 +469,48 @@ public final class StringUtils {
 
 
 
-	public static String pad(final int width, final String text, final char padding) {
+	public static String Pad(final int width, final String text, final char padding) {
 		if (width < 1) return null;
 		final int count = width - text.length();
 		if (count < 1) return text;
 		return
 			(new StringBuilder(width))
 				.append( text                   )
-				.append( repeat(count, padding) )
+				.append( Repeat(count, padding) )
 				.toString();
 	}
-	public static String padFront(final int width, final String text, final char padding) {
+	public static String PadFront(final int width, final String text, final char padding) {
 		if (width < 1) return null;
 		final int count = width - text.length();
 		if (count < 1) return text;
 		return
 			(new StringBuilder(width))
-				.append( repeat(count, padding) )
+				.append( Repeat(count, padding) )
 				.append( text                   )
 				.toString();
 	}
-	public static String padEnd(final int width, final String text, final char padding) {
+	public static String PadEnd(final int width, final String text, final char padding) {
 		if (width < 1) return null;
 		final int count = width - text.length();
 		if (count < 1) return text;
 		return
 			(new StringBuilder(width))
 				.append( text                   )
-				.append( repeat(count, padding) )
+				.append( Repeat(count, padding) )
 				.toString();
 	}
-	public static String padCenter(final int width, final String text, final char padding) {
+	public static String PadCenter(final int width, final String text, final char padding) {
 		if (width < 1) return null;
 		if (Utils.isEmpty(text)) {
-			return repeat(width, padding);
+			return Repeat(width, padding);
 		}
 		final double count = ( ((double) width) - ((double) text.length()) ) / 2.0;
 		if (Math.ceil(count) < 1.0) return text;
 		return
 			(new StringBuilder(width))
-				.append( repeat((int) Math.floor(count), padding) )
+				.append( Repeat((int) Math.floor(count), padding) )
 				.append( text                                     )
-				.append( repeat((int) Math.ceil(count), padding)  )
+				.append( Repeat((int) Math.ceil(count), padding)  )
 				.toString();
 	}
 
@@ -518,7 +518,7 @@ public final class StringUtils {
 
 	public static String pad(final int width, final int value) {
 		return
-			pad(
+			Pad(
 				width,
 				Integer.toString(value),
 				'0'
@@ -526,7 +526,7 @@ public final class StringUtils {
 	}
 	public static String padFront(final int width, final int value) {
 		return
-			padFront(
+			PadFront(
 				width,
 				Integer.toString(value),
 				'0'
@@ -534,7 +534,7 @@ public final class StringUtils {
 	}
 	public static String padEnd(final int width, final int value) {
 		return
-			padEnd(
+			PadEnd(
 				width,
 				Integer.toString(value),
 				'0'
@@ -542,7 +542,7 @@ public final class StringUtils {
 	}
 	public static String padCenter(final int width, final int value) {
 		return
-			padCenter(
+			PadCenter(
 				width,
 				Integer.toString(value),
 				'0'
@@ -551,7 +551,7 @@ public final class StringUtils {
 
 
 
-	public static String wildcardToRegex(final String wildcard) {
+	public static String WildcardToRegex(final String wildcard) {
 		final StringBuilder buf = new StringBuilder(wildcard.length());
 		buf.append('^');
 		final int len = wildcard.length();
