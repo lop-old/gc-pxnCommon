@@ -18,8 +18,7 @@ public final class StringUtils {
 	// object to string
 	public static String toString(final Object obj) {
 		// null
-		if (obj == null)
-			return null;
+		if (obj == null) return null;
 		// string
 		if (obj instanceof String)
 			return (String) obj;
@@ -59,8 +58,7 @@ public final class StringUtils {
 
 
 	public static boolean isAlpha(final String str) {
-		if (str == null)
-			return false;
+		if (str == null) return false;
 		int sz = str.length();
 		for (int i = 0; i < sz; i++) {
 			if ( ! Character.isLetter(str.charAt(i)) ) {
@@ -70,8 +68,7 @@ public final class StringUtils {
 		return true;
 	}
 	public static boolean isAlphaSpace(final String str) {
-		if (str == null)
-			return false;
+		if (str == null) return false;
 		int sz = str.length();
 		for (int i = 0; i < sz; i++) {
 			final char chr = str.charAt(i);
@@ -84,8 +81,7 @@ public final class StringUtils {
 		return true;
 	}
 	public static boolean isAlphaNum(final String str) {
-		if (str == null)
-			return false;
+		if (str == null) return false;
 		int sz = str.length();
 		for (int i = 0; i < sz; i++) {
 			final char chr = str.charAt(i);
@@ -96,8 +92,7 @@ public final class StringUtils {
 		return true;
 	}
 	public static boolean isAlphaNumSpace(final String str) {
-		if (str == null)
-			return false;
+		if (str == null) return false;
 		int sz = str.length();
 		for (int i = 0; i < sz; i++) {
 			final char chr = str.charAt(i);
@@ -202,8 +197,7 @@ public final class StringUtils {
 
 	// ensure starts with
 	public static String ForceStarts(final String start, final String data) {
-		if (data == null)
-			return null;
+		if (data == null) return null;
 		if (data.startsWith(start))
 			return data;
 		return
@@ -214,8 +208,7 @@ public final class StringUtils {
 	}
 	// ensure ends with
 	public static String ForceEnds(final String end, final String data) {
-		if (data == null)
-			return null;
+		if (data == null) return null;
 		if (data.endsWith(end))
 			return data;
 		return
@@ -423,7 +416,8 @@ public final class StringUtils {
 		return addArray(delim, addThis);
 	}
 	public static String addArray(final String delim, final String[] addThis) {
-		if (Utils.isEmpty(addThis)) return null;
+		if (addThis == null)     return null;
+		if (addThis.length == 0) return "";
 		final String dlm = (Utils.isEmpty(delim) ? null : delim);
 		final StringBuilder buf = new StringBuilder();
 		boolean b = false;
@@ -490,32 +484,36 @@ public final class StringUtils {
 
 
 	public static String pad(final int width, final int value) {
-		return pad(
+		return
+			pad(
 				width,
 				Integer.toString(value),
 				'0'
-		);
+			);
 	}
 	public static String padFront(final int width, final int value) {
-		return padFront(
+		return
+			padFront(
 				width,
 				Integer.toString(value),
 				'0'
-		);
+			);
 	}
 	public static String padEnd(final int width, final int value) {
-		return padEnd(
+		return
+			padEnd(
 				width,
 				Integer.toString(value),
 				'0'
-		);
+			);
 	}
 	public static String padCenter(final int width, final int value) {
-		return padCenter(
+		return
+			padCenter(
 				width,
 				Integer.toString(value),
 				'0'
-		);
+			);
 	}
 
 
