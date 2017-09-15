@@ -519,7 +519,7 @@ public final class StringUtils {
 
 
 	public static String wildcardToRegex(final String wildcard) {
-		final StringBuffer buf = new StringBuffer(wildcard.length());
+		final StringBuilder buf = new StringBuilder(wildcard.length());
 		buf.append('^');
 		final int len = wildcard.length();
 		for (int i = 0; i < len; i++) {
