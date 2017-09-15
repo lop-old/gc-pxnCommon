@@ -105,6 +105,34 @@ public final class NativeUtils {
 
 
 	public static boolean LoadExtractLibrary(
+			final String fileName) {
+		return LoadExtractLibrary(
+			null,
+			null,
+			fileName,
+			null
+		);
+	}
+	public static boolean LoadExtractLibrary(
+			final String fileName, final Class<?> classRef) {
+		return LoadExtractLibrary(
+			null,
+			null,
+			fileName,
+			classRef
+		);
+	}
+	public static boolean LoadExtractLibrary(
+			final String outputDir,
+			final String fileName, final Class<?> classRef) {
+		return LoadExtractLibrary(
+			outputDir,
+			null,
+			fileName,
+			classRef
+		);
+	}
+	public static boolean LoadExtractLibrary(
 			final String outputDir, final String resourcePath,
 			final String fileName, final Class<?> classRef) {
 //TODO: is this useful?
