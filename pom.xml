@@ -179,6 +179,11 @@
 			<version>${commons-logging-version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit-version}</version>
+		</dependency>
 	</dependencies>
 	<reporting>
 		<plugins>
