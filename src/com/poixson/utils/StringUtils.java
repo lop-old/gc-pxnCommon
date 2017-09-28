@@ -473,6 +473,34 @@ public final class StringUtils {
 
 
 
+	// split by many delims
+	public static String[] SplitByDelims(final String string, final char...delims) {
+		final List<String> list = new ArrayList<String>();
+		StringRef str = StringRef.get(string);
+		while (str.length() > 0) {
+			final String part =
+				str.CutFirstPart(delims);
+			if (Utils.notEmpty(part)) {
+				list.add(part);
+			}
+		}
+		return list.toArray(new String[0]);
+	}
+	public static String[] SplitByDelims(final String string, final String...delims) {
+		final List<String> list = new ArrayList<String>();
+		StringRef str = StringRef.get(string);
+		while (str.length() > 0) {
+			final String part =
+				str.CutFirstPart(delims);
+			if (Utils.notEmpty(part)) {
+				list.add(part);
+			}
+		}
+		return list.toArray(new String[0]);
+	}
+
+
+
 	// replace with array
 	public static String ReplaceWith(final String replaceWhat, final String[] withWhat, final String data) {
 		if (Utils.isEmpty(replaceWhat)) return data;
