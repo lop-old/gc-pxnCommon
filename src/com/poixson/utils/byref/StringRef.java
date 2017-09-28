@@ -4,7 +4,7 @@ import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
 
 
-public class StringRef {
+public class StringRef implements StringRefInterface {
 
 	public volatile String value = null;
 
@@ -17,20 +17,36 @@ public class StringRef {
 
 
 
+	@Override
 	public void value(final String val) {
 		this.value = val;
 	}
+	@Override
 	public String value() {
 		return this.value;
 	}
 
 
 
+	@Override
 	public boolean isEmpty() {
 		return Utils.isEmpty(this.value);
 	}
+	@Override
 	public boolean notEmpty() {
 		return Utils.notEmpty(this.value);
+	}
+
+
+
+	@Override
+	public int length() {
+		final String val = this.value;
+		return (
+			val == null
+			? 0
+			: val.length()
+		);
 	}
 
 
@@ -41,6 +57,7 @@ public class StringRef {
 
 
 	// index of (single delim)
+	@Override
 	public int indexOf(final char delim) {
 		final String val = this.value;
 		return (
@@ -49,6 +66,7 @@ public class StringRef {
 			: val.indexOf(delim)
 		);
 	}
+	@Override
 	public int indexOf(final String delim) {
 		final String val = this.value;
 		return (
@@ -59,6 +77,7 @@ public class StringRef {
 	}
 
 	// index of (many delims)
+	@Override
 	public int indexOf(final char...delims) {
 		final String val = this.value;
 		return (
@@ -67,6 +86,7 @@ public class StringRef {
 			: StringUtils.IndexOf(val, delims)
 		);
 	}
+	@Override
 	public int indexOf(final String...delims) {
 		final String val = this.value;
 		return (
@@ -84,6 +104,7 @@ public class StringRef {
 
 
 	// last index of (single delim)
+	@Override
 	public int indexOfLast(final char delim) {
 		final String val = this.value;
 		return (
@@ -92,6 +113,7 @@ public class StringRef {
 			: val.lastIndexOf(delim)
 		);
 	}
+	@Override
 	public int indexOfLast(final String delim) {
 		final String val = this.value;
 		return (
@@ -102,6 +124,7 @@ public class StringRef {
 	}
 
 	// last index of (many delims)
+	@Override
 	public int indexOfLast(final char...delims) {
 		final String val = this.value;
 		return (
@@ -110,6 +133,7 @@ public class StringRef {
 			: StringUtils.IndexOfLast(val, delims)
 		);
 	}
+	@Override
 	public int indexOfLast(final String...delims) {
 		final String val = this.value;
 		return (
@@ -127,6 +151,7 @@ public class StringRef {
 
 
 	// get first part (single delim)
+	@Override
 	public String PeekFirstPart(final char delim) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
@@ -138,6 +163,7 @@ public class StringRef {
 			: val.substring(0, pos)
 		);
 	}
+	@Override
 	public String PeekFirstPart(final String delim) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
@@ -151,6 +177,7 @@ public class StringRef {
 	}
 
 	// cut first part (single delim)
+	@Override
 	public String CutFirstPart(final char delim) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
@@ -164,6 +191,7 @@ public class StringRef {
 		this.value = val.substring(pos + 1);
 		return result;
 	}
+	@Override
 	public String CutFirstPart(final String delim) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
@@ -181,6 +209,7 @@ public class StringRef {
 
 
 	// get first part (many delims)
+	@Override
 	public String PeekFirstPart(final char...delims) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
@@ -191,6 +220,7 @@ public class StringRef {
 				delims
 			);
 	}
+	@Override
 	public String PeekFirstPart(final String...delims) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
@@ -203,6 +233,7 @@ public class StringRef {
 	}
 
 	// cut first part (many delims)
+	@Override
 	public String CutFirstPart(final char...delims) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
@@ -230,6 +261,7 @@ public class StringRef {
 		this.value = val.substring(pos + 1);
 		return result;
 	}
+	@Override
 	public String CutFirstPart(final String...delims) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
@@ -274,6 +306,7 @@ public class StringRef {
 
 
 	// get last part (single delim)
+	@Override
 	public String PeekLastPart(final char delim) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
@@ -285,6 +318,7 @@ public class StringRef {
 			: val.substring(pos + 1)
 		);
 	}
+	@Override
 	public String PeekLastPart(final String delim) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
@@ -298,6 +332,7 @@ public class StringRef {
 	}
 
 	// cut last part (single delim)
+	@Override
 	public String CutLastPart(final char delim) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
@@ -311,6 +346,7 @@ public class StringRef {
 		this.value = val.substring(0, pos);
 		return result;
 	}
+	@Override
 	public String CutLastPart(final String delim) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
@@ -328,6 +364,7 @@ public class StringRef {
 
 
 	// get last part (many delims)
+	@Override
 	public String PeekLastPart(final char...delims) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
@@ -338,6 +375,7 @@ public class StringRef {
 				delims
 			);
 	}
+	@Override
 	public String PeekLastPart(final String...delims) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
@@ -350,6 +388,7 @@ public class StringRef {
 	}
 
 	// cut last part (many delims)
+	@Override
 	public String CutLastPart(final char...delims) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
@@ -377,6 +416,7 @@ public class StringRef {
 		this.value = val.substring(0, pos);
 		return result;
 	}
+	@Override
 	public String CutLastPart(final String...delims) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
