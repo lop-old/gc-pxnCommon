@@ -3,11 +3,7 @@ package com.poixson.utils;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 import com.poixson.utils.exceptions.RequiredArgumentException;
 
@@ -199,70 +195,78 @@ public final class FileUtils {
 	public static String MergePaths(final String...strings) {
 		if (strings.length == 0)
 			return null;
-		final LinkedList<String> list =
-			new LinkedList<String>(
-				Arrays.asList(strings)
-			);
+		boolean isAbsolute = false;
+		// maintain absolute
+		for (int index=0; index<strings.length; index++) {
+			if (Utils.isEmpty(strings[index])) continue;
+			if (strings[index].startsWith("/")
+			||  strings[index].startsWith("\\")) {
+				isAbsolute = true;
+			}
+			break;
+		}
+		// split further
+		final LinkedList<String> list = new LinkedList<String>();
+		int count = 0;
+		for (int index=0; index<strings.length; index++) {
+			final String[] strs =
+				StringUtils.SplitByDelims(strings[index], "/", "\\");
+			// remove nulls/blanks
+			for (final String str : strs) {
+				if (Utils.isEmpty(str)) continue;
+				final String s =
+					StringUtils.Trim(
+						str,
+						" ", "\t", "\r", "\n"
+					);
+				if (count > 0) {
+					if (".".equals(s)) continue;
+				}
+				if (Utils.isEmpty(s)) continue;
+				list.add(s);
+				count++;
+			}
+		}
+		if (list.isEmpty())
+			return null;
 		final String first = list.getFirst();
-		// relative to cwd
+		// relative to absolute
 		if (".".equals(first)) {
 			list.removeFirst();
-			list.addFirst(cwd());
-			return MergePaths(
-				list.toArray(new String[0])
-			);
-		}
-		// absolute path
-		if ("/".equals(first) || "\\".equals(first)) {
-			list.removeFirst();
-			final String path =
-				MergePaths(
-					list.toArray(new String[0])
-				);
-			return
-				StringUtils.ForceStarts(
-					File.separator,
-					path
-				);
-		}
-		if (first.startsWith("/") || first.startsWith("\\")) {
-			final String part =
-				StringUtils.Trim(
-					list.getFirst(),
-					"/", "\\", " ", "\t", "\r", "\n"
-				);
-			list.removeFirst();
-			if (Utils.notEmpty(part)) {
-				list.addFirst(part);
+			isAbsolute = true;
+			// prepend cwd
+			final String[] cwdArray =
+				StringUtils.SplitByDelims(cwd(), "/", "\\");
+			for (int index=cwdArray.length-1; index>=0; index--) {
+				list.addFirst(cwdArray[index]);
 			}
-			final String path =
-				MergePaths(
-					list.toArray(new String[0])
-				);
-			return
-				StringUtils.ForceStarts(
-					File.separator,
-					path
-				);
+		}
+		// resolve ..
+		for (int index=0; index<list.size(); index++) {
+			final String entry = list.get(index);
+			if ("..".equals(entry)) {
+				list.remove(index);
+				if (index > 0) {
+					index--;
+					list.remove(index);
+				}
+				index--;
+			}
 		}
 		// build path
-		final List<String> array = new ArrayList<String>();
-		final Iterator<String> it = list.iterator();
-		while (it.hasNext()) {
-			final String part =
-				StringUtils.Trim(
-					it.next(),
-					"/", "\\", " ", "\t", "\r", "\n"
-				);
-			if (Utils.isEmpty(part))
-				continue;
-			array.add(part);
-		}
-		return
+		final String path =
 			StringUtils.addStrings(
 				File.separator,
-				array.toArray(new String[0])
+				list.toArray(new String[0])
 			);
+		if (isAbsolute) {
+			return
+				StringUtils.ForceStarts(
+					File.separator,
+					path
+				);
+		}
+		return path;
 	}
 
 
