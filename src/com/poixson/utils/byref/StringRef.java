@@ -10,10 +10,14 @@ public class StringRef implements StringRefInterface {
 
 
 
-	public StringRef(final String value) {
-		this.value = value;
+	public static StringRef get(final String val) {
+		return new StringRef(val);
 	}
-	public StringRef() {}
+	public StringRef(final String val) {
+		this.value = val;
+	}
+	public StringRef() {
+	}
 
 
 
