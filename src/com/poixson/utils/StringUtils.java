@@ -2,6 +2,8 @@ package com.poixson.utils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -277,85 +279,196 @@ public final class StringUtils {
 
 
 
-	// get first part
-	public static String getFirstPart(final String delim, final String data) {
-		final int pos = data.indexOf(delim);
-		if (pos == -1) {
-			return data;
-		}
-		return data.substring(0, pos);
-	}
-	// get next part
-	public static String getNextPart(final String delim, final StringRef data) {
-		final int pos = data.value.indexOf(delim);
-		final String part;
-		if (pos == -1) {
-			part       = data.value;
-			data.value = "";
-		} else {
-			part       = data.value.substring(0, pos);
-			data.value = data.value.substring(pos + delim.length());
-		}
-		return part;
-	}
-	// get last part
-	public static String getLastPart(final String delim, final String data) {
-		final int pos = data.lastIndexOf(delim);
-		if (pos == -1) {
-			return data;
-		}
-		return data.substring(pos + delim.length());
-	}
-
-
-
-	// get first part
-	public static String getFirstPart(final char[] delims, final String data) {
+	// index of (many delims)
+	public static int IndexOf(final String string, final char...delims) {
+		if (Utils.isEmpty(string))
+			return -1;
 		int pos = Integer.MAX_VALUE;
-		for (final char c : delims) {
-			final int p = data.indexOf(c);
+		for (final char delim : delims) {
+			if (Utils.isEmpty(delim)) continue;
+			final int p = string.indexOf(delim);
+			// delim not found
 			if (p == -1) continue;
-			if (pos > p) pos = p;
-			if (pos == 0) break;
+			// earlier delim
+			if (p < pos) {
+				pos = p;
+				if (p == 0)
+					return 0;
+			}
 		}
-		if (pos == Integer.MAX_VALUE) {
-			return data;
-		}
-		return data.substring(0, pos);
+		return (
+			pos == Integer.MAX_VALUE
+			? -1
+			: pos
+		);
 	}
-	// get next part
-	public static String getNextPart(final char[] delims, final StringRef data) {
+	public static int IndexOf(final String string, final String...delims) {
+		if (Utils.isEmpty(string))
+			return -1;
 		int pos = Integer.MAX_VALUE;
-		for (final char c : delims) {
-			final int p = data.value.indexOf(c);
+		for (final String delim : delims) {
+			if (Utils.isEmpty(delim)) continue;
+			final int p = string.indexOf(delim);
+			// delim not found
 			if (p == -1) continue;
-			if (pos > p) pos = p;
-			if (pos == 0) break;
+			// earlier delim
+			if (p < pos) {
+				pos = p;
+				if (p == 0)
+					return 0;
+			}
 		}
-		final String part;
-		if (pos == Integer.MAX_VALUE) {
-			return null;
-		}
-		part       = data.value.substring(0, pos);
-		data.value = data.value.substring(pos + 1);
-		return part;
+		return (
+			pos == Integer.MAX_VALUE
+			? -1
+			: pos
+		);
 	}
-	// get last part
-	public static String getLastPart(final char[] delims, final String data) {
-		int pos = 0;
-		final int len = data.length();
-		for (final char c : delims) {
-			final int p = data.lastIndexOf(c);
-			if (p == -1)
+
+
+
+	// last index of (many delims)
+	public static int IndexOfLast(final String string, final char...delims) {
+		if (Utils.isEmpty(string))
+			return -1;
+		int pos = Integer.MIN_VALUE;
+		for (final char delim : delims) {
+			if (Utils.isEmpty(delim)) continue;
+			final int p = string.lastIndexOf(delim);
+			// delim not found
+			if (p == -1) continue;
+			// later delim
+			if (p > pos) {
+				pos = p;
+			}
+		}
+		return (
+			pos == Integer.MIN_VALUE
+			? -1
+			: pos
+		);
+	}
+	public static int IndexOfLast(final String string, final String...delims) {
+		if (Utils.isEmpty(string))
+			return -1;
+		int pos = Integer.MIN_VALUE;
+		for (final String delim : delims) {
+			if (Utils.isEmpty(delim)) continue;
+			final int p = string.lastIndexOf(delim);
+			// delim not found
+			if (p == -1) continue;
+			// later delim
+			if (p > pos) {
+				pos = p;
+			}
+		}
+		return (
+			pos == Integer.MIN_VALUE
+			? -1
+			: pos
+		);
+	}
+
+
+	// get first part (many delims)
+	public static String PeekFirstPart(final String string, final char...delims) {
+		if (Utils.isEmpty(string))
+			return string;
+		int pos = Integer.MAX_VALUE;
+		// find earliest delim
+		for (final char delim : delims) {
+			if (Utils.isEmpty(delim)) continue;
+			final int p = string.indexOf(delim);
+			// delim not found
+			if (p == -1) continue;
+			// earlier delim
+			if (p < pos) {
+				pos = p;
+				if (p == 0) break;
+			}
+		}
+		return (
+			pos == Integer.MAX_VALUE
+			? string
+			: string.substring(0, pos)
+		);
+	}
+	public static String PeekFirstPart(final String string, final String...delims) {
+		if (Utils.isEmpty(string))
+			return string;
+		int pos = Integer.MAX_VALUE;
+		// find earliest delim
+		for (final String delim : delims) {
+			if (Utils.isEmpty(delim)) continue;
+			final int p = string.indexOf(delim);
+			// delim not found
+			if (p == -1) continue;
+			// earlier delim
+			if (p < pos) {
+				pos = p;
+				if (p == 0) break;
+			}
+		}
+		return (
+			pos == Integer.MAX_VALUE
+			? string
+			: string.substring(0, pos)
+		);
+	}
+
+
+
+	// get last part (many delims)
+	public static String PeekLastPart(final String string, final char...delims) {
+		if (Utils.isEmpty(string))
+			return string;
+		int pos = Integer.MIN_VALUE;
+		// find latest delim
+		for (final char delim : delims) {
+			if (Utils.isEmpty(delim)) continue;
+			final int p = string.lastIndexOf(delim);
+			// delim not found
+			if (p == -1) continue;
+			// later delim
+			if (p > pos) {
+				pos = p;
+			}
+		}
+		return (
+			pos == Integer.MIN_VALUE
+			? string
+			: string.substring(pos + 1)
+		);
+	}
+	public static String PeekLastPart(final String string, final String...delims) {
+		if (Utils.isEmpty(string))
+			return string;
+		int pos = Integer.MIN_VALUE;
+		int delimSize = 0;
+		// find latest delim
+		for (final String delim : delims) {
+			if (Utils.isEmpty(delim)) continue;
+			final int p = string.lastIndexOf(delim);
+			// delim not found
+			if (p == -1) continue;
+			// longer delim
+			if (p == pos) {
+				if (delim.length() > delimSize) {
+					delimSize = delim.length();
+				}
 				continue;
-			if (pos < p) pos = p;
-			if (pos == len)
-				break;
+			}
+			// later delim
+			if (p+delimSize > pos+delim.length()) {
+				pos = p;
+				delimSize = delim.length();
+			}
 		}
-		if (pos == len) {
-			return data;
-		}
-		return data.substring(pos + 1);
+		return (
+			pos == Integer.MIN_VALUE
+			? string
+			: string.substring(pos + delimSize)
+		);
 	}
 
 
