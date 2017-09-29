@@ -11,10 +11,12 @@ import com.poixson.utils.xLogger.xLog;
 
 public class NativeLoader {
 
+	public static final ErrorMode DEFAULT_ERROR_MODE = ErrorMode.LOG;
+	protected ErrorMode errorMode = null;
+
 	public static boolean DEFAULT_ENABLE_EXTRACT = false;
 	public static boolean DEFAULT_ENABLE_REPLACE = false;
 
-	protected ErrorMode errorMode = null;
 	protected Class<?> classRef   = null;
 
 	protected String fileName = null;
@@ -45,10 +47,10 @@ public class NativeLoader {
 		final ErrorMode errorMode = this.getErrorMode();
 		final String fileName = this.getFileName();
 		if (Utils.isEmpty(fileName)) {
-			if (errorMode.equals(ErrorMode.EXCEPTION)) {
+			if (ErrorMode.EXCEPTION.equals(errorMode)) {
 				throw new RequiredArgumentException("fileName");
 			} else
-			if (errorMode.equals(ErrorMode.LOG)) {
+			if (ErrorMode.LOG.equals(errorMode)) {
 				this.log().severe("Library fileName is missing!");
 			}
 			return false;
@@ -72,10 +74,10 @@ public class NativeLoader {
 				if (dir.mkdirs()) {
 					this.log().info("Created libraries dir: {}", libPath);
 				} else {
-					if (errorMode.equals(ErrorMode.EXCEPTION)) {
+					if (ErrorMode.EXCEPTION.equals(errorMode)) {
 						throw new IORuntimeException("Failed to create directory: "+libPath);
 					} else
-					if (errorMode.equals(ErrorMode.LOG)) {
+					if (ErrorMode.LOG.equals(errorMode)) {
 						this.log().severe("Failed to create directory: {}", libPath);
 					}
 					return false;
@@ -105,10 +107,10 @@ public class NativeLoader {
 					);
 				} catch (IOException e) {
 					this.log().severe(e.getMessage());
-					if (errorMode.equals(ErrorMode.EXCEPTION)) {
+					if (ErrorMode.EXCEPTION.equals(errorMode)) {
 						throw new IORuntimeException("Failed to extract library file: "+filePath, e);
 					} else
-					if (errorMode.equals(ErrorMode.LOG)) {
+					if (ErrorMode.LOG.equals(errorMode)) {
 						this.log().severe("Failed to extract library file: {}", filePath);
 					}
 					return false;
@@ -119,10 +121,10 @@ public class NativeLoader {
 		{
 			final boolean exists = outFile.isFile();
 			if (!exists) {
-				if (errorMode.equals(ErrorMode.EXCEPTION)) {
+				if (ErrorMode.EXCEPTION.equals(errorMode)) {
 					throw new IORuntimeException("Library file not found: "+filePath);
 				} else
-				if (errorMode.equals(ErrorMode.LOG)) {
+				if (ErrorMode.LOG.equals(errorMode)) {
 					this.log().severe("Library file not found: {}", filePath);
 				}
 				return false;
@@ -131,19 +133,19 @@ public class NativeLoader {
 				NativeUtils.LoadLibrary(filePath);
 			} catch (SecurityException e) {
 				this.log().severe(e.getMessage());
-				if (errorMode.equals(ErrorMode.EXCEPTION)) {
+				if (ErrorMode.EXCEPTION.equals(errorMode)) {
 					throw e;
 				} else
-				if (errorMode.equals(ErrorMode.LOG)) {
+				if (ErrorMode.LOG.equals(errorMode)) {
 					this.log().severe("Failed to load library: {}  {}", filePath, e.getMessage());
 				}
 				return false;
 			} catch (UnsatisfiedLinkError e) {
 				this.log().severe(e.getMessage());
-				if (errorMode.equals(ErrorMode.EXCEPTION)) {
+				if (ErrorMode.EXCEPTION.equals(errorMode)) {
 					throw e;
 				} else
-				if (errorMode.equals(ErrorMode.LOG)) {
+				if (ErrorMode.LOG.equals(errorMode)) {
 					this.log().severe("Failed to load library: {}  {}", filePath, e.getMessage());
 				}
 				return false;
@@ -159,7 +161,7 @@ public class NativeLoader {
 		final ErrorMode mode = this.errorMode;
 		return (
 			mode == null
-			? ErrorMode.LOG
+			? DEFAULT_ERROR_MODE
 			: mode
 		);
 	}
