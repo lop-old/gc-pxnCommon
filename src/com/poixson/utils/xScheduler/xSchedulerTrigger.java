@@ -55,12 +55,12 @@ public abstract class xSchedulerTrigger implements xEnableable {
 	}
 
 	public xSchedulerTrigger enable() {
-		return this.enabled(true);
+		return this.enable(true);
 	}
 	public xSchedulerTrigger disable() {
-		return this.enabled(false);
+		return this.enable(false);
 	}
-	public xSchedulerTrigger enabled(final boolean enabled) {
+	public xSchedulerTrigger enable(final boolean enabled) {
 		this.setEnabled(enabled);
 		return this;
 	}
@@ -74,14 +74,31 @@ public abstract class xSchedulerTrigger implements xEnableable {
 	public boolean notRepeating() {
 		return ! this.isRepeating();
 	}
-	public xSchedulerTrigger setRepeating() {
-		return this.setRepeating(true);
+
+	public void setRepeat() {
+		this.setRepeat(true);
 	}
-	public xSchedulerTrigger setRunOnce() {
-		return this.setRepeating(false);
+	public void disableRepeat() {
+		this.setRepeat(false);
 	}
-	public xSchedulerTrigger setRepeating(final boolean repeating) {
+	public void setRunOnce() {
+		this.setRepeat(false);
+	}
+	public void setRepeat(final boolean repeating) {
 		this.repeating = repeating;
+	}
+
+	public xSchedulerTrigger repeat() {
+		return this.repeat(true);
+	}
+	public xSchedulerTrigger noRepeat() {
+		return this.repeat(false);
+	}
+	public xSchedulerTrigger runOnce() {
+		return this.repeat(false);
+	}
+	public xSchedulerTrigger repeat(final boolean repeating) {
+		this.setRepeat(repeating);
 		return this;
 	}
 
