@@ -101,4 +101,64 @@ public class TriggerCron extends xSchedulerTrigger {
 
 
 
+	// ------------------------------------------------------------------------------- //
+	// overrides
+
+
+
+	public TriggerCron enable() {
+		return (
+			super.enable() == null
+			? null
+			: this
+		);
+	}
+	public TriggerCron disable() {
+		return (
+			super.disable() == null
+			? null
+			: this
+		);
+	}
+	public TriggerCron enable(final boolean enabled) {
+		return (
+			super.enable(enabled) == null
+			? null
+			: this
+		);
+	}
+
+
+
+	public TriggerCron repeat() {
+		return (
+			super.repeat() == null
+			? null
+			: this
+		);
+	}
+	public TriggerCron noRepeat() {
+		return (
+			super.noRepeat() == null
+			? null
+			: this
+		);
+	}
+	public TriggerCron runOnce() {
+		return (
+			super.runOnce() == null
+			? null
+			: this
+		);
+	}
+	public TriggerCron repeat(final boolean repeating) {
+		return (
+			super.repeat(repeating) == null
+			? null
+			: this
+		);
+	}
+
+
+
 }

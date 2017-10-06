@@ -143,4 +143,64 @@ xLog.getRoot().warning("Skipping old scheduled clock trigger..");
 
 
 
+	// ------------------------------------------------------------------------------- //
+	// overrides
+
+
+
+	public TriggerClock enable() {
+		return (
+			super.enable() == null
+			? null
+			: this
+		);
+	}
+	public TriggerClock disable() {
+		return (
+			super.disable() == null
+			? null
+			: this
+		);
+	}
+	public TriggerClock enable(final boolean enabled) {
+		return (
+			super.enable(enabled) == null
+			? null
+			: this
+		);
+	}
+
+
+
+	public TriggerClock repeat() {
+		return (
+			super.repeat() == null
+			? null
+			: this
+		);
+	}
+	public TriggerClock noRepeat() {
+		return (
+			super.noRepeat() == null
+			? null
+			: this
+		);
+	}
+	public TriggerClock runOnce() {
+		return (
+			super.runOnce() == null
+			? null
+			: this
+		);
+	}
+	public TriggerClock repeat(final boolean repeating) {
+		return (
+			super.repeat(repeating) == null
+			? null
+			: this
+		);
+	}
+
+
+
 }
