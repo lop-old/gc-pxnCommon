@@ -5,13 +5,17 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.poixson.utils.ReflectUtils;
 import com.poixson.utils.Utils;
 import com.poixson.utils.xEnableable;
 import com.poixson.utils.xRunnable;
+import com.poixson.utils.xTime;
 import com.poixson.utils.exceptions.RequiredArgumentException;
 import com.poixson.utils.xLogger.xLog;
 import com.poixson.utils.xThreadPool.xThreadPool;
@@ -37,6 +41,13 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 
 	// task run count
 	private final AtomicLong runCount = new AtomicLong(0L);
+
+	// wait functions
+	private final ReentrantLock waitForNextRunStart_Lock = new ReentrantLock();
+	private final Condition     waitForNextRunStart = waitForNextRunStart_Lock.newCondition();
+
+	private final ReentrantLock waitForNextRunCompleted_Lock = new ReentrantLock();
+	private final Condition     waitForNextRunCompleted = waitForNextRunCompleted_Lock.newCondition();
 
 
 
@@ -108,7 +119,9 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 		// run task
 		this.runCount.incrementAndGet();
 		final xThreadPool threadPool = this.getThreadPool();
+		this.waitForNextRunStart.signalAll();
 		threadPool.runLater(this);
+		this.waitForNextRunCompleted.signalAll();
 	}
 
 
@@ -137,6 +150,89 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 	public long resetRunCount() {
 		return this.runCount
 				.getAndSet(0L);
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// wait functions
+
+
+
+	public void waitForNextRunStart()
+			throws InterruptedException {
+		this.waitForNextRunStart_Lock.lockInterruptibly();
+		try {
+			this.waitForNextRunStart.await();
+		} finally {
+			this.waitForNextRunStart_Lock.unlock();
+		}
+	}
+	public void waitForNextRunStart(final long time, final TimeUnit unit)
+			throws InterruptedException {
+		this.waitForNextRunStart_Lock.lockInterruptibly();
+		try {
+			this.waitForNextRunStart.await(time, unit);
+		} finally {
+			this.waitForNextRunStart_Lock.unlock();
+		}
+	}
+	public void waitForNextRunStart(final String timeStr)
+			throws InterruptedException {
+		this.waitForNextRunStart_Lock.lockInterruptibly();
+		try {
+			this.waitForNextRunStart(xTime.get(timeStr));
+		} finally {
+			this.waitForNextRunStart_Lock.unlock();
+		}
+	}
+	public void waitForNextRunStart(final xTime time)
+			throws InterruptedException {
+		this.waitForNextRunStart_Lock.lockInterruptibly();
+		try {
+			this.waitForNextRunStart(time.getMS(), TimeUnit.MILLISECONDS);
+		} finally {
+			this.waitForNextRunStart_Lock.unlock();
+		}
+	}
+
+
+
+	public void waitForNextRunCompleted()
+			throws InterruptedException {
+		this.waitForNextRunCompleted_Lock.lockInterruptibly();
+		try {
+			this.waitForNextRunCompleted.await();
+		} finally {
+			this.waitForNextRunCompleted_Lock.unlock();
+		}
+	}
+	public void waitForNextRunCompleted(final long time, final TimeUnit unit)
+			throws InterruptedException {
+		this.waitForNextRunCompleted_Lock.lockInterruptibly();
+		try {
+			this.waitForNextRunCompleted.await(time, unit);
+		} finally {
+			this.waitForNextRunCompleted_Lock.unlock();
+		}
+	}
+	public void waitForNextRunCompleted(final String timeStr)
+			throws InterruptedException {
+		this.waitForNextRunCompleted_Lock.lockInterruptibly();
+		try {
+			this.waitForNextRunCompleted(xTime.get(timeStr));
+		} finally {
+			this.waitForNextRunCompleted_Lock.unlock();
+		}
+	}
+	public void waitForNextRunCompleted(final xTime time)
+			throws InterruptedException {
+		this.waitForNextRunCompleted_Lock.lockInterruptibly();
+		try {
+			this.waitForNextRunCompleted(time.getMS(), TimeUnit.MILLISECONDS);
+		} finally {
+			this.waitForNextRunCompleted_Lock.unlock();
+		}
 	}
 
 
@@ -230,6 +326,10 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 		if (run != null) {
 			run.setTaskName(taskName);
 		}
+	}
+	public xSchedulerTask setTaskNam(final String taskName) {
+		this.setTaskName(taskName);
+		return this;
 	}
 	@Override
 	public boolean taskNameEquals(final String taskName) {
