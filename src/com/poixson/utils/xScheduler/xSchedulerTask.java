@@ -43,11 +43,10 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 	private final AtomicLong runCount = new AtomicLong(0L);
 
 	// wait functions
-	private final ReentrantLock waitForNextRunStart_Lock = new ReentrantLock();
-	private final Condition     waitForNextRunStart = waitForNextRunStart_Lock.newCondition();
-
+	private final ReentrantLock waitForNextRunStart_Lock     = new ReentrantLock();
 	private final ReentrantLock waitForNextRunCompleted_Lock = new ReentrantLock();
-	private final Condition     waitForNextRunCompleted = waitForNextRunCompleted_Lock.newCondition();
+	private final Condition waitForNextRunStart =     this.waitForNextRunStart_Lock.newCondition();
+	private final Condition waitForNextRunCompleted = this.waitForNextRunCompleted_Lock.newCondition();
 
 
 
@@ -331,7 +330,7 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 			run.setTaskName(taskName);
 		}
 	}
-	public xSchedulerTask setTaskNam(final String taskName) {
+	public xSchedulerTask setName(final String taskName) {
 		this.setTaskName(taskName);
 		return this;
 	}
