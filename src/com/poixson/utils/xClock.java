@@ -202,7 +202,9 @@ public class xClock {
 			// signal waiting threads
 			final Condition lock = this.blockingLock.get();
 			if (lock != null) {
-				lock.signalAll();
+				try {
+					lock.signalAll();
+				} catch (IllegalMonitorStateException ignore) {}
 				this.blockingLock.set(null);
 			}
 		}

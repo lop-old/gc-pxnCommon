@@ -119,9 +119,13 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 		// run task
 		this.runCount.incrementAndGet();
 		final xThreadPool threadPool = this.getThreadPool();
-		this.waitForNextRunStart.signalAll();
+		try {
+			this.waitForNextRunStart.signalAll();
+		} catch (IllegalMonitorStateException ignore) {}
 		threadPool.runLater(this);
-		this.waitForNextRunCompleted.signalAll();
+		try {
+			this.waitForNextRunCompleted.signalAll();
+		} catch (IllegalMonitorStateException ignore) {}
 	}
 
 
