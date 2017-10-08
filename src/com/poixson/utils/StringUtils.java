@@ -285,7 +285,6 @@ public final class StringUtils {
 			return -1;
 		int pos = Integer.MAX_VALUE;
 		for (final char delim : delims) {
-			if (Utils.isEmpty(delim)) continue;
 			final int p = string.indexOf(delim);
 			// delim not found
 			if (p == -1) continue;
@@ -333,7 +332,6 @@ public final class StringUtils {
 			return -1;
 		int pos = Integer.MIN_VALUE;
 		for (final char delim : delims) {
-			if (Utils.isEmpty(delim)) continue;
 			final int p = string.lastIndexOf(delim);
 			// delim not found
 			if (p == -1) continue;
@@ -377,7 +375,6 @@ public final class StringUtils {
 		int pos = Integer.MAX_VALUE;
 		// find earliest delim
 		for (final char delim : delims) {
-			if (Utils.isEmpty(delim)) continue;
 			final int p = string.indexOf(delim);
 			// delim not found
 			if (p == -1) continue;
@@ -425,7 +422,6 @@ public final class StringUtils {
 		int pos = Integer.MIN_VALUE;
 		// find latest delim
 		for (final char delim : delims) {
-			if (Utils.isEmpty(delim)) continue;
 			final int p = string.lastIndexOf(delim);
 			// delim not found
 			if (p == -1) continue;

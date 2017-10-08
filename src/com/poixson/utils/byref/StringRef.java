@@ -245,7 +245,6 @@ public class StringRef implements StringRefInterface {
 		int pos = Integer.MAX_VALUE;
 		// find earliest delim
 		for (final char delim : delims) {
-			if (Utils.isEmpty(delim)) continue;
 			final int p = val.indexOf(delim);
 			// delim not found
 			if (p == -1) continue;
@@ -400,7 +399,6 @@ public class StringRef implements StringRefInterface {
 		int pos = Integer.MIN_VALUE;
 		// find latest delim
 		for (final char delim : delims) {
-			if (Utils.isEmpty(delim)) continue;
 			final int p = val.lastIndexOf(delim);
 			// delim not found
 			if (p == -1) continue;
