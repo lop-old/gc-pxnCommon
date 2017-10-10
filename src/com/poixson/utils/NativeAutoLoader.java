@@ -9,7 +9,7 @@ import com.poixson.utils.exceptions.RequiredArgumentException;
 import com.poixson.utils.xLogger.xLog;
 
 
-public class NativeLoader {
+public class NativeAutoLoader {
 
 	public static final ErrorMode DEFAULT_ERROR_MODE = ErrorMode.LOG;
 	protected ErrorMode errorMode = null;
@@ -28,22 +28,22 @@ public class NativeLoader {
 
 
 
-	public static NativeLoader get() {
-		return new NativeLoader();
+	public static NativeAutoLoader get() {
+		return new NativeAutoLoader();
 	}
-	public NativeLoader() {
+	public NativeAutoLoader() {
 	}
 
 
 
 	// extract/load library
-	public boolean LoadLibrary(final String fileName) {
+	public boolean Load(final String fileName) {
 		if (Utils.notEmpty(fileName)) {
 			this.setFileName(fileName);
 		}
-		return this.LoadLibrary();
+		return this.Load();
 	}
-	public boolean LoadLibrary() {
+	public boolean Load() {
 		final ErrorMode errorMode = this.getErrorMode();
 		final String fileName = this.getFileName();
 		if (Utils.isEmpty(fileName)) {
@@ -56,7 +56,7 @@ public class NativeLoader {
 			return false;
 		}
 		final Class<?> classRef   = this.getClassRef();
-		final String libPath = this.getLibrariesPath();
+		final String libPath = this.getLocalLibPath();
 		final String resPath = this.getResourcesPath();
 		final boolean enableExtract = this.getEnableExtract();
 		final boolean enableReplace = this.getEnableReplace();
@@ -165,7 +165,7 @@ public class NativeLoader {
 			: mode
 		);
 	}
-	public NativeLoader setErrorMode(final ErrorMode mode) {
+	public NativeAutoLoader setErrorMode(final ErrorMode mode) {
 		this.errorMode = mode;
 		return this;
 	}
@@ -185,7 +185,7 @@ public class NativeLoader {
 //		}
 		return fileName;
 	}
-	public NativeLoader setFileName(final String fileName) {
+	public NativeAutoLoader setFileName(final String fileName) {
 		this.fileName = fileName;
 		return this;
 	}
@@ -197,11 +197,11 @@ public class NativeLoader {
 		final Class<?> clss = this.classRef;
 		return (
 			clss == null
-			? NativeLoader.class
+			? NativeAutoLoader.class
 			: clss
 		);
 	}
-	public NativeLoader setClassRef(final Class<?> clss) {
+	public NativeAutoLoader setClassRef(final Class<?> clss) {
 		this.classRef = clss;
 		return this;
 	}
@@ -217,7 +217,7 @@ public class NativeLoader {
 			: StringUtils.ForceStarts("/", path)
 		);
 	}
-	public NativeLoader setResourcesPath(final String path) {
+	public NativeAutoLoader setResourcesPath(final String path) {
 		this.resPath = path;
 		return this;
 	}
@@ -225,7 +225,7 @@ public class NativeLoader {
 
 
 	// extracted library path
-	public String getLibrariesPath() {
+	public String getLocalLibPath() {
 		final String path = this.libPath;
 		return (
 			Utils.isEmpty(path)
@@ -233,7 +233,7 @@ public class NativeLoader {
 			: path
 		);
 	}
-	public NativeLoader setLibrariesPath(final String path) {
+	public NativeAutoLoader setLocalLibPath(final String path) {
 		this.libPath = path;
 		return this;
 	}
@@ -249,13 +249,13 @@ public class NativeLoader {
 			: enabled.booleanValue()
 		);
 	}
-	public NativeLoader enableExtract() {
+	public NativeAutoLoader enableExtract() {
 		return this.enableExtract(true);
 	}
-	public NativeLoader disableExtract() {
+	public NativeAutoLoader disableExtract() {
 		return this.enableExtract(false);
 	}
-	public NativeLoader enableExtract(final boolean enable) {
+	public NativeAutoLoader enableExtract(final boolean enable) {
 		this.enableExtract = Boolean.valueOf(enable);
 		return this;
 	}
@@ -271,13 +271,13 @@ public class NativeLoader {
 			: enabled.booleanValue()
 		);
 	}
-	public NativeLoader enableReplace() {
+	public NativeAutoLoader enableReplace() {
 		return this.enableReplace(true);
 	}
-	public NativeLoader disableReplace() {
+	public NativeAutoLoader disableReplace() {
 		return this.enableReplace(false);
 	}
-	public NativeLoader enableReplace(final boolean enable) {
+	public NativeAutoLoader enableReplace(final boolean enable) {
 		this.enableReplace = Boolean.valueOf(enable);
 		return this;
 	}
