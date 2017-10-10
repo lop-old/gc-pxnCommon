@@ -18,6 +18,33 @@ public final class NativeUtils {
 
 
 
+	public static boolean SafeLoad(final String fileStr, final ErrorMode errorMode) {
+		try {
+			NativeUtils.LoadLibrary(fileStr);
+		} catch (SecurityException e) {
+			log().severe(e.getMessage());
+			if (ErrorMode.EXCEPTION.equals(errorMode)) {
+				throw e;
+			} else
+			if (ErrorMode.LOG.equals(errorMode)) {
+				log().severe("Failed to load library: {}  {}", fileStr, e.getMessage());
+			}
+			return false;
+		} catch (UnsatisfiedLinkError e) {
+			log().severe(e.getMessage());
+			if (ErrorMode.EXCEPTION.equals(errorMode)) {
+				throw e;
+			} else
+			if (ErrorMode.LOG.equals(errorMode)) {
+				log().severe("Failed to load library: {}  {}", fileStr, e.getMessage());
+			}
+			return false;
+		}
+		return true;
+	}
+
+
+
 	public static void LoadLibrary(final String...filePath)
 			throws SecurityException, UnsatisfiedLinkError {
 		final String pathStr =

@@ -126,36 +126,15 @@ public class NativeAutoLoader {
 			final boolean exists = localFile.isFile();
 			if (!exists) {
 				if (ErrorMode.EXCEPTION.equals(errorMode)) {
-					throw new IORuntimeException("Library file not found: "+filePath);
+					throw new IORuntimeException("Library file not found: "+localFilePath);
 				} else
 				if (ErrorMode.LOG.equals(errorMode)) {
-					this.log().severe("Library file not found: {}", filePath);
-				}
-				return false;
-			}
-			try {
-				NativeUtils.LoadLibrary(filePath);
-			} catch (SecurityException e) {
-				this.log().severe(e.getMessage());
-				if (ErrorMode.EXCEPTION.equals(errorMode)) {
-					throw e;
-				} else
-				if (ErrorMode.LOG.equals(errorMode)) {
-					this.log().severe("Failed to load library: {}  {}", filePath, e.getMessage());
-				}
-				return false;
-			} catch (UnsatisfiedLinkError e) {
-				this.log().severe(e.getMessage());
-				if (ErrorMode.EXCEPTION.equals(errorMode)) {
-					throw e;
-				} else
-				if (ErrorMode.LOG.equals(errorMode)) {
-					this.log().severe("Failed to load library: {}  {}", filePath, e.getMessage());
+					this.log().severe("Library file not found: {}", localFilePath);
 				}
 				return false;
 			}
 		}
-		return true;
+		return NativeUtils.SafeLoad(localFilePath, errorMode);
 	}
 
 
