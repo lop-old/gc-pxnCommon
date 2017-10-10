@@ -12,19 +12,19 @@ import com.poixson.utils.xLogger.xLog;
 public class NativeAutoLoader {
 
 	public static final ErrorMode DEFAULT_ERROR_MODE = ErrorMode.LOG;
-	protected ErrorMode errorMode = null;
+	private ErrorMode errorMode = null;
 
 	public static boolean DEFAULT_ENABLE_EXTRACT = false;
 	public static boolean DEFAULT_ENABLE_REPLACE = false;
 
-	protected Class<?> classRef   = null;
+	private Class<?> classRef   = null;
 
-	protected String fileName = null;
-	protected String libPath  = null;
-	protected String resPath  = null;
+	private String fileName  = null;
+	private String localPath = null;
+	private String resPath   = null;
 
-	protected Boolean enableExtract = null;
-	protected Boolean enableReplace = null;
+	private Boolean enableExtract = null;
+	private Boolean enableReplace = null;
 
 
 
@@ -55,52 +55,55 @@ public class NativeAutoLoader {
 			}
 			return false;
 		}
-		final Class<?> classRef   = this.getClassRef();
-		final String libPath = this.getLocalLibPath();
-		final String resPath = this.getResourcesPath();
+		final Class<?> classRef     = this.getClassRef();
+		final String  localPath     = this.getLocalLibPath();
+		final String  resPath       = this.getResourcesPath();
 		final boolean enableExtract = this.getEnableExtract();
 		final boolean enableReplace = this.getEnableReplace();
-		final String filePath =
+		final String localFilePath =
 			FileUtils.MergePaths(
 				".",
-				libPath,
+				localPath,
 				fileName
 			);
-		final File outFile = new File(filePath);
+		final File localFile = new File(localFilePath);
+
 		// create library directory
 		{
-			final File dir = new File(libPath);
+			final File dir = new File(localPath);
 			if (!dir.isDirectory()) {
 				if (dir.mkdirs()) {
-					this.log().info("Created libraries dir: {}", libPath);
+					this.log().info("Created libraries dir: {}", localPath);
 				} else {
 					if (ErrorMode.EXCEPTION.equals(errorMode)) {
-						throw new IORuntimeException("Failed to create directory: "+libPath);
+						throw new IORuntimeException("Failed to create directory: "+localPath);
 					} else
 					if (ErrorMode.LOG.equals(errorMode)) {
-						this.log().severe("Failed to create directory: {}", libPath);
+						this.log().severe("Failed to create directory: {}", localPath);
 					}
 					return false;
 				}
 			}
 		}
+
 		// remove existing file
 		if (enableExtract && enableReplace) {
-			final boolean exists = outFile.isFile();
+			final boolean exists = localFile.isFile();
 			if (exists) {
 				if (enableReplace && enableExtract) {
 					this.log().fine("Replacing existing library file: {}", fileName);
-					outFile.delete();
+					localFile.delete();
 				}
 			}
 		}
+
 		// extract file
 		if (enableExtract) {
-			final boolean exists = outFile.isFile();
+			final boolean exists = localFile.isFile();
 			if (!exists) {
 				try {
 					NativeUtils.ExtractLibrary(
-						libPath,
+						localPath,
 						resPath,
 						fileName,
 						classRef
@@ -108,18 +111,19 @@ public class NativeAutoLoader {
 				} catch (IOException e) {
 					this.log().severe(e.getMessage());
 					if (ErrorMode.EXCEPTION.equals(errorMode)) {
-						throw new IORuntimeException("Failed to extract library file: "+filePath, e);
+						throw new IORuntimeException("Failed to extract library file: "+localFilePath, e);
 					} else
 					if (ErrorMode.LOG.equals(errorMode)) {
-						this.log().severe("Failed to extract library file: {}", filePath);
+						this.log().severe("Failed to extract library file: {}", localFilePath);
 					}
 					return false;
 				}
 			}
 		}
-		// load library
+
+		// load extracted library
 		{
-			final boolean exists = outFile.isFile();
+			final boolean exists = localFile.isFile();
 			if (!exists) {
 				if (ErrorMode.EXCEPTION.equals(errorMode)) {
 					throw new IORuntimeException("Library file not found: "+filePath);
@@ -226,7 +230,7 @@ public class NativeAutoLoader {
 
 	// extracted library path
 	public String getLocalLibPath() {
-		final String path = this.libPath;
+		final String path = this.localPath;
 		return (
 			Utils.isEmpty(path)
 			? "."
@@ -234,7 +238,7 @@ public class NativeAutoLoader {
 		);
 	}
 	public NativeAutoLoader setLocalLibPath(final String path) {
-		this.libPath = path;
+		this.localPath = path;
 		return this;
 	}
 

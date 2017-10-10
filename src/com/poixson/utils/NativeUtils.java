@@ -39,14 +39,6 @@ public final class NativeUtils {
 			throws IOException {
 		if (Utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
 		if (classRef == null       ) throw new RequiredArgumentException("classRef");
-		if (log().isLoggable(xLevel.DETAIL)) {
-			log().detail(
-				"NativeUtils::ExtractLibrary(outDir={},resPath={},file={})",
-				outputDir,
-				resourcePath,
-				fileName
-			);
-		}
 		// prepare paths
 		final String resPath =
 			FileUtils.MergePaths(
