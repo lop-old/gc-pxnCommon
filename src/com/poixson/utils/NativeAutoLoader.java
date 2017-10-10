@@ -3,6 +3,8 @@ package com.poixson.utils;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.SoftReference;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.poixson.utils.exceptions.IORuntimeException;
 import com.poixson.utils.exceptions.RequiredArgumentException;
@@ -22,6 +24,7 @@ public class NativeAutoLoader {
 	private String fileName  = null;
 	private String localPath = null;
 	private String resPath   = null;
+	private final List<String> searchPaths = new ArrayList<String>();
 
 	private Boolean enableExtract = null;
 	private Boolean enableReplace = null;
@@ -58,6 +61,7 @@ public class NativeAutoLoader {
 		final Class<?> classRef     = this.getClassRef();
 		final String  localPath     = this.getLocalLibPath();
 		final String  resPath       = this.getResourcesPath();
+		final String[] searchPaths  = this.getSearchPaths();
 		final boolean enableExtract = this.getEnableExtract();
 		final boolean enableReplace = this.getEnableReplace();
 		final String localFilePath =
@@ -67,6 +71,30 @@ public class NativeAutoLoader {
 				fileName
 			);
 		final File localFile = new File(localFilePath);
+
+		// load existing local
+		if (localFile.exists()) {
+			this.log().fine("Found library {} at local path {}", fileName, localPath);
+			return NativeUtils.SafeLoad(localFilePath, errorMode);
+		}
+
+		// load from search paths
+		if (Utils.notEmpty(searchPaths)) {
+			for (final String path : searchPaths) {
+				if (Utils.isEmpty(path)) continue;
+				final String searchPath =
+					FileUtils.MergePaths(
+						path,
+						fileName
+					);
+				final File searchFile = new File(searchPath);
+System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
+				if (searchFile.exists()) {
+					this.log().fine("Found library {} at search path {}", fileName, path);
+					return NativeUtils.SafeLoad(searchPath, errorMode);
+				}
+			}
+		}
 
 		// create library directory
 		{
@@ -218,6 +246,23 @@ public class NativeAutoLoader {
 	}
 	public NativeAutoLoader setLocalLibPath(final String path) {
 		this.localPath = path;
+		return this;
+	}
+
+
+
+	// library search paths
+	public String[] getSearchPaths() {
+		return this.searchPaths.toArray(new String[0]);
+	}
+	public NativeAutoLoader addSearchPath(final String path) {
+		if (Utils.notEmpty(path))
+			this.searchPaths.add(path);
+		return this;
+	}
+	public NativeAutoLoader addDefaultSearchPaths() {
+		this.addSearchPath("/usr/local/bin");
+		this.addSearchPath("/usr/bin");
 		return this;
 	}
 
