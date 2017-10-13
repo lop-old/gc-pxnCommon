@@ -59,6 +59,39 @@ public final class StringUtils {
 
 
 
+	public static String[] bytesToStringArray(final byte[] bytes) {
+		if (bytes == null)     return null;
+		if (bytes.length == 0) return new String[0];
+		final List<String> list = new ArrayList<String>();
+		final int bytesSize = bytes.length;
+		int last = 0;
+		for (int i=0; i<bytesSize; i++) {
+			if (bytes[i] == 0) {
+				if (i - last <= 0) continue;
+				list.add(
+					new String(
+						bytes,
+						last,
+						i - last
+					)
+				);
+				last = i+1;
+			}
+		}
+		if (last+1 < bytesSize) {
+			list.add(
+				new String(
+					bytes,
+					last,
+					bytesSize
+				)
+			);
+		}
+		return list.toArray(new String[0]);
+	}
+
+
+
 	public static boolean isAlpha(final String str) {
 		if (str == null) return false;
 		int sz = str.length();
