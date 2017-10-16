@@ -51,8 +51,7 @@ public final class NativeUtils {
 
 	public static void LoadLibrary(final String...filePath)
 			throws SecurityException, UnsatisfiedLinkError {
-		final String pathStr =
-			FileUtils.MergePaths(filePath);
+		final String pathStr = FileUtils.MergePaths(filePath);
 		if ( ! libsLoaded.add(pathStr) ) {
 			if (log().isLoggable(xLevel.DETAIL)) {
 				log().detail("Library already loaded: {}", pathStr);
@@ -60,10 +59,7 @@ public final class NativeUtils {
 			return;
 		}
 		if (log().isLoggable(xLevel.DETAIL)) {
-			log().detail(
-				"NativeUtils::LoadLibrary(path={})",
-				pathStr
-			);
+			log().detail("NativeUtils::LoadLibrary(path={})", pathStr);
 		}
 		System.load(pathStr);
 	}
@@ -90,6 +86,10 @@ public final class NativeUtils {
 		final File outFile = new File(outFilePath);
 		InputStream      in  = null;
 		FileOutputStream out = null;
+		if (log().isLoggable(xLevel.DETAIL)) {
+			log().detail("NativeUtils::ExtractLibrary(outFilePath={},resPath={},fileName={},classRef={})",
+				outFilePath, resPath, fileName, classRef.getName());
+		}
 		// open resource
 		in = classRef.getResourceAsStream(resPath);
 		if (in == null)
