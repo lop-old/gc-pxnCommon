@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.poixson.utils.exceptions.RequiredArgumentException;
 import com.poixson.utils.xLogger.xLevel;
@@ -15,6 +16,9 @@ public final class NativeUtils {
 	private NativeUtils() {}
 
 	private static final int EXTRACT_BUFFER_SIZE = 4096;
+
+	private static final CopyOnWriteArraySet<String> libsLoaded =
+			new CopyOnWriteArraySet<String>();
 
 
 
@@ -49,6 +53,12 @@ public final class NativeUtils {
 			throws SecurityException, UnsatisfiedLinkError {
 		final String pathStr =
 			FileUtils.MergePaths(filePath);
+		if ( ! libsLoaded.add(pathStr) ) {
+			if (log().isLoggable(xLevel.DETAIL)) {
+				log().detail("Library already loaded: {}", pathStr);
+			}
+			return;
+		}
 		if (log().isLoggable(xLevel.DETAIL)) {
 			log().detail(
 				"NativeUtils::LoadLibrary(path={})",
