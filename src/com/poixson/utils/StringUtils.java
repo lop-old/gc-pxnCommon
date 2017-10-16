@@ -2,6 +2,8 @@ package com.poixson.utils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -62,6 +64,7 @@ public final class StringUtils {
 	public static String[] bytesToStringArray(final byte[] bytes) {
 		if (bytes == null)     return null;
 		if (bytes.length == 0) return new String[0];
+		final Charset charset = StandardCharsets.US_ASCII;
 		final List<String> list = new ArrayList<String>();
 		final int bytesSize = bytes.length;
 		int last = 0;
@@ -72,7 +75,8 @@ public final class StringUtils {
 					new String(
 						bytes,
 						last,
-						i - last
+						i - last,
+						charset
 					)
 				);
 				last = i+1;
@@ -83,7 +87,8 @@ public final class StringUtils {
 				new String(
 					bytes,
 					last,
-					bytesSize
+					bytesSize,
+					charset
 				)
 			);
 		}
