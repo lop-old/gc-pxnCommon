@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.poixson.utils.exceptions.IORuntimeException;
 import com.poixson.utils.exceptions.RequiredArgumentException;
@@ -18,6 +19,9 @@ public class NativeAutoLoader {
 
 	public static boolean DEFAULT_ENABLE_EXTRACT = false;
 	public static boolean DEFAULT_ENABLE_REPLACE = false;
+
+	private static final AtomicBoolean hasLoaded = new AtomicBoolean(false);
+	private static final Object loadLock = new Object();
 
 	private Class<?> classRef   = null;
 
@@ -47,6 +51,16 @@ public class NativeAutoLoader {
 		return this.Load();
 	}
 	public boolean Load() {
+		if (hasLoaded.get())
+			return false;
+		final boolean result;
+		synchronized (loadLock) {
+			hasLoaded.set(true);
+			result = this.doLoad();
+		}
+		return result;
+	}
+	private boolean doLoad() {
 		final ErrorMode errorMode = this.getErrorMode();
 		final String fileName = this.getFileName();
 		if (Utils.isEmpty(fileName)) {
