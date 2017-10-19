@@ -95,6 +95,49 @@ import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
 
+/* settable logger
+
+	// logger
+	private volatile xLog _log_override = null;
+	public xLog log() {
+		// use override logger
+		{
+			final xLog log = this._log_override;
+			if (log != null)
+				return log;
+		}
+		// use default logger
+		return this.logSoft();
+	}
+	public pxnSerial setLog(final xLog log) {
+		this._log_override = log;
+		return this;
+	}
+
+	private volatile SoftReference<xLog> _log_soft = null;
+	private volatile String _className = null;
+	private xLog logSoft() {
+		if (this._log_soft != null) {
+			final xLog log = this._log_soft.get();
+			if (log != null)
+				return log;
+		}
+		if (this._className == null) {
+			this._className =
+				ReflectUtils.getClassName(
+					this.getClass()
+				);
+		}
+		final xLog log =
+			xLog.getRoot()
+				.get(this._className);
+		this._log_soft = new SoftReference<xLog>(log);
+		return log;
+	}
+*/
+
+
+
 // ------------------------------------------------------------------------------- //
 
 public class xLog extends xLogPrinting {
