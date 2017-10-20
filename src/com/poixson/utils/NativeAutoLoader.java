@@ -20,8 +20,8 @@ public class NativeAutoLoader {
 	public static boolean DEFAULT_ENABLE_EXTRACT = false;
 	public static boolean DEFAULT_ENABLE_REPLACE = false;
 
-	private static final AtomicBoolean hasLoaded = new AtomicBoolean(false);
-	private static final Object loadLock = new Object();
+	private final AtomicBoolean hasLoaded = new AtomicBoolean(false);
+	private final Object loadLock = new Object();
 
 	private Class<?> classRef   = null;
 
@@ -51,11 +51,11 @@ public class NativeAutoLoader {
 		return this.Load();
 	}
 	public boolean Load() {
-		if (hasLoaded.get())
+		if (this.hasLoaded.get())
 			return false;
 		final boolean result;
-		synchronized (loadLock) {
-			hasLoaded.set(true);
+		synchronized (this.loadLock) {
+			this.hasLoaded.set(true);
 			result = this.doLoad();
 		}
 		return result;
