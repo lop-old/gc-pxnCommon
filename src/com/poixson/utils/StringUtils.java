@@ -177,13 +177,17 @@ public final class StringUtils {
 		return a.equalsIgnoreCase(b);
 	}
 	public static boolean strEquals(final String a, final String b) {
-		if (Utils.isEmpty(a)) return false;
-		if (Utils.isEmpty(b)) return false;
+		final boolean aEmpty = Utils.isEmpty(a);
+		final boolean bEmpty = Utils.isEmpty(b);
+		if (aEmpty && bEmpty) return true;
+		if (aEmpty || bEmpty) return false;
 		return a.equals(b);
 	}
 	public static boolean strEqualsIgnoreCase(final String a, final String b) {
-		if (Utils.isEmpty(a)) return false;
-		if (Utils.isEmpty(b)) return false;
+		final boolean aEmpty = Utils.isEmpty(a);
+		final boolean bEmpty = Utils.isEmpty(b);
+		if (aEmpty && bEmpty) return true;
+		if (aEmpty || bEmpty) return false;
 		return a.equalsIgnoreCase(b);
 	}
 
