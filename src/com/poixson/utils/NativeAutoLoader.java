@@ -211,7 +211,10 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 		return fileName;
 	}
 	public NativeAutoLoader setFileName(final String fileName) {
-		this.fileName = fileName;
+		if (!StringUtils.strEqualsExact(this.fileName, fileName)) {
+			this.hasLoaded.set(false);
+			this.fileName = fileName;
+		}
 		return this;
 	}
 
@@ -227,7 +230,10 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 		);
 	}
 	public NativeAutoLoader setClassRef(final Class<?> clss) {
-		this.classRef = clss;
+		if (this.classRef != clss) {
+			this.hasLoaded.set(false);
+			this.classRef = clss;
+		}
 		return this;
 	}
 
@@ -243,7 +249,10 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 		);
 	}
 	public NativeAutoLoader setResourcesPath(final String path) {
-		this.resPath = path;
+		if (!StringUtils.strEqualsExact(this.resPath, path)) {
+			this.hasLoaded.set(false);
+			this.resPath = path;
+		}
 		return this;
 	}
 
@@ -259,7 +268,10 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 		);
 	}
 	public NativeAutoLoader setLocalLibPath(final String path) {
-		this.localPath = path;
+		if (!StringUtils.strEqualsExact(this.localPath, path)) {
+			this.hasLoaded.set(false);
+			this.localPath = path;
+		}
 		return this;
 	}
 
@@ -270,8 +282,12 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 		return this.searchPaths.toArray(new String[0]);
 	}
 	public NativeAutoLoader addSearchPath(final String path) {
-		if (Utils.notEmpty(path))
-			this.searchPaths.add(path);
+		if (Utils.notEmpty(path)) {
+			if (!this.searchPaths.contains(path)) {
+				this.hasLoaded.set(false);
+				this.searchPaths.add(path);
+			}
+		}
 		return this;
 	}
 	public NativeAutoLoader addDefaultSearchPaths() {
@@ -298,7 +314,11 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 		return this.enableExtract(false);
 	}
 	public NativeAutoLoader enableExtract(final boolean enable) {
-		this.enableExtract = Boolean.valueOf(enable);
+		if (this.enableExtract == null
+		|| this.enableExtract.booleanValue() != enable) {
+			this.hasLoaded.set(false);
+			this.enableExtract = Boolean.valueOf(enable);
+		}
 		return this;
 	}
 
@@ -320,7 +340,11 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 		return this.enableReplace(false);
 	}
 	public NativeAutoLoader enableReplace(final boolean enable) {
-		this.enableReplace = Boolean.valueOf(enable);
+		if (this.enableReplace == null
+		|| this.enableReplace.booleanValue() != enable) {
+			this.hasLoaded.set(false);
+			this.enableReplace = Boolean.valueOf(enable);
+		}
 		return this;
 	}
 
