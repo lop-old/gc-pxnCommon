@@ -44,6 +44,58 @@ public final class NumberUtils {
 
 
 
+	public static boolean equalsExact(final Integer a, final Integer b) {
+		if (a == null && b == null)
+			return true;
+		if (a == null || b == null)
+			return false;
+		return a.intValue() == b.intValue();
+	}
+	public static boolean equalsExact(final Boolean a, final Boolean b) {
+		if (a == null && b == null)
+			return true;
+		if (a == null || b == null)
+			return false;
+		return ( a.booleanValue() == b.booleanValue() );
+	}
+	public static boolean equalsExact(final Byte a, final Byte b) {
+		if (a == null && b == null)
+			return true;
+		if (a == null || b == null)
+			return false;
+		return ( a.byteValue() == b.byteValue() );
+	}
+	public static boolean equalsExact(final Short a, final Short b) {
+		if (a == null && b == null)
+			return true;
+		if (a == null || b == null)
+			return false;
+		return ( a.shortValue() == b.shortValue() );
+	}
+	public static boolean equalsExact(final Long a, final Long b) {
+		if (a == null && b == null)
+			return true;
+		if (a == null || b == null)
+			return false;
+		return ( a.longValue() == b.longValue() );
+	}
+	public static boolean equalsExact(final Double a, final Double b) {
+		if (a == null && b == null)
+			return true;
+		if (a == null || b == null)
+			return false;
+		return ( a.doubleValue() == b.doubleValue() );
+	}
+	public static boolean equalsExact(final Float a, final Float b) {
+		if (a == null && b == null)
+			return true;
+		if (a == null || b == null)
+			return false;
+		return ( a.floatValue() == b.floatValue() );
+	}
+
+
+
 	// parse number
 	public static Integer toInteger(final String value) {
 		if (Utils.isEmpty(value))
