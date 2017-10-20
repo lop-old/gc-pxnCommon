@@ -162,6 +162,20 @@ public final class StringUtils {
 
 
 	// string equals
+	public static boolean strEqualsExact(final String a, final String b) {
+		if (a == null && b == null)
+			return true;
+		if (a == null || b == null)
+			return false;
+		return a.equals(b);
+	}
+	public static boolean strEqualsExactIgnoreCase(final String a, final String b) {
+		if (a == null && b == null)
+			return true;
+		if (a == null || b == null)
+			return false;
+		return a.equalsIgnoreCase(b);
+	}
 	public static boolean strEquals(final String a, final String b) {
 		if (Utils.isEmpty(a)) return false;
 		if (Utils.isEmpty(b)) return false;
