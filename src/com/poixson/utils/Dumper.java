@@ -66,6 +66,7 @@ public class Dumper {
 			tabs.append("\t");
 		}
 		final StringBuilder buffer = new StringBuilder();
+		buffer.append("Dumped: ");
 		Class<?> objClass = obj.getClass();
 		String objSimpleName = getSimpleNameWithoutArrayQualifier(objClass);
 		if (ctx.ignoreList.get(objSimpleName + ":") != null) {
@@ -86,7 +87,7 @@ public class Dumper {
 				? Array.getLength(obj)
 				: Math.min(ctx.maxArrayElements, Array.getLength(obj));
 			for (int i = 0; i < rowCount; i++) {
-				buffer.append(tabs.toString());
+				buffer.append(tabs);
 				try {
 					Object value = Array.get(obj, i);
 					buffer.append(dumpValue(value, ctx));
@@ -101,7 +102,7 @@ public class Dumper {
 			if (rowCount < Array.getLength(obj)) {
 				final int rowCountMore = Array.getLength(obj) - rowCount;
 				buffer
-					.append( tabs.toString()             )
+					.append( tabs                        )
 					.append( rowCountMore                )
 					.append( " more array elements...\n" );
 			}
@@ -113,7 +114,7 @@ public class Dumper {
 				.append( "\n"                         )
 				.append( tabs.toString().substring(1) )
 				.append( "{\n"                        )
-				.append( tabs.toString()              )
+				.append( tabs                         )
 				.append( "hashCode: "                 )
 				.append( obj.hashCode()               )
 				.append( "\n"                         );
@@ -132,7 +133,7 @@ public class Dumper {
 						final String fName = fields[i].getName();
 						fields[i].setAccessible(true);
 						buffer
-							.append( tabs.toString() )
+							.append( tabs            )
 							.append( fName           )
 							.append( "("             )
 							.append( fSimpleName     )
