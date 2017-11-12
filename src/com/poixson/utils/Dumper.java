@@ -71,6 +71,11 @@ public class Dumper {
 		if (ctx.ignoreList.get(objSimpleName + ":") != null) {
 			return "<Ignored>";
 		}
+		if (String.class.equals(objClass)) {
+			buffer
+				.append("(String): \n")
+				.append( (String)obj );
+		} else
 		if (objClass.isArray()) {
 			buffer
 				.append( "\n"                         )
