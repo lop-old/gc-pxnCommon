@@ -61,11 +61,11 @@ public class Dumper {
 			return "<null>";
 		}
 		ctx.callCount++;
-		final StringBuffer tabs = new StringBuffer();
+		final StringBuilder tabs = new StringBuilder();
 		for (int k = 0; k < ctx.callCount; k++) {
 			tabs.append("\t");
 		}
-		final StringBuffer buffer = new StringBuffer();
+		final StringBuilder buffer = new StringBuilder();
 		Class<?> objClass = obj.getClass();
 		String objSimpleName = getSimpleNameWithoutArrayQualifier(objClass);
 		if (ctx.ignoreList.get(objSimpleName + ":") != null) {
