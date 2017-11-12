@@ -19,6 +19,10 @@ public final class StringUtils {
 
 
 
+	public static final Charset UTF8 = Charset.forName("UTF-8");
+
+
+
 	// object to string
 	public static String toString(final Object obj) {
 		// null
