@@ -9,6 +9,9 @@ public class xString {
 
 
 
+	public static xString get() {
+		return new xString("");
+	}
 	public static xString get(final String data) {
 		return new xString(data);
 	}
