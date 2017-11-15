@@ -181,6 +181,19 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 
 
 
+	public NativeAutoLoader setDefaults(final Class<?> clss) {
+		this.addDefaultSearchPaths()
+			.enableExtract()
+			.enableReplace()
+			.setClassRef(clss)
+			.setResourcesPath("/")
+//TODO: include os and arch
+			.setLocalLibPath("libs/");
+		return this;
+	}
+
+
+
 	// error mode
 	public ErrorMode getErrorMode() {
 		final ErrorMode mode = this.errorMode;
