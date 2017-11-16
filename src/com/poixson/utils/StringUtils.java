@@ -364,6 +364,13 @@ public final class StringUtils {
 	public static int IndexOf(final String string, final char...delims) {
 		return IndexOf(string, 0, delims);
 	}
+	public static int LastIndexOf(final String string, final int fromIndex, final char...delims) {
+//TODO:
+		throw new UnsupportedOperationException("UNFINISHED");
+	}
+	public static int LastIndexOf(final String string, final char...delims) {
+		return LastIndexOf(string, 0, delims);
+	}
 
 
 
@@ -391,6 +398,13 @@ public final class StringUtils {
 	}
 	public static int IndexOf(final String string, final String...delims) {
 		return IndexOf(string, 0, delims);
+	}
+	public static int LastIndexOf(final String string, final int fromIndex, final String...delims) {
+//TODO:
+		throw new UnsupportedOperationException("UNFINISHED");
+	}
+	public static int LastIndexOf(final String string, final String...delims) {
+		return LastIndexOf(string, 0, delims);
 	}
 
 
