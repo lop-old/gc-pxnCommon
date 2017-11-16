@@ -122,6 +122,42 @@ public class xString {
 
 
 
+	public boolean contains(final CharSequence str) {
+		final String data = this.data;
+		if (data == null)
+			return false;
+		return data.contains(str);
+	}
+
+
+
+	public int indexOf(final String...delims) {
+		final String data = this.data;
+		if (data == null)
+			return -1;
+		return StringUtils.IndexOf(data, delims);
+	}
+	public int indexOf(final int fromIndex, final String...delims) {
+		final String data = this.data;
+		if (data == null)
+			return -1;
+		return StringUtils.IndexOf(data, fromIndex, delims);
+	}
+	public int lastIndexOf(final String...delims) {
+		final String data = this.data;
+		if (data == null)
+			return -1;
+		return StringUtils.LastIndexOf(data, delims);
+	}
+	public int lastIndexOf(final int fromIndex, final String...delims) {
+		final String data = this.data;
+		if (data == null)
+			return -1;
+		return StringUtils.LastIndexOf(data, fromIndex, delims);
+	}
+
+
+
 	public xString ensureStarts(final String start) {
 		final String data = this.data;
 		if (data != null) {
