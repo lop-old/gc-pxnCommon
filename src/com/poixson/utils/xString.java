@@ -3,9 +3,9 @@ package com.poixson.utils;
 
 public class xString {
 
-	protected volatile String data  = null;
-	protected volatile String next  = null;
-	protected volatile String delim = null;
+	protected String data  = null;
+	protected String next  = null;
+	protected String delim = null;
 
 
 
