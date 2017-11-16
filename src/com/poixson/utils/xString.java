@@ -48,20 +48,22 @@ public class xString {
 
 
 	public xString append(final String append) {
-		this.data =
-				this.data == null
-				? append
-				: this.data + append;
+		this.data = (
+			this.data == null
+			? append
+			: this.data + append
+		);
 		return this;
 	}
 
 
 
 	public xString remove(final String...strip) {
-		if (this.data != null) {
+		final String data = this.data;
+		if (data != null) {
 			this.data = StringUtils.RemoveFromStr(
-					this.data,
-					strip
+				data,
+				strip
 			);
 		}
 		return this;
@@ -70,14 +72,16 @@ public class xString {
 
 
 	public xString upper() {
-		if (this.data != null) {
-			this.data = this.data.toUpperCase();
+		final String data = this.data;
+		if (data != null) {
+			this.data = data.toUpperCase();
 		}
 		return this;
 	}
 	public xString lower() {
-		if (this.data != null) {
-			this.data = this.data.toLowerCase();
+		final String data = this.data;
+		if (data != null) {
+			this.data = data.toLowerCase();
 		}
 		return this;
 	}
@@ -85,14 +89,16 @@ public class xString {
 
 
 	public xString trim() {
-		if (this.data != null) {
-			this.data = this.data.trim();
+		final String data = this.data;
+		if (data != null) {
+			this.data = data.trim();
 		}
 		return this;
 	}
 	public xString trims(final String...strip) {
-		if (this.data != null) {
-			this.data = StringUtils.Trim(this.data, strip);
+		final String data = this.data;
+		if (data != null) {
+			this.data = StringUtils.Trim(data, strip);
 		}
 		return this;
 	}
@@ -100,29 +106,33 @@ public class xString {
 
 
 	public boolean startsWith(final String prefix) {
-		if (this.data == null) {
+		final String data = this.data;
+		if (data == null) {
 			return false;
 		}
-		return this.data.startsWith(prefix);
+		return data.startsWith(prefix);
 	}
 	public boolean endsWith(final String suffix) {
-		if (this.data == null) {
+		final String data = this.data;
+		if (data == null) {
 			return false;
 		}
-		return this.data.endsWith(suffix);
+		return data.endsWith(suffix);
 	}
 
 
 
 	public xString ensureStarts(final String start) {
-		if (this.data != null) {
-			this.data = StringUtils.ForceStarts(start, this.data);
+		final String data = this.data;
+		if (data != null) {
+			this.data = StringUtils.ForceStarts(start, data);
 		}
 		return this;
 	}
 	public xString ensureEnds(final String end) {
-		if (this.data != null) {
-			this.data = StringUtils.ForceEnds(end, this.data);
+		final String data = this.data;
+		if (data != null) {
+			this.data = StringUtils.ForceEnds(end, data);
 		}
 		return this;
 	}
@@ -130,8 +140,9 @@ public class xString {
 
 
 	public xString replaceWith(final String replaceWhat, final String[] withWhat) {
-		if (this.data != null) {
-			this.data = StringUtils.ReplaceWith(replaceWhat, withWhat, this.data);
+		final String data = this.data;
+		if (data != null) {
+			this.data = StringUtils.ReplaceWith(replaceWhat, withWhat, data);
 		}
 		return this;
 	}
@@ -139,20 +150,23 @@ public class xString {
 
 
 	public xString pad(final int width, final char padding) {
-		if (this.data != null) {
-			this.data = StringUtils.Pad(width, this.data, padding);
+		final String data = this.data;
+		if (data != null) {
+			this.data = StringUtils.Pad(width, data, padding);
 		}
 		return this;
 	}
 	public xString padFront(final int width, final char padding) {
-		if (this.data != null) {
-			this.data = StringUtils.PadFront(width, this.data, padding);
+		final String data = this.data;
+		if (data != null) {
+			this.data = StringUtils.PadFront(width, data, padding);
 		}
 		return this;
 	}
 	public xString padCenter(final int width, final char padding) {
-		if (this.data != null) {
-			this.data = StringUtils.PadCenter(width, this.data, padding);
+		final String data = this.data;
+		if (data != null) {
+			this.data = StringUtils.PadCenter(width, data, padding);
 		}
 		return this;
 	}
@@ -184,22 +198,22 @@ public class xString {
 		final String dlm = this.delim;
 		if (Utils.isEmpty(dlm))
 			return false;
-		// trim
-		this.trim();
-		while (this.data.startsWith(dlm)) {
-			this.data = this.data.substring(dlm.length());
-			this.trim();
+		String data = this.data.trim();
+		while (data.startsWith(dlm)) {
+			data = data.substring(dlm.length()).trim();
 		}
-		if (this.data.isEmpty())
+		if (data.isEmpty()) {
+			this.data = "";
 			return false;
+		}
 		// find next delim
-		final int pos = this.data.indexOf(dlm);
+		final int pos = data.indexOf(dlm);
 		if (pos == -1) {
-			this.next = this.data;
+			this.next = data;
 			this.data = "";
 		} else {
-			this.next = this.data.substring(0, pos);
-			this.data = this.data.substring(pos + dlm.length());
+			this.next = data.substring(0, pos);
+			this.data = data.substring(pos + dlm.length());
 		}
 		return true;
 	}
