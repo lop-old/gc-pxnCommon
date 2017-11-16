@@ -340,12 +340,40 @@ public final class StringUtils {
 
 
 	// index of (many delims)
-	public static int IndexOf(final String string, final char...delims) {
+	public static int IndexOf(final String string, final int fromIndex, final char...delims) {
 		if (Utils.isEmpty(string))
 			return -1;
 		int pos = Integer.MAX_VALUE;
 		for (final char delim : delims) {
-			final int p = string.indexOf(delim);
+			final int p = string.indexOf(delim, fromIndex);
+			// delim not found
+			if (p == -1) continue;
+			// earlier delim
+			if (p < pos) {
+				pos = p;
+				if (p == 0)
+					return 0;
+			}
+		}
+		return (
+			pos == Integer.MAX_VALUE
+			? -1
+			: pos
+		);
+	}
+	public static int IndexOf(final String string, final char...delims) {
+		return IndexOf(string, 0, delims);
+	}
+
+
+
+	public static int IndexOf(final String string, final int fromIndex, final String...delims) {
+		if (Utils.isEmpty(string))
+			return -1;
+		int pos = Integer.MAX_VALUE;
+		for (final String delim : delims) {
+			if (Utils.isEmpty(delim)) continue;
+			final int p = string.indexOf(delim, fromIndex);
 			// delim not found
 			if (p == -1) continue;
 			// earlier delim
@@ -362,26 +390,7 @@ public final class StringUtils {
 		);
 	}
 	public static int IndexOf(final String string, final String...delims) {
-		if (Utils.isEmpty(string))
-			return -1;
-		int pos = Integer.MAX_VALUE;
-		for (final String delim : delims) {
-			if (Utils.isEmpty(delim)) continue;
-			final int p = string.indexOf(delim);
-			// delim not found
-			if (p == -1) continue;
-			// earlier delim
-			if (p < pos) {
-				pos = p;
-				if (p == 0)
-					return 0;
-			}
-		}
-		return (
-			pos == Integer.MAX_VALUE
-			? -1
-			: pos
-		);
+		return IndexOf(string, 0, delims);
 	}
 
 
