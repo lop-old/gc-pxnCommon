@@ -1,6 +1,7 @@
 package com.poixson.utils.xLogger;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -16,34 +17,68 @@ public class xLevel implements Serializable {
 	private static volatile int minValue = 0;
 	private static volatile int maxValue = 0;
 
-	public static final transient xLevel OFF     = new xLevel("OFF",     Integer.MAX_VALUE);
-	public static final transient xLevel STDERR  = new xLevel("ERR",     9000);
-	public static final transient xLevel STDOUT  = new xLevel("OUT",     8000);
-	public static final transient xLevel TITLE   = new xLevel("TITLE",   7000);
-	public static final transient xLevel FATAL   = new xLevel("FATAL",   2000);
-	public static final transient xLevel SEVERE  = new xLevel("SEVERE",  1000);
-	public static final transient xLevel NOTICE  = new xLevel("NOTICE",  900);
-	public static final transient xLevel WARNING = new xLevel("WARNING", 800);
-	public static final transient xLevel INFO    = new xLevel("INFO",    700);
-	public static final transient xLevel STATS   = new xLevel("STATS",   600);
-	public static final transient xLevel FINE    = new xLevel("FINE",    500);
-	public static final transient xLevel FINER   = new xLevel("FINER",   400);
-	public static final transient xLevel FINEST  = new xLevel("FINEST",  300);
-	public static final transient xLevel DETAIL  = new xLevel("DETAIL",  100);
-	public static final transient xLevel ALL     = new xLevel("ALL",     Integer.MIN_VALUE);
+	public static final transient xLevel OFF     = new xLevel("OF", "OFF",     Integer.MAX_VALUE);
+	public static final transient xLevel STDERR  = new xLevel("ER", "ERR",     9000);
+	public static final transient xLevel STDOUT  = new xLevel("OT", "OUT",     8000);
+	public static final transient xLevel TITLE   = new xLevel("TT", "TITLE",   7000);
+	public static final transient xLevel FATAL   = new xLevel("FA", "FATAL",   2000);
+	public static final transient xLevel SEVERE  = new xLevel("SV", "SEVERE",  1000);
+	public static final transient xLevel NOTICE  = new xLevel("NT", "NOTICE",  900);
+	public static final transient xLevel WARNING = new xLevel("WN", "WARNING", 800);
+	public static final transient xLevel INFO    = new xLevel("IN", "INFO",    700);
+	public static final transient xLevel STATS   = new xLevel("ST", "STATS",   600);
+	public static final transient xLevel FINE    = new xLevel("FI", "FINE",    500);
+	public static final transient xLevel FINER   = new xLevel("FR", "FINER",   400);
+	public static final transient xLevel FINEST  = new xLevel("FT", "FINEST",  300);
+	public static final transient xLevel DETAIL  = new xLevel("DE", "DETAIL",  100);
+	public static final transient xLevel ALL     = new xLevel("AL", "ALL",     Integer.MIN_VALUE);
 
 	public final String name;
-	public final int value;
+	public final String shortName;
+	public final int    value;
 
 
 
-	private xLevel(final String name, final int value) {
-		if (Utils.isEmpty(name))
-			throw new RequiredArgumentException("name");
-		this.name = name.toUpperCase();
-		this.value = value;
+	private xLevel(final String shortName, final String name, final int value) {
+		if (Utils.isEmpty(name))      throw new RequiredArgumentException("name");
+		if (Utils.isEmpty(shortName)) throw new RequiredArgumentException("shortName");
+		this.name      = name.toUpperCase();
+		this.shortName = shortName.toUpperCase();
+		this.value     = value;
 		if (value != Integer.MIN_VALUE && value < minValue) minValue = value;
 		if (value != Integer.MAX_VALUE && value > maxValue) maxValue = value;
+		// validate unique
+		if ( ! knownLevels.isEmpty()) {
+			final Iterator<xLevel> it = knownLevels.iterator();
+			while (it.hasNext()) {
+				final xLevel level = it.next();
+				// duplicate name
+				if (name.equals(level.name))
+					throw new RuntimeException("Duplicate xLevel named: "+name);
+				// duplicate short-name
+				if (shortName.equals(level.shortName)) {
+					throw new RuntimeException(
+						(new StringBuilder())
+						.append("Duplicate xLevel short-name: ")
+						.append(shortName)
+						.append(" - ")
+						.append(name)
+						.toString()
+					);
+				}
+				// duplicate value
+				if (value == level.value) {
+					throw new RuntimeException(
+						(new StringBuilder())
+						.append("Duplicate xLevel value: ")
+						.append(value)
+						.append(" - ")
+						.append(name)
+						.toString()
+					);
+				}
+			}
+		}
 		knownLevels.add(this);
 	}
 	@Override
