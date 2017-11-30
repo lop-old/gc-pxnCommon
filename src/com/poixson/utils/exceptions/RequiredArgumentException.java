@@ -7,7 +7,8 @@ public class RequiredArgumentException extends NullPointerException {
 
 
 	public RequiredArgumentException(final String argName) {
-		super( (new StringBuilder())
+		super(
+			(new StringBuilder())
 				.append(argName)
 				.append(" argument is required!")
 				.toString()

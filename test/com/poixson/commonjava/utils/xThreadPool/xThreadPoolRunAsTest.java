@@ -46,7 +46,8 @@ public class xThreadPoolRunAsTest {
 					"runA"
 			);
 			this.waitForResult();
-//			final String expect = (new StringBuilder())
+//			final String expect =
+//				(new StringBuilder())
 //					.append("2:").append(POOL_1_NAME).append(":")
 //					.append("[2:Force: com.poixson.commonjava.utils.xThreadPool.]")
 //					.append("xThreadPoolRunAsTest")
@@ -60,7 +61,8 @@ public class xThreadPoolRunAsTest {
 					"runB"
 			);
 			this.waitForResult();
-//			final String expect = (new StringBuilder())
+//			final String expect =
+//				(new StringBuilder())
 //					.append("2:").append(POOL_1_NAME).append(":")
 //					.append("[[2:Force: com.poixson.commonjava.utils.xThreadPool.]")
 //					.append("xThreadPoolRunAsTest")
@@ -83,7 +85,8 @@ public class xThreadPoolRunAsTest {
 		Assert.assertFalse(this.pool1.isPoolThread());
 		final String name = Thread.currentThread().getName();
 		this.result = name;
-		xLogTest.get().publish( (new StringBuilder())
+		xLogTest.get().publish(
+			(new StringBuilder())
 				.append(" -- ")
 				.append(name)
 				.append(" -- ")
@@ -94,7 +97,8 @@ public class xThreadPoolRunAsTest {
 		Assert.assertFalse(this.pool2.isPoolThread());
 		final String name = Thread.currentThread().getName();
 		this.result = name;
-		xLogTest.get().publish( (new StringBuilder())
+		xLogTest.get().publish(
+			(new StringBuilder())
 				.append(" -- ")
 				.append(name)
 				.append(" -- ")

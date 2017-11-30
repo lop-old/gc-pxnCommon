@@ -37,7 +37,7 @@ public class xLogTest {
 	public static void testStart(final String name) {
 		get().publish();
 		get().title(
-				(new StringBuilder())
+			(new StringBuilder())
 				.append(name)
 				.append(" is testing..")
 				.toString()
@@ -45,7 +45,7 @@ public class xLogTest {
 	}
 	public static void testPassed(final String name) {
 		get().title(
-				(new StringBuilder())
+			(new StringBuilder())
 				.append(name)
 				.append(" passed!")
 				.toString()
@@ -56,7 +56,7 @@ public class xLogTest {
 	}
 	public static void publish(final String msg) {
 		get().publish(
-				(new StringBuilder())
+			(new StringBuilder())
 				.append("*** ")
 				.append(msg)
 				.toString()

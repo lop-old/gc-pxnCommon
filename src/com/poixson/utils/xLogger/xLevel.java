@@ -59,22 +59,22 @@ public class xLevel implements Serializable {
 				if (shortName.equals(level.shortName)) {
 					throw new RuntimeException(
 						(new StringBuilder())
-						.append("Duplicate xLevel short-name: ")
-						.append(shortName)
-						.append(" - ")
-						.append(name)
-						.toString()
+							.append("Duplicate xLevel short-name: ")
+							.append(shortName)
+							.append(" - ")
+							.append(name)
+							.toString()
 					);
 				}
 				// duplicate value
 				if (value == level.value) {
 					throw new RuntimeException(
 						(new StringBuilder())
-						.append("Duplicate xLevel value: ")
-						.append(value)
-						.append(" - ")
-						.append(name)
-						.toString()
+							.append("Duplicate xLevel value: ")
+							.append(value)
+							.append(" - ")
+							.append(name)
+							.toString()
 					);
 				}
 			}
