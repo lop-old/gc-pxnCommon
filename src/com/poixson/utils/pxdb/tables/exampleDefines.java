@@ -13,7 +13,7 @@ public class exampleDefines extends dbTableManager {
 
 
 	@Override
-	public void InitTables() throws SQLException {
+	public void initTables() throws SQLException {
 		// Example table
 		TableDAO tableExample =
 			defineTable("Example")

@@ -55,7 +55,7 @@ public class HangCatcher implements xStartable {
 
 
 	@Override
-	public void Start() {
+	public void start() {
 		if (this.cancel) return;
 		this.resetTimeout();
 		if (this.thread == null) {
@@ -66,7 +66,7 @@ public class HangCatcher implements xStartable {
 		}
 	}
 	@Override
-	public void Stop() {
+	public void stop() {
 		this.cancel = true;
 	}
 
@@ -82,7 +82,7 @@ public class HangCatcher implements xStartable {
 				out.println(Ansi.ansi().a(" ").fg(Ansi.Color.RED).a("*  Shutdown has hung!  *").reset().a(" "));
 				out.println(Ansi.ansi().a(" ").fg(Ansi.Color.RED).a("************************").reset().a(" "));
 				out.println();
-				ThreadUtils.displayStillRunning();
+				ThreadUtils.DisplayStillRunning();
 				System.exit(1);
 			}
 			ThreadUtils.Sleep(this.sleep);

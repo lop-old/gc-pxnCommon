@@ -94,11 +94,11 @@ public class dbPool {
 			// soft max
 			final int count = this.getWorkerCount();
 			if (count >= this.poolSize.getSoft()) {
-				this.poolSize.StartWarningThread();
+				this.poolSize.startWarningThread();
 			}
 			// hard max
 			if (count >= this.poolSize.getHard()) {
-				this.poolSize.HardLimitWarningMessage();
+				this.poolSize.hardLimitWarningMessage();
 				// give up waiting
 				if (maxHardBlocking.runAgain()) {
 					log().severe(

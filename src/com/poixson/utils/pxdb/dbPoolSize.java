@@ -38,7 +38,7 @@ public class dbPoolSize extends Thread {
 
 
 	// pool size warnings
-	public void StartWarningThread() {
+	public void startWarningThread() {
 		if (!this.running.compareAndSet(false, true))
 			return;
 		if (!this.isAlive()) {
@@ -78,10 +78,10 @@ public class dbPoolSize extends Thread {
 			}
 			// warning message
 			if (count >= this.HARD) {
-				HardLimitWarningMessage();
+				hardLimitWarningMessage();
 			} else
 			if (count > this.SOFT) {
-				SoftLimitWarningMessage();
+				softLimitWarningMessage();
 			}
 			// sleep thread
 			ThreadUtils.Sleep(250L);
@@ -93,7 +93,7 @@ public class dbPoolSize extends Thread {
 
 
 	// warning messages (with cooldown)
-	protected void SoftLimitWarningMessage() {
+	protected void softLimitWarningMessage() {
 		final int count = getWorkerCount();
 		if (count <= this.SOFT)
 			return;
@@ -107,7 +107,7 @@ public class dbPoolSize extends Thread {
 			);
 		}
 	}
-	protected void HardLimitWarningMessage() {
+	protected void hardLimitWarningMessage() {
 		final int count = getWorkerCount();
 		if (count < this.HARD)
 			return;

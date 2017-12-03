@@ -97,7 +97,7 @@ public final class Failure {
 		final String[] msgs = getMessages();
 		if (msgs == null)     return null;
 		if (msgs.length == 0) return "";
-		return StringUtils.addArray(
+		return StringUtils.AddArray(
 			"; ",
 			msgs
 		);

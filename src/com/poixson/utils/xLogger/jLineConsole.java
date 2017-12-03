@@ -121,7 +121,7 @@ public class jLineConsole implements xConsole {
 	public void finalize() {
 		if (this.isRunning()) {
 			if (!this.isStopping()) {
-				this.Stop();
+				this.stop();
 			}
 		}
 	}
@@ -150,7 +150,7 @@ public class jLineConsole implements xConsole {
 
 
 	@Override
-	public void Start() {
+	public void start() {
 		if (xVars.debug()) {
 			log().finest("Start jlineConsole");
 		}
@@ -205,7 +205,7 @@ public class jLineConsole implements xConsole {
 			throw new RuntimeException("Console already stopped");
 	}
 	@Override
-	public void Stop() {
+	public void stop() {
 		if (this.stopping) return;
 		this.stopping = true;
 		if (this.running.get()) {
@@ -294,7 +294,7 @@ public class jLineConsole implements xConsole {
 			handler.trigger(event);
 		}
 		if (!this.stopping) {
-			this.Stop();
+			this.stop();
 		}
 		this.running.set(false);
 		// save command history

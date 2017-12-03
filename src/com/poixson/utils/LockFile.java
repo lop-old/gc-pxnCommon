@@ -31,7 +31,7 @@ public class LockFile {
 
 	public static LockFile get(final String filename) {
 		if (Utils.isBlank(filename))          throw new RequiredArgumentException("filename");
-		if (!SanUtils.safeFileName(filename)) throw new IllegalArgumentException("Invalid lock file name: "+filename);
+		if (!SanUtils.SafeFileName(filename)) throw new IllegalArgumentException("Invalid lock file name: "+filename);
 		// existing lock instance
 		{
 			final LockFile lock = instances.get(filename);
@@ -50,7 +50,7 @@ public class LockFile {
 	}
 	public static LockFile peek(final String filename) {
 		if (Utils.isBlank(filename))          throw new RequiredArgumentException("filename");
-		if (!SanUtils.safeFileName(filename)) throw new IllegalArgumentException("Invalid lock file name: "+filename);
+		if (!SanUtils.SafeFileName(filename)) throw new IllegalArgumentException("Invalid lock file name: "+filename);
 		return instances.get(filename);
 	}
 
@@ -82,7 +82,7 @@ public class LockFile {
 	private LockFile(final String filename) {
 		if (Utils.isBlank(filename))
 			throw new RequiredArgumentException("filename");
-		if (!SanUtils.safeFileName(filename))
+		if (!SanUtils.SafeFileName(filename))
 			throw new IllegalArgumentException("Invalid lock file name: "+filename);
 		this.filename = filename;
 		this.file = new File(filename);

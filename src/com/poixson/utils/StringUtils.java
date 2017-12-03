@@ -65,7 +65,7 @@ public final class StringUtils {
 
 
 
-	public static String[] bytesToStringArray(final byte[] bytes) {
+	public static String[] BytesToStringArray(final byte[] bytes) {
 		if (bytes == null)     return null;
 		if (bytes.length == 0) return new String[0];
 		final Charset charset = StandardCharsets.US_ASCII;
@@ -166,28 +166,28 @@ public final class StringUtils {
 
 
 	// string equals
-	public static boolean strEqualsExact(final String a, final String b) {
+	public static boolean StrEqualsExact(final String a, final String b) {
 		if (a == null && b == null)
 			return true;
 		if (a == null || b == null)
 			return false;
 		return a.equals(b);
 	}
-	public static boolean strEqualsExactIgnoreCase(final String a, final String b) {
+	public static boolean StrEqualsExactIgnoreCase(final String a, final String b) {
 		if (a == null && b == null)
 			return true;
 		if (a == null || b == null)
 			return false;
 		return a.equalsIgnoreCase(b);
 	}
-	public static boolean strEquals(final String a, final String b) {
+	public static boolean StrEquals(final String a, final String b) {
 		final boolean aEmpty = Utils.isEmpty(a);
 		final boolean bEmpty = Utils.isEmpty(b);
 		if (aEmpty && bEmpty) return true;
 		if (aEmpty || bEmpty) return false;
 		return a.equals(b);
 	}
-	public static boolean strEqualsIgnoreCase(final String a, final String b) {
+	public static boolean StrEqualsIgnoreCase(final String a, final String b) {
 		final boolean aEmpty = Utils.isEmpty(a);
 		final boolean bEmpty = Utils.isEmpty(b);
 		if (aEmpty && bEmpty) return true;
@@ -558,7 +558,7 @@ public final class StringUtils {
 		StringRef str = StringRef.get(string);
 		while (str.length() > 0) {
 			final String part =
-				str.CutFirstPart(delims);
+				str.cutFirstPart(delims);
 			if (Utils.notEmpty(part)) {
 				list.add(part);
 			}
@@ -570,7 +570,7 @@ public final class StringUtils {
 		StringRef str = StringRef.get(string);
 		while (str.length() > 0) {
 			final String part =
-				str.CutFirstPart(delims);
+				str.cutFirstPart(delims);
 			if (Utils.notEmpty(part)) {
 				list.add(part);
 			}
@@ -666,10 +666,10 @@ public final class StringUtils {
 
 
 	// add strings with delimiter
-	public static String addStrings(final String delim, final String...addThis) {
-		return addArray(delim, addThis);
+	public static String AddStrings(final String delim, final String...addThis) {
+		return AddArray(delim, addThis);
 	}
-	public static String addArray(final String delim, final String[] addThis) {
+	public static String AddArray(final String delim, final String[] addThis) {
 		if (addThis == null)     return null;
 		if (addThis.length == 0) return "";
 		final String dlm = (Utils.isEmpty(delim) ? null : delim);

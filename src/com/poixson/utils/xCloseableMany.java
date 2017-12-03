@@ -8,7 +8,7 @@ public interface xCloseableMany extends xCloseable {
 
 	@Override
 	public void close() throws IOException;
-	public void CloseAll();
+	public void closeAll();
 
 	@Override
 	public boolean isClosed();

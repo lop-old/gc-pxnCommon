@@ -44,13 +44,13 @@ public class NativeAutoLoader {
 
 
 	// extract/load library
-	public boolean Load(final String fileName) {
+	public boolean load(final String fileName) {
 		if (Utils.notEmpty(fileName)) {
 			this.setFileName(fileName);
 		}
-		return this.Load();
+		return this.load();
 	}
-	public boolean Load() {
+	public boolean load() {
 		if (this.hasLoaded.get())
 			return false;
 		final boolean result;
@@ -224,7 +224,7 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 		return fileName;
 	}
 	public NativeAutoLoader setFileName(final String fileName) {
-		if (!StringUtils.strEqualsExact(this.fileName, fileName)) {
+		if (!StringUtils.StrEqualsExact(this.fileName, fileName)) {
 			this.hasLoaded.set(false);
 			this.fileName = fileName;
 		}
@@ -262,7 +262,7 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 		);
 	}
 	public NativeAutoLoader setResourcesPath(final String path) {
-		if (!StringUtils.strEqualsExact(this.resPath, path)) {
+		if (!StringUtils.StrEqualsExact(this.resPath, path)) {
 			this.hasLoaded.set(false);
 			this.resPath = path;
 		}
@@ -281,7 +281,7 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 		);
 	}
 	public NativeAutoLoader setLocalLibPath(final String path) {
-		if (!StringUtils.strEqualsExact(this.localPath, path)) {
+		if (!StringUtils.StrEqualsExact(this.localPath, path)) {
 			this.hasLoaded.set(false);
 			this.localPath = path;
 		}

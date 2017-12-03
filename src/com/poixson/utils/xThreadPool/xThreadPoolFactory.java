@@ -147,7 +147,7 @@ public class xThreadPoolFactory {
 					final Iterator<xThreadPool> it = pools.values().iterator();
 					while (it.hasNext()) {
 						final xThreadPool pool = it.next();
-						pool.Stop();
+						pool.stop();
 					}
 				}
 			}

@@ -16,7 +16,7 @@ public final class SwingUtils {
 
 
 	// change font size
-	public static void changeFontSize(final JComponent component, final int size) {
+	public static void ChangeFontSize(final JComponent component, final int size) {
 		if (component == null) throw new RequiredArgumentException("component");
 		final Font font = component.getFont();
 		component.setFont(
@@ -31,7 +31,7 @@ public final class SwingUtils {
 
 
 	// load image file/resource
-	public static ImageIcon loadImageResource(final String path) {
+	public static ImageIcon LoadImageResource(final String path) {
 		// open file
 		if ((new File(path)).exists()) {
 			try {

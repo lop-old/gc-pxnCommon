@@ -114,7 +114,7 @@ public abstract class xApp implements xStartable {
 
 
 	@Override
-	public void Start() {
+	public void start() {
 		// already starting or running
 		if (this.isRunning() || this.isStarting()) {
 			return;
@@ -211,7 +211,7 @@ public abstract class xApp implements xStartable {
 				"10s",
 				"100n"
 			);
-			hangCatcher.Start();
+			hangCatcher.start();
 		}
 		// startup loop
 		final PrintStream out = xVars.getOriginalOut();
@@ -268,7 +268,7 @@ public abstract class xApp implements xStartable {
 			this.step.incrementAndGet();
 		}
 		if (hangCatcher != null) {
-			hangCatcher.Stop();
+			hangCatcher.stop();
 		}
 		if (!this.isStarting()) {
 			Failure.fail(APP_INCONSISTENT_STATE_EXCEPTION,
@@ -279,7 +279,7 @@ public abstract class xApp implements xStartable {
 	}
 //TODO: ThreadUtils.displayStillRunning();
 	@Override
-	public void Stop() {
+	public void stop() {
 		// already stopping or stopped
 		if (this.isStopped())  return;
 		if (this.isStopping()) return;
@@ -308,7 +308,7 @@ public abstract class xApp implements xStartable {
 			"10s",
 			"100n"
 		);
-		hangCatcher.Start();
+		hangCatcher.start();
 		// shutdown loop
 		final PrintStream out = xVars.getOriginalOut();
 		while (true) {
@@ -365,7 +365,7 @@ public abstract class xApp implements xStartable {
 			}
 			this.step.incrementAndGet();
 		}
-		hangCatcher.Stop();
+		hangCatcher.stop();
 		if (!this.isStopping()) {
 			Failure.fail(APP_INCONSISTENT_STOP_EXCEPTION,
 					new RuntimeException(APP_INCONSISTENT_STOP_EXCEPTION));
@@ -600,7 +600,7 @@ return "<uptime>";
 		try {
 			final xThreadPool pool =
 				xThreadPoolFactory.getMainPool();
-			pool.Start();
+			pool.start();
 		} catch (Exception e) {
 			Failure.fail(e);
 		}
@@ -614,7 +614,7 @@ return "<uptime>";
 		try {
 			// start main scheduler
 			final xScheduler sched = xScheduler.getMainSched();
-			sched.Start();
+			sched.start();
 //TODO:
 //			// start ticker
 //			final xTicker ticker = xTicker.get();
@@ -640,7 +640,7 @@ return "<uptime>";
 //			ticker.Stop();
 			// stop main scheduler
 			final xScheduler sched = xScheduler.getMainSched();
-			sched.Stop();
+			sched.stop();
 		} catch (Exception e) {
 			Failure.fail(e);
 		}

@@ -4,8 +4,8 @@ package com.poixson.utils;
 public interface xStartable extends Runnable {
 
 
-	public void Start();
-	public void Stop();
+	public void start();
+	public void stop();
 
 	@Override
 	public void run();

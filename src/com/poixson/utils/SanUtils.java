@@ -12,7 +12,7 @@ public final class SanUtils {
 		if (text.isEmpty()) return "";
 		return text.replaceAll("[^a-zA-Z0-9]+", "");
 	}
-	public static boolean safeAlphaNum(final String text) {
+	public static boolean SafeAlphaNum(final String text) {
 		if (text == null)
 			return true;
 		final String safeText = AlphaNum(text);
@@ -26,7 +26,7 @@ public final class SanUtils {
 		if (text.isEmpty()) return "";
 		return text.replaceAll("[^a-zA-Z0-9\\-\\_\\.]+", "");
 	}
-	public static boolean safeAlphaNumUnderscore(final String text) {
+	public static boolean SafeAlphaNumUnderscore(final String text) {
 		if (text == null)
 			return true;
 		final String safeText = AlphaNumUnderscore(text);
@@ -48,7 +48,7 @@ public final class SanUtils {
 		if (Utils.isBlank(text)) return null;
 		return text.replaceAll("[^a-zA-Z0-9\\._]+", "_");
 	}
-	public static boolean safeFileName(final String text) {
+	public static boolean SafeFileName(final String text) {
 		if (text == null)
 			return true;
 		final String safeText = FileName(text);

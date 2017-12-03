@@ -18,7 +18,7 @@ public final class ObjectUtils {
 
 
 	@SuppressWarnings("unchecked")
-	public static <T> T cast(final Object object,
+	public static <T> T Cast(final Object object,
 			final Class<? extends T> clss) {
 		if (clss   == null) throw new RequiredArgumentException("clss");
 		if (object == null) return null;
@@ -38,7 +38,7 @@ public final class ObjectUtils {
 	 * @param clss
 	 * @return
 	 */
-	public static <T> Set<T> castSet(final Collection<?> data,
+	public static <T> Set<T> CastSet(final Collection<?> data,
 			final Class<? extends T> clss) {
 		if (clss == null) throw new RequiredArgumentException("clss");
 		if (data == null) return null;
@@ -60,12 +60,12 @@ public final class ObjectUtils {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Set<T> castSet(final Object data,
+	public static <T> Set<T> CastSet(final Object data,
 			final Class<? extends T> clss) {
 		if (clss == null) throw new RequiredArgumentException("clss");
 		if (data == null) return null;
 		try {
-			return castSet(
+			return CastSet(
 					(Collection<T>) data,
 					clss
 			);
@@ -81,7 +81,7 @@ public final class ObjectUtils {
 	 * @param clss
 	 * @return
 	 */
-	public static <T> List<T> castList(final Collection<?> data,
+	public static <T> List<T> CastList(final Collection<?> data,
 			final Class<? extends T> clss) {
 		if (clss == null) throw new RequiredArgumentException("clss");
 		if (data == null) return null;
@@ -103,12 +103,12 @@ public final class ObjectUtils {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> List<T> castList(final Object data,
+	public static <T> List<T> CastList(final Object data,
 			final Class<? extends T> clss) {
 		if (clss == null) throw new RequiredArgumentException("clss");
 		if (data == null) return null;
 		try {
-			return castList(
+			return CastList(
 					(Collection<T>) data,
 					clss
 			);
@@ -125,7 +125,7 @@ public final class ObjectUtils {
 	 * @param m
 	 * @return
 	 */
-	public static <K, V> Map<K, V> castMap(final Map<?, ?> data,
+	public static <K, V> Map<K, V> CastMap(final Map<?, ?> data,
 			final Class<? extends K> keyClss, final Class<? extends V> valClss) {
 		if (keyClss == null) throw new RequiredArgumentException("keyClss");
 		if (valClss == null) throw new RequiredArgumentException("valClss");
@@ -135,11 +135,11 @@ public final class ObjectUtils {
 			for (final Entry<?, ?> entry : data.entrySet()) {
 				try {
 					result.put(
-						cast(
+						Cast(
 							entry.getKey(),
 							keyClss
 						),
-						cast(
+						Cast(
 							entry.getValue(),
 							valClss
 						)
@@ -158,13 +158,13 @@ public final class ObjectUtils {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, V> Map<K, V> castMap(final Object data,
+	public static <K, V> Map<K, V> CastMap(final Object data,
 			final Class<? extends K> keyClss, final Class<? extends V> valClss) {
 		if (keyClss == null) throw new RequiredArgumentException("keyClss");
 		if (valClss == null) throw new RequiredArgumentException("valClss");
 		if (data    == null) return null;
 		try {
-			return castMap(
+			return CastMap(
 					(Map<K, V>) data,
 					keyClss,
 					valClss

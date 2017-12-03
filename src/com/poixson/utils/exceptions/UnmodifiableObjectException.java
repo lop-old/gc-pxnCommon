@@ -14,7 +14,7 @@ public class UnmodifiableObjectException extends UnsupportedOperationException {
 		final StackTraceElement[] trace = eTemp.getStackTrace();
 		final String parentClassName =
 			StringRef.get(trace[index].getClassName())
-				.PeekLastPart('.');
+				.peekLastPart('.');
 		final String parentMethodName = trace[index].getMethodName();
 		final StringBuilder msg =
 			(new StringBuilder())

@@ -96,7 +96,7 @@ public class xThreadPool implements xStartable {
 
 
 	@Override
-	public void Start() {
+	public void start() {
 		if (!this.running.compareAndSet(false, true))
 			return;
 		// initial task (creates the first thread)
@@ -117,7 +117,7 @@ public class xThreadPool implements xStartable {
 		ThreadUtils.Sleep(POST_START_SLEEP);
 	}
 	@Override
-	public void Stop() {
+	public void stop() {
 		this.stopping = true;
 		ThreadUtils.Sleep(50L);
 		final Iterator<xThreadPoolWorker> it =

@@ -44,49 +44,49 @@ public final class NumberUtils {
 
 
 
-	public static boolean equalsExact(final Integer a, final Integer b) {
+	public static boolean EqualsExact(final Integer a, final Integer b) {
 		if (a == null && b == null)
 			return true;
 		if (a == null || b == null)
 			return false;
 		return a.intValue() == b.intValue();
 	}
-	public static boolean equalsExact(final Boolean a, final Boolean b) {
+	public static boolean EqualsExact(final Boolean a, final Boolean b) {
 		if (a == null && b == null)
 			return true;
 		if (a == null || b == null)
 			return false;
 		return ( a.booleanValue() == b.booleanValue() );
 	}
-	public static boolean equalsExact(final Byte a, final Byte b) {
+	public static boolean EqualsExact(final Byte a, final Byte b) {
 		if (a == null && b == null)
 			return true;
 		if (a == null || b == null)
 			return false;
 		return ( a.byteValue() == b.byteValue() );
 	}
-	public static boolean equalsExact(final Short a, final Short b) {
+	public static boolean EqualsExact(final Short a, final Short b) {
 		if (a == null && b == null)
 			return true;
 		if (a == null || b == null)
 			return false;
 		return ( a.shortValue() == b.shortValue() );
 	}
-	public static boolean equalsExact(final Long a, final Long b) {
+	public static boolean EqualsExact(final Long a, final Long b) {
 		if (a == null && b == null)
 			return true;
 		if (a == null || b == null)
 			return false;
 		return ( a.longValue() == b.longValue() );
 	}
-	public static boolean equalsExact(final Double a, final Double b) {
+	public static boolean EqualsExact(final Double a, final Double b) {
 		if (a == null && b == null)
 			return true;
 		if (a == null || b == null)
 			return false;
 		return ( a.doubleValue() == b.doubleValue() );
 	}
-	public static boolean equalsExact(final Float a, final Float b) {
+	public static boolean EqualsExact(final Float a, final Float b) {
 		if (a == null && b == null)
 			return true;
 		if (a == null || b == null)
@@ -251,38 +251,38 @@ public final class NumberUtils {
 
 
 
-	public static double round(final double value, final double product) {
+	public static double Round(final double value, final double product) {
 		final double val = Math.round( value / product );
 		return val * product;
 	}
-	public static double floor(final double value, final double product) {
+	public static double Floor(final double value, final double product) {
 		final double val = Math.floor( value / product );
 		return val * product;
 	}
-	public static double ceil(final double value, final double product) {
+	public static double Ceil(final double value, final double product) {
 		final double val = Math.ceil( value / product );
 		return val * product;
 	}
 
 
 
-	public static int round(final int value, final int product) {
+	public static int Round(final int value, final int product) {
 		return (int)
-			round(
+			Round(
 				(double) value,
 				(double) product
 			);
 	}
-	public static int floor(final int value, final int product) {
+	public static int Floor(final int value, final int product) {
 		return (int)
-			floor(
+			Floor(
 				(double) value,
 				(double) product
 			);
 	}
-	public static int ceil(final int value, final int product) {
+	public static int Ceil(final int value, final int product) {
 		return (int)
-			ceil(
+			Ceil(
 				(double) value,
 				(double) product
 			);
@@ -290,23 +290,23 @@ public final class NumberUtils {
 
 
 
-	public static long round(final long value, final int product) {
+	public static long Round(final long value, final int product) {
 		return (long)
-			round(
+			Round(
 				(double) value,
 				(double) product
 			);
 	}
-	public static long floor(final long value, final int product) {
+	public static long Floor(final long value, final int product) {
 		return (long)
-			floor(
+			Floor(
 				(double) value,
 				(double) product
 			);
 	}
-	public static long ceil(final long value, final int product) {
+	public static long Ceil(final long value, final int product) {
 		return (long)
-			ceil(
+			Ceil(
 				(double) value,
 				(double) product
 			);

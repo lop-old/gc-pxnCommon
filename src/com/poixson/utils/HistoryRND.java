@@ -50,7 +50,7 @@ public class HistoryRND {
 
 
 	// random number (unique history)
-	public synchronized int RND() {
+	public synchronized int rnd() {
 		final int index = this.index.incrementAndGet();
 		final int maxValue  = this.getMaxValue();
 		final int minValue  = this.getMinValue();

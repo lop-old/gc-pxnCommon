@@ -513,7 +513,7 @@ public final class Utils {
 
 
 
-	public static boolean checkJavaVersion(final String requiredVersion) {
+	public static boolean CheckJavaVersion(final String requiredVersion) {
 		final String javaVersion;
 		{
 			final String vers = System.getProperty("java.version");

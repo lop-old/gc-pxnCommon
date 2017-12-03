@@ -39,14 +39,14 @@ public final class SystemHash {
 	 * Generates a GUID (48 chars).
 	 * @return The generated GUID.
 	 */
-	public static String generate() {
+	public static String Generate() {
 		final int rnd = NumberUtils.getRandom(0, Integer.MAX_VALUE);
 		final StringBuffer buf = new StringBuffer();
-		encode( buf, DESCRIPTOR                 );
-		encode( buf, Runtime.getRuntime()       );
-		encode( buf, Thread.currentThread()     );
-		encode( buf, System.currentTimeMillis() );
-		encode( buf, rnd                        );
+		Encode( buf, DESCRIPTOR                 );
+		Encode( buf, Runtime.getRuntime()       );
+		Encode( buf, Thread.currentThread()     );
+		Encode( buf, System.currentTimeMillis() );
+		Encode( buf, rnd                        );
 		return buf.toString();
 	}
 
@@ -71,7 +71,7 @@ public final class SystemHash {
 			.append( "::"                             )
 			.append( System.getProperty("user.name")  )
 			.append( "::"                             );
-		final StringBuffer buf = buildNetworkInterfaceDescriptor();
+		final StringBuffer buf = BuildNetworkInterfaceDescriptor();
 		if (buf != null) {
 			desc.append(buf);
 		} else {
@@ -88,7 +88,7 @@ public final class SystemHash {
 	 * available since Java 1.4.
 	 * @return A descriptor fragment, or null if the method fails.
 	 */
-	private static StringBuffer buildNetworkInterfaceDescriptor() {
+	private static StringBuffer BuildNetworkInterfaceDescriptor() {
 		final Enumeration<NetworkInterface> e;
 		try {
 			e = NetworkInterface.getNetworkInterfaces();
@@ -169,15 +169,15 @@ public final class SystemHash {
 	 * @param str The buffer.
 	 * @param obj The object.
 	 */
-	private static void encode(final StringBuffer str, final Object obj) {
-		encode(str, obj.hashCode());
+	private static void Encode(final StringBuffer str, final Object obj) {
+		Encode(str, obj.hashCode());
 	}
 	/**
 	 * Encodes an integer value and appends it to the buffer.
 	 * @param str The buffer.
 	 * @param value The value.
 	 */
-	private static void encode(final StringBuffer str, final int value) {
+	private static void Encode(final StringBuffer str, final int value) {
 		final String hex = Integer.toHexString(value);
 		final int hexSize = hex.length();
 		for (int i = 8; i > hexSize; i--) {
@@ -190,7 +190,7 @@ public final class SystemHash {
 	 * @param str The buffer.
 	 * @param value The value.
 	 */
-	private static void encode(final StringBuffer str, final long value) {
+	private static void Encode(final StringBuffer str, final long value) {
 		final String hex = Long.toHexString(value);
 		final int hexSize = hex.length();
 		for (int i = 16; i > hexSize; i--) {

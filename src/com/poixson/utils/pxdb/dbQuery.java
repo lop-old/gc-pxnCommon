@@ -52,7 +52,7 @@ public class dbQuery {
 
 
 	// prepared query
-	public dbQuery Prepare(final String sqlStr) throws SQLException {
+	public dbQuery prepare(final String sqlStr) throws SQLException {
 		if (Utils.isEmpty(sqlStr)) throw new RequiredArgumentException("sqlStr");
 		synchronized(this.lock) {
 			if (!this.worker.inUse()) {
@@ -78,10 +78,10 @@ public class dbQuery {
 		}
 		return this;
 	}
-	public boolean Prep(final String sqlStr) {
+	public boolean prep(final String sqlStr) {
 		if (Utils.isEmpty(sqlStr)) throw new RequiredArgumentException("sqlStr");
 		try {
-			if (this.Prepare(sqlStr) != null) {
+			if (this.prepare(sqlStr) != null) {
 				return true;
 			}
 		} catch (SQLException e) {
@@ -94,7 +94,7 @@ public class dbQuery {
 
 
 	// execute query
-	public boolean Execute() throws SQLException {
+	public boolean execute() throws SQLException {
 		synchronized(this.lock) {
 			if (!this.worker.inUse()) {
 				log().trace(new IllegalAccessException("dbWorker not locked!"));
@@ -151,19 +151,19 @@ public class dbQuery {
 		}
 		return true;
 	}
-	public boolean Execute(final String sqlStr) throws SQLException {
+	public boolean execute(final String sqlStr) throws SQLException {
 		if (Utils.isEmpty(sqlStr))
 			return false;
-		if (Prepare(sqlStr) == null)
+		if (prepare(sqlStr) == null)
 			return false;
-		return Execute();
+		return execute();
 	}
 
 
 
 	public boolean Exec() {
 		try {
-			return this.Execute();
+			return this.execute();
 		} catch (SQLException e) {
 			log().trace(e);
 			this.clean();
@@ -172,7 +172,7 @@ public class dbQuery {
 	}
 	public boolean Exec(final String sqlStr) {
 		try {
-			return this.Execute(sqlStr);
+			return this.execute(sqlStr);
 		} catch (SQLException e) {
 			log().trace(e);
 			this.clean();
@@ -594,7 +594,7 @@ public class dbQuery {
 					.append("LOCK TABLES `").append(tableName).append("` ")
 					.append(readable ? "READ" : "WRITE")
 					.append(" /"+"* lock table *"+"/");
-			if (!Prep(str.toString()) || !Exec()) {
+			if (!prep(str.toString()) || !Exec()) {
 				log().severe("Failed to lock table {}", tableName);
 				return false;
 			}
@@ -612,7 +612,7 @@ public class dbQuery {
 	public void unlockTables() {
 		synchronized(this.lock) {
 			final String sqlStr = "UNLOCK TABLES /"+"* unlock table *"+"/";
-			if (!Prep(sqlStr) || !Exec()) {
+			if (!prep(sqlStr) || !Exec()) {
 				log().severe("Failed to unlock tables");
 			}
 		}

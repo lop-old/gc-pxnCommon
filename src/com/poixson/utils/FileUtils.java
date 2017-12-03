@@ -255,7 +255,7 @@ public final class FileUtils {
 		}
 		// build path
 		final String path =
-			StringUtils.addStrings(
+			StringUtils.AddStrings(
 				File.separator,
 				list.toArray(new String[0])
 			);

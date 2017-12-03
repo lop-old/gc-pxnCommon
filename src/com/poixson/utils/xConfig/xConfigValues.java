@@ -260,7 +260,7 @@ public abstract class xConfigValues {
 
 	// set
 	public <C> Set<C> getSet(final String key, final Class<? extends C> clss) {
-		return ObjectUtils.castSet(
+		return ObjectUtils.CastSet(
 				this.get(key),
 				clss
 		);
@@ -276,7 +276,7 @@ public abstract class xConfigValues {
 
 	// list
 	public <C> List<C> getList(final String key, final Class<? extends C> clss) {
-		return ObjectUtils.castList(
+		return ObjectUtils.CastList(
 				this.get(key),
 				clss
 		);
@@ -293,7 +293,7 @@ public abstract class xConfigValues {
 	// map
 	public <K, V> Map<K, V> getMap(final String key,
 			final Class<? extends K> clssK, final Class<? extends V> clssV) {
-		return ObjectUtils.castMap(
+		return ObjectUtils.CastMap(
 				this.get(key),
 				clssK,
 				clssV
@@ -330,7 +330,7 @@ public abstract class xConfigValues {
 		while (it.hasNext()) {
 			final Object o = it.next();
 			final Map<String, Object> datamap =
-				ObjectUtils.castMap(
+				ObjectUtils.CastMap(
 					o,
 					String.class,
 					Object.class

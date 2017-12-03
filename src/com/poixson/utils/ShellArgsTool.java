@@ -23,7 +23,7 @@ public class ShellArgsTool {
 
 
 
-	public static ShellArgsTool init(final String[] argsArray) {
+	public static ShellArgsTool Init(final String[] argsArray) {
 		final ShellArgsTool argsTool = new ShellArgsTool(argsArray);
 		// debug flag
 		{

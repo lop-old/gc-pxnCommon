@@ -156,7 +156,7 @@ public class StringRef implements StringRefInterface {
 
 	// get first part (single delim)
 	@Override
-	public String PeekFirstPart(final char delim) {
+	public String peekFirstPart(final char delim) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
 			return val;
@@ -168,7 +168,7 @@ public class StringRef implements StringRefInterface {
 		);
 	}
 	@Override
-	public String PeekFirstPart(final String delim) {
+	public String peekFirstPart(final String delim) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
 			return val;
@@ -182,7 +182,7 @@ public class StringRef implements StringRefInterface {
 
 	// cut first part (single delim)
 	@Override
-	public String CutFirstPart(final char delim) {
+	public String cutFirstPart(final char delim) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
 			return val;
@@ -196,7 +196,7 @@ public class StringRef implements StringRefInterface {
 		return result;
 	}
 	@Override
-	public String CutFirstPart(final String delim) {
+	public String cutFirstPart(final String delim) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
 			return val;
@@ -214,7 +214,7 @@ public class StringRef implements StringRefInterface {
 
 	// get first part (many delims)
 	@Override
-	public String PeekFirstPart(final char...delims) {
+	public String peekFirstPart(final char...delims) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
 			return val;
@@ -225,7 +225,7 @@ public class StringRef implements StringRefInterface {
 			);
 	}
 	@Override
-	public String PeekFirstPart(final String...delims) {
+	public String peekFirstPart(final String...delims) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
 			return val;
@@ -238,7 +238,7 @@ public class StringRef implements StringRefInterface {
 
 	// cut first part (many delims)
 	@Override
-	public String CutFirstPart(final char...delims) {
+	public String cutFirstPart(final char...delims) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
 			return val;
@@ -265,7 +265,7 @@ public class StringRef implements StringRefInterface {
 		return result;
 	}
 	@Override
-	public String CutFirstPart(final String...delims) {
+	public String cutFirstPart(final String...delims) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
 			return val;
@@ -310,7 +310,7 @@ public class StringRef implements StringRefInterface {
 
 	// get last part (single delim)
 	@Override
-	public String PeekLastPart(final char delim) {
+	public String peekLastPart(final char delim) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
 			return val;
@@ -322,7 +322,7 @@ public class StringRef implements StringRefInterface {
 		);
 	}
 	@Override
-	public String PeekLastPart(final String delim) {
+	public String peekLastPart(final String delim) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
 			return val;
@@ -336,7 +336,7 @@ public class StringRef implements StringRefInterface {
 
 	// cut last part (single delim)
 	@Override
-	public String CutLastPart(final char delim) {
+	public String cutLastPart(final char delim) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
 			return val;
@@ -350,7 +350,7 @@ public class StringRef implements StringRefInterface {
 		return result;
 	}
 	@Override
-	public String CutLastPart(final String delim) {
+	public String cutLastPart(final String delim) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
 			return val;
@@ -368,7 +368,7 @@ public class StringRef implements StringRefInterface {
 
 	// get last part (many delims)
 	@Override
-	public String PeekLastPart(final char...delims) {
+	public String peekLastPart(final char...delims) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
 			return val;
@@ -379,7 +379,7 @@ public class StringRef implements StringRefInterface {
 			);
 	}
 	@Override
-	public String PeekLastPart(final String...delims) {
+	public String peekLastPart(final String...delims) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
 			return val;
@@ -392,7 +392,7 @@ public class StringRef implements StringRefInterface {
 
 	// cut last part (many delims)
 	@Override
-	public String CutLastPart(final char...delims) {
+	public String cutLastPart(final char...delims) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
 			return val;
@@ -419,7 +419,7 @@ public class StringRef implements StringRefInterface {
 		return result;
 	}
 	@Override
-	public String CutLastPart(final String...delims) {
+	public String cutLastPart(final String...delims) {
 		final String val = this.value;
 		if (Utils.isEmpty(val))
 			return val;

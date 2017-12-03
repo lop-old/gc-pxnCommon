@@ -28,25 +28,25 @@ public final class CryptUtils {
 
 	// md5
 	public static String MD5(final String data) {
-		return crypt(CRYPT_MD5, data);
+		return Crypt(CRYPT_MD5, data);
 	}
 	// sha1
 	public static String SHA1(final String data) {
-		return crypt(CRYPT_SHA1, data);
+		return Crypt(CRYPT_SHA1, data);
 	}
 	// sha256
 	public static String SHA256(final String data) {
-		return crypt(CRYPT_SHA256, data);
+		return Crypt(CRYPT_SHA256, data);
 	}
 	// sha512
 	public static String SHA512(final String data) {
-		return crypt(CRYPT_SHA512, data);
+		return Crypt(CRYPT_SHA512, data);
 	}
 
 
 
 	// perform crypt
-	public static String crypt(final String cryptMethod, final String data) {
+	public static String Crypt(final String cryptMethod, final String data) {
 		try {
 			final MessageDigest md = MessageDigest.getInstance(cryptMethod);
 			if (md == null)
@@ -59,7 +59,7 @@ public final class CryptUtils {
 		return null;
 	}
 	// crypt with key
-	public static String crypt(final String cryptMethod, final String key, final String data) {
+	public static String Crypt(final String cryptMethod, final String key, final String data) {
 		try {
 			final Mac mac = Mac.getInstance(cryptMethod);
 			if (mac == null)
@@ -81,16 +81,16 @@ public final class CryptUtils {
 
 
 	// encrypted data checksum
-	public static String hmacMD5(final String key, final String data) {
-		return hmac(key, data, Hmac_MD5);
+	public static String HMacMD5(final String key, final String data) {
+		return HMac(key, data, Hmac_MD5);
 	}
-	public static String hmacSHA1(final String key, final String data) {
-		return hmac(key, data, Hmac_SHA1);
+	public static String HMacSHA1(final String key, final String data) {
+		return HMac(key, data, Hmac_SHA1);
 	}
-	public static String hmacSHA256(final String key, final String data) {
-		return hmac(key, data, Hmac_SHA256);
+	public static String HMacSHA256(final String key, final String data) {
+		return HMac(key, data, Hmac_SHA256);
 	}
-	public static String hmac(final String key, final String data, final String cryptMethod) {
+	public static String HMac(final String key, final String data, final String cryptMethod) {
 		try {
 			final Mac mac = Mac.getInstance(cryptMethod);
 			if (mac == null)

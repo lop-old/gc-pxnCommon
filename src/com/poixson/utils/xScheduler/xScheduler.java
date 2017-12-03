@@ -90,13 +90,13 @@ public class xScheduler implements xStartable {
 
 
 	@Override
-	public void Start() {
+	public void start() {
 		if (this.stopping)    throw new RuntimeException("Scheduler already stopping");
 		if (this.isRunning()) throw new RuntimeException("Scheduler already running");
 		this.thread.start();
 	}
 	@Override
-	public void Stop() {
+	public void stop() {
 		this.stopping = true;
 		this.wakeManager();
 	}

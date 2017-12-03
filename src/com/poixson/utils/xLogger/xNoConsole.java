@@ -20,12 +20,12 @@ public class xNoConsole implements xConsole {
 
 
 	@Override
-	public void Start() {
+	public void start() {
 		log().finest("Start xNoConsole");
 		this.running = true;
 	}
 	@Override
-	public void Stop() {
+	public void stop() {
 		this.running = false;
 	}
 

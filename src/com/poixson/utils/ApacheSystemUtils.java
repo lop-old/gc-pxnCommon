@@ -1318,7 +1318,7 @@ public final class ApacheSystemUtils {
 		if (version == null) {
 			return new int[0];
 		}
-		String[] strings = ApacheCommons.splitByChars(version, "._- ");
+		String[] strings = ApacheCommons.SplitByChars(version, "._- ");
 		int[] ints = new int[Math.min(limit, strings.length)];
 		int j = 0;
 		for (int i = 0; i < strings.length && j < limit; i++) {

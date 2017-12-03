@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.poixson.utils.xLogger.xLog;
 
+
 public final class ThreadUtils {
 	private ThreadUtils() {}
 	{ Keeper.add(new ThreadUtils()); }
@@ -56,7 +57,7 @@ public final class ThreadUtils {
 		return list.toArray(new String[0]);
 	}
 	// display threads still running
-	public static void displayStillRunning() {
+	public static void DisplayStillRunning() {
 		if (!xVars.debug()) return;
 		final String[] threadNames = getThreadNames(false);
 		// no threads still running

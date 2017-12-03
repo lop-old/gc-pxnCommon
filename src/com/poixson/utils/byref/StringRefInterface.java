@@ -44,18 +44,18 @@ public interface StringRefInterface {
 
 
 	// get first part (single delim)
-	public String PeekFirstPart(final char   delim);
-	public String PeekFirstPart(final String delim);
+	public String peekFirstPart(final char   delim);
+	public String peekFirstPart(final String delim);
 	// cut first part (single delim)
-	public String CutFirstPart(final char    delim);
-	public String CutFirstPart(final String  delim);
+	public String cutFirstPart(final char    delim);
+	public String cutFirstPart(final String  delim);
 
 	// get first part (many delims)
-	public String PeekFirstPart(final char  ...delims);
-	public String PeekFirstPart(final String...delims);
+	public String peekFirstPart(final char  ...delims);
+	public String peekFirstPart(final String...delims);
 	// cut first part (many delims)
-	public String CutFirstPart(final char   ...delims);
-	public String CutFirstPart(final String ...delims);
+	public String cutFirstPart(final char   ...delims);
+	public String cutFirstPart(final String ...delims);
 
 
 
@@ -65,18 +65,18 @@ public interface StringRefInterface {
 
 
 	// get last part (single delim)
-	public String PeekLastPart(final char   delim);
-	public String PeekLastPart(final String delim);
+	public String peekLastPart(final char   delim);
+	public String peekLastPart(final String delim);
 	// cut last part (single delim)
-	public String CutLastPart(final char    delim);
-	public String CutLastPart(final String  delim);
+	public String cutLastPart(final char    delim);
+	public String cutLastPart(final String  delim);
 
 	// get last part (many delims)
-	public String PeekLastPart(final char  ...delims);
-	public String PeekLastPart(final String...delims);
+	public String peekLastPart(final char  ...delims);
+	public String peekLastPart(final String...delims);
 	// cut last part (many delims)
-	public String CutLastPart(final char   ...delims);
-	public String CutLastPart(final String ...delims);
+	public String cutLastPart(final char   ...delims);
+	public String cutLastPart(final String ...delims);
 
 
 

@@ -17,18 +17,18 @@ public class StringRefTest extends TestCase {
 			final StringRef str = StringRef.get("abc-efg");
 			assertEquals(
 				"abc",
-				str.PeekFirstPart('-')
+				str.peekFirstPart('-')
 			);
 			assertEquals(
 				"abc",
-				str.PeekFirstPart("-")
+				str.peekFirstPart("-")
 			);
 		}
 		{
 			final StringRef str = StringRef.get("abc-+=def");
 			assertEquals(
 				"abc",
-				str.CutFirstPart("-", "-+=")
+				str.cutFirstPart("-", "-+=")
 			);
 			assertEquals("def", str.value);
 		}

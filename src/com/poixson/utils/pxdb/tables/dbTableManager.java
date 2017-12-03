@@ -11,7 +11,7 @@ public abstract class dbTableManager {
 
 
 
-	public abstract void InitTables() throws SQLException;
+	public abstract void initTables() throws SQLException;
 	protected abstract dbQuery getDB();
 	protected abstract String getTablePrefix();
 
@@ -29,9 +29,9 @@ public abstract class dbTableManager {
 		final dbQuery db = getDB();
 		boolean result = false;
 		try {
-			db.Prepare("SHOW TABLES LIKE ?");
+			db.prepare("SHOW TABLES LIKE ?");
 			db.setString(1, tableName);
-			db.Execute();
+			db.execute();
 			result = db.hasNext();
 		} finally {
 			db.free();

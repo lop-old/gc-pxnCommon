@@ -26,7 +26,7 @@ public final class ApacheCommons {
 
 
 
-	public static String[] splitByChars(final String value, final String delims) {
+	public static String[] SplitByChars(final String value, final String delims) {
 		return SplitWorker(
 			value,
 			delims,
@@ -119,7 +119,7 @@ public final class ApacheCommons {
 
 
 
-	public static String replaceEach(final String text,
+	public static String ReplaceEach(final String text,
 			final String[] search, final String[] replace) {
 		return ReplaceEach(
 			text,

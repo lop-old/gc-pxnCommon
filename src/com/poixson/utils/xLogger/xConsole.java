@@ -7,9 +7,9 @@ public interface xConsole extends xStartable {
 
 
 	@Override
-	public void Start();
+	public void start();
 	@Override
-	public void Stop();
+	public void stop();
 
 	@Override
 	public void run();

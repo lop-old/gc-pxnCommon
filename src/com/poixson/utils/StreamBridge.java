@@ -112,11 +112,11 @@ public class StreamBridge implements xStartable {
 
 
 	@Override
-	public void Start() {
+	public void start() {
 		this.thread.start();
 	}
 	@Override
-	public void Stop() {
+	public void stop() {
 		this.stopping = true;
 		this.thread.interrupt();
 		Utils.safeClose(this.out);

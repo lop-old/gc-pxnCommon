@@ -465,7 +465,7 @@ public class xLog extends xLogPrinting {
 		{
 			final xConsole console = peekConsole();
 			if (console != null) {
-				console.Stop();
+				console.stop();
 			}
 		}
 	}
