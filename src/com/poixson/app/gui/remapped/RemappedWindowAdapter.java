@@ -5,12 +5,13 @@ import java.awt.event.WindowEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import com.poixson.commonjava.Utils.utils;
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
-import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.utils.Utils;
+import com.poixson.utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.xLogger.xLog;
 
 
 public class RemappedWindowAdapter extends WindowAdapter {
+	private static final String LOG_NAME = "GUI";
 
 	protected final Object obj;
 	protected final Method method;
@@ -21,22 +22,30 @@ public class RemappedWindowAdapter extends WindowAdapter {
 		try {
 			return new RemappedWindowAdapter(listenerClass, methodName);
 		} catch (NoSuchMethodException e) {
-xLog.getRoot().trace(e);
+			log().trace(e);
 		}
 		throw new RuntimeException();
 	}
-	public RemappedWindowAdapter(final Object listenerClass, final String methodName)
+	public RemappedWindowAdapter(final Object listenerClass, final String methodStr)
 			throws NoSuchMethodException {
-		if(listenerClass == null)     throw new RequiredArgumentException("listenerClass");
-		if(utils.isEmpty(methodName)) throw new RequiredArgumentException("methodName");
+		if (listenerClass == null)    throw new RequiredArgumentException("listenerClass");
+		if (Utils.isEmpty(methodStr)) throw new RequiredArgumentException("methodName");
 		this.obj = listenerClass;
 		final Class<?> clss = listenerClass.getClass();
-		this.method = clss.getMethod(methodName);
-		if(this.method == null) {
-xLog.getRoot().severe("Method: "+methodName+"() in class: "+listenerClass.getClass().getName());
+		this.method = clss.getMethod(methodStr);
+		if (this.method == null) {
+			log().severe(
+				"Method: {}() in class: {}",
+				methodStr,
+				listenerClass.getClass().getName()
+			);
 			throw new NoSuchMethodException();
 		}
-xLog.getRoot().finest("New WindowAdapter created for: "+clss.getName()+"::"+methodName+"()");
+		log().finest(
+			"New WindowAdapter created for: {}::{}()",
+			clss.getName(),
+			methodStr
+		);
 	}
 
 
@@ -46,14 +55,22 @@ xLog.getRoot().finest("New WindowAdapter created for: "+clss.getName()+"::"+meth
 		try {
 			this.method.invoke(this.obj);
 		} catch (IllegalAccessException e) {
-xLog.getRoot().trace(e);
+			log().trace(e);
 		} catch (IllegalArgumentException e) {
-xLog.getRoot().trace(e);
+			log().trace(e);
 		} catch (InvocationTargetException e) {
-xLog.getRoot().trace(e);
+			log().trace(e);
 		} catch (Exception e) {
-xLog.getRoot().trace(e);
+			log().trace(e);
 		}
+	}
+
+
+
+	// logger
+	public static xLog log() {
+		return xLog.getRoot()
+				.get(LOG_NAME);
 	}
 
 
