@@ -19,7 +19,7 @@ public abstract class xConfigValues {
 
 
 	public xConfigValues(final Map<String, Object> datamap) {
-		if (datamap == null) throw new RequiredArgumentException("datamap");
+		if (datamap == null) throw RequiredArgumentException.getNew("datamap");
 		this.datamap = new ConcurrentHashMap<String, Object>();
 		this.datamap.putAll(datamap);
 	}

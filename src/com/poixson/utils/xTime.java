@@ -52,26 +52,26 @@ public class xTime {
 
 
 	// get object
-	public static xTime get() {
+	public static xTime getNew() {
 		return new xTime(0);
 	}
-	public static xTime get(final long ms) {
-		return get(ms, xTimeU.MS);
+	public static xTime getNew(final long ms) {
+		return getNew(ms, xTimeU.MS);
 	}
-	public static xTime get(final long value, final TimeUnit unit) {
+	public static xTime getNew(final long value, final TimeUnit unit) {
 		if (value < 0)
 			return null;
-		return get().set(value, unit);
+		return getNew().set(value, unit);
 	}
-	public static xTime get(final String value) {
+	public static xTime getNew(final String value) {
 		if (Utils.isEmpty(value))
 			return null;
-		return get().set(value);
+		return getNew().set(value);
 	}
-	public static xTime get(final xTime time) {
+	public static xTime getNew(final xTime time) {
 		if (time == null)
 			return null;
-		return get().set(time);
+		return getNew().set(time);
 	}
 	// new object
 	protected xTime(final long ms) {
@@ -80,7 +80,7 @@ public class xTime {
 	// clone object
 	@Override
 	public xTime clone() {
-		return get(this);
+		return getNew(this);
 	}
 
 
@@ -99,7 +99,7 @@ public class xTime {
 	// reset value to 0
 	public void reset() {
 		if (this.isFinal)
-			throw UnmodifiableObjectException.get();
+			throw UnmodifiableObjectException.getNew();
 		this.value = 0;
 	}
 
@@ -107,8 +107,7 @@ public class xTime {
 
 	// get value
 	public long get(final TimeUnit unit) {
-		if (unit == null)
-			throw new RequiredArgumentException("unit");
+		if (unit == null) throw RequiredArgumentException.getNew("unit");
 		return unit.convert(this.value, xTimeU.MS);
 	}
 	public String getString() {
@@ -122,20 +121,20 @@ public class xTime {
 	}
 	// set value
 	public xTime set(final long value, final TimeUnit unit) {
-		if (unit == null) throw new RequiredArgumentException("unit");
-		if (this.isFinal) throw UnmodifiableObjectException.get();
+		if (unit == null) throw RequiredArgumentException.getNew("unit");
+		if (this.isFinal) throw UnmodifiableObjectException.getNew();
 		this.value = xTimeU.MS.convert(value, unit);
 		return this;
 	}
 	public xTime set(final String val) {
-		if (this.isFinal) throw UnmodifiableObjectException.get();
+		if (this.isFinal) throw UnmodifiableObjectException.getNew();
 		if (Utils.notEmpty(val)) {
 			this.value = parseLong(val).longValue();
 		}
 		return this;
 	}
 	public xTime set(final xTime time) {
-		if (this.isFinal) throw UnmodifiableObjectException.get();
+		if (this.isFinal) throw UnmodifiableObjectException.getNew();
 		if (time != null) {
 			this.value = time.getMS();
 		}
@@ -146,19 +145,19 @@ public class xTime {
 
 	// add time
 	public void add(final long val, final TimeUnit unit) {
-		if (unit == null) throw new RequiredArgumentException("unit");
-		if (this.isFinal) throw UnmodifiableObjectException.get();
+		if (unit == null) throw RequiredArgumentException.getNew("unit");
+		if (this.isFinal) throw UnmodifiableObjectException.getNew();
 		this.value += xTimeU.MS.convert(val, unit);
 	}
 	public void add(final String val) {
-		if (this.isFinal) throw UnmodifiableObjectException.get();
+		if (this.isFinal) throw UnmodifiableObjectException.getNew();
 		if (Utils.notEmpty(val)) {
 			this.value += parseLong(val).longValue();
 		}
 	}
 	public void add(final xTime time) {
-		if (time == null) throw new RequiredArgumentException("time");
-		if (this.isFinal) throw UnmodifiableObjectException.get();
+		if (time == null) throw RequiredArgumentException.getNew("time");
+		if (this.isFinal) throw UnmodifiableObjectException.getNew();
 		this.value += time.value;
 	}
 
@@ -171,7 +170,7 @@ public class xTime {
 		return (
 			lng == null
 			? null
-			: xTime.get(lng.longValue(), xTimeU.MS)
+			: xTime.getNew(lng.longValue(), xTimeU.MS)
 		);
 	}
 	public static Long parseLong(final String value) {

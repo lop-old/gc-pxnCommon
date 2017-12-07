@@ -33,9 +33,9 @@ public class dbConfig {
 
 	public static dbConfig load(final String host, final int port,
 			final String db, final String user, final String pass, final String prefix) {
-		if (Utils.isEmpty(user)) throw new RequiredArgumentException("database username");
-		if (Utils.isEmpty(pass)) throw new RequiredArgumentException("database password");
-		if (Utils.isEmpty(db)  ) throw new RequiredArgumentException("database name");
+		if (Utils.isEmpty(user)) throw RequiredArgumentException.getNew("database username");
+		if (Utils.isEmpty(pass)) throw RequiredArgumentException.getNew("database password");
+		if (Utils.isEmpty(db)  ) throw RequiredArgumentException.getNew("database name");
 		final String hostStr = (
 				Utils.isEmpty(host)
 				? "127.0.0.1"
@@ -113,7 +113,7 @@ public class dbConfig {
 
 
 	// connect to db
-//	private final CoolDown coolFail = CoolDown.get("2s");
+//	private final CoolDown coolFail = CoolDown.getNew("2s");
 	public Connection getConnection() {
 		if (Failure.hasFailed())
 			return null;
@@ -133,7 +133,7 @@ public class dbConfig {
 				if (conn != null) {
 					return conn;
 				}
-				final xTime sleepTime = xTime.get(
+				final xTime sleepTime = xTime.getNew(
 					(i * 2L) + 1L,
 					xTimeU.S
 				);

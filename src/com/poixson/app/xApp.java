@@ -559,7 +559,7 @@ return "<uptime>";
 		try {
 			final xClock clock = xClock.get(true);
 			this.startTime =
-				xTime.get(
+				xTime.getNew(
 					clock.millis()
 				);
 		} catch (Exception e) {

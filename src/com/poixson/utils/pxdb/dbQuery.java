@@ -36,7 +36,7 @@ public class dbQuery {
 
 
 	// new query
-	public static dbQuery get(final String dbKey) {
+	public static dbQuery getNew(final String dbKey) {
 		final dbWorker worker = dbManager.getLockedWorker(dbKey);
 		if (worker == null)
 			return null;
@@ -44,7 +44,7 @@ public class dbQuery {
 	}
 	// new query (must already have lock)
 	public dbQuery(final dbWorker worker) {
-		if (worker == null) throw new RequiredArgumentException("worker");
+		if (worker == null) throw RequiredArgumentException.getNew("worker");
 		this.worker = worker;
 		this.tablePrefix = worker.getTablePrefix();
 	}
@@ -53,7 +53,7 @@ public class dbQuery {
 
 	// prepared query
 	public dbQuery prepare(final String sqlStr) throws SQLException {
-		if (Utils.isEmpty(sqlStr)) throw new RequiredArgumentException("sqlStr");
+		if (Utils.isEmpty(sqlStr)) throw RequiredArgumentException.getNew("sqlStr");
 		synchronized(this.lock) {
 			if (!this.worker.inUse()) {
 				log().trace(new IllegalAccessException("dbWorker not locked!"));
@@ -79,7 +79,7 @@ public class dbQuery {
 		return this;
 	}
 	public boolean prep(final String sqlStr) {
-		if (Utils.isEmpty(sqlStr)) throw new RequiredArgumentException("sqlStr");
+		if (Utils.isEmpty(sqlStr)) throw RequiredArgumentException.getNew("sqlStr");
 		try {
 			if (this.prepare(sqlStr) != null) {
 				return true;
@@ -587,7 +587,7 @@ public class dbQuery {
 
 	// lock table (readable/unreadable)
 	public boolean lockTable(final String tableName, final boolean readable) {
-		if (Utils.isEmpty(tableName)) throw new RequiredArgumentException("tableName");
+		if (Utils.isEmpty(tableName)) throw RequiredArgumentException.getNew("tableName");
 		synchronized(this.lock) {
 			final StringBuilder str =
 				(new StringBuilder())

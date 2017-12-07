@@ -25,8 +25,8 @@ public abstract class xJavaPlugin {
 	public xJavaPlugin() {
 	}
 	public void init(final xPluginManager<?> manager, final xPluginYML yml) {
-		if (manager == null) throw new RequiredArgumentException("manager");
-		if (yml     == null) throw new RequiredArgumentException("yml");
+		if (manager == null) throw RequiredArgumentException.getNew("manager");
+		if (yml     == null) throw RequiredArgumentException.getNew("yml");
 		this.manager = manager;
 		this.yml     = yml;
 	}

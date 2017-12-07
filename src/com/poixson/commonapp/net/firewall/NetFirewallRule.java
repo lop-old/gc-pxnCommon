@@ -16,7 +16,7 @@ public abstract class NetFirewallRule {
 
 
 	public NetFirewallRule(final RuleType ruleType) {
-		if(ruleType == null) throw new RequiredArgumentException("ruleType");
+		if(ruleType == null) throw RequiredArgumentException.getNew("ruleType");
 		this.ruleType = ruleType;
 	}
 
@@ -28,7 +28,7 @@ public abstract class NetFirewallRule {
 
 	protected void SplitPattern(final String pattern,
 			final StringRef hostPattern, final StringRef portPattern) {
-		if(utils.isEmpty(pattern)) throw new RequiredArgumentException("pattern");
+		if(utils.isEmpty(pattern)) throw RequiredArgumentException.getNew("pattern");
 		final String[] parts = pattern.split(":", 2);
 		if(parts.length > 1) {
 			hostPattern.value(parts[0]);

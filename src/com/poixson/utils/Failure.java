@@ -12,7 +12,7 @@ public final class Failure {
 	private Failure() {}
 	{ Keeper.add(new Failure()); }
 
-	public static final xTime EXIT_TIMEOUT = xTime.get("300n");
+	public static final xTime EXIT_TIMEOUT = xTime.getNew("300n");
 
 	private static final List<String> messages = new CopyOnWriteArrayList<String>();
 	private static volatile boolean failed = false;

@@ -51,8 +51,8 @@ public class StreamBridge implements xStartable {
 
 
 	public StreamBridge(final InputStream in, final OutputStream out) {
-		if (in  == null) throw new RequiredArgumentException("in");
-		if (out == null) throw new RequiredArgumentException("out");
+		if (in  == null) throw RequiredArgumentException.getNew("in");
+		if (out == null) throw RequiredArgumentException.getNew("out");
 		instances.add(this);
 		this.in  = in;
 		this.out = out;

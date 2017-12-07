@@ -6,6 +6,9 @@ public class RequiredArgumentException extends NullPointerException {
 
 
 
+	public static RequiredArgumentException getNew(final String argName) {
+		return new RequiredArgumentException(argName);
+	}
 	public RequiredArgumentException(final String argName) {
 		super(
 			(new StringBuilder())

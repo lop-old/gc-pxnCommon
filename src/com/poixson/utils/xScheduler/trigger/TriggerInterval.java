@@ -10,8 +10,8 @@ import com.poixson.utils.xScheduler.xSchedulerTrigger;
 
 public class TriggerInterval extends xSchedulerTrigger {
 
-	private final xTime delay    = xTime.get();
-	private final xTime interval = xTime.get();
+	private final xTime delay    = xTime.getNew();
+	private final xTime interval = xTime.getNew();
 	private volatile long last = Long.MIN_VALUE;
 
 	private final Object updateLock = new Object();
@@ -74,8 +74,7 @@ public class TriggerInterval extends xSchedulerTrigger {
 				final long delay    = this.delay.getMS();
 				final long interval = this.interval.getMS();
 				if (interval < 1L) {
-					if (delay < 1L)
-						throw new RequiredArgumentException("delay/interval");
+					if (delay < 1L) throw RequiredArgumentException.getNew("delay/interval");
 					// swap delay to interval
 					// and set no repeat
 					this.interval.set(

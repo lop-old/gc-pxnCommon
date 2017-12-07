@@ -11,7 +11,7 @@ public final class appDefines {
 
 //TODO:
 //	// defaults
-//	public static final xTime DEFAULT_TICK_INTERVAL = xTime.get("60s");
+//	public static final xTime DEFAULT_TICK_INTERVAL = xTime.getNew("60s");
 
 
 

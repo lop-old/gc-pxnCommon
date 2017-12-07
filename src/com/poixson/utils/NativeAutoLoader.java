@@ -35,7 +35,7 @@ public class NativeAutoLoader {
 
 
 
-	public static NativeAutoLoader get() {
+	public static NativeAutoLoader getNew() {
 		return new NativeAutoLoader();
 	}
 	public NativeAutoLoader() {
@@ -65,8 +65,8 @@ public class NativeAutoLoader {
 		final String fileName = this.getFileName();
 		if (Utils.isEmpty(fileName)) {
 			if (ErrorMode.EXCEPTION.equals(errorMode)) {
-				throw new RequiredArgumentException("fileName");
 			} else
+				throw RequiredArgumentException.getNew("fileName");
 			if (ErrorMode.LOG.equals(errorMode)) {
 				this.log().severe("Library fileName is missing!");
 			}
@@ -118,7 +118,7 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 					this.log().info("Created libraries dir: {}", localPath);
 				} else {
 					if (ErrorMode.EXCEPTION.equals(errorMode)) {
-						throw new IORuntimeException("Failed to create directory: "+localPath);
+						throw IORuntimeException.getNew("Failed to create directory: "+localPath);
 					} else
 					if (ErrorMode.LOG.equals(errorMode)) {
 						this.log().severe("Failed to create directory: {}", localPath);
@@ -153,7 +153,7 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 				} catch (IOException e) {
 					this.log().severe(e.getMessage());
 					if (ErrorMode.EXCEPTION.equals(errorMode)) {
-						throw new IORuntimeException("Failed to extract library file: "+localFilePath, e);
+						throw IORuntimeException.getNew("Failed to extract library file: "+localFilePath, e);
 					} else
 					if (ErrorMode.LOG.equals(errorMode)) {
 						this.log().severe("Failed to extract library file: {}", localFilePath);
@@ -168,7 +168,7 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 			final boolean exists = localFile.isFile();
 			if (!exists) {
 				if (ErrorMode.EXCEPTION.equals(errorMode)) {
-					throw new IORuntimeException("Library file not found: "+localFilePath);
+					throw IORuntimeException.getNew("Library file not found: "+localFilePath);
 				} else
 				if (ErrorMode.LOG.equals(errorMode)) {
 					this.log().severe("Library file not found: {}", localFilePath);

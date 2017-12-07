@@ -9,13 +9,13 @@ public class xString {
 
 
 
-	public static xString get() {
+	public static xString getNew() {
 		return new xString("");
 	}
-	public static xString get(final String data) {
+	public static xString getNew(final String data) {
 		return new xString(data);
 	}
-	public static xString get(final Object obj) {
+	public static xString getNew(final Object obj) {
 		return new xString(obj);
 	}
 	public xString(final String data) {

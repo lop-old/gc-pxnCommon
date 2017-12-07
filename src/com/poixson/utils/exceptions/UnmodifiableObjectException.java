@@ -8,12 +8,12 @@ public class UnmodifiableObjectException extends UnsupportedOperationException {
 
 
 
-	public static UnmodifiableObjectException get() {
+	public static UnmodifiableObjectException getNew() {
 		final int index = 1;
 		final Exception eTemp = new Exception();
 		final StackTraceElement[] trace = eTemp.getStackTrace();
 		final String parentClassName =
-			StringRef.get(trace[index].getClassName())
+			StringRef.getNew(trace[index].getClassName())
 				.peekLastPart('.');
 		final String parentMethodName = trace[index].getMethodName();
 		final StringBuilder msg =

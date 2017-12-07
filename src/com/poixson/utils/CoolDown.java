@@ -5,26 +5,26 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class CoolDown {
 
-	protected final xTime duration = xTime.get();
+	protected final xTime duration = xTime.getNew();
 	protected final AtomicLong last = new AtomicLong(-1L);
 
 
 
-	public static CoolDown get() {
+	public static CoolDown getNew() {
 		return new CoolDown();
 	}
-	public static CoolDown get(final long ms) {
-		CoolDown cool = CoolDown.get();
+	public static CoolDown getNew(final long ms) {
+		CoolDown cool = CoolDown.getNew();
 		cool.setDuration(ms);
 		return cool;
 	}
-	public static CoolDown get(final String time) {
-		CoolDown cool = CoolDown.get();
+	public static CoolDown getNew(final String time) {
+		CoolDown cool = CoolDown.getNew();
 		cool.setDuration(time);
 		return cool;
 	}
-	public static CoolDown get(final xTime time) {
-		CoolDown cool = CoolDown.get();
+	public static CoolDown getNew(final xTime time) {
+		CoolDown cool = CoolDown.getNew();
 		cool.setDuration(time);
 		return cool;
 	}

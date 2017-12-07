@@ -25,11 +25,11 @@ import com.poixson.utils.xLogger.xLog;
 
 public class xThreadPool implements xStartable {
 
-	protected static final xTime THREAD_LOOP_TIME        = xTime.get("1s");
-	protected static final xTime INACTIVE_THREAD_TIMEOUT = xTime.get("10s");
+	protected static final xTime THREAD_LOOP_TIME        = xTime.getNew("1s");
+	protected static final xTime INACTIVE_THREAD_TIMEOUT = xTime.getNew("10s");
 //TODO:
-//	protected static final xTime TASK_RUN_TIMEOUT        = xTime.get("5s");
-	protected static final xTime POST_START_SLEEP        = xTime.get("20n");
+//	protected static final xTime TASK_RUN_TIMEOUT        = xTime.getNew("5s");
+	protected static final xTime POST_START_SLEEP        = xTime.getNew("20n");
 	protected static final int   GLOBAL_POOL_SIZE_LIMIT  = 50;
 	protected static final int   MAX_QUEUE_SIZE          = 1000;
 
@@ -62,13 +62,13 @@ public class xThreadPool implements xStartable {
 	private final ConcurrentLinkedQueue<xThreadPoolTask> queueLow;
 
 	// warning cool-down
-	private CoolDown coolMaxReached       = CoolDown.get("5s");
-	private CoolDown coolGlobalMaxReached = CoolDown.get("5s");
+	private CoolDown coolMaxReached       = CoolDown.getNew("5s");
+	private CoolDown coolGlobalMaxReached = CoolDown.getNew("5s");
 
 
 
 	protected xThreadPool(final String poolName) {
-		if (Utils.isEmpty(poolName)) throw new RequiredArgumentException("poolName");
+		if (Utils.isEmpty(poolName)) throw RequiredArgumentException.getNew("poolName");
 		this.isMainPool = MAIN_POOL_NAME.equalsIgnoreCase(poolName);
 		this.poolName = (
 			this.isMainPool
@@ -302,7 +302,7 @@ public class xThreadPool implements xStartable {
 //		throw new UnsupportedOperationException();
 //		if (!this.isStopping())
 //			this.Stop();
-//		final CoolDown cool = CoolDown.get("1s");
+//		final CoolDown cool = CoolDown.getNew("1s");
 //		while (true) {
 //			int count = 0;
 //			final Iterator<xThreadPoolWorker> it =
@@ -340,7 +340,7 @@ public class xThreadPool implements xStartable {
 
 	// run a task as soon as possible
 	public void runNow(final Runnable run) {
-		if (run == null) throw new RequiredArgumentException("run");
+		if (run == null) throw RequiredArgumentException.getNew("run");
 		// run in main thread pool
 		if (!this.isMainPool()) {
 			if (this.getMaxThreadCount() == 0) {
@@ -373,7 +373,7 @@ public class xThreadPool implements xStartable {
 
 	// queue a task
 	public void runLater(final Runnable run) {
-		if (run == null) throw new RequiredArgumentException("run");
+		if (run == null) throw RequiredArgumentException.getNew("run");
 //TODO:
 //		// pass to main pool
 //		if (this.getMaxThreads() < 1 && !this.isMainPool) {

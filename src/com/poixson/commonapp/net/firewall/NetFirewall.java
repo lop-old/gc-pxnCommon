@@ -18,7 +18,7 @@ public class NetFirewall {
 
 
 	public void addRule(final NetFirewallRule rule) {
-		if(rule == null) throw new RequiredArgumentException("rule");
+		if(rule == null) throw RequiredArgumentException.getNew("rule");
 		this.rules.add(rule);
 	}
 

@@ -21,7 +21,7 @@ public class xTickHandler extends xHandlerSimple implements xStartable {
 	protected static volatile xTickHandler instance = null;
 	protected static final Object instanceLock = new Object();
 
-	protected final xTime interval = xTime.get("1s");
+	protected final xTime interval = xTime.getNew("1s");
 	protected final AtomicLong tickCounter = new AtomicLong(0);
 
 	protected volatile xScheduledTask schedTask = null;
@@ -70,7 +70,7 @@ public class xTickHandler extends xHandlerSimple implements xStartable {
 	public void Start() {
 		synchronized(instanceLock) {
 			if(this.isRunning()) throw new RuntimeException("xTicker already running");
-			this.schedTask = xScheduledTask.get()
+			this.schedTask = xScheduledTask.getNew()
 					.setRepeating(true)
 					.setRunnable(this)
 					.setTrigger(
@@ -110,7 +110,7 @@ public class xTickHandler extends xHandlerSimple implements xStartable {
 
 
 	public void setInterval(final String value) {
-		this.setInterval(xTime.get(value));
+		this.setInterval(xTime.getNew(value));
 	}
 	public void setInterval(final xTime value) {
 		this.interval.set(value);

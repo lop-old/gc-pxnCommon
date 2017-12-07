@@ -82,7 +82,7 @@ public abstract class xWindow extends JFrame implements Closeable {
 				@Override
 				public void run() {
 					this.window.addWindowListener(
-						RemappedWindowAdapter.get(
+						RemappedWindowAdapter.getNew(
 							this.window,
 							"close"
 						)

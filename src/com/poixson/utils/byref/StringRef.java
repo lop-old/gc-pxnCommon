@@ -10,7 +10,7 @@ public class StringRef implements StringRefInterface {
 
 
 
-	public static StringRef get(final String val) {
+	public static StringRef getNew(final String val) {
 		return new StringRef(val);
 	}
 	public StringRef(final String val) {

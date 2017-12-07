@@ -16,7 +16,7 @@ import com.poixson.utils.xLogger.xLog;
 
 public class dbPool {
 
-	private static final xTime MAX_HARD_BLOCKING = xTime.get("5s");
+	private static final xTime MAX_HARD_BLOCKING = xTime.getNew("5s");
 
 	// connection config
 	private final dbConfig config;
@@ -30,7 +30,7 @@ public class dbPool {
 
 
 	protected dbPool(final dbConfig config) {
-		if (config == null) throw new RequiredArgumentException("config");
+		if (config == null) throw RequiredArgumentException.getNew("config");
 		this.config   = config;
 		this.poolSize = new dbPoolSize(this);
 		this.poolSize.setSoft(config.getPoolSizeWarn());
@@ -82,7 +82,7 @@ public class dbPool {
 
 	// get unused worker
 	public dbWorker getLockedWorker() {
-		final CoolDown maxHardBlocking = CoolDown.get(MAX_HARD_BLOCKING);
+		final CoolDown maxHardBlocking = CoolDown.getNew(MAX_HARD_BLOCKING);
 		maxHardBlocking.resetRun();
 		while (true) {
 			// use existing connection
@@ -160,7 +160,7 @@ public class dbPool {
 		return output;
 	}
 	// new worker/connection
-//	private final CoolDown coolFail = CoolDown.get("2s");
+//	private final CoolDown coolFail = CoolDown.getNew("2s");
 	private dbWorker newLockedWorker() {
 		// hard limit reached
 		if (getWorkerCount() >= this.poolSize.getHard())

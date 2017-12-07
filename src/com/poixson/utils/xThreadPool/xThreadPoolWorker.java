@@ -68,7 +68,7 @@ public class xThreadPoolWorker extends Thread {
 			.finer("Started worker thread..");
 		// inactive thread timer
 		final CoolDown inactive =
-			CoolDown.get(
+			CoolDown.getNew(
 				xThreadPool.INACTIVE_THREAD_TIMEOUT
 			);
 		inactive.resetRun();

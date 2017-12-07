@@ -13,25 +13,25 @@ public class xURL {
 
 
 
-	public static xURL get() {
+	public static xURL getNew() {
 		return new xURL();
 	}
-	public static xURL get(final String uri) {
+	public static xURL getNew(final String uri) {
 		return new xURL(uri);
 	}
-	public static xURL get(final String protocol, final String host) {
+	public static xURL getNew(final String protocol, final String host) {
 		return new xURL(protocol, host);
 	}
-	public static xURL get(final String host, final int port) {
+	public static xURL getNew(final String host, final int port) {
 		return new xURL(host, port);
 	}
-	public static xURL get(final String protocol, final String host, final int port) {
+	public static xURL getNew(final String protocol, final String host, final int port) {
 		return new xURL(protocol, host, port);
 	}
-	public static xURL get(final String protocol, final String host, final int port, final String path) {
+	public static xURL getNew(final String protocol, final String host, final int port, final String path) {
 		return new xURL(protocol, host, port, path);
 	}
-	public static xURL get(final String user, final String pass,
+	public static xURL getNew(final String user, final String pass,
 			final String protocol, final String host, final int port, final String path) {
 		return new xURL(protocol, user, pass, host, port, path);
 	}

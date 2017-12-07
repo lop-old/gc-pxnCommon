@@ -40,8 +40,8 @@ public class xLevel implements Serializable {
 
 
 	private xLevel(final String shortName, final String name, final int value) {
-		if (Utils.isEmpty(name))      throw new RequiredArgumentException("name");
-		if (Utils.isEmpty(shortName)) throw new RequiredArgumentException("shortName");
+		if (Utils.isEmpty(name))      throw RequiredArgumentException.getNew("name");
+		if (Utils.isEmpty(shortName)) throw RequiredArgumentException.getNew("shortName");
 		this.name      = name.toUpperCase();
 		this.shortName = shortName.toUpperCase();
 		this.value     = value;

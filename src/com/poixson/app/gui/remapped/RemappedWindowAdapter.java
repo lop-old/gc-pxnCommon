@@ -18,7 +18,7 @@ public class RemappedWindowAdapter extends WindowAdapter {
 
 
 
-	public static RemappedWindowAdapter get(final Object listenerClass, final String methodName) {
+	public static RemappedWindowAdapter getNew(final Object listenerClass, final String methodName) {
 		try {
 			return new RemappedWindowAdapter(listenerClass, methodName);
 		} catch (NoSuchMethodException e) {
@@ -28,8 +28,8 @@ public class RemappedWindowAdapter extends WindowAdapter {
 	}
 	public RemappedWindowAdapter(final Object listenerClass, final String methodStr)
 			throws NoSuchMethodException {
-		if (listenerClass == null)    throw new RequiredArgumentException("listenerClass");
-		if (Utils.isEmpty(methodStr)) throw new RequiredArgumentException("methodName");
+		if (listenerClass == null)    throw RequiredArgumentException.getNew("listenerClass");
+		if (Utils.isEmpty(methodStr)) throw RequiredArgumentException.getNew("methodName");
 		this.obj = listenerClass;
 		final Class<?> clss = listenerClass.getClass();
 		this.method = clss.getMethod(methodStr);

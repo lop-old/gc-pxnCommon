@@ -48,7 +48,7 @@ public class xRunnable implements Runnable {
 		return cast(null, run);
 	}
 	public static xRunnable cast(final String taskName, final Runnable run) {
-		if (run == null) throw new RequiredArgumentException("run");
+		if (run == null) throw RequiredArgumentException.getNew("run");
 		if (run instanceof xRunnable) {
 			final xRunnable xrun = (xRunnable) run;
 			if (Utils.notEmpty(taskName)) {
@@ -71,7 +71,7 @@ public class xRunnable implements Runnable {
 	@Override
 	public void run() {
 		final Runnable task = this.task;
-		if (task == null) throw new RequiredArgumentException("task");
+		if (task == null) throw RequiredArgumentException.getNew("task");
 		task.run();
 	}
 

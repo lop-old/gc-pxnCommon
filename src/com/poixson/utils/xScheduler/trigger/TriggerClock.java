@@ -20,7 +20,7 @@ public class TriggerClock extends xSchedulerTrigger {
 	private static final long  DEFAULT_GRACE_TIME  = 1000L;
 
 	private volatile Date date = null;
-	private final xTime grace = xTime.get();
+	private final xTime grace = xTime.getNew();
 
 	private final Object updateLock = new Object();
 
@@ -57,12 +57,10 @@ public class TriggerClock extends xSchedulerTrigger {
 	public long untilNextTrigger(final long now) {
 		if (this.notEnabled())
 			return Long.MIN_VALUE;
-		if (this.date == null)
-			throw new RequiredArgumentException("date");
+		if (this.date == null) throw RequiredArgumentException.getNew("date");
 		synchronized(this.updateLock) {
 			final Date date = this.date;
-			if (date == null)
-				throw new RequiredArgumentException("date");
+			if (date == null) throw RequiredArgumentException.getNew("date");
 			final long time = date.getTime();
 			final long grace = this.getGraceTime();
 			// calculate time until trigger
@@ -91,10 +89,8 @@ xLog.getRoot().warning("Skipping old scheduled clock trigger..");
 	}
 	public TriggerClock setDate(final String dateStr, final String dateFormatStr)
 			throws ParseException {
-		if (Utils.isBlank(dateStr))
-			throw new RequiredArgumentException("dateStr");
-		if (Utils.isBlank(dateFormatStr))
-			throw new RequiredArgumentException("dateFormatStr");
+		if (Utils.isBlank(dateStr))       throw RequiredArgumentException.getNew("dateStr");
+		if (Utils.isBlank(dateFormatStr)) throw RequiredArgumentException.getNew("dateFormatStr");
 		final DateFormat format =
 			new SimpleDateFormat(
 				(
@@ -108,8 +104,7 @@ xLog.getRoot().warning("Skipping old scheduled clock trigger..");
 		return this.setDate(date);
 	}
 	public TriggerClock setDate(final Date date) {
-		if (date == null)
-			throw new RequiredArgumentException("date");
+		if (date == null) throw RequiredArgumentException.getNew("date");
 		this.date = date;
 		return this;
 	}

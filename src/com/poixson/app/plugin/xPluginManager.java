@@ -73,13 +73,13 @@ public class xPluginManager<T extends xJavaPlugin> {
 
 
 	public boolean isPluginLoaded(final String pluginName) {
-		if (Utils.isBlank(pluginName)) throw new RequiredArgumentException("pluginName");
+		if (Utils.isBlank(pluginName)) throw RequiredArgumentException.getNew("pluginName");
 		return
 			this.plugins
 				.containsKey(pluginName);
 	}
 	public boolean isPluginLoaded(final T plugin) {
-		if (plugin == null) throw new RequiredArgumentException("plugin");
+		if (plugin == null) throw RequiredArgumentException.getNew("plugin");
 		return
 			this.isPluginLoaded(
 				plugin.getPluginName()
@@ -112,13 +112,13 @@ public class xPluginManager<T extends xJavaPlugin> {
 		}
 	}
 	public void enable(final String pluginName) {
-		if (Utils.isEmpty(pluginName)) throw new RequiredArgumentException("pluginName");
+		if (Utils.isEmpty(pluginName)) throw RequiredArgumentException.getNew("pluginName");
 		final T plugin = this.getPlugin(pluginName);
 		if (plugin == null) throw new RuntimeException("Unknown plugin: "+pluginName);
 		this.enable(plugin);
 	}
 	public void enable(final T plugin) {
-		if (plugin == null) throw new RequiredArgumentException("plugin");
+		if (plugin == null) throw RequiredArgumentException.getNew("plugin");
 		plugin.doEnable();
 	}
 
@@ -133,13 +133,13 @@ public class xPluginManager<T extends xJavaPlugin> {
 		}
 	}
 	public void disable(final String pluginName) {
-		if (Utils.isEmpty(pluginName)) throw new RequiredArgumentException("pluginName");
+		if (Utils.isEmpty(pluginName)) throw RequiredArgumentException.getNew("pluginName");
 		final T plugin = this.getPlugin(pluginName);
 		if (plugin == null) throw new RuntimeException("Unknown plugin: "+pluginName);
 		this.disable(plugin);
 	}
 	public void disable(final T plugin) {
-		if (plugin == null) throw new RequiredArgumentException("plugin");
+		if (plugin == null) throw RequiredArgumentException.getNew("plugin");
 		plugin.doDisable();
 	}
 

@@ -10,7 +10,7 @@ public class xPluginsEventHandler extends xHandlerGeneric {
 
 
 
-	public static xPluginsEventHandler get() {
+	public static xPluginsEventHandler getNew() {
 		return new xPluginsEventHandler();
 	}
 	protected xPluginsEventHandler() {

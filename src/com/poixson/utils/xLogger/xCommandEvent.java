@@ -16,7 +16,7 @@ public class xCommandEvent extends xEventData {
 
 	public xCommandEvent(final String line) {
 		super();
-		if (Utils.isEmpty(line)) throw new RequiredArgumentException("line");
+		if (Utils.isEmpty(line)) throw RequiredArgumentException.getNew("line");
 		String str = line.trim();
 		boolean ishelp = false;
 		// starts with ?

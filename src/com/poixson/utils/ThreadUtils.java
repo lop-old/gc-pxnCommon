@@ -85,7 +85,7 @@ public final class ThreadUtils {
 	}
 	public static void Sleep(final String time) {
 		Sleep(
-			xTime.get(time)
+			xTime.getNew(time)
 		);
 	}
 	public static void Sleep(final xTime time) {

@@ -20,7 +20,7 @@ public final class ObjectUtils {
 	@SuppressWarnings("unchecked")
 	public static <T> T Cast(final Object object,
 			final Class<? extends T> clss) {
-		if (clss   == null) throw new RequiredArgumentException("clss");
+		if (clss   == null) throw RequiredArgumentException.getNew("clss");
 		if (object == null) return null;
 		try {
 			if ( String.class.equals(clss) && !(object instanceof String) )
@@ -40,7 +40,7 @@ public final class ObjectUtils {
 	 */
 	public static <T> Set<T> CastSet(final Collection<?> data,
 			final Class<? extends T> clss) {
-		if (clss == null) throw new RequiredArgumentException("clss");
+		if (clss == null) throw RequiredArgumentException.getNew("clss");
 		if (data == null) return null;
 		try {
 			final Set<T> result = new HashSet<T>(data.size());
@@ -62,7 +62,7 @@ public final class ObjectUtils {
 	@SuppressWarnings("unchecked")
 	public static <T> Set<T> CastSet(final Object data,
 			final Class<? extends T> clss) {
-		if (clss == null) throw new RequiredArgumentException("clss");
+		if (clss == null) throw RequiredArgumentException.getNew("clss");
 		if (data == null) return null;
 		try {
 			return CastSet(
@@ -83,7 +83,7 @@ public final class ObjectUtils {
 	 */
 	public static <T> List<T> CastList(final Collection<?> data,
 			final Class<? extends T> clss) {
-		if (clss == null) throw new RequiredArgumentException("clss");
+		if (clss == null) throw RequiredArgumentException.getNew("clss");
 		if (data == null) return null;
 		try {
 			final List<T> result = new ArrayList<T>(data.size());
@@ -105,7 +105,7 @@ public final class ObjectUtils {
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> CastList(final Object data,
 			final Class<? extends T> clss) {
-		if (clss == null) throw new RequiredArgumentException("clss");
+		if (clss == null) throw RequiredArgumentException.getNew("clss");
 		if (data == null) return null;
 		try {
 			return CastList(
@@ -127,8 +127,8 @@ public final class ObjectUtils {
 	 */
 	public static <K, V> Map<K, V> CastMap(final Map<?, ?> data,
 			final Class<? extends K> keyClss, final Class<? extends V> valClss) {
-		if (keyClss == null) throw new RequiredArgumentException("keyClss");
-		if (valClss == null) throw new RequiredArgumentException("valClss");
+		if (keyClss == null) throw RequiredArgumentException.getNew("keyClss");
+		if (valClss == null) throw RequiredArgumentException.getNew("valClss");
 		if (data    == null) return null;
 		try {
 			final Map<K, V> result = new HashMap<K, V>(data.size());
@@ -160,8 +160,8 @@ public final class ObjectUtils {
 	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> CastMap(final Object data,
 			final Class<? extends K> keyClss, final Class<? extends V> valClss) {
-		if (keyClss == null) throw new RequiredArgumentException("keyClss");
-		if (valClss == null) throw new RequiredArgumentException("valClss");
+		if (keyClss == null) throw RequiredArgumentException.getNew("keyClss");
+		if (valClss == null) throw RequiredArgumentException.getNew("valClss");
 		if (data    == null) return null;
 		try {
 			return CastMap(

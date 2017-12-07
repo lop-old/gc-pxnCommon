@@ -29,7 +29,7 @@ public class xPluginLoader<T extends xJavaPlugin> {
 
 
 	public xPluginLoader(final xPluginManager<T> manager) {
-		if (manager == null) throw new RequiredArgumentException("manager");
+		if (manager == null) throw RequiredArgumentException.getNew("manager");
 		this.manager = manager;
 		final JarClassLoader jcl = new JarClassLoader();
 		final DefaultContextLoader context = new DefaultContextLoader(jcl);
@@ -39,7 +39,7 @@ public class xPluginLoader<T extends xJavaPlugin> {
 
 
 	protected xPluginYML LoadPluginYML(final File file) {
-		if (file == null)   throw new RequiredArgumentException("file");
+		if (file == null)   throw RequiredArgumentException.getNew("file");
 		if (!file.exists()) throw new RuntimeException("Plugin file not found: "+file.getPath());
 		JarFile jarFile = null;
 		InputStream in  = null;
@@ -89,8 +89,8 @@ public class xPluginLoader<T extends xJavaPlugin> {
 		return yml;
 	}
 	protected T LoadPluginClass(final File file, final xPluginYML yml) {
-		if (file == null)   throw new RequiredArgumentException("file");
-		if (yml  == null)   throw new RequiredArgumentException("yml");
+		if (file == null)   throw RequiredArgumentException.getNew("file");
+		if (yml  == null)   throw RequiredArgumentException.getNew("yml");
 		if (!file.exists()) throw new RuntimeException("Plugin file not found: "+file.getPath());
 		this.log()
 			.info(

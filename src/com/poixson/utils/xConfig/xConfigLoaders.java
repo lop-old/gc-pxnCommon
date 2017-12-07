@@ -22,8 +22,8 @@ public final class xConfigLoaders {
 	// new xConfig child instance
 	public static <T extends xConfig> T newConfig(
 			final Map<String, Object> datamap, final Class<T> cfgClass) {
-		if (datamap == null)  throw new RequiredArgumentException("datamap");
-		if (cfgClass == null) throw new RequiredArgumentException("cfgClass");
+		if (datamap == null)  throw RequiredArgumentException.getNew("datamap");
+		if (cfgClass == null) throw RequiredArgumentException.getNew("cfgClass");
 		// get construct
 		final Constructor<? extends xConfig> construct;
 		try {
@@ -62,8 +62,8 @@ public final class xConfigLoaders {
 	// from file
 	public static <T extends xConfig> T fromFile(
 			final String filePath, final Class<T> cfgClass) {
-		if (Utils.isEmpty(filePath)) throw new RequiredArgumentException("filePath");
-		if (cfgClass == null)        throw new RequiredArgumentException("cfgClass");
+		if (Utils.isEmpty(filePath)) throw RequiredArgumentException.getNew("filePath");
+		if (cfgClass == null)        throw RequiredArgumentException.getNew("cfgClass");
 		final String fileStr = StringUtils.ForceEnds(".yml", filePath);
 		final File file = new File(fileStr);
 		if (!file.isFile())
@@ -95,8 +95,8 @@ public final class xConfigLoaders {
 	// from jar resource
 	public static <T extends xConfig> T fromJar(
 			final String filePath, final Class<T> cfgClass) {
-		if (Utils.isEmpty(filePath)) throw new RequiredArgumentException("filePath");
-		if (cfgClass == null)        throw new RequiredArgumentException("cfgClass");
+		if (Utils.isEmpty(filePath)) throw RequiredArgumentException.getNew("filePath");
+		if (cfgClass == null)        throw RequiredArgumentException.getNew("cfgClass");
 		final String fileStr = StringUtils.ForceEnds(".yml", filePath);
 		InputStream in = null;
 		try {
@@ -124,8 +124,8 @@ public final class xConfigLoaders {
 	public static <T extends xConfig> T fromFileOrJar(
 			final String filePath, final Class<T> cfgClass)
 			throws CreateDefaultYmlFileException {
-		if (Utils.isEmpty(filePath)) throw new RequiredArgumentException("filePath");
-		if (cfgClass == null)        throw new RequiredArgumentException("cfgClass");
+		if (Utils.isEmpty(filePath)) throw RequiredArgumentException.getNew("filePath");
+		if (cfgClass == null)        throw RequiredArgumentException.getNew("cfgClass");
 		final String fileStr = StringUtils.ForceEnds(".yml", filePath);
 		try {
 			// attempt loading from file

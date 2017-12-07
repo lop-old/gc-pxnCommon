@@ -70,8 +70,8 @@ public final class NativeUtils {
 			final String outputDir, final String resourcePath,
 			final String fileName, final Class<?> classRef)
 			throws IOException {
-		if (Utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
-		if (classRef == null       ) throw new RequiredArgumentException("classRef");
+		if (Utils.isEmpty(fileName)) throw RequiredArgumentException.getNew("fileName");
+		if (classRef == null       ) throw RequiredArgumentException.getNew("classRef");
 		// prepare paths
 		final String resPath =
 			FileUtils.MergePaths(

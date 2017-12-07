@@ -63,12 +63,12 @@ public class DualKeyMap<K, J, V> {
 
 
 	public void clear() {
-		if (this.isFinal) throw UnmodifiableObjectException.get();
+		if (this.isFinal) throw UnmodifiableObjectException.getNew();
 		this.kMap.clear();
 		this.jMap.clear();
 	}
 	public V remove(final K kKey, final J jKey) {
-		if (this.isFinal) throw UnmodifiableObjectException.get();
+		if (this.isFinal) throw UnmodifiableObjectException.getNew();
 		final V resultK = this.kMap.remove(kKey);
 		final V resultJ = this.jMap.remove(jKey);
 		if (resultK != null) {
@@ -131,13 +131,13 @@ public class DualKeyMap<K, J, V> {
 
 	// put a key,key,value
 	public V put(final K kKey, final J jKey, final V value) {
-		if (this.isFinal) UnmodifiableObjectException.get();
+		if (this.isFinal) UnmodifiableObjectException.getNew();
 		this.kMap.put(kKey, value);
 		this.jMap.put(jKey, value);
 		return value;
 	}
 	public void putAll(final DualKeyMap<K, J, V> map) {
-		if (this.isFinal) throw UnmodifiableObjectException.get();
+		if (this.isFinal) throw UnmodifiableObjectException.getNew();
 		final Iterator<Entry<K, V>> itK = this.kMap.entrySet().iterator();
 		final Iterator<Entry<J, V>> itJ = this.jMap.entrySet().iterator();
 		while (itK.hasNext() && itJ.hasNext()) {

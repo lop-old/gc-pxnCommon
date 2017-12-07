@@ -14,7 +14,7 @@ public class StringRefTest extends TestCase {
 	@Test
 	public void testPeekFirstPart() {
 		{
-			final StringRef str = StringRef.get("abc-efg");
+			final StringRef str = StringRef.getNew("abc-efg");
 			assertEquals(
 				"abc",
 				str.peekFirstPart('-')
@@ -25,7 +25,7 @@ public class StringRefTest extends TestCase {
 			);
 		}
 		{
-			final StringRef str = StringRef.get("abc-+=def");
+			final StringRef str = StringRef.getNew("abc-+=def");
 			assertEquals(
 				"abc",
 				str.cutFirstPart("-", "-+=")

@@ -85,7 +85,7 @@ public final class FileUtils {
 	 * @return
 	 */
 	public static File[] ListDirContents(final File dir, final String[] extensions) {
-		if (dir == null) throw new RequiredArgumentException("dir");
+		if (dir == null) throw RequiredArgumentException.getNew("dir");
 		if (!dir.isDirectory()) return null;
 		return dir.listFiles(
 			new FileFilter() {
@@ -121,7 +121,7 @@ public final class FileUtils {
 //TODO: does this work?
 	// add lib to paths
 	public static void addLibraryPath(final String libDir) {
-		if (utils.isEmpty(libDir)) throw new RequiredArgumentException("libDir");
+		if (utils.isEmpty(libDir)) throw RequiredArgumentException.getNew("libDir");
 		// get lib path
 		final File file = new File(libDir);
 		if (!file.exists() || !file.isDirectory()) {
@@ -164,7 +164,7 @@ public final class FileUtils {
 	// build path+file+ext
 	public static String BuildFilePath(final String pathStr,
 			final String fileName, final String extension) {
-		if (Utils.isEmpty(fileName)) throw new RequiredArgumentException("fileName");
+		if (Utils.isEmpty(fileName)) throw RequiredArgumentException.getNew("fileName");
 		// file extension
 		String ext = "";
 		if (Utils.notEmpty(extension)) {

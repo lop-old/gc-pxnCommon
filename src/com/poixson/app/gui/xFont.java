@@ -68,7 +68,7 @@ public class xFont {
 	public xFont apply(final String format) {
 		if (Utils.isEmpty(format))
 			return this;
-		final xString str = xString.get(format);
+		final xString str = xString.getNew(format);
 		str.delim(",");
 		while (str.hasNext()) {
 			// get part

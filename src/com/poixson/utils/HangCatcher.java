@@ -27,12 +27,12 @@ public class HangCatcher implements xStartable {
 	}
 	public HangCatcher(final String timeoutStr, final String sleepStr) {
 		this(
-			xTime.get(
+			xTime.getNew(
 				Utils.isEmpty(timeoutStr)
 				? DEFAULT_TIMEOUT
 				: timeoutStr
 			),
-			xTime.get(
+			xTime.getNew(
 				Utils.isEmpty(sleepStr)
 				? DEFAULT_SLEEP
 				: sleepStr
@@ -40,14 +40,14 @@ public class HangCatcher implements xStartable {
 		);
 	}
 	public HangCatcher(final xTime timeout, final xTime sleep) {
-		this.cool = CoolDown.get(
+		this.cool = CoolDown.getNew(
 			timeout == null
-			? xTime.get(DEFAULT_TIMEOUT)
+			? xTime.getNew(DEFAULT_TIMEOUT)
 			: timeout
 		);
 		this.sleep = (
 			sleep == null
-			? xTime.get(DEFAULT_SLEEP)
+			? xTime.getNew(DEFAULT_SLEEP)
 			: sleep
 		);
 	}

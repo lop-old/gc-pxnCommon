@@ -46,8 +46,8 @@ public class RemappedMethod extends xRunnable {
 	}
 	public RemappedMethod(final String taskName, final Object container,
 			final Method method, final Object...args) {
-		if (container == null) throw new RequiredArgumentException("container");
-		if (method == null)    throw new RequiredArgumentException("method");
+		if (container == null) throw RequiredArgumentException.getNew("container");
+		if (method == null)    throw RequiredArgumentException.getNew("method");
 		this.container = container;
 		this.method    = method;
 		this.args      = args;

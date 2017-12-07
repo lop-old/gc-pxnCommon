@@ -17,7 +17,7 @@ public final class SwingUtils {
 
 	// change font size
 	public static void ChangeFontSize(final JComponent component, final int size) {
-		if (component == null) throw new RequiredArgumentException("component");
+		if (component == null) throw RequiredArgumentException.getNew("component");
 		final Font font = component.getFont();
 		component.setFont(
 			new Font(

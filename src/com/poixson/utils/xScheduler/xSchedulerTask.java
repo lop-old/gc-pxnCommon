@@ -50,7 +50,7 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 
 
 
-	public static xSchedulerTask get() {
+	public static xSchedulerTask getNew() {
 		return new xSchedulerTask(null);
 	}
 	public xSchedulerTask(final xScheduler sched) {
@@ -66,8 +66,7 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 
 	public void register() {
 		final xScheduler sched = this.sched;
-		if (sched == null)
-			throw new RequiredArgumentException("sched");
+		if (sched == null) throw RequiredArgumentException.getNew("sched");
 		sched.add(this);
 	}
 	public void unregister() {
@@ -140,7 +139,7 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 			}
 		}
 		this.setDisabled();
-		throw new RequiredArgumentException("run");
+		throw RequiredArgumentException.getNew("run");
 	}
 
 
@@ -184,7 +183,7 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 			throws InterruptedException {
 		this.waitForNextRunStart_Lock.lockInterruptibly();
 		try {
-			this.waitForNextRunStart(xTime.get(timeStr));
+			this.waitForNextRunStart(xTime.getNew(timeStr));
 		} finally {
 			this.waitForNextRunStart_Lock.unlock();
 		}
@@ -223,7 +222,7 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 			throws InterruptedException {
 		this.waitForNextRunCompleted_Lock.lockInterruptibly();
 		try {
-			this.waitForNextRunCompleted(xTime.get(timeStr));
+			this.waitForNextRunCompleted(xTime.getNew(timeStr));
 		} finally {
 			this.waitForNextRunCompleted_Lock.unlock();
 		}

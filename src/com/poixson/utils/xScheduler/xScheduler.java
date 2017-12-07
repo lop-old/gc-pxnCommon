@@ -37,7 +37,7 @@ public class xScheduler implements xStartable {
 	private volatile boolean stopping = false;
 
 	// manager thread sleep
-	private final xTime threadSleepTime = xTime.get("5s");
+	private final xTime threadSleepTime = xTime.getNew("5s");
 	private final double threadSleepInhibitPercent = 0.95;
 	private volatile boolean sleeping = false;
 	private volatile boolean changes  = false;

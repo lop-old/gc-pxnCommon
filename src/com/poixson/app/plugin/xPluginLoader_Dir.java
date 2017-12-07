@@ -30,7 +30,7 @@ public class xPluginLoader_Dir<T extends xJavaPlugin> extends xPluginLoader_File
 			);
 	}
 	public Set<T> LoadFromDir(final String pathStr) {
-		if (Utils.isEmpty(pathStr)) throw new RequiredArgumentException("pathStr");
+		if (Utils.isEmpty(pathStr)) throw RequiredArgumentException.getNew("pathStr");
 		return
 			this.LoadFromDir(
 				Utils.isEmpty(pathStr)

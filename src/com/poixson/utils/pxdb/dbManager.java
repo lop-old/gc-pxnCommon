@@ -59,12 +59,12 @@ public final class dbManager {
 //	}
 	// get pool
 	public static dbPool getPool(final String key) {
-		if (Utils.isEmpty(key)) throw new RequiredArgumentException("dbKey");
+		if (Utils.isEmpty(key)) throw RequiredArgumentException.getNew("dbKey");
 		final dbManager manager = get();
 		return manager.pool(key);
 	}
 	public dbPool pool(final String key) {
-		if (Utils.isEmpty(key)) throw new RequiredArgumentException("dbKey");
+		if (Utils.isEmpty(key)) throw RequiredArgumentException.getNew("dbKey");
 		final dbPool pool = this.pools.get(key);
 		if (pool == null) {
 			log().warning("db config not found for key: {}", key);
@@ -99,7 +99,7 @@ public final class dbManager {
 	 * @return null if successful; on failure, returns an instance of the existing pool.
 	 */
 	protected dbPool reg(final dbConfig config) {
-		if (config == null) throw new RequiredArgumentException("config");
+		if (config == null) throw RequiredArgumentException.getNew("config");
 		final String key = config.dbKey();
 		if (Utils.isEmpty(key))
 			throw new RuntimeException("dbKey returned from dbConfig is empty!");

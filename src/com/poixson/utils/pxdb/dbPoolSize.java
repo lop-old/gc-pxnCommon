@@ -19,8 +19,8 @@ public class dbPoolSize extends Thread {
 	private volatile int SOFT = 5;
 	private volatile int HARD = 8;
 
-	private final CoolDown coolSoftLimit = CoolDown.get("10s");
-	private final CoolDown coolHardLimit = CoolDown.get("2s");
+	private final CoolDown coolSoftLimit = CoolDown.getNew("10s");
+	private final CoolDown coolHardLimit = CoolDown.getNew("2s");
 
 	private final dbPool pool;
 
@@ -30,7 +30,7 @@ public class dbPoolSize extends Thread {
 
 	// hard/soft pool size limits
 	protected dbPoolSize(final dbPool pool) {
-		if (pool == null) throw new RequiredArgumentException("pool");
+		if (pool == null) throw RequiredArgumentException.getNew("pool");
 		this.pool = pool;
 		this.setName(pool.dbKey()+" Warning Thread");
 	}
