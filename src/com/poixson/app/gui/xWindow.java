@@ -15,10 +15,11 @@ import com.poixson.app.gui.annotations.xWindowProperties;
 import com.poixson.app.gui.remapped.RemappedWindowAdapter;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
+import com.poixson.utils.xLogger.AttachedLogger;
 import com.poixson.utils.xLogger.xLog;
 
 
-public abstract class xWindow extends JFrame implements Closeable {
+public abstract class xWindow extends JFrame implements Closeable, AttachedLogger {
 	private static final long serialVersionUID = 1L;
 	private static final String LOG_NAME = "GUI";
 
@@ -53,7 +54,7 @@ public abstract class xWindow extends JFrame implements Closeable {
 					throw new RuntimeException("Detected duplicate window key when attempting to generate a unique key!");
 				if (allWindows.putIfAbsent(name, this) == null) {
 					this.windowKey = name;
-					log().fine("New window created: {}", name);
+					this.log().fine("New window created: {}", name);
 					break;
 				}
 				last = name;
@@ -108,7 +109,7 @@ public abstract class xWindow extends JFrame implements Closeable {
 		// only close once
 		if (!this.closing.compareAndSet(false, true))    return;
 		// close window
-		log().fine("Closing window: {}", this.getWindowKey());
+		this.log().fine("Closing window: {}", this.getWindowKey());
 		this.dispose();
 	}
 
@@ -141,7 +142,8 @@ public abstract class xWindow extends JFrame implements Closeable {
 
 
 	// logger
-	public static xLog log() {
+	@Override
+	public xLog log() {
 		return xLog.getRoot()
 				.get(LOG_NAME);
 	}

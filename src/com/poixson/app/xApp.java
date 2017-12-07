@@ -31,6 +31,7 @@ import com.poixson.utils.xClock;
 import com.poixson.utils.xStartable;
 import com.poixson.utils.xTime;
 import com.poixson.utils.xVars;
+import com.poixson.utils.xLogger.AttachedLogger;
 import com.poixson.utils.xLogger.xLevel;
 import com.poixson.utils.xLogger.xLog;
 import com.poixson.utils.xLogger.xLogFormatter_Color;
@@ -58,7 +59,7 @@ import com.poixson.utils.xThreadPool.xThreadPoolFactory;
  *   20  release lock file
  *   10  final garpage collect
  */
-public abstract class xApp implements xStartable {
+public abstract class xApp implements xStartable, AttachedLogger {
 	private static final String APP_ALREADY_STARTED_EXCEPTION    = "Cannot init app, already inited!";
 	private static final String APP_ALREADY_STOPPING_EXCEPTION   = "Cannot start app, already stopping!";
 	private static final String APP_INVALID_STATE_EXCEPTION      = "Invalid state, cannot start: {}";
@@ -104,8 +105,7 @@ public abstract class xApp implements xStartable {
 		if (!instance.compareAndSet(null, this)) {
 			final RuntimeException e =
 				new RuntimeException(APP_ALREADY_STARTED_EXCEPTION);
-			xLog.getRoot()
-				.trace(e);
+			this.trace(e);
 			Failure.fail(APP_ALREADY_STARTED_EXCEPTION, e);
 		}
 		this.props = new AppProps(this.getClass());
@@ -121,17 +121,15 @@ public abstract class xApp implements xStartable {
 		}
 		// already stopping
 		if (this.isStopping()) {
-			this.log()
-				.warning(APP_ALREADY_STOPPING_EXCEPTION);
+			this.warning(APP_ALREADY_STOPPING_EXCEPTION);
 			return;
 		}
 		// set starting state
 		if (!this.step.compareAndSet(STEP_OFF, STEP_START)) {
-			this.log()
-				.warning(
-					APP_INVALID_STATE_EXCEPTION,
-					Integer.toString(this.step.get())
-				);
+			this.warning(
+				APP_INVALID_STATE_EXCEPTION,
+				Integer.toString(this.step.get())
+			);
 			return;
 		}
 
@@ -196,8 +194,8 @@ public abstract class xApp implements xStartable {
 //		Failure.fail("@|FG_RED Main process ended! (this shouldn't happen)|@");
 //		System.exit(1);
 
-		this.log().publish();
-		this.log().title("Starting {}..", this.getTitle());
+		this.publish();
+		this.title("Starting {}..", this.getTitle());
 		// prepare startup steps
 		final Map<Integer, List<xAppStepDAO>> orderedSteps =
 				getSteps(StepType.STARTUP);
@@ -234,12 +232,11 @@ public abstract class xApp implements xStartable {
 							stepNames.append(", ");
 						stepNames.append(dao.title);
 					}
-					this.log()
-						.detail(
-							"Startup Step {}.. {}",
-							Integer.valueOf(stepInt),
-							stepNames.toString()
-						);
+					this.detail(
+						"Startup Step {}.. {}",
+						Integer.valueOf(stepInt),
+						stepNames.toString()
+					);
 				}
 				boolean hasInvoked = false;
 				for (final xAppStepDAO dao : lst) {
@@ -285,7 +282,7 @@ public abstract class xApp implements xStartable {
 		if (this.isStopping()) return;
 		// set stopping state
 		this.step.set(STEP_STOP);
-		this.log().title(
+		this.title(
 			new String[] {
 				(new StringBuilder())
 					.append("Stopping ")
@@ -332,12 +329,11 @@ public abstract class xApp implements xStartable {
 							stepNames.append(", ");
 						stepNames.append(dao.title);
 					}
-					this.log()
-						.detail(
-							"Shutdown Step {}.. {}",
-							Integer.valueOf(stepInt),
-							stepNames.toString()
-						);
+					this.detail(
+						"Shutdown Step {}.. {}",
+						Integer.valueOf(stepInt),
+						stepNames.toString()
+					);
 				}
 				boolean hasInvoked = false;
 				for (final xAppStepDAO dao : lst) {
@@ -526,13 +522,11 @@ return "<uptime>";
 		try {
 			final String user = System.getProperty("user.name");
 			if ("root".equals(user)) {
-				this.log()
-					.warning("It is recommended to run as a non-root user");
+				this.warning("It is recommended to run as a non-root user");
 			} else
 			if ("administrator".equalsIgnoreCase(user)
 			|| "admin".equalsIgnoreCase(user)) {
-				this.log()
-					.warning("It is recommended to run as a non-administrator user");
+				this.warning("It is recommended to run as a non-administrator user");
 			}
 		} catch (Exception e) {
 			Failure.fail(e);
@@ -702,11 +696,10 @@ return "<uptime>";
 //		Utils.Sleep(250L);
 //		xScheduler.clearInstance();
 		System.gc();
-//		final xLog log = this.log();
 //		if (xScheduler.hasLoaded()) {
-//			log.warning("xScheduler hasn't fully unloaded!");
+//			this.warning("xScheduler hasn't fully unloaded!");
 //		} else {
-//			log.finest("xScheduler has been unloaded");
+//			this.finest("xScheduler has been unloaded");
 //		}
 		xVars.getOriginalOut()
 			.println();
@@ -720,6 +713,7 @@ return "<uptime>";
 
 	// logger
 	private volatile SoftReference<xLog> _log = null;
+	@Override
 	public xLog log() {
 		if (this._log != null) {
 			final xLog log = this._log.get();

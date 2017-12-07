@@ -5,10 +5,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.poixson.utils.ThreadUtils;
 import com.poixson.utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.xLogger.AttachedLogger;
 import com.poixson.utils.xLogger.xLog;
 
 
-public abstract class xJavaPlugin {
+public abstract class xJavaPlugin implements AttachedLogger {
 
 	private volatile  xPluginManager<?> manager = null;
 	private volatile xPluginYML yml= null;
@@ -142,6 +143,7 @@ public abstract class xJavaPlugin {
 
 	// logger
 	private volatile SoftReference<xLog> _log = null;
+	@Override
 	public xLog log() {
 		if (this._log != null) {
 			final xLog log = this._log.get();
