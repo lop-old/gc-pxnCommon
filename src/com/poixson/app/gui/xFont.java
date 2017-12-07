@@ -2,18 +2,19 @@ package com.poixson.app.gui;
 
 import java.awt.Font;
 
-import com.poixson.commonjava.Utils.utils;
-import com.poixson.commonjava.Utils.utilsNumbers;
-import com.poixson.commonjava.Utils.xString;
-import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.utils.NumberUtils;
+import com.poixson.utils.Utils;
+import com.poixson.utils.xString;
+import com.poixson.utils.xLogger.xLog;
 
 
 public class xFont {
+	private static final String LOG_NAME = "GUI";
 
 	protected volatile String family = null;
 	protected volatile Style  style  = Style.PLAIN;
-	protected final    int base = 12;
-	protected volatile int size = 0;
+	protected final    int    base   = 12;
+	protected volatile int    size   = 0;
 
 
 
@@ -31,7 +32,7 @@ public class xFont {
 
 	public xFont(final String format) {
 		this();
-		if (utils.notEmpty(format)) {
+		if (Utils.notEmpty(format)) {
 			this.apply(format);
 		}
 	}
@@ -47,7 +48,7 @@ public class xFont {
 
 
 	public Font getFont(final String format) {
-		if (utils.isEmpty(format)) {
+		if (Utils.isEmpty(format)) {
 			return this.getFont();
 		}
 		final xFont font = new xFont(this);
@@ -65,10 +66,11 @@ public class xFont {
 
 
 	public xFont apply(final String format) {
-		if (utils.isEmpty(format))
+		if (Utils.isEmpty(format))
 			return this;
 		final xString str = xString.get(format);
-		while (str.delim(",").hasNext()) {
+		str.delim(",");
+		while (str.hasNext()) {
 			// get part
 			final String part;
 			{
@@ -76,7 +78,7 @@ public class xFont {
 				if (prt == null)
 					break;
 				part = prt.trim().toLowerCase();
-				if (utils.isEmpty(part))
+				if (Utils.isEmpty(part))
 					continue;
 			}
 			// font style
@@ -95,15 +97,13 @@ public class xFont {
 				continue;
 			}
 			// font family
-			if (part.startsWith("family")
-			|| part.startsWith("fam")) {
+			if (part.startsWith("fam")) {
 				String tmp = (
 					part.startsWith("family")
 					? part.substring(6)
 					: part.substring(3)
 				).trim();
-				if (tmp.startsWith("=")
-				|| tmp.startsWith(":"))
+				if (tmp.startsWith("=") || tmp.startsWith(":"))
 					tmp = tmp.substring(1).trim();
 				this.family = tmp;
 				continue;
@@ -117,18 +117,26 @@ public class xFont {
 				if (tmp.startsWith("+")) {
 					tmp = tmp.substring(1).trim();
 				}
-				final Integer i = utilsNumbers.toInteger(tmp);
+				final Integer i = NumberUtils.toInteger(tmp);
 				if (i == null) {
-					xLog.getRoot().warning("Invalid font size value: "+part);
+					log().warning("Invalid font size value: {}", part);
 					continue;
 				}
 				this.size = i.intValue();
 				continue;
 			}
 			// unknown format
-			xLog.getRoot().warning("Unknown font formatting: "+part);
+			log().warning("Unknown font formatting: {}", part);
 		}
 		return this;
+	}
+
+
+
+	// logger
+	public static xLog log() {
+		return xLog.getRoot()
+				.get(LOG_NAME);
 	}
 
 
