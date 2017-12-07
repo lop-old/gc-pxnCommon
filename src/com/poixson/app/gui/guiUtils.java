@@ -1,5 +1,4 @@
-/*
-package com.poixson.commonapp.gui;
+package com.poixson.app.gui;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -42,7 +41,7 @@ public final class guiUtils {
 
 
 
-	/ **
+	/**
 	 * Forces a function to be called from the event dispatch thread.
 	 * @param callingFrom Class object which contains the function.
 	 * @param callingMethod The function which is being called.
@@ -51,7 +50,7 @@ public final class guiUtils {
 	 *   if not calling from the event dispatch thread, this will
 	 *   create a new Runnable instance, calling the provided function
 	 *   later from the proper thread.
-	 * /
+	 */
 	public static boolean forceDispatchThread(final Object callingFrom,
 			final String callingMethod, final Object...args) {
 		if (callingFrom == null)          throw new RequiredArgumentException("callingFrom");
@@ -195,4 +194,3 @@ public final class guiUtils {
 
 
 }
-*/
