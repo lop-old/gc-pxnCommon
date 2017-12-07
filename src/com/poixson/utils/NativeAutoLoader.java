@@ -40,6 +40,30 @@ public class NativeAutoLoader {
 	}
 	public NativeAutoLoader() {
 	}
+	@Override
+	public NativeAutoLoader clone() {
+		final NativeAutoLoader loader =
+			getNew()
+				.setErrorMode(this.errorMode)
+				.setClassRef(this.classRef)
+				.setFileName(this.fileName)
+				.setLocalLibPath(this.localPath)
+				.setResourcesPath(this.resPath);
+		{
+			final String[] searchPaths =
+				this.searchPaths.toArray(new String[0]);
+			if (Utils.notEmpty(searchPaths)) {
+				for (final String path : searchPaths) {
+					loader.addSearchPath(path);
+				}
+			}
+		}
+		if (this.enableExtract != null)
+			loader.enableExtract(this.enableExtract.booleanValue());
+		if (this.enableReplace != null)
+			loader.enableReplace(this.enableReplace.booleanValue());
+		return loader;
+	}
 
 
 
