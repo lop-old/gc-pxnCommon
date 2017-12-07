@@ -1,5 +1,4 @@
-/*
-package com.poixson.commonapp.gui.remapped;
+package com.poixson.app.gui.remapped;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -60,4 +59,3 @@ xLog.getRoot().trace(e);
 
 
 }
-*/

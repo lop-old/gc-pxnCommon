@@ -1,5 +1,4 @@
-/*
-package com.poixson.commonapp.gui.remapped;
+package com.poixson.app.gui.remapped;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -60,4 +59,3 @@ xLog.getRoot().trace(e);
 
 
 }
-*/
