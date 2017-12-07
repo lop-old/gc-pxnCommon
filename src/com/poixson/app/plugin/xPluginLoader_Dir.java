@@ -86,7 +86,7 @@ public class xPluginLoader_Dir<T extends xJavaPlugin> extends xPluginLoader_File
 		this.log()
 			.info(
 				"Found [ {} ] plugin{}.",
-				plugins.size(),
+				Integer.valueOf(plugins.size()),
 				( plugins.size() > 2 ? "s" : "")
 			);
 		return plugins;

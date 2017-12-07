@@ -101,7 +101,7 @@ public class xPluginManager<T extends xJavaPlugin> {
 		this.log()
 			.info(
 				"Starting [ {} ] plugin{}..",
-				count,
+				Integer.valueOf(count),
 				(count == 1 ? "" : "s")
 			);
 		final Iterator<Entry<String, T>> it = this.plugins.entrySet().iterator();

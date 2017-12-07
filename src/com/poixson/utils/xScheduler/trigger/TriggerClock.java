@@ -39,7 +39,8 @@ public class TriggerClock extends xSchedulerTrigger {
 		this();
 		this.setDate(time);
 	}
-	public TriggerClock(final String dateStr, final String dateFormatStr) throws ParseException {
+	public TriggerClock(final String dateStr, final String dateFormatStr)
+			throws ParseException {
 		this();
 		this.setDate(
 			dateStr,

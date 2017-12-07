@@ -64,8 +64,7 @@ public class NativeAutoLoader {
 		final ErrorMode errorMode = this.getErrorMode();
 		final String fileName = this.getFileName();
 		if (Utils.isEmpty(fileName)) {
-			if (ErrorMode.EXCEPTION.equals(errorMode)) {
-			} else
+			if (ErrorMode.EXCEPTION.equals(errorMode))
 				throw RequiredArgumentException.getNew("fileName");
 			if (ErrorMode.LOG.equals(errorMode)) {
 				this.log().severe("Library fileName is missing!");

@@ -22,9 +22,8 @@ public class RemappedItemListener implements ItemListener {
 		try {
 			return new RemappedItemListener(listenerClass, methodName);
 		} catch (NoSuchMethodException e) {
-			log().trace(e);
+			throw new RuntimeException(e);
 		}
-		throw new RuntimeException();
 	}
 	public RemappedItemListener(final Object listenerClass, final String methodStr)
 			throws NoSuchMethodException {

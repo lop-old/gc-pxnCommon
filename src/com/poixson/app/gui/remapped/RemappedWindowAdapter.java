@@ -22,9 +22,8 @@ public class RemappedWindowAdapter extends WindowAdapter {
 		try {
 			return new RemappedWindowAdapter(listenerClass, methodName);
 		} catch (NoSuchMethodException e) {
-			log().trace(e);
+			throw new RuntimeException(e);
 		}
-		throw new RuntimeException();
 	}
 	public RemappedWindowAdapter(final Object listenerClass, final String methodStr)
 			throws NoSuchMethodException {

@@ -57,7 +57,7 @@ public class HistoryRND {
 		if (minValue == maxValue)
 			return minValue;
 		if ((maxValue - minValue) == 1) {
-			if (lastValue == minValue) {
+			if (this.lastValue == minValue) {
 				this.lastValue = maxValue;
 				return maxValue;
 			}
@@ -69,8 +69,8 @@ public class HistoryRND {
 		final int maxTries = this.getMaxTries();
 		while (true) {
 			// get a new random number
-			gen.setSeed( Utils.getSystemMillis() + ((long)tries) + ((long)index) );
-			final int number = gen.nextInt(maxValue - minValue) + minValue;
+			this.gen.setSeed( Utils.getSystemMillis() + ((long)tries) + ((long)index) );
+			final int number = this.gen.nextInt(maxValue - minValue) + minValue;
 			if ( ! this.history.contains(new Integer(number)) ) {
 				this.lastValue = number;
 				this.history.add(new Integer(number));

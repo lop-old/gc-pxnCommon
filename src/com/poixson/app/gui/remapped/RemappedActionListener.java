@@ -22,9 +22,8 @@ public class RemappedActionListener implements ActionListener {
 		try {
 			return new RemappedActionListener(listenerClass, methodName);
 		} catch (NoSuchMethodException e) {
-			log().trace(e);
+			throw new RuntimeException(e);
 		}
-		throw new RuntimeException();
 	}
 	public RemappedActionListener(final Object listenerClass, final String methodStr)
 			throws NoSuchMethodException {

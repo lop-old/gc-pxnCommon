@@ -237,7 +237,7 @@ public abstract class xApp implements xStartable {
 					this.log()
 						.detail(
 							"Startup Step {}.. {}",
-							stepInt,
+							Integer.valueOf(stepInt),
 							stepNames.toString()
 						);
 				}
@@ -335,7 +335,7 @@ public abstract class xApp implements xStartable {
 					this.log()
 						.detail(
 							"Shutdown Step {}.. {}",
-							stepInt,
+							Integer.valueOf(stepInt),
 							stepNames.toString()
 						);
 				}
