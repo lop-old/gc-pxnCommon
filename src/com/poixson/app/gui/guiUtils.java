@@ -7,9 +7,10 @@ import java.lang.reflect.Method;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 
-import com.poixson.commonjava.Utils.utils;
-import com.poixson.commonjava.Utils.exceptions.RequiredArgumentException;
-import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.utils.ReflectUtils;
+import com.poixson.utils.Utils;
+import com.poixson.utils.exceptions.RequiredArgumentException;
+import com.poixson.utils.xLogger.xLog;
 
 
 public final class guiUtils {
@@ -21,13 +22,15 @@ public final class guiUtils {
 	// load image file/resource
 	public static ImageIcon loadImageResource(final String path) {
 		// open file
-		final File file = new File(path);
-		if (file.exists()) {
-			try {
-				final ImageIcon image = new ImageIcon(path);
-				log().finer("Loaded image file: "+path);
-				return image;
-			} catch(Exception ignore) {}
+		{
+			final File file = new File(path);
+			if (file.exists()) {
+				try {
+					final ImageIcon image = new ImageIcon(path);
+					log().finer("Loaded image file: "+path);
+					return image;
+				} catch(Exception ignore) {}
+			}
 		}
 		// open resource
 		try {
@@ -52,65 +55,26 @@ public final class guiUtils {
 	 *   later from the proper thread.
 	 */
 	public static boolean forceDispatchThread(final Object callingFrom,
-			final String callingMethod, final Object...args) {
-		if (callingFrom == null)          throw new RequiredArgumentException("callingFrom");
-		if (utils.isEmpty(callingMethod)) throw new RequiredArgumentException("callingMethod");
+			final String methodStr, final Object...args) {
+		if (callingFrom == null)      throw new RequiredArgumentException("callingFrom");
+		if (Utils.isEmpty(methodStr)) throw new RequiredArgumentException("methodStr");
 		// already running from event dispatch thread
 		if (SwingUtilities.isEventDispatchThread()) {
 			return false;
 		}
-		// get calling class
-		final Class<?> clss = callingFrom.getClass();
 		// get calling method
 		final Method method;
 		try {
-			switch (args.length) {
-			case 0:
-				method = clss.getMethod(
-					callingMethod
-				);
-				break;
-			case 1:
-				method = clss.getMethod(
-					callingMethod,
-					args[0].getClass()
-				);
-				break;
-			case 2:
-				method = clss.getMethod(
-					callingMethod,
-					args[0].getClass(),
-					args[1].getClass()
-				);
-				break;
-			case 3:
-				method = clss.getMethod(
-					callingMethod,
-					args[0].getClass(),
-					args[1].getClass(),
-					args[2].getClass()
-				);
-				break;
-			case 4:
-				method = clss.getMethod(
-					callingMethod,
-					args[0].getClass(),
-					args[1].getClass(),
-					args[2].getClass(),
-					args[3].getClass()
-				);
-				break;
-			default:
-				throw new IllegalArgumentException("Too many arguments");
-			}
+			final Class<?> clss = callingFrom.getClass();
+			final Class<?>[] params = ReflectUtils.ArgsToClasses(args);
+			method = clss.getMethod(methodStr, params);
 		} catch (NoSuchMethodException e) {
-			log()
-				.trace(e);
+			log().trace(e);
 			throw new IllegalArgumentException("Method not found");
 		}
 		// pass to dispatch thread
-		try {
-			SwingUtilities.invokeAndWait(
+		{
+			final Runnable run =
 				new Runnable() {
 					private volatile Object   o = null;
 					private volatile Method   m = null;
@@ -125,45 +89,10 @@ public final class guiUtils {
 					@Override
 					public void run() {
 						try {
-							switch (this.a.length) {
-							case 0:
-								this.m.invoke(
-									this.o
-								);
-								break;
-							case 1:
-								this.m.invoke(
-									this.o,
-									this.a[0]
-								);
-								break;
-							case 2:
-								this.m.invoke(
-									this.o,
-									this.a[0],
-									this.a[1]
-								);
-								break;
-							case 3:
-								this.m.invoke(
-									this.o,
-									this.a[0],
-									this.a[1],
-									this.a[2]
-								);
-								break;
-							case 4:
-								this.m.invoke(
-									this.o,
-									this.a[0],
-									this.a[1],
-									this.a[2],
-									this.a[3]
-								);
-								break;
-							default:
-								throw new IllegalArgumentException("Too many arguments");
-							}
+							this.m.invoke(
+								this.o,
+								this.a
+							);
 						} catch (IllegalAccessException e) {
 							log().trace(e);
 						} catch (IllegalArgumentException e) {
@@ -174,12 +103,14 @@ public final class guiUtils {
 							log().trace(e);
 						}
 					}
-				}.init(callingFrom, method, args)
-			);
-		} catch (InvocationTargetException e) {
-			log().trace(e);
-		} catch (InterruptedException e) {
-			log().trace(e);
+				}.init(callingFrom, method, args);
+			try {
+				SwingUtilities.invokeAndWait(run);
+			} catch (InvocationTargetException e) {
+				log().trace(e);
+			} catch (InterruptedException e) {
+				log().trace(e);
+			}
 		}
 		return true;
 	}
@@ -188,7 +119,8 @@ public final class guiUtils {
 
 	// logger
 	public static xLog log() {
-		return xLog.getRoot(LOG_NAME);
+		return xLog.getRoot()
+				.get(LOG_NAME);
 	}
 
 
