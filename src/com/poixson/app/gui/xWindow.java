@@ -1,5 +1,6 @@
 package com.poixson.app.gui;
 
+import java.awt.EventQueue;
 import java.awt.HeadlessException;
 import java.awt.LayoutManager;
 import java.io.Closeable;
@@ -27,7 +28,6 @@ public abstract class xWindow extends JFrame implements Closeable {
 	private final String windowKey;
 
 	private final AtomicBoolean closing     = new AtomicBoolean(false);
-	private final AtomicBoolean closeHooked = new AtomicBoolean(false);
 
 
 
@@ -71,7 +71,25 @@ public abstract class xWindow extends JFrame implements Closeable {
 			// resizable
 			this.setResizable(props.resizable());
 		}
-		this.registerCloseHook();
+		// register close hook
+		EventQueue.invokeLater(
+			new Runnable() {
+				private volatile xWindow window = null;
+				public Runnable init(final xWindow window) {
+					this.window = window;
+					return this;
+				}
+				@Override
+				public void run() {
+					this.window.addWindowListener(
+						RemappedWindowAdapter.get(
+							this.window,
+							"close"
+						)
+					);
+				}
+			}.init(this)
+		);
 	}
 	public xWindow(final String title) throws HeadlessException {
 		this();
@@ -92,17 +110,6 @@ public abstract class xWindow extends JFrame implements Closeable {
 		// close window
 		log().fine("Closing window: {}", this.getWindowKey());
 		this.dispose();
-	}
-	private void registerCloseHook() {
-		if (!this.closeHooked.compareAndSet(false, true))            return;
-		if (guiUtils.forceDispatchThread(this, "registerCloseHook")) return;
-		// window close event listener
-		this.addWindowListener(
-			RemappedWindowAdapter.get(
-				this,
-				"close"
-			)
-		);
 	}
 
 
