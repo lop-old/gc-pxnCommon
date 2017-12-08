@@ -253,6 +253,12 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 		}
 		return this;
 	}
+	public NativeAutoLoader setFileNameIfNull(final String fileName) {
+		if (Utils.isEmpty(this.fileName)) {
+			return this.setFileName(fileName);
+		}
+		return this;
+	}
 
 
 
