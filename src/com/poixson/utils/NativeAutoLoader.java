@@ -76,7 +76,7 @@ public class NativeAutoLoader {
 	}
 	public boolean load() {
 		if (this.hasLoaded.get())
-			return false;
+			return true;
 		final boolean result;
 		synchronized (this.loadLock) {
 			this.hasLoaded.set(true);
