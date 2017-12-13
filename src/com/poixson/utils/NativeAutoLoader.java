@@ -19,9 +19,16 @@ public class NativeAutoLoader {
 
 	public static boolean DEFAULT_ENABLE_EXTRACT = false;
 	public static boolean DEFAULT_ENABLE_REPLACE = false;
+	public static final AutoMode DEFAULT_AUTO_MODE = AutoMode.AUTO_MODE_SYSTEM_OR_LOCAL;
 
 	private final AtomicBoolean hasLoaded = new AtomicBoolean(false);
 	private final Object loadLock = new Object();
+
+	public enum AutoMode {
+		AUTO_MODE_SELF_CONTAINED,
+		AUTO_MODE_SYSTEM_OR_LOCAL
+	};
+	private AutoMode autoMode = null;
 
 	private Class<?> classRef   = null;
 
@@ -35,6 +42,10 @@ public class NativeAutoLoader {
 
 
 
+	public static NativeAutoLoader getNew(final AutoMode mode) {
+		final NativeAutoLoader loader = getNew();
+		return loader.setAutoMode(mode);
+	}
 	public static NativeAutoLoader getNew() {
 		return new NativeAutoLoader();
 	}
@@ -206,6 +217,7 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 
 	public NativeAutoLoader setDefaults(final Class<?> clss) {
 		this.addDefaultSearchPaths()
+			.setAutoMode(AutoMode.AUTO_MODE_SYSTEM_OR_LOCAL)
 			.enableExtract()
 			.enableReplace()
 			.setClassRef(clss)
@@ -228,6 +240,17 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 	}
 	public NativeAutoLoader setErrorMode(final ErrorMode mode) {
 		this.errorMode = mode;
+		return this;
+	}
+
+
+
+	// auto mode
+	public AutoMode getAutoMode() {
+		return this.autoMode;
+	}
+	public NativeAutoLoader setAutoMode(final AutoMode mode) {
+		this.autoMode = mode;
 		return this;
 	}
 
@@ -333,8 +356,16 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 		return this;
 	}
 	public NativeAutoLoader addDefaultSearchPaths() {
-		this.addSearchPath("/usr/local/bin");
-		this.addSearchPath("/usr/bin");
+		final AutoMode mode = this.getAutoMode();
+		switch (mode) {
+		case AUTO_MODE_SELF_CONTAINED:
+			break;
+		case AUTO_MODE_SYSTEM_OR_LOCAL:
+			this.addSearchPath("/usr/local/bin");
+			this.addSearchPath("/usr/bin");
+			break;
+		default:
+		}
 		return this;
 	}
 
