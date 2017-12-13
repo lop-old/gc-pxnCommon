@@ -17,8 +17,8 @@ public class NativeAutoLoader {
 	public static final ErrorMode DEFAULT_ERROR_MODE = ErrorMode.LOG;
 	private ErrorMode errorMode = null;
 
-	public static boolean DEFAULT_ENABLE_EXTRACT = false;
-	public static boolean DEFAULT_ENABLE_REPLACE = false;
+	public static final boolean DEFAULT_ENABLE_EXTRACT = false;
+	public static final boolean DEFAULT_ENABLE_REPLACE = false;
 	public static final AutoMode DEFAULT_AUTO_MODE = AutoMode.AUTO_MODE_SYSTEM_OR_LOCAL;
 
 	private final AtomicBoolean hasLoaded = new AtomicBoolean(false);
@@ -217,6 +217,7 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 
 	public NativeAutoLoader setDefaults(final Class<?> clss) {
 		this.addDefaultSearchPaths()
+			.setErrorMode(ErrorMode.EXCEPTION)
 			.setAutoMode(AutoMode.AUTO_MODE_SYSTEM_OR_LOCAL)
 			.enableExtract()
 			.enableReplace()
