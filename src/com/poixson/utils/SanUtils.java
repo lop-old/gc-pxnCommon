@@ -8,28 +8,40 @@ public final class SanUtils {
 
 
 	public static String AlphaNum(final String text) {
+		return AlphaNum(text, "");
+	}
+	public static String AlphaNum(final String text, final String replacement) {
 		if (text == null)   return null;
 		if (text.isEmpty()) return "";
-		return text.replaceAll("[^a-zA-Z0-9]+", "");
+		return text.replaceAll(
+			"[^a-zA-Z0-9]+",
+			(replacement == null ? "" : replacement)
+		);
 	}
 	public static boolean SafeAlphaNum(final String text) {
 		if (text == null)
 			return true;
-		final String safeText = AlphaNum(text);
+		final String safeText = AlphaNum(text, null);
 		return text.equals(safeText);
 	}
 
 
 
 	public static String AlphaNumUnderscore(final String text) {
+		return AlphaNumUnderscore(text, "");
+	}
+	public static String AlphaNumUnderscore(final String text, final String replacement) {
 		if (text == null)   return null;
 		if (text.isEmpty()) return "";
-		return text.replaceAll("[^a-zA-Z0-9\\-\\_\\.]+", "");
+		return text.replaceAll(
+			"[^a-zA-Z0-9\\-\\_\\.]+",
+			(replacement == null ? "" : replacement)
+		);
 	}
 	public static boolean SafeAlphaNumUnderscore(final String text) {
 		if (text == null)
 			return true;
-		final String safeText = AlphaNumUnderscore(text);
+		final String safeText = AlphaNumUnderscore(text, null);
 		return text.equals(safeText);
 	}
 
@@ -45,13 +57,19 @@ public final class SanUtils {
 
 
 	public static String FileName(final String text) {
+		return FileName(text, "_");
+	}
+	public static String FileName(final String text, final String replacement) {
 		if (Utils.isBlank(text)) return null;
-		return text.replaceAll("[^a-zA-Z0-9\\._]+", "_");
+		return text.replaceAll(
+			"[^a-zA-Z0-9\\._-]+",
+			(replacement == null ? "" : replacement)
+		);
 	}
 	public static boolean SafeFileName(final String text) {
 		if (text == null)
 			return true;
-		final String safeText = FileName(text);
+		final String safeText = FileName(text, null);
 		return text.equals(safeText);
 	}
 
