@@ -103,6 +103,12 @@ public abstract class xWindow extends JFrame implements Closeable, AttachedLogge
 
 
 
+	public void display() {
+		this.setVisible(true);
+	}
+
+
+
 	@Override
 	public void close() {
 		if (guiUtils.forceDispatchThread(this, "close")) return;
