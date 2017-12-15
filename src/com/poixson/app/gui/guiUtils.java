@@ -1,5 +1,8 @@
 package com.poixson.app.gui;
 
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -16,6 +19,34 @@ import com.poixson.utils.xLogger.xLog;
 public final class guiUtils {
 	private guiUtils() {}
 	private static final String LOG_NAME = "GUI";
+
+
+
+	public static void RotateFont(final Component comp, final int degrees) {
+		RotateFont(
+			comp,
+			Math.toRadians(degrees)
+		);
+	}
+	public static void RotateFont(final Component comp, final double rad) {
+		comp.setFont(
+			RotateFont(
+				comp.getFont(),
+				rad
+			)
+		);
+	}
+	public static Font RotateFont(final Font font, final int degrees) {
+		return RotateFont(
+			font,
+			Math.toRadians(degrees)
+		);
+	}
+	public static Font RotateFont(final Font font, final double rad) {
+		final AffineTransform transform = new AffineTransform();
+		transform.rotate(rad);
+		return font.deriveFont(transform);
+	}
 
 
 
