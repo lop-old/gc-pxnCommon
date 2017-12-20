@@ -1,4 +1,4 @@
-package com.poixson.app.gui;
+package com.poixson.app.gui.darrylbu;
 
 import java.awt.Color;
 import java.awt.Component;
