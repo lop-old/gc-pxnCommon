@@ -1,0 +1,23 @@
+{
+	"Name": "pxnCommon-App",
+	"ArtifactId": "common-app",
+	"GroupId": "com.poixson",
+	"Version": "3.6.2",
+	"URL": "http://poixson.com",
+	"Github-Path": "GrowControl/pxnCommon",
+	"Org-Name": "PoiXson",
+	"Deps": {
+		"pxnCommon-Core": {
+			"GroupId": "com.poixson",
+			"ArtifactId": "common-core",
+			"Name": "pxnCommon-Core",
+			"Version": "3.6.2"
+		},
+		"pxnCommon-Shell": {
+			"GroupId": "com.poixson",
+			"ArtifactId": "common-shell",
+			"Name": "pxnCommon-Shell",
+			"Version": "3.6.2"
+		}
+	}
+}

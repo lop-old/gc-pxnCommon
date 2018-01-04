@@ -1,11 +1,11 @@
-<!-- Generated on: January 4, 2018 22:54 UTC -->
+<!-- Generated on: January 4, 2018 22:55 UTC -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<name>pxnCommon-Core</name>
-	<artifactId>common-core</artifactId>
+	<name>pxnCommon-Plugin</name>
+	<artifactId>common-plugin</artifactId>
 	<groupId>com.poixson</groupId>
 	<version>3.6.2</version>
 	<packaging>jar</packaging>
@@ -32,6 +32,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+		<pxnCommon-Core-version>3.6.2</pxnCommon-Core-version>
 
 		<git-commit-id-plugin-version>2.2.2</git-commit-id-plugin-version>
 
@@ -151,6 +152,11 @@
 	</build>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.poixson</groupId>
+			<artifactId>common-core</artifactId>
+			<version>${pxnCommon-Core-version}</version>
+		</dependency>
 
 	</dependencies>
 	<reporting>
