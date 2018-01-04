@@ -2,7 +2,7 @@
 	"Name": "pxnCommon",
 	"ArtifactId": "common",
 	"GroupId": "com.poixson",
-	"Version": "3.6.1",
+	"Version": "3.6.2",
 	"URL": "http://poixson.com",
 	"Github-Path": "GrowControl/pxnCommon",
 	"Org-Name": "PoiXson",
