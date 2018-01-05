@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<name>pxnCommon-Plugin</name>
-	<artifactId>common-plugin</artifactId>
+	<name>pxnCommon-Config</name>
+	<artifactId>common-config</artifactId>
 	<groupId>com.poixson</groupId>
 	<version>3.6.2</version>
 	<packaging>jar</packaging>

@@ -32,6 +32,7 @@
 	<modules>
 		<module>core</module>
 		<module>shell</module>
+		<module>config</module>
 		<module>app</module>
 		<module>plugin</module>
 		<module>scheduler</module>

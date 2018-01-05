@@ -1,4 +1,4 @@
-<!-- Generated on: January 4, 2018 22:55 UTC -->
+<!-- Generated on: January 5, 2018 00:06 UTC -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
@@ -33,7 +33,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<pxnCommon-Core-version>3.6.2</pxnCommon-Core-version>
+		<pxnCommon-Config-version>3.6.2</pxnCommon-Config-version>
 		<pxnCommon-Shell-version>3.6.2</pxnCommon-Shell-version>
+		<snakeyaml-version>1.19</snakeyaml-version>
 
 		<git-commit-id-plugin-version>2.2.2</git-commit-id-plugin-version>
 
@@ -160,8 +162,18 @@
 		</dependency>
 		<dependency>
 			<groupId>com.poixson</groupId>
+			<artifactId>common-config</artifactId>
+			<version>${pxnCommon-Config-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.poixson</groupId>
 			<artifactId>common-shell</artifactId>
 			<version>${pxnCommon-Shell-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>${snakeyaml-version}</version>
 		</dependency>
 
 	</dependencies>

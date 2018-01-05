@@ -1,6 +1,6 @@
 {
-	"Name": "pxnCommon-Plugin",
-	"ArtifactId": "common-plugin",
+	"Name": "pxnCommon-Config",
+	"ArtifactId": "common-config",
 	"GroupId": "com.poixson",
 	"Version": "3.6.2",
 	"URL": "http://poixson.com",
