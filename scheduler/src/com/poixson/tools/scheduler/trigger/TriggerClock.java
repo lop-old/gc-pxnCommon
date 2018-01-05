@@ -1,17 +1,17 @@
-package com.poixson.utils.xScheduler.trigger;
+package com.poixson.tools.scheduler.trigger;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
+import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.logger.xLog;
+import com.poixson.tools.xTime;
+import com.poixson.tools.scheduler.xSchedulerTrigger;
 import com.poixson.utils.Utils;
-import com.poixson.utils.xTime;
-import com.poixson.utils.xTimeU;
-import com.poixson.utils.exceptions.RequiredArgumentException;
-import com.poixson.utils.xLogger.xLog;
-import com.poixson.utils.xScheduler.xSchedulerTrigger;
 
 
 public class TriggerClock extends xSchedulerTrigger {
@@ -124,7 +124,7 @@ xLog.getRoot().warning("Skipping old scheduled clock trigger..");
 	public TriggerClock setGraceTime(final long time) {
 		this.grace.set(
 			time,
-			xTimeU.MS
+			TimeUnit.MILLISECONDS
 		);
 		return this;
 	}

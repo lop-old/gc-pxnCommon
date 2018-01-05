@@ -1,4 +1,4 @@
-package com.poixson.utils.xScheduler.trigger;
+package com.poixson.tools.scheduler.trigger;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -6,8 +6,8 @@ import java.util.Date;
 import org.quartz.CronExpression;
 import org.quartz.impl.triggers.CronTriggerImpl;
 
-import com.poixson.utils.exceptions.RequiredArgumentException;
-import com.poixson.utils.xScheduler.xSchedulerTrigger;
+import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.tools.scheduler.xSchedulerTrigger;
 
 
 /*

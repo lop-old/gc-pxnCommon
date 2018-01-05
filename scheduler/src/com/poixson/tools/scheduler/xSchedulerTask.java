@@ -1,4 +1,4 @@
-package com.poixson.utils.xScheduler;
+package com.poixson.tools.scheduler;
 
 import java.lang.ref.SoftReference;
 import java.util.HashSet;
@@ -11,15 +11,15 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+import com.poixson.abstractions.xEnableable;
+import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.logger.xLog;
+import com.poixson.tools.xTime;
+import com.poixson.tools.remapped.xRunnable;
+import com.poixson.tools.threadpool.xThreadPool;
+import com.poixson.tools.threadpool.types.xThreadPool_Main;
 import com.poixson.utils.ReflectUtils;
 import com.poixson.utils.Utils;
-import com.poixson.utils.xEnableable;
-import com.poixson.utils.xRunnable;
-import com.poixson.utils.xTime;
-import com.poixson.utils.exceptions.RequiredArgumentException;
-import com.poixson.utils.xLogger.xLog;
-import com.poixson.utils.xThreadPool.xThreadPool;
-import com.poixson.utils.xThreadPool.xThreadPoolFactory;
 
 
 public class xSchedulerTask extends xRunnable implements xEnableable {
@@ -352,16 +352,17 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 		final xThreadPool pool = this.pool;
 		return (
 			pool == null
-			? xThreadPoolFactory.getMainPool()
+			? xThreadPool_Main.get()
 			: pool
 		);
 	}
-	public xSchedulerTask setThreadPool(final String poolName) {
-		return
-			this.setThreadPool(
-				xThreadPoolFactory.get(poolName)
-			);
-	}
+//TODO: remove this?
+//	public xSchedulerTask setThreadPool(final String poolName) {
+//		return
+//			this.setThreadPool(
+//				xThreadPoolFactory.get(poolName)
+//			);
+//	}
 	public xSchedulerTask setThreadPool(final xThreadPool pool) {
 		this.pool = pool;
 		return this;

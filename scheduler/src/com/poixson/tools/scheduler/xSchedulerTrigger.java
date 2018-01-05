@@ -1,6 +1,6 @@
-package com.poixson.utils.xScheduler;
+package com.poixson.tools.scheduler;
 
-import com.poixson.utils.xEnableable;
+import com.poixson.abstractions.xEnableable;
 
 
 public abstract class xSchedulerTrigger implements xEnableable {

@@ -1,11 +1,10 @@
-package com.poixson.utils.xScheduler.trigger;
+package com.poixson.tools.scheduler.trigger;
 
 import java.util.concurrent.TimeUnit;
 
-import com.poixson.utils.xTime;
-import com.poixson.utils.xTimeU;
-import com.poixson.utils.exceptions.RequiredArgumentException;
-import com.poixson.utils.xScheduler.xSchedulerTrigger;
+import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.tools.xTime;
+import com.poixson.tools.scheduler.xSchedulerTrigger;
 
 
 public class TriggerInterval extends xSchedulerTrigger {
@@ -79,11 +78,11 @@ public class TriggerInterval extends xSchedulerTrigger {
 					// and set no repeat
 					this.interval.set(
 						delay,
-						xTimeU.MS
+						TimeUnit.MILLISECONDS
 					);
 					this.delay.set(
 						0L,
-						xTimeU.MS
+						TimeUnit.MILLISECONDS
 					);
 					this.setRunOnce();
 				}
