@@ -1,4 +1,4 @@
-package com.poixson.utils.xLogger;
+package com.poixson.logger;
 
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;

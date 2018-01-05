@@ -1,4 +1,4 @@
-package com.poixson.utils;
+package com.poixson.tools;
 
 
 // protocol:[//[user[:password]@]host[:port]][/path]

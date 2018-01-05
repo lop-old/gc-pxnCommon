@@ -1,4 +1,4 @@
-package com.poixson.utils;
+package com.poixson.app;
 
 import java.util.List;
 import java.util.Set;

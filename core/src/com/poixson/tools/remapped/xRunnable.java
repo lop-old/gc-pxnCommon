@@ -1,4 +1,4 @@
-package com.poixson.utils;
+package com.poixson.tools.remapped;
 
 import com.poixson.utils.exceptions.RequiredArgumentException;
 

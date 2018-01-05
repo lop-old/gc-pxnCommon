@@ -1,4 +1,4 @@
-package com.poixson.utils;
+package com.poixson.tools;
 
 import java.util.Collection;
 import java.util.Iterator;

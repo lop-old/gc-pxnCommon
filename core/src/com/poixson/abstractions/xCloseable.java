@@ -1,4 +1,4 @@
-package com.poixson.utils;
+package com.poixson.abstractions;
 
 import java.io.Closeable;
 

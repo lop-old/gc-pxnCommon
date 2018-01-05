@@ -1,4 +1,4 @@
-package com.poixson.utils.exceptions;
+package com.poixson.exceptions;
 
 
 public class MismatchedLibraryVersionException extends Exception {

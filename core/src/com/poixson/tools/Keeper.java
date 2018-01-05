@@ -1,4 +1,4 @@
-package com.poixson.utils;
+package com.poixson.tools;
 
 import java.lang.ref.SoftReference;
 import java.util.Iterator;

@@ -1,4 +1,4 @@
-package com.poixson.utils;
+package com.poixson.tools;
 
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;

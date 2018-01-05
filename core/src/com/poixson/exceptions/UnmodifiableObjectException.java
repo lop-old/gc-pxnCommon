@@ -1,4 +1,4 @@
-package com.poixson.utils.exceptions;
+package com.poixson.exceptions;
 
 import com.poixson.utils.byref.StringRef;
 

@@ -1,4 +1,4 @@
-package com.poixson.utils;
+package com.poixson.tools;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

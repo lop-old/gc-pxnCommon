@@ -1,4 +1,4 @@
-package com.poixson.utils.byref;
+package com.poixson.tools.byref;
 
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;

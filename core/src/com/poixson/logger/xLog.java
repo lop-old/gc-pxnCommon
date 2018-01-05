@@ -1,4 +1,4 @@
-package com.poixson.utils.xLogger;
+package com.poixson.logger;
 
 import java.io.InputStream;
 import java.io.PrintStream;

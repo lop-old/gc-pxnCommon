@@ -1,4 +1,4 @@
-package com.poixson.utils.exceptions;
+package com.poixson.exceptions;
 
 
 public class RequiredArgumentException extends NullPointerException {

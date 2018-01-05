@@ -1,4 +1,4 @@
-package com.poixson.utils.xLogger;
+package com.poixson.logger;
 
 
 public class xLogFormatter_Simple extends xLogFormatter_Default {

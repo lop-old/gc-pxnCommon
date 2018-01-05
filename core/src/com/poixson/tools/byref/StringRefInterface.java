@@ -1,4 +1,4 @@
-package com.poixson.utils.byref;
+package com.poixson.tools.byref;
 
 
 public interface StringRefInterface {

@@ -1,4 +1,4 @@
-package com.poixson.utils.remapped;
+package com.poixson.tools.remapped;
 
 import java.lang.reflect.Method;
 
