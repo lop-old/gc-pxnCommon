@@ -16,6 +16,7 @@
 		"jline": {
 			"GroupId": "jline",
 			"ArtifactId": "jline",
+			"Name": "jLine",
 			"Version": "2.14.5"
 		}
 	}
