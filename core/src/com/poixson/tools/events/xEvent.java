@@ -1,4 +1,4 @@
-package com.poixson.utils.xEvents;
+package com.poixson.tools.events;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

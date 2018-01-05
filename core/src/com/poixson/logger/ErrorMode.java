@@ -1,4 +1,4 @@
-package com.poixson.utils;
+package com.poixson.logger;
 
 
 public enum ErrorMode {

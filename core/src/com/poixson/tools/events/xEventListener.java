@@ -1,4 +1,4 @@
-package com.poixson.utils.xEvents;
+package com.poixson.tools.events;
 
 
 public interface xEventListener {
