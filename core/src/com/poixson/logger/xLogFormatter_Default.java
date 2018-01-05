@@ -3,8 +3,8 @@ package com.poixson.logger;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.utils.StringUtils;
-import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
 public class xLogFormatter_Default implements xLogFormatter {

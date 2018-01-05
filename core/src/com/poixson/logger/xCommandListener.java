@@ -1,6 +1,6 @@
 package com.poixson.logger;
 
-import com.poixson.utils.xEvents.xEventListener;
+import com.poixson.tools.events.xEventListener;
 
 
 public interface xCommandListener extends xEventListener {

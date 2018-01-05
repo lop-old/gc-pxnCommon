@@ -1,5 +1,8 @@
 package com.poixson.tools;
 
+import com.poixson.utils.NumberUtils;
+import com.poixson.utils.StringUtils;
+import com.poixson.utils.Utils;
 
 // protocol:[//[user[:password]@]host[:port]][/path]
 public class xURL {

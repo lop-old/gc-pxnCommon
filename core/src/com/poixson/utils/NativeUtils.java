@@ -7,9 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import com.poixson.utils.exceptions.RequiredArgumentException;
-import com.poixson.utils.xLogger.xLevel;
-import com.poixson.utils.xLogger.xLog;
+import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.logger.ErrorMode;
+import com.poixson.logger.xLevel;
+import com.poixson.logger.xLog;
 
 
 public final class NativeUtils {

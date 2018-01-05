@@ -3,6 +3,9 @@ package com.poixson.tools;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.poixson.utils.NumberUtils;
+import com.poixson.utils.Utils;
+
 
 public class HistoryRND {
 

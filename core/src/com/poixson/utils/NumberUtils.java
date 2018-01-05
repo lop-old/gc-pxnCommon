@@ -3,6 +3,8 @@ package com.poixson.utils;
 import java.text.DecimalFormat;
 import java.util.Random;
 
+import com.poixson.tools.Keeper;
+
 
 public final class NumberUtils {
 	private NumberUtils() {}

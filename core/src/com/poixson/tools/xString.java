@@ -1,5 +1,7 @@
 package com.poixson.tools;
 
+import com.poixson.utils.StringUtils;
+import com.poixson.utils.Utils;
 
 public class xString {
 

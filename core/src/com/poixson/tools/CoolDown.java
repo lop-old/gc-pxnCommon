@@ -2,6 +2,8 @@ package com.poixson.tools;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.poixson.utils.Utils;
+
 
 public class CoolDown {
 

@@ -1,13 +1,13 @@
-package com.poixson.utils.xThreadPool;
+package com.poixson.tools.threadpool;
 
 import java.lang.ref.SoftReference;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.poixson.utils.xRunnable;
-import com.poixson.utils.xTimeU;
-import com.poixson.utils.xLogger.xLog;
+import com.poixson.logger.xLog;
+import com.poixson.tools.xTimeU;
+import com.poixson.tools.remapped.xRunnable;
 
 
 public class xThreadPoolTask implements Runnable {

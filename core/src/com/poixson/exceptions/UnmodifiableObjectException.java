@@ -1,6 +1,6 @@
 package com.poixson.exceptions;
 
-import com.poixson.utils.byref.StringRef;
+import com.poixson.tools.byref.StringRef;
 
 
 public class UnmodifiableObjectException extends UnsupportedOperationException {

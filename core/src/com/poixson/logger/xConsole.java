@@ -1,6 +1,6 @@
-package com.poixson.utils.xLogger;
+package com.poixson.logger;
 
-import com.poixson.utils.xStartable;
+import com.poixson.abstractions.xStartable;
 
 
 public interface xConsole extends xStartable {

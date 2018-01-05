@@ -5,7 +5,8 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.util.LinkedList;
 
-import com.poixson.utils.exceptions.RequiredArgumentException;
+import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.tools.Keeper;
 
 
 public final class FileUtils {

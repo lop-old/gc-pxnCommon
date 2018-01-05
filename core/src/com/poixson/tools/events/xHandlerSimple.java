@@ -2,8 +2,8 @@ package com.poixson.tools.events;
 
 import java.lang.reflect.Method;
 
-import com.poixson.utils.exceptions.RequiredArgumentException;
-import com.poixson.utils.xEvents.xEventListener.ListenerPriority;
+import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.tools.events.xEventListener.ListenerPriority;
 
 
 /**

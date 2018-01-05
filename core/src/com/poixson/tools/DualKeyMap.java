@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.poixson.utils.exceptions.UnmodifiableObjectException;
-import com.poixson.utils.xLogger.xLog;
+import com.poixson.exceptions.UnmodifiableObjectException;
+import com.poixson.logger.xLog;
 
 
 public class DualKeyMap<K, J, V> {

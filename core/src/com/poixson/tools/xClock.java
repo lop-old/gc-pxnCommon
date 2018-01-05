@@ -14,7 +14,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.poixson.utils.xLogger.xLog;
+import com.poixson.logger.xLog;
+import com.poixson.utils.NumberUtils;
+import com.poixson.utils.Utils;
 
 
 public class xClock {
@@ -139,12 +141,12 @@ public class xClock {
 			socket = new DatagramSocket();
 			socket.setSoTimeout(500);
 			final InetAddress address = InetAddress.getByName(this.timeserver);
-			byte[] buf = new ntpMessage().toByteArray();
+			byte[] buf = new xClockNtpMessage().toByteArray();
 			final DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 123);
-			ntpMessage.encodeTimestamp(packet.getData(), 40, fromUnixTimestamp());
+			xClockNtpMessage.encodeTimestamp(packet.getData(), 40, fromUnixTimestamp());
 			socket.send(packet);
 			socket.receive(packet);
-			final ntpMessage msg = new ntpMessage(packet.getData());
+			final xClockNtpMessage msg = new xClockNtpMessage(packet.getData());
 			// calculate local offset for correction
 			time = getSystemTime();
 			this.localOffset =

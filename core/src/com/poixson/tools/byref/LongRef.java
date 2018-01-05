@@ -1,6 +1,6 @@
 package com.poixson.tools.byref;
 
-import com.poixson.utils.exceptions.RequiredArgumentException;
+import com.poixson.exceptions.RequiredArgumentException;
 
 
 public class LongRef {

@@ -1,29 +1,32 @@
-package com.poixson.utils.xThreadPool;
+package com.poixson.tools.threadpool;
 
 import java.lang.ref.SoftReference;
 import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.poixson.utils.CoolDown;
-import com.poixson.utils.Keeper;
+import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.logger.xLevel;
+import com.poixson.logger.xLog;
+import com.poixson.tools.CoolDown;
+import com.poixson.tools.Keeper;
+import com.poixson.tools.xTime;
+import com.poixson.tools.xTimeU;
+import com.poixson.tools.remapped.xRunnable;
 import com.poixson.utils.NumberUtils;
 import com.poixson.utils.ReflectUtils;
 import com.poixson.utils.ThreadUtils;
 import com.poixson.utils.Utils;
-import com.poixson.utils.xRunnable;
-import com.poixson.utils.xStartable;
-import com.poixson.utils.xTime;
-import com.poixson.utils.xTimeU;
-import com.poixson.utils.exceptions.RequiredArgumentException;
-import com.poixson.utils.xLogger.xLevel;
-import com.poixson.utils.xLogger.xLog;
 
 
-public class xThreadPool implements xStartable {
+public abstract class xThreadPool extends xThreadPoolQueue {
+
+	protected static final ConcurrentHashMap<String, xThreadPool> pools =
+			new ConcurrentHashMap<String, xThreadPool>();
 
 	protected static final xTime THREAD_LOOP_TIME        = xTime.getNew("1s");
 	protected static final xTime INACTIVE_THREAD_TIMEOUT = xTime.getNew("10s");
@@ -344,7 +347,7 @@ public class xThreadPool implements xStartable {
 		// run in main thread pool
 		if (!this.isMainPool()) {
 			if (this.getMaxThreadCount() == 0) {
-				xThreadPoolFactory.getMainPool()
+				xThreadPool_Main.get()
 					.runNow(run);
 				return;
 			}
@@ -383,7 +386,7 @@ public class xThreadPool implements xStartable {
 		// run in main thread pool
 		if (!this.isMainPool()) {
 			if (this.getMaxThreadCount() == 0) {
-				xThreadPoolFactory.getMainPool()
+				xThreadPool_Main.get()
 					.runLater(run);
 				return;
 			}
@@ -552,12 +555,11 @@ public class xThreadPool implements xStartable {
 
 
 	public static int getGlobalThreadCount() {
-		if (xThreadPoolFactory.pools.isEmpty())
+		if (pools.isEmpty())
 			return 0;
 		int count = 0;
 		final Iterator<xThreadPool> it =
-			xThreadPoolFactory.pools
-				.values().iterator();
+			pools.values().iterator();
 		while (it.hasNext()) {
 			count += it.next()
 					.getCurrentThreadCount();

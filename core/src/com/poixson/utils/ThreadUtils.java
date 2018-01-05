@@ -3,7 +3,10 @@ package com.poixson.utils;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.poixson.utils.xLogger.xLog;
+import com.poixson.app.xVars;
+import com.poixson.logger.xLog;
+import com.poixson.tools.Keeper;
+import com.poixson.tools.xTime;
 
 
 public final class ThreadUtils {
@@ -58,7 +61,7 @@ public final class ThreadUtils {
 	}
 	// display threads still running
 	public static void DisplayStillRunning() {
-		if (!xVars.debug()) return;
+		if ( ! xVars.debug()) return;
 		final String[] threadNames = getThreadNames(false);
 		// no threads still running
 		if (Utils.isEmpty(threadNames)) return;

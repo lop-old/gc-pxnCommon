@@ -9,7 +9,7 @@ import java.util.Formatter;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import com.poixson.utils.xLogger.xLog;
+import com.poixson.logger.xLog;
 
 
 public final class CryptUtils {

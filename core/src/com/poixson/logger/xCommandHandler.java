@@ -1,9 +1,10 @@
 package com.poixson.logger;
 
-import com.poixson.utils.xEvents.xEventData;
-import com.poixson.utils.xEvents.xEventListener;
-import com.poixson.utils.xEvents.xHandlerSimple;
-import com.poixson.utils.xThreadPool.xThreadPoolFactory;
+import com.poixson.tools.events.xEventData;
+import com.poixson.tools.events.xEventListener;
+import com.poixson.tools.events.xHandlerSimple;
+import com.poixson.tools.threadpool.xThreadPoolQueue.TaskPriority;
+import com.poixson.tools.threadpool.xThreadPool_Main;
 
 
 public class xCommandHandler extends xHandlerSimple {
@@ -60,8 +61,8 @@ public class xCommandHandler extends xHandlerSimple {
 						.doTrigger(this.cmdEvent);
 				}
 			}.init(this, cmdEvent);
-		xThreadPoolFactory.getMainPool()
-			.runLater(run);
+		xThreadPool_Main.get()
+			.addTask(run, TaskPriority.NORM);
 	}
 	public void doTrigger(final xCommandEvent event) {
 		// pass to handler

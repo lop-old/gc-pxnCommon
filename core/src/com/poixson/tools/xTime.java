@@ -5,8 +5,10 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
-import com.poixson.utils.exceptions.RequiredArgumentException;
-import com.poixson.utils.exceptions.UnmodifiableObjectException;
+import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.exceptions.UnmodifiableObjectException;
+import com.poixson.utils.NumberUtils;
+import com.poixson.utils.Utils;
 
 
 public class xTime {

@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.poixson.utils.xEvents.xEventListener.ListenerPriority;
+import com.poixson.tools.events.xEventListener.ListenerPriority;
 
 
 @Target(ElementType.METHOD)

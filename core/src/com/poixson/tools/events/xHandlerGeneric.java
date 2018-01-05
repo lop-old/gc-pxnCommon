@@ -4,9 +4,9 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.tools.events.xEventListener.ListenerPriority;
 import com.poixson.utils.Utils;
-import com.poixson.utils.exceptions.RequiredArgumentException;
-import com.poixson.utils.xEvents.xEventListener.ListenerPriority;
 
 
 /**

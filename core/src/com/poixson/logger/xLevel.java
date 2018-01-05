@@ -5,9 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.utils.NumberUtils;
 import com.poixson.utils.Utils;
-import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
 public class xLevel implements Serializable {

@@ -1,9 +1,9 @@
 package com.poixson.logger;
 
+import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.tools.events.xEventData;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
-import com.poixson.utils.exceptions.RequiredArgumentException;
-import com.poixson.utils.xEvents.xEventData;
 
 
 public class xCommandEvent extends xEventData {

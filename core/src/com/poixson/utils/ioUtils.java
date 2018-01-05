@@ -6,13 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.yaml.snakeyaml.Yaml;
-
-import com.poixson.utils.exceptions.RequiredArgumentException;
+import com.poixson.exceptions.RequiredArgumentException;
 
 
 public final class ioUtils {
@@ -98,22 +95,6 @@ public final class ioUtils {
 		} finally {
 			Utils.safeClose(in);
 		}
-	}
-
-
-
-	/**
-	 * Load and parse yaml data from an input stream. 
-	 * @param in InputStream to read from.
-	 * @return Map<String, Object> datamap contents of yml file.
-	 */
-	@SuppressWarnings("unchecked")
-	public static Map<String, Object> LoadYamlFromStream(final InputStream in) {
-		if (in == null) throw RequiredArgumentException.getNew("in");
-		final Yaml yml = new Yaml();
-		final Map<String, Object> datamap =
-			yml.loadAs(in, Map.class);
-		return datamap;
 	}
 
 

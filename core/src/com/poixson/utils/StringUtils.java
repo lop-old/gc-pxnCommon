@@ -9,8 +9,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import com.poixson.utils.byref.StringRef;
-import com.poixson.utils.exceptions.RequiredArgumentException;
+import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.tools.Keeper;
+import com.poixson.tools.byref.StringRef;
 
 
 public final class StringUtils {

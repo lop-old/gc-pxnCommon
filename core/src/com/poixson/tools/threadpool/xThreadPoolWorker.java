@@ -1,11 +1,11 @@
-package com.poixson.utils.xThreadPool;
+package com.poixson.tools.threadpool;
 
 import java.lang.ref.SoftReference;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.poixson.utils.CoolDown;
-import com.poixson.utils.xLogger.xLog;
+import com.poixson.logger.xLog;
+import com.poixson.tools.CoolDown;
 
 
 public class xThreadPoolWorker extends Thread {
