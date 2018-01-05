@@ -1,4 +1,4 @@
-package com.poixson.app.plugin;
+package com.poixson.tools.plugin;
 
 import java.lang.ref.SoftReference;
 import java.util.Iterator;
@@ -6,9 +6,9 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.logger.xLog;
 import com.poixson.utils.Utils;
-import com.poixson.utils.exceptions.RequiredArgumentException;
-import com.poixson.utils.xLogger.xLog;
 
 
 public class xPluginManager<T extends xJavaPlugin> {

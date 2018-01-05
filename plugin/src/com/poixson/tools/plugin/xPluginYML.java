@@ -1,10 +1,9 @@
-package com.poixson.app.plugin;
+package com.poixson.tools.plugin;
 
 import java.util.Map;
 
-import com.poixson.app.appDefines;
+import com.poixson.tools.config.xConfig;
 import com.poixson.utils.Utils;
-import com.poixson.utils.xConfig.xConfig;
 
 
 public class xPluginYML extends xConfig {
@@ -22,14 +21,14 @@ public class xPluginYML extends xConfig {
 	}
 	public xPluginYML(final Map<String, Object> datamap, final String mainClassKey) {
 		super(datamap);
-		this.name    = this.getString(appDefines.PLUGIN_NAME);
-		this.version = this.getString(appDefines.PLUGIN_VERSION);
-		this.author  = this.getString(appDefines.PLUGIN_AUTHOR);
-		this.website = this.getString(appDefines.PLUGIN_WEBSITE);
+		this.name    = this.getString(xPluginDefines.PLUGIN_NAME);
+		this.version = this.getString(xPluginDefines.PLUGIN_VERSION);
+		this.author  = this.getString(xPluginDefines.PLUGIN_AUTHOR);
+		this.website = this.getString(xPluginDefines.PLUGIN_WEBSITE);
 		{
 			final String key = (
 				Utils.isEmpty(mainClassKey)
-				? appDefines.DEFAULT_PLUGIN_CLASS_KEY
+				? xPluginDefines.DEFAULT_PLUGIN_CLASS_KEY
 				: mainClassKey
 			);
 			this.mainClass = this.getStr(key, null);

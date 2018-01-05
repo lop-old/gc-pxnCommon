@@ -1,19 +1,18 @@
-package com.poixson.app.plugin;
+package com.poixson.tools.plugin;
 
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.poixson.app.appDefines;
+import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.utils.FileUtils;
 import com.poixson.utils.Utils;
-import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
 // load all plugins from dir
 public class xPluginLoader_Dir<T extends xJavaPlugin> extends xPluginLoader_File<T> {
 
-	private static final String DEFAULT_PLUGINS_DIR = appDefines.DEFAULT_PLUGINS_DIR;
+	private static final String DEFAULT_PLUGINS_DIR = xPluginDefines.DEFAULT_PLUGINS_DIR;
 
 
 

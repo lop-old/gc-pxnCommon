@@ -1,4 +1,4 @@
-package com.poixson.app.plugin;
+package com.poixson.tools.plugin;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

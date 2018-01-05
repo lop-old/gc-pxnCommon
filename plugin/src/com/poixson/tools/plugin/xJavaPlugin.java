@@ -1,12 +1,12 @@
-package com.poixson.app.plugin;
+package com.poixson.tools.plugin;
 
 import java.lang.ref.SoftReference;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.logger.AttachedLogger;
+import com.poixson.logger.xLog;
 import com.poixson.utils.ThreadUtils;
-import com.poixson.utils.exceptions.RequiredArgumentException;
-import com.poixson.utils.xLogger.AttachedLogger;
-import com.poixson.utils.xLogger.xLog;
 
 
 public abstract class xJavaPlugin implements AttachedLogger {

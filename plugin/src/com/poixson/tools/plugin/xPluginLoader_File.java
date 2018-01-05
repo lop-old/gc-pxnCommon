@@ -1,9 +1,9 @@
-package com.poixson.app.plugin;
+package com.poixson.tools.plugin;
 
 import java.io.File;
 
+import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.utils.Utils;
-import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
 // load a plugin from jar file

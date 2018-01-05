@@ -1,4 +1,4 @@
-package com.poixson.app.plugin;
+package com.poixson.tools.plugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,10 +14,11 @@ import org.xeustechnologies.jcl.JarClassLoader;
 import org.xeustechnologies.jcl.context.DefaultContextLoader;
 import org.xeustechnologies.jcl.context.JclContext;
 
+import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.logger.xLog;
+import com.poixson.tools.config.ConfigUtils;
 import com.poixson.utils.Utils;
 import com.poixson.utils.ioUtils;
-import com.poixson.utils.exceptions.RequiredArgumentException;
-import com.poixson.utils.xLogger.xLog;
 
 
 public class xPluginLoader<T extends xJavaPlugin> {
@@ -53,7 +54,7 @@ public class xPluginLoader<T extends xJavaPlugin> {
 			if (in == null)
 				throw new IOException("Failed to load plugin.yml from: "+file.getName());
 			final Map<String, Object> datamap =
-				ioUtils.LoadYamlFromStream(in);
+				ConfigUtils.LoadYamlFromStream(in);
 			if (datamap == null)
 				throw new IOException("Failed to load yaml from jar file: "+file.getName());
 			yml = new xPluginYML(
