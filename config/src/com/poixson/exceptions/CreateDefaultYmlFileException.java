@@ -1,4 +1,4 @@
-package com.poixson.utils.xConfig;
+package com.poixson.exceptions;
 
 
 public class CreateDefaultYmlFileException extends Exception {

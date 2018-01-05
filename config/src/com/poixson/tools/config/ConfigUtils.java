@@ -1,4 +1,4 @@
-package com.poixson.config;
+package com.poixson.tools.config;
 
 import java.io.InputStream;
 import java.util.Map;

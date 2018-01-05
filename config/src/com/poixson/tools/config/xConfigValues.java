@@ -1,4 +1,4 @@
-package com.poixson.utils.xConfig;
+package com.poixson.tools.config;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,9 +7,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.utils.ObjectUtils;
 import com.poixson.utils.Utils;
-import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
 public abstract class xConfigValues {

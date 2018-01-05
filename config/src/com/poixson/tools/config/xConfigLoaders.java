@@ -1,4 +1,4 @@
-package com.poixson.utils.xConfig;
+package com.poixson.tools.config;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,11 +7,12 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
+import com.poixson.exceptions.CreateDefaultYmlFileException;
+import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.logger.xLog;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
 import com.poixson.utils.ioUtils;
-import com.poixson.utils.exceptions.RequiredArgumentException;
-import com.poixson.utils.xLogger.xLog;
 
 
 public final class xConfigLoaders {
@@ -74,7 +75,7 @@ public final class xConfigLoaders {
 			if (in == null)
 				return null;
 			final Map<String, Object> datamap =
-				ioUtils.LoadYamlFromStream(in);
+				ConfigUtils.LoadYamlFromStream(in);
 			if (datamap == null)
 				return null;
 			final T cfg =
@@ -104,7 +105,7 @@ public final class xConfigLoaders {
 			if (in == null)
 				return null;
 			final Map<String, Object> datamap =
-				ioUtils.LoadYamlFromStream(in);
+				ConfigUtils.LoadYamlFromStream(in);
 			if (datamap == null)
 				return null;
 			final T cfg =

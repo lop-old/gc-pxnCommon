@@ -1,4 +1,4 @@
-package com.poixson.utils.xConfig;
+package com.poixson.tools.config;
 
 import java.util.Map;
 
