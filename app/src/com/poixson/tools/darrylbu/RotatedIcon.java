@@ -1,4 +1,4 @@
-package com.poixson.app.gui.darrylbu;
+package com.poixson.tools.darrylbu;
 
 import java.awt.Component;
 import java.awt.Graphics;

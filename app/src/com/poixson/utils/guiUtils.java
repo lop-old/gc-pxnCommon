@@ -1,4 +1,4 @@
-package com.poixson.app.gui;
+package com.poixson.utils;
 
 import java.awt.Component;
 import java.awt.Font;
@@ -10,10 +10,8 @@ import java.lang.reflect.Method;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 
-import com.poixson.utils.ReflectUtils;
-import com.poixson.utils.Utils;
-import com.poixson.utils.exceptions.RequiredArgumentException;
-import com.poixson.utils.xLogger.xLog;
+import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.logger.xLog;
 
 
 public final class guiUtils {

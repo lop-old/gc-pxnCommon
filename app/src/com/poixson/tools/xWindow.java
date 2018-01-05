@@ -1,4 +1,4 @@
-package com.poixson.app.gui;
+package com.poixson.tools;
 
 import java.awt.EventQueue;
 import java.awt.HeadlessException;
@@ -11,12 +11,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JFrame;
 
-import com.poixson.app.gui.annotations.xWindowProperties;
-import com.poixson.app.gui.remapped.RemappedWindowAdapter;
+import com.poixson.logger.AttachedLogger;
+import com.poixson.logger.xLog;
+import com.poixson.tools.remapped.RemappedWindowAdapter;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
-import com.poixson.utils.xLogger.AttachedLogger;
-import com.poixson.utils.xLogger.xLog;
+import com.poixson.utils.guiUtils;
 
 
 public abstract class xWindow extends JFrame implements Closeable, AttachedLogger {

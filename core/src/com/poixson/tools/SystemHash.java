@@ -1,4 +1,4 @@
-package com.poixson.utils;
+package com.poixson.tools;
 /*
  * cron4j - A pure Java cron-like scheduler
  *
@@ -22,6 +22,8 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
+
+import com.poixson.utils.NumberUtils;
 
 
 /**

@@ -1,4 +1,4 @@
-package com.poixson.utils.xLogger;
+package com.poixson.logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,11 +10,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
+import com.poixson.app.xVars;
+import com.poixson.tools.remapped.OutputStreamLineRemapper;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.ThreadUtils;
 import com.poixson.utils.Utils;
-import com.poixson.utils.xVars;
-import com.poixson.utils.remapped.OutputStreamLineRemapper;
 
 import jline.Terminal;
 import jline.console.ConsoleReader;

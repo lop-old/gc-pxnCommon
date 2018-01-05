@@ -6,8 +6,8 @@ import java.io.File;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
-import com.poixson.utils.exceptions.RequiredArgumentException;
-import com.poixson.utils.xLogger.xLog;
+import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.logger.xLog;
 
 
 public final class SwingUtils {

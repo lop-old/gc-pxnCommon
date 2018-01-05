@@ -1,12 +1,11 @@
-package com.poixson.app.steps;
+package com.poixson.app;
 
 import java.lang.reflect.Method;
 
-import com.poixson.app.xApp;
-import com.poixson.app.steps.xAppStep.StepType;
+import com.poixson.app.xAppStep.StepType;
+import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
-import com.poixson.utils.exceptions.RequiredArgumentException;
 
 
 public class xAppStepDAO {

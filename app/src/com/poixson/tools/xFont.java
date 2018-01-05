@@ -1,11 +1,10 @@
-package com.poixson.app.gui;
+package com.poixson.tools;
 
 import java.awt.Font;
 
+import com.poixson.logger.xLog;
 import com.poixson.utils.NumberUtils;
 import com.poixson.utils.Utils;
-import com.poixson.utils.xString;
-import com.poixson.utils.xLogger.xLog;
 
 
 public class xFont {

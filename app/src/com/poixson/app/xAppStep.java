@@ -1,4 +1,4 @@
-package com.poixson.app.steps;
+package com.poixson.app;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

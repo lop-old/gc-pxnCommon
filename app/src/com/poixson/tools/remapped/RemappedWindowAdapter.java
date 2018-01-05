@@ -1,13 +1,13 @@
-package com.poixson.app.gui.remapped;
+package com.poixson.tools.remapped;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.logger.xLog;
 import com.poixson.utils.Utils;
-import com.poixson.utils.exceptions.RequiredArgumentException;
-import com.poixson.utils.xLogger.xLog;
 
 
 public class RemappedWindowAdapter extends WindowAdapter {
