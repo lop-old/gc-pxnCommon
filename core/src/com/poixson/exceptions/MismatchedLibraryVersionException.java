@@ -9,13 +9,6 @@ public class MismatchedLibraryVersionException extends Exception {
 
 
 
-	public static MismatchedLibraryVersionException getNew(
-			final String expectedVersion, final String libraryVersion) {
-		return new MismatchedLibraryVersionException(
-			expectedVersion,
-			libraryVersion
-		);
-	}
 	public MismatchedLibraryVersionException(
 			final String expectedVersion, final String libraryVersion) {
 		super(

@@ -6,21 +6,6 @@ public class IORuntimeException extends RuntimeException {
 
 
 
-	public static IORuntimeException getNew() {
-		return new IORuntimeException();
-	}
-	public static IORuntimeException getNew(final String msg) {
-		return new IORuntimeException(msg);
-	}
-	public static IORuntimeException getNew(final String msg, final Throwable e) {
-		return new IORuntimeException(msg, e);
-	}
-	public static IORuntimeException getNew(final Throwable e) {
-		return new IORuntimeException(e);
-	}
-
-
-
 	public IORuntimeException() {
 		super();
 	}
