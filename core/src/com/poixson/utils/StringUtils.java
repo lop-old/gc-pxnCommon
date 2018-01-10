@@ -215,6 +215,33 @@ public final class StringUtils {
 
 
 	// trim from string
+	public static String Trim(final String str, final char...strip) {
+		return
+			doTrim(
+				true, true,
+				str,
+				strip
+			);
+	}
+	public static String TrimFront(final String str, final char...strip) {
+		return
+			doTrim(
+				true, false,
+				str,
+				strip
+			);
+	}
+	public static String TrimEnd(final String str, final char...strip) {
+		return
+			doTrim(
+				false, true,
+				str,
+				strip
+			);
+	}
+
+
+
 	public static String Trim(final String str, final String...strip) {
 		return
 			doTrim(
@@ -240,6 +267,39 @@ public final class StringUtils {
 			);
 	}
 
+
+
+	private static String doTrim(
+			final boolean trimFront, final boolean trimEnd,
+			final String str, final char...strip) {
+		if (!trimFront && !trimEnd) return str;
+		if (Utils.isEmpty(str))     return str;
+		if (Utils.isEmpty(strip))   return str;
+		final int stripCount = strip.length;
+		String out = str;
+		boolean changed = true;
+		while (changed) {
+			changed = false;
+			for (int index = 0; index < stripCount; index++) {
+				if (trimFront) {
+					while (out.charAt(0) == strip[index]) {
+						out = out.substring(1);
+						changed = true;
+					}
+				}
+				if (trimEnd) {
+					while (out.charAt(0) == strip[index]) {
+						out = out.substring(0, out.length() - 1);
+						changed = true;
+					}
+				}
+			}
+			if (out.length() == 0) {
+				break;
+			}
+		}
+		return out;
+	}
 	private static String doTrim(
 			final boolean trimFront, final boolean trimEnd,
 			final String str, final String...strip) {
