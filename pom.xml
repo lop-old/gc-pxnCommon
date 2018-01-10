@@ -31,6 +31,7 @@
 	</properties>
 	<modules>
 		<module>core</module>
+		<module>loggers</module>
 		<module>shell</module>
 		<module>config</module>
 		<module>app</module>
