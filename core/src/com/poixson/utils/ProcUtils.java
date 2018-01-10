@@ -107,7 +107,7 @@ public final class ProcUtils {
 				path = appName+".lock";
 			}
 		}
-		if (Utils.isEmpty(path)) throw RequiredArgumentException.getNew("filepath");
+		if (Utils.isEmpty(path)) throw new RequiredArgumentException("filepath");
 		final File file = new File(path);
 		RandomAccessFile access = null;
 		try {

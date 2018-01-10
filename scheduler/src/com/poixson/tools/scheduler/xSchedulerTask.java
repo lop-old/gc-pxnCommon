@@ -66,7 +66,7 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 
 	public void register() {
 		final xScheduler sched = this.sched;
-		if (sched == null) throw RequiredArgumentException.getNew("sched");
+		if (sched == null) throw new RequiredArgumentException("sched");
 		sched.add(this);
 	}
 	public void unregister() {
@@ -139,7 +139,7 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 			}
 		}
 		this.setDisabled();
-		throw RequiredArgumentException.getNew("run");
+		throw new RequiredArgumentException("run");
 	}
 
 

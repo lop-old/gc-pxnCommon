@@ -85,8 +85,8 @@ public final class guiUtils {
 	 */
 	public static boolean forceDispatchThread(final Object callingFrom,
 			final String methodStr, final Object...args) {
-		if (callingFrom == null)      throw RequiredArgumentException.getNew("callingFrom");
-		if (Utils.isEmpty(methodStr)) throw RequiredArgumentException.getNew("methodStr");
+		if (callingFrom == null)      throw new RequiredArgumentException("callingFrom");
+		if (Utils.isEmpty(methodStr)) throw new RequiredArgumentException("methodStr");
 		// already running from event dispatch thread
 		if (SwingUtilities.isEventDispatchThread()) {
 			return false;

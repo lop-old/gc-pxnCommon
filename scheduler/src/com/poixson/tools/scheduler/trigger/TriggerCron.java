@@ -50,10 +50,10 @@ public class TriggerCron extends xSchedulerTrigger {
 
 
 	public void update(final long now) {
-		if (this.trigger == null) throw RequiredArgumentException.getNew("CronTrigger");
+		if (this.trigger == null) throw new RequiredArgumentException("CronTrigger");
 		synchronized(this.updateLock) {
 			final CronTriggerImpl trigger = this.trigger;
-			if (trigger == null) throw RequiredArgumentException.getNew("CronTrigger");
+			if (trigger == null) throw new RequiredArgumentException("CronTrigger");
 			// calculate time until next trigger
 			final Date nowDate = new Date(now);
 			final Date nextDate = trigger.getFireTimeAfter(nowDate);
@@ -92,7 +92,7 @@ public class TriggerCron extends xSchedulerTrigger {
 		return this.setCronExpression(express);
 	}
 	public TriggerCron setCronExpression(final CronExpression express) {
-		if (express == null) throw RequiredArgumentException.getNew("expression");
+		if (express == null) throw new RequiredArgumentException("expression");
 		final CronTriggerImpl trigger = new CronTriggerImpl();
 		trigger.setCronExpression(express);
 		this.trigger = trigger;

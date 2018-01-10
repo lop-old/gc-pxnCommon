@@ -18,14 +18,14 @@ public class xPluginLoader_File<T extends xJavaPlugin> extends xPluginLoader<T> 
 
 
 	public T LoadJar(final String fileStr) {
-		if (Utils.isEmpty(fileStr)) throw RequiredArgumentException.getNew("fileStr");
+		if (Utils.isEmpty(fileStr)) throw new RequiredArgumentException("fileStr");
 		return
 			this.LoadJar(
 				new File(fileStr)
 			);
 	}
 	public T LoadJar(final File file) {
-		if (file == null)   throw RequiredArgumentException.getNew("file");
+		if (file == null)   throw new RequiredArgumentException("file");
 		if (!file.exists()) throw new RuntimeException("Plugin file not found: "+file.getPath());
 		// load plugin.yml file from jar
 		final xPluginYML yml = this.LoadPluginYML(file);

@@ -72,7 +72,7 @@ public abstract class xThreadPool extends xThreadPoolQueue {
 
 
 	protected xThreadPool(final String poolName) {
-		if (Utils.isEmpty(poolName)) throw RequiredArgumentException.getNew("poolName");
+		if (Utils.isEmpty(poolName)) throw new RequiredArgumentException("poolName");
 		this.isMainPool = MAIN_POOL_NAME.equalsIgnoreCase(poolName);
 		this.poolName = (
 			this.isMainPool
@@ -344,7 +344,7 @@ public abstract class xThreadPool extends xThreadPoolQueue {
 
 	// run a task as soon as possible
 	public void runNow(final Runnable run) {
-		if (run == null) throw RequiredArgumentException.getNew("run");
+		if (run == null) throw new RequiredArgumentException("run");
 		// run in main thread pool
 		if (!this.isMainPool()) {
 			if (this.getMaxThreadCount() == 0) {
@@ -377,7 +377,7 @@ public abstract class xThreadPool extends xThreadPoolQueue {
 
 	// queue a task
 	public void runLater(final Runnable run) {
-		if (run == null) throw RequiredArgumentException.getNew("run");
+		if (run == null) throw new RequiredArgumentException("run");
 //TODO:
 //		// pass to main pool
 //		if (this.getMaxThreads() < 1 && !this.isMainPool) {

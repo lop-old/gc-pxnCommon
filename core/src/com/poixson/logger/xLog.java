@@ -225,7 +225,7 @@ public class xLog extends xLogPrinting {
 	@Override
 	public xLog getWeak(final String logName) {
 		if (Utils.isEmpty(logName))
-			throw RequiredArgumentException.getNew("logName");
+			throw new RequiredArgumentException("logName");
 		return new xLog(logName, this);
 	}
 	@Override
@@ -238,7 +238,7 @@ public class xLog extends xLogPrinting {
 	// new logger instance
 	protected xLog(final String logName, final xLog parentLogger) {
 		if (parentLogger != null) {
-			if (Utils.isEmpty(logName)) throw RequiredArgumentException.getNew("name");
+			if (Utils.isEmpty(logName)) throw new RequiredArgumentException("name");
 		}
 		this.name   = logName;
 		this.parent = parentLogger;
@@ -317,7 +317,7 @@ public class xLog extends xLogPrinting {
 
 	// formatter
 	public void setFormatter(final xLogFormatter formatter, final Class<?> handlerType) {
-		if (formatter == null) throw RequiredArgumentException.getNew("formatter");
+		if (formatter == null) throw new RequiredArgumentException("formatter");
 		final Iterator<xLogHandler> it = this.handlers.iterator();
 		while (it.hasNext()) {
 			final xLogHandler handler = it.next();

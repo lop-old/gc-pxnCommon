@@ -20,7 +20,7 @@ public final class ConfigUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	public static Map<String, Object> LoadYamlFromStream(final InputStream in) {
-		if (in == null) throw RequiredArgumentException.getNew("in");
+		if (in == null) throw new RequiredArgumentException("in");
 		final Yaml yml = new Yaml();
 		final Map<String, Object> datamap =
 			yml.loadAs(in, Map.class);

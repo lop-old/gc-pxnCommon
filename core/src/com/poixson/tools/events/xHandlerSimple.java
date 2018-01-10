@@ -30,7 +30,7 @@ public abstract class xHandlerSimple extends xHandler {
 	// register fixed named method
 	@Override
 	public void register(final xEventListener listener) {
-		if (listener == null) throw RequiredArgumentException.getNew("listener");
+		if (listener == null) throw new RequiredArgumentException("listener");
 //TODO:
 //		{
 //			final Class<? extends xEventListener> expected = this.getEventListenerType();

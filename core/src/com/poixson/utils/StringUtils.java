@@ -378,8 +378,8 @@ public final class StringUtils {
 
 
 	public static String ForceUnique(final String match, final Set<String> existing) {
-		if (Utils.isEmpty(match)) throw RequiredArgumentException.getNew("match");
-		if (existing == null)     throw RequiredArgumentException.getNew("existing");
+		if (Utils.isEmpty(match)) throw new RequiredArgumentException("match");
+		if (existing == null)     throw new RequiredArgumentException("existing");
 		// already unique
 		if (existing.isEmpty())        return match;
 		if (!existing.contains(match)) return match;
@@ -672,7 +672,7 @@ public final class StringUtils {
 		return Repeat(count, str, null);
 	}
 	public static String Repeat(final int count, final String str, final String delim) {
-		if (Utils.isEmpty(str)) throw RequiredArgumentException.getNew("str");
+		if (Utils.isEmpty(str)) throw new RequiredArgumentException("str");
 		if (count < 1) return "";
 		final StringBuilder buf = new StringBuilder();
 		// repeat string
@@ -713,7 +713,7 @@ public final class StringUtils {
 		final StringBuilder buf = new StringBuilder(length);
 		while (buf.length() < length) {
 			final String str = UUID.randomUUID().toString();
-			if (str == null) throw RequiredArgumentException.getNew("str");
+			if (str == null) throw new RequiredArgumentException("str");
 			buf.append(str);
 		}
 		return

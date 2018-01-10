@@ -32,7 +32,7 @@ public abstract class xHandlerGeneric extends xHandler {
 	// register all xEvent listeners
 	@Override
 	public void register(final xEventListener listener) {
-		if (listener == null) throw RequiredArgumentException.getNew("listener");
+		if (listener == null) throw new RequiredArgumentException("listener");
 		final Class<? extends xEventData> eventType = this.getEventDataType();
 		// find listener methods
 		final Set<Method> methodsFound = new HashSet<Method>();

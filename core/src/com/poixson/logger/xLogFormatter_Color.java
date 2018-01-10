@@ -11,7 +11,7 @@ public class xLogFormatter_Color extends xLogFormatter_Default {
 	// level
 	@Override
 	protected String partLevel(final xLogRecord record) {
-		if (record == null) throw RequiredArgumentException.getNew("record");
+		if (record == null) throw new RequiredArgumentException("record");
 		final xLevel level = record.level();
 		final String color;
 		// all, finest, finer, fine

@@ -27,8 +27,8 @@ public class RemappedWindowAdapter extends WindowAdapter {
 	}
 	public RemappedWindowAdapter(final Object listenerClass, final String methodStr)
 			throws NoSuchMethodException {
-		if (listenerClass == null)    throw RequiredArgumentException.getNew("listenerClass");
-		if (Utils.isEmpty(methodStr)) throw RequiredArgumentException.getNew("methodName");
+		if (listenerClass == null)    throw new RequiredArgumentException("listenerClass");
+		if (Utils.isEmpty(methodStr)) throw new RequiredArgumentException("methodName");
 		this.obj = listenerClass;
 		final Class<?> clss = listenerClass.getClass();
 		this.method = clss.getMethod(methodStr);

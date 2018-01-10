@@ -20,7 +20,7 @@ public class BoolRef {
 		this.value = value;
 	}
 	public void value(final Boolean value) {
-		if (value == null) throw RequiredArgumentException.getNew("value");
+		if (value == null) throw new RequiredArgumentException("value");
 		this.value = value.booleanValue();
 	}
 	public boolean value() {

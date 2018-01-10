@@ -25,7 +25,7 @@ public final class ioUtils {
 	 */
 	public static InputStream OpenFile(final String fileStr)
 			throws FileNotFoundException {
-		if (Utils.isEmpty(fileStr)) throw RequiredArgumentException.getNew("fileStr");
+		if (Utils.isEmpty(fileStr)) throw new RequiredArgumentException("fileStr");
 		final File file = new File(fileStr);
 		if (!file.exists()) return null;
 		final InputStream in =
@@ -42,7 +42,7 @@ public final class ioUtils {
 	 * @return InputStream of the open file, or null on failure.
 	 */
 	public static InputStream OpenResource(final Class<? extends Object> clssRef, final String fileStr) {
-		if (Utils.isEmpty(fileStr)) throw RequiredArgumentException.getNew("fileStr");
+		if (Utils.isEmpty(fileStr)) throw new RequiredArgumentException("fileStr");
 		final Class<? extends Object> clss = (
 			clssRef == null
 			? ioUtils.class
@@ -67,8 +67,8 @@ public final class ioUtils {
 	 */
 	public static InputStream OpenFileFromJar(final JarFile jarFile, final String fileStr)
 			throws IOException {
-		if (jarFile == null)        throw RequiredArgumentException.getNew("jarFile");
-		if (Utils.isEmpty(fileStr)) throw RequiredArgumentException.getNew("fileStr");
+		if (jarFile == null)        throw new RequiredArgumentException("jarFile");
+		if (Utils.isEmpty(fileStr)) throw new RequiredArgumentException("fileStr");
 		final JarEntry jarEntry =
 			jarFile.getJarEntry(fileStr);
 		if (jarEntry == null)
@@ -84,8 +84,8 @@ public final class ioUtils {
 	public static void ExportResource(
 			final String targetFileStr, final InputStream in)
 			throws IOException {
-		if (Utils.isEmpty(targetFileStr)) throw RequiredArgumentException.getNew("outputFileStr");
-		if (in == null)                   throw RequiredArgumentException.getNew("in");
+		if (Utils.isEmpty(targetFileStr)) throw new RequiredArgumentException("outputFileStr");
+		if (in == null)                   throw new RequiredArgumentException("in");
 		final File file = new File(targetFileStr);
 		try {
 			Files.copy(

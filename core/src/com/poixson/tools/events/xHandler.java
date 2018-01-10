@@ -41,8 +41,8 @@ public abstract class xHandler {
 //TODO:
 //				final boolean async,
 				final boolean filterHandled, final boolean filterCancelled) {
-			if (listener == null) throw RequiredArgumentException.getNew("listener");
-			if (method   == null) throw RequiredArgumentException.getNew("method");
+			if (listener == null) throw new RequiredArgumentException("listener");
+			if (method   == null) throw new RequiredArgumentException("method");
 			this.index    = getNextIndex();
 			this.listener = listener;
 			this.method   = method;
@@ -90,7 +90,7 @@ public abstract class xHandler {
 	 * @param listener
 	 */
 	public void unregister(final xEventListener listener) {
-		if (listener == null) throw RequiredArgumentException.getNew("listener");
+		if (listener == null) throw new RequiredArgumentException("listener");
 		final Set<xListenerDAO> removing = new HashSet<xListenerDAO>();
 		{
 			final Iterator<xListenerDAO> it = this.listeners.iterator();
@@ -121,7 +121,7 @@ public abstract class xHandler {
 	 * @param clss
 	 */
 	public void unregisterType(final Class<?> listenerClass) {
-		if (listenerClass == null) throw RequiredArgumentException.getNew("listenerClass");
+		if (listenerClass == null) throw new RequiredArgumentException("listenerClass");
 		final Iterator<xListenerDAO> it = this.listeners.iterator();
 		int count = 0;
 		while (it.hasNext()) {
@@ -161,7 +161,7 @@ public abstract class xHandler {
 	// trigger event
 	public void trigger(final xEventData event) {
 //TODO: ensure main thread
-		if (event == null) throw RequiredArgumentException.getNew("event");
+		if (event == null) throw new RequiredArgumentException("event");
 //TODO:
 //		final Set<xRunnableEvent> waitFor = new HashSet<xRunnableEvent>();
 		boolean isFirst = true;

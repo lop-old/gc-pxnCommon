@@ -20,7 +20,7 @@ public class IntRef {
 		this.value = value;
 	}
 	public void value(final Integer value) {
-		if (value == null) throw RequiredArgumentException.getNew("value");
+		if (value == null) throw new RequiredArgumentException("value");
 		this.value = value.intValue();
 	}
 	public int value() {

@@ -34,7 +34,7 @@ public class Keeper {
 
 
 	public static void add(final Object obj) {
-		if (obj == null) throw RequiredArgumentException.getNew("obj");
+		if (obj == null) throw new RequiredArgumentException("obj");
 		holder.add(obj);
 		if (isDetailedLogging()) {
 			log().detail(
@@ -45,7 +45,7 @@ public class Keeper {
 		}
 	}
 	public static void remove(final Object obj) {
-		if (obj == null) throw RequiredArgumentException.getNew("obj");
+		if (obj == null) throw new RequiredArgumentException("obj");
 		holder.remove(obj);
 		if (isDetailedLogging()) {
 			log().detail(

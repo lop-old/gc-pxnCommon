@@ -24,9 +24,9 @@ public class xRunnableEvent extends xRunnable {
 
 	public xRunnableEvent(final xListenerDAO dao,
 			final xEventData event, final ListenerPriority priority) {
-		if (dao      == null) throw RequiredArgumentException.getNew("dao");
-		if (event    == null) throw RequiredArgumentException.getNew("event");
-		if (priority == null) throw RequiredArgumentException.getNew("priority");
+		if (dao      == null) throw new RequiredArgumentException("dao");
+		if (event    == null) throw new RequiredArgumentException("event");
+		if (priority == null) throw new RequiredArgumentException("priority");
 		this.dao      = dao;
 		this.event    = event;
 		this.priority = priority;

@@ -435,8 +435,8 @@ public final class Utils {
 
 	// compare version numbers
 	public static String CompareVersions(final String versionA, final String versionB) {
-		if (Utils.isEmpty(versionA)) throw RequiredArgumentException.getNew("versionA");
-		if (Utils.isEmpty(versionB)) throw RequiredArgumentException.getNew("versionB");
+		if (Utils.isEmpty(versionA)) throw new RequiredArgumentException("versionA");
+		if (Utils.isEmpty(versionB)) throw new RequiredArgumentException("versionB");
 		final String[] norms = NormalizeVersions(versionA, versionB);
 		final int cmp = norms[0].compareTo(norms[1]);
 		if (cmp < 0) return "<";
@@ -444,8 +444,8 @@ public final class Utils {
 		return "=";
 	}
 	private static String[] NormalizeVersions(final String versionA, final String versionB) {
-		if (Utils.isEmpty(versionA)) throw RequiredArgumentException.getNew("versionA");
-		if (Utils.isEmpty(versionB)) throw RequiredArgumentException.getNew("versionB");
+		if (Utils.isEmpty(versionA)) throw new RequiredArgumentException("versionA");
+		if (Utils.isEmpty(versionB)) throw new RequiredArgumentException("versionB");
 		// split string by .
 		final String[] splitA = Pattern.compile(".", Pattern.LITERAL).split(versionA);
 		final String[] splitB = Pattern.compile(".", Pattern.LITERAL).split(versionB);

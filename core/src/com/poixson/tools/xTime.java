@@ -100,8 +100,7 @@ public class xTime {
 
 	// reset value to 0
 	public void reset() {
-		if (this.isFinal)
-			throw UnmodifiableObjectException.getNew();
+		if (this.isFinal) throw new UnmodifiableObjectException();
 		this.value = 0;
 	}
 
@@ -109,7 +108,7 @@ public class xTime {
 
 	// get value
 	public long get(final TimeUnit unit) {
-		if (unit == null) throw RequiredArgumentException.getNew("unit");
+		if (unit == null) throw new RequiredArgumentException("unit");
 		return unit.convert(this.value, xTimeU.MS);
 	}
 	public String getString() {
@@ -123,20 +122,20 @@ public class xTime {
 	}
 	// set value
 	public xTime set(final long value, final TimeUnit unit) {
-		if (unit == null) throw RequiredArgumentException.getNew("unit");
-		if (this.isFinal) throw UnmodifiableObjectException.getNew();
+		if (unit == null) throw new RequiredArgumentException("unit");
+		if (this.isFinal) throw new UnmodifiableObjectException();
 		this.value = xTimeU.MS.convert(value, unit);
 		return this;
 	}
 	public xTime set(final String val) {
-		if (this.isFinal) throw UnmodifiableObjectException.getNew();
+		if (this.isFinal) throw new UnmodifiableObjectException();
 		if (Utils.notEmpty(val)) {
 			this.value = parseLong(val).longValue();
 		}
 		return this;
 	}
 	public xTime set(final xTime time) {
-		if (this.isFinal) throw UnmodifiableObjectException.getNew();
+		if (this.isFinal) throw new UnmodifiableObjectException();
 		if (time != null) {
 			this.value = time.getMS();
 		}
@@ -147,19 +146,19 @@ public class xTime {
 
 	// add time
 	public void add(final long val, final TimeUnit unit) {
-		if (unit == null) throw RequiredArgumentException.getNew("unit");
-		if (this.isFinal) throw UnmodifiableObjectException.getNew();
+		if (unit == null) throw new RequiredArgumentException("unit");
+		if (this.isFinal) throw new UnmodifiableObjectException();
 		this.value += xTimeU.MS.convert(val, unit);
 	}
 	public void add(final String val) {
-		if (this.isFinal) throw UnmodifiableObjectException.getNew();
+		if (this.isFinal) throw new UnmodifiableObjectException();
 		if (Utils.notEmpty(val)) {
 			this.value += parseLong(val).longValue();
 		}
 	}
 	public void add(final xTime time) {
-		if (time == null) throw RequiredArgumentException.getNew("time");
-		if (this.isFinal) throw UnmodifiableObjectException.getNew();
+		if (time == null) throw new RequiredArgumentException("time");
+		if (this.isFinal) throw new UnmodifiableObjectException();
 		this.value += time.value;
 	}
 

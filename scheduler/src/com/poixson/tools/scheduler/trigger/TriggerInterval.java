@@ -73,7 +73,7 @@ public class TriggerInterval extends xSchedulerTrigger {
 				final long delay    = this.delay.getMS();
 				final long interval = this.interval.getMS();
 				if (interval < 1L) {
-					if (delay < 1L) throw RequiredArgumentException.getNew("delay/interval");
+					if (delay < 1L) throw new RequiredArgumentException("delay/interval");
 					// swap delay to interval
 					// and set no repeat
 					this.interval.set(

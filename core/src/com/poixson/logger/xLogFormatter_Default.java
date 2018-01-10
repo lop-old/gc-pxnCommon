@@ -13,7 +13,7 @@ public class xLogFormatter_Default implements xLogFormatter {
 
 	@Override
 	public String formatMsg(final xLogRecord record) {
-		if (record == null) throw RequiredArgumentException.getNew("record");
+		if (record == null) throw new RequiredArgumentException("record");
 		if (record.level() == null) {
 			return record.msg();
 		}
@@ -33,13 +33,13 @@ public class xLogFormatter_Default implements xLogFormatter {
 
 	// timestamp
 	protected String partTimestamp(final xLogRecord record) {
-		if (record == null) throw RequiredArgumentException.getNew("record");
+		if (record == null) throw new RequiredArgumentException("record");
 		final SimpleDateFormat dateFormat = new SimpleDateFormat("D yyyy-MM-dd HH:mm:ss");
 		return dateFormat.format(new Long(record.timestamp()));
 	}
 	// level
 	protected String partLevel(final xLogRecord record) {
-		if (record == null) throw RequiredArgumentException.getNew("record");
+		if (record == null) throw new RequiredArgumentException("record");
 		return (new StringBuilder())
 			.append("[")
 			.append(StringUtils.PadCenter(
@@ -52,7 +52,7 @@ public class xLogFormatter_Default implements xLogFormatter {
 	}
 	// [logger] [crumbs]
 	protected String partCrumbs(final xLogRecord record) {
-		if (record == null) throw RequiredArgumentException.getNew("record");
+		if (record == null) throw new RequiredArgumentException("record");
 		final List<String> tree = record.getNameTree();
 		if (tree.isEmpty())
 			return "";

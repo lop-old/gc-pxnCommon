@@ -22,9 +22,9 @@ public class xAppStepDAO {
 
 
 	public xAppStepDAO(final xApp app, final Method method, final xAppStep anno) {
-		if (app    == null) throw RequiredArgumentException.getNew("app");
-		if (method == null) throw RequiredArgumentException.getNew("method");
-		if (anno   == null) throw RequiredArgumentException.getNew("annotation");
+		if (app    == null) throw new RequiredArgumentException("app");
+		if (method == null) throw new RequiredArgumentException("method");
+		if (anno   == null) throw new RequiredArgumentException("annotation");
 		this.type = anno.type();
 		this.priority = Math.abs(anno.priority());
 		this.app    = app;
