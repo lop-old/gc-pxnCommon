@@ -4,8 +4,8 @@ import org.slf4j.helpers.FormattingTuple;
 import org.slf4j.helpers.MarkerIgnoringBase;
 import org.slf4j.helpers.MessageFormatter;
 
-import com.poixson.utils.xLogger.xLevel;
-import com.poixson.utils.xLogger.xLog;
+import com.poixson.logger.xLevel;
+import com.poixson.logger.xLog;
 
 
 public class slf4jLoggerAdapter extends MarkerIgnoringBase {

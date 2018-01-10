@@ -6,8 +6,8 @@ import java.util.concurrent.ConcurrentMap;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 
-import com.poixson.utils.xLogger.xLevel;
-import com.poixson.utils.xLogger.xLog;
+import com.poixson.logger.xLevel;
+import com.poixson.logger.xLog;
 
 
 public class slf4jLoggerFactory implements ILoggerFactory {
