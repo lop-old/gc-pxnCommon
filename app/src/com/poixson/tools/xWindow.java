@@ -75,21 +75,17 @@ public abstract class xWindow extends JFrame implements Closeable, AttachedLogge
 		// register close hook
 		EventQueue.invokeLater(
 			new Runnable() {
-				private volatile xWindow window = null;
-				public Runnable init(final xWindow window) {
-					this.window = window;
-					return this;
-				}
 				@Override
 				public void run() {
-					this.window.addWindowListener(
-						RemappedWindowAdapter.getNew(
-							this.window,
-							"close"
-						)
+					xWindow.this
+						.addWindowListener(
+							RemappedWindowAdapter.getNew(
+								xWindow.this,
+								"close"
+							)
 					);
 				}
-			}.init(this)
+			}
 		);
 	}
 	public xWindow(final String title) throws HeadlessException {

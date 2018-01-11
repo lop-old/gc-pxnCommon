@@ -80,19 +80,17 @@ public class xClock {
 		// update in a new thread
 		if (this.thread.get() == null) {
 			final Thread thread = new Thread() {
-				private volatile xClock  clock    = null;
 				private volatile boolean blocking = false;
-				public Thread init(final xClock clock, final boolean blocking) {
-					this.clock    = clock;
+				public Thread init(final boolean blocking) {
 					this.blocking = blocking;
 					return this;
 				}
 				@Override
 				public void run() {
-					this.clock
+					xClock.this
 						.doUpdate(this.blocking);
 				}
-			}.init(this, blocking);
+			}.init(blocking);
 			if (this.thread.compareAndSet(null, thread)) {
 				thread.setDaemon(true);
 				thread.setName("xClock Update");

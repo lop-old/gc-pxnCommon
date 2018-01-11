@@ -91,17 +91,12 @@ public class LockFile {
 		// register shutdown hook
 		Runtime.getRuntime().addShutdownHook(
 			new Thread() {
-				private volatile LockFile lock = null;
-				public Thread init(final LockFile lock) {
-					this.lock = lock;
-					return this;
-				}
 				@Override
 				public void run() {
-					this.lock
+					LockFile.this
 						.release();
 				}
-			}.init(this)
+			}
 		);
 	}
 
