@@ -15,6 +15,12 @@ public class xVars {
 
 	private static final boolean DEFAULT_DEBUG = false;
 
+	public static final String[] SEARCH_DEBUG_FILES =
+		new String[] {
+			"debug",
+			".debug"
+		};
+
 
 
 	// ------------------------------------------------------------------------------- //
