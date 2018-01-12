@@ -23,14 +23,17 @@ public final class FileUtils {
 
 	// get current working directory
 	public static String cwd() {
+		if (Utils.isEmpty(cwd))
+			populateCwd();
+		return cwd;
+	}
+	private static void populateCwd() {
 		if (Utils.notEmpty(cwd))
-			return cwd;
-		{
-			final String path = System.getProperty("user.dir");
-			if (Utils.notEmpty(path)) {
-				cwd = path;
-				return path;
-			}
+			return;
+		final String path = System.getProperty("user.dir");
+		if (Utils.notEmpty(path)) {
+			cwd = path;
+			return;
 		}
 		try {
 			final File dir = new File(".");
@@ -38,11 +41,19 @@ public final class FileUtils {
 		} catch (IOException ignore) {
 			cwd = null;
 		}
-		return cwd;
 	}
+
+
+
+	// get running directory
 	public static String pwd() {
+		if (Utils.isEmpty(pwd))
+			populatePwd();
+		return pwd;
+	}
+	private static void populatePwd() {
 		if (Utils.notEmpty(pwd))
-			return pwd;
+			return;
 		final CodeSource source = FileUtils.class.getProtectionDomain().getCodeSource();
 		final String path = source.getLocation().getPath();
 		try {
@@ -50,7 +61,6 @@ public final class FileUtils {
 		} catch (UnsupportedEncodingException ignore) {
 			pwd = path;
 		}
-		return pwd;
 	}
 
 
