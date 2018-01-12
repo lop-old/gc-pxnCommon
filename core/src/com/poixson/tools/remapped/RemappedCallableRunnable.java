@@ -6,7 +6,7 @@ import com.poixson.exceptions.RequiredArgumentException;
 
 
 // can also use Executors.callable(run) which returns RunnableAdapter
-public class RemappedCallableRunnable<V> implements Callable<Object>, Runnable {
+public class RemappedCallableRunnable<V> implements Callable<V>, Runnable {
 
 	protected final Runnable run;
 

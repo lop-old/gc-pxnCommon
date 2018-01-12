@@ -6,13 +6,12 @@ import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.xLog;
 
 
-public class RemappedRunnableCallable<V> implements Callable<Object>, Runnable {
+public class RemappedRunnableCallable<V> implements Runnable, Callable<V> {
 
 	protected final Callable<V> call;
-	protected volatile V result;
 
+	protected volatile V result;
 	protected volatile Exception e = null;
-	protected volatile xLog log = null;
 
 
 
@@ -51,7 +50,7 @@ public class RemappedRunnableCallable<V> implements Callable<Object>, Runnable {
 	}
 	@Override
 	public V call() throws Exception {
-		throw new RequiredArgumentException("task");
+		throw new RequiredArgumentException("call");
 	}
 
 
