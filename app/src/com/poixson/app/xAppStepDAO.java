@@ -8,7 +8,7 @@ import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
 
 
-public class xAppStepDAO {
+public class xAppStepDAO implements Runnable {
 
 	public final StepType type;
 	public final int      priority;
@@ -67,6 +67,14 @@ public class xAppStepDAO {
 
 	public void invoke() throws ReflectiveOperationException, RuntimeException {
 		this.method.invoke(this.app);
+	}
+	@Override
+	public void run() {
+		try {
+			this.invoke();
+		} catch (ReflectiveOperationException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 
