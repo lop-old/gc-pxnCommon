@@ -2,7 +2,6 @@ package com.poixson.tools;
 
 import java.lang.ref.SoftReference;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -17,7 +16,8 @@ public class Keeper {
 	private static final AtomicReference<Keeper> instance =
 			new AtomicReference<Keeper>(null);
 
-	private static final Set<Object> holder = new CopyOnWriteArraySet<Object>();
+	private static final CopyOnWriteArraySet<Object> holder =
+			new CopyOnWriteArraySet<Object>();
 
 
 
@@ -44,6 +44,9 @@ public class Keeper {
 			);
 		}
 	}
+
+
+
 	public static void remove(final Object obj) {
 		if (obj == null) throw new RequiredArgumentException("obj");
 		holder.remove(obj);
@@ -54,6 +57,9 @@ public class Keeper {
 					.getName()
 			);
 		}
+	}
+	public static void removeAll() {
+		holder.clear();
 	}
 	public static int removeAll(final Class<? extends Object> clss) {
 		if (holder.isEmpty())
