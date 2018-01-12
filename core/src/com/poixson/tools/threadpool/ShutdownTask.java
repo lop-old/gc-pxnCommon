@@ -1,6 +1,7 @@
 package com.poixson.tools.threadpool;
 
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.poixson.app.Failure;
@@ -20,6 +21,8 @@ public class ShutdownTask implements Runnable {
 	protected final xThreadPool pool;
 
 	protected final HangCatcher hangCatch;
+
+	protected final AtomicBoolean running = new AtomicBoolean(false);
 
 	// hang timeout
 	public final long hangTimeout = xTime.getNew("10s").getMS();
@@ -88,6 +91,8 @@ public class ShutdownTask implements Runnable {
 	@Override
 	public void run() {
 		this.resetTimeout();
+		if (!this.running.compareAndSet(false, true))
+			return;
 		int totalCount = 0;
 		OUTER_LOOP:
 		while (true) {
@@ -111,6 +116,7 @@ public class ShutdownTask implements Runnable {
 		// queue another shutdown task (to wait for things to finish)
 		if (totalCount > 0) {
 			// run this again
+			this.running.set(false);
 			this.resetTimeout();
 			this.queueIt();
 		// finished running hooks
