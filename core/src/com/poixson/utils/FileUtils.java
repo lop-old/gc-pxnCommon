@@ -21,6 +21,28 @@ public final class FileUtils {
 
 
 
+	public static boolean SearchLocalFile(final String fileNames[]) {
+		if (Utils.isEmpty(fileNames)) throw new RequiredArgumentException("fileNames");
+		final String[] workingPaths = (
+			FileUtils.inRunDirectory()
+			? new String[] { FileUtils.cwd() }
+			: new String[] { FileUtils.cwd(), FileUtils.pwd() }
+		);
+		for (final String workPath : workingPaths) {
+			for (final String fileName : fileNames) {
+				final String path =
+					FileUtils.MergePaths(workPath, fileName);
+				final File file = new File(path);
+				if (file.exists()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+
+
 	// get current working directory
 	public static String cwd() {
 		if (Utils.isEmpty(cwd))

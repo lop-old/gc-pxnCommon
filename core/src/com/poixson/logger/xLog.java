@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import com.poixson.app.xVars;
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.tools.Keeper;
+import com.poixson.utils.FileUtils;
 import com.poixson.utils.Utils;
 
 
@@ -175,6 +176,9 @@ public class xLog extends xLogPrinting {
 //		}
 		if (!root.compareAndSet(null, log)) {
 			return root.get();
+		}
+		if (FileUtils.SearchLocalFile(xVars.SEARCH_DEBUG_FILES)) {
+			xVars.debug(true);
 		}
 		Keeper.add(log);
 		return log;
