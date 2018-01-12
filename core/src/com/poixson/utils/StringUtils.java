@@ -269,6 +269,8 @@ public final class StringUtils {
 
 
 
+//TODO: this could use further optimizations
+//track trim length rather than modifying the string every loop
 	private static String doTrim(
 			final boolean trimFront, final boolean trimEnd,
 			final String str, final char...strip) {
@@ -277,6 +279,7 @@ public final class StringUtils {
 		if (Utils.isEmpty(strip))   return str;
 		final int stripCount = strip.length;
 		String out = str;
+		int size = str.length();
 		boolean changed = true;
 		while (changed) {
 			changed = false;
@@ -284,19 +287,20 @@ public final class StringUtils {
 				if (trimFront) {
 					while (out.charAt(0) == strip[index]) {
 						out = out.substring(1);
+						size--;
 						changed = true;
 					}
 				}
 				if (trimEnd) {
-					while (out.charAt(0) == strip[index]) {
-						out = out.substring(0, out.length() - 1);
+					while (out.charAt(size - 1) == strip[index]) {
+						size--;
+						out = out.substring(0, size);
 						changed = true;
 					}
 				}
 			}
-			if (out.length() == 0) {
+			if (size <= 0)
 				break;
-			}
 		}
 		return out;
 	}
