@@ -3,6 +3,9 @@ package com.poixson.utils;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.security.CodeSource;
 import java.util.LinkedList;
 
 import com.poixson.exceptions.RequiredArgumentException;
@@ -14,6 +17,7 @@ public final class FileUtils {
 	{ Keeper.add(new FileUtils()); }
 
 	private static volatile String cwd = null;
+	private static volatile String pwd = null;
 
 
 
@@ -35,6 +39,18 @@ public final class FileUtils {
 			cwd = null;
 		}
 		return cwd;
+	}
+	public static String pwd() {
+		if (Utils.notEmpty(pwd))
+			return pwd;
+		final CodeSource source = FileUtils.class.getProtectionDomain().getCodeSource();
+		final String path = source.getLocation().getPath();
+		try {
+			pwd = URLDecoder.decode(path, "UTF-8");
+		} catch (UnsupportedEncodingException ignore) {
+			pwd = path;
+		}
+		return pwd;
 	}
 
 
@@ -222,6 +238,7 @@ public final class FileUtils {
 					);
 				if (count > 0) {
 					if (".".equals(s)) continue;
+					if (",".equals(s)) continue;
 				}
 				if (Utils.isEmpty(s)) continue;
 				list.add(s);
@@ -231,15 +248,24 @@ public final class FileUtils {
 		if (list.isEmpty())
 			return null;
 		final String first = list.getFirst();
-		// relative to absolute
+		// prepend cwd
 		if (".".equals(first)) {
 			list.removeFirst();
 			isAbsolute = true;
-			// prepend cwd
-			final String[] cwdArray =
+			final String[] array =
 				StringUtils.SplitByDelims(cwd(), "/", "\\");
-			for (int index=cwdArray.length-1; index>=0; index--) {
-				list.addFirst(cwdArray[index]);
+			for (int index=array.length-1; index>=0; index--) {
+				list.addFirst(array[index]);
+			}
+		} else
+		// prepend pwd
+		if (",".equals(first)) {
+			list.removeFirst();
+			isAbsolute = true;
+			final String[] array =
+				StringUtils.SplitByDelims(pwd(), "/", "\\");
+			for (int index=array.length-1; index>=0; index--) {
+				list.addFirst(array[index]);
 			}
 		}
 		// resolve ..
