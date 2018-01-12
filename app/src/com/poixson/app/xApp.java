@@ -28,6 +28,7 @@ import com.poixson.tools.Keeper;
 import com.poixson.tools.LockFile;
 import com.poixson.tools.xClock;
 import com.poixson.tools.xTime;
+import com.poixson.tools.remapped.RemappedMethod;
 import com.poixson.tools.threadpool.xThreadPool;
 import com.poixson.tools.threadpool.types.xThreadPool_Main;
 import com.poixson.utils.ProcUtils;
@@ -64,12 +65,16 @@ public abstract class xApp implements xStartable, AttachedLogger {
 	protected static final AtomicReference<xApp> instance =
 			new AtomicReference<xApp>(null);
 
-	// state
+	// startup/shutdown steps
 	protected final AtomicInteger step = new AtomicInteger(0);
-	protected static final int STEP_OFF   = 0;
-	protected static final int STEP_START = 1;
-	protected static final int STEP_STOP  = Integer.MIN_VALUE;
-	protected static final int STEP_RUN   = Integer.MAX_VALUE;
+	protected final HashMap<Integer, List<xAppStepDAO>> currentSteps =
+			new HashMap<Integer, List<xAppStepDAO>>();
+	protected volatile HangCatcher hangCatcher = null;
+
+	protected static final int STEP_OFF      = 0;
+	protected static final int STEP_START    = 1;
+	protected static final int STEP_STOPPING = Integer.MIN_VALUE;
+	protected static final int STEP_RUNNING  = Integer.MAX_VALUE;
 
 	protected volatile xTime startTime = null;
 
@@ -128,6 +133,8 @@ public abstract class xApp implements xStartable, AttachedLogger {
 		}
 		// init logger
 		this.initLogger();
+
+//TODO:
 //		// process command line arguments
 //		final List<String> argsList = new LinkedList<String>();
 //		argsList.addAll(Arrays.asList(args));
@@ -148,7 +155,6 @@ public abstract class xApp implements xStartable, AttachedLogger {
 //				return;
 //			}
 //		}
-
 //		// handle command-line arguments
 //		instance.displayStartupVars();
 //		// main thread ended
@@ -157,6 +163,14 @@ public abstract class xApp implements xStartable, AttachedLogger {
 
 		this.publish();
 		this.title("Starting {}..", this.getTitle());
+		// register shutdown hook
+		xThreadPool.addShutdownHook(
+			new RemappedMethod(
+				this,
+				"stop"
+			)
+		);
+/*
 		// prepare startup steps
 		final Map<Integer, List<xAppStepDAO>> orderedSteps =
 				getSteps(StepType.STARTUP);
@@ -234,12 +248,16 @@ public abstract class xApp implements xStartable, AttachedLogger {
 		}
 		// finished starting
 		this.step.set(STEP_RUN);
+*/
 	}
 //TODO: ThreadUtils.displayStillRunning();
 	@Override
 	public void stop() {
+/*
 		// already stopping or stopped
 		if (this.isStopped())  return;
+		// get ready to stop thread pools
+		xThreadPool.ShutdownAll();
 		if (this.isStopping()) return;
 		// set stopping state
 		this.step.set(STEP_STOP);
@@ -261,12 +279,13 @@ public abstract class xApp implements xStartable, AttachedLogger {
 				getSteps(StepType.SHUTDOWN);
 		final int highestStep = findHighestPriorityStep(orderedSteps);
 		this.step.set( 0 - highestStep );
-		// hang catcher
-		final HangCatcher hangCatcher = new HangCatcher(
-			"10s",
-			"100n"
-		);
-		hangCatcher.start();
+//TODO: remove this, moved to ShutdownTask class
+//		// hang catcher
+//		final HangCatcher hangCatcher = new HangCatcher(
+//			"10s",
+//			"100n"
+//		);
+//		hangCatcher.start();
 		// shutdown loop
 		final PrintStream out = xVars.getOriginalOut();
 		while (true) {
@@ -329,6 +348,7 @@ public abstract class xApp implements xStartable, AttachedLogger {
 		}
 		// finished stopping
 		this.step.set(STEP_OFF);
+*/
 	}
 
 
@@ -424,11 +444,11 @@ public abstract class xApp implements xStartable, AttachedLogger {
 
 	@Override
 	public boolean isRunning() {
-		return (this.step.get() == STEP_RUN);
+		return (this.step.get() > 0);
 	}
 	public boolean isStarting() {
 		final int step = this.step.get();
-		return (step > STEP_OFF && step < STEP_RUN);
+		return (step > STEP_OFF && step < STEP_RUNNING);
 	}
 	@Override
 	public boolean isStopping() {
@@ -575,17 +595,17 @@ return "<uptime>";
 
 
 
-	// start thread pools
-	@xAppStep(type=StepType.STARTUP, title="ThreadPools", priority=100)
-	public void __STARTUP_threadpools() {
-		try {
-			final xThreadPool pool =
-				xThreadPoolFactory.getMainPool();
-			pool.start();
-		} catch (Exception e) {
-			Failure.fail(e);
-		}
-	}
+//	// start thread pools
+//	@xAppStep(type=StepType.STARTUP, title="ThreadPools", priority=100)
+//	public void __STARTUP_threadpools() {
+//		try {
+//			final xThreadPool pool =
+//				xThreadPool_Main.get();
+//			pool.start();
+//		} catch (Exception e) {
+//			Failure.fail(e);
+//		}
+//	}
 
 
 
@@ -593,9 +613,10 @@ return "<uptime>";
 	@xAppStep(type=StepType.STARTUP, title="Scheduler", priority=150)
 	public void __STARTUP_scheduler() {
 		try {
-			// start main scheduler
-			final xScheduler sched = xScheduler.getMainSched();
-			sched.start();
+//TODO:
+//			// start main scheduler
+//			final xScheduler sched = xScheduler.getMainSched();
+//			sched.start();
 //TODO:
 //			// start ticker
 //			final xTicker ticker = xTicker.get();
@@ -619,9 +640,10 @@ return "<uptime>";
 //			// stop ticker
 //			final xTicker ticker = xTicker.get();
 //			ticker.Stop();
-			// stop main scheduler
-			final xScheduler sched = xScheduler.getMainSched();
-			sched.stop();
+//TODO:
+//			// stop main scheduler
+//			final xScheduler sched = xScheduler.getMainSched();
+//			sched.stop();
 		} catch (Exception e) {
 			Failure.fail(e);
 		}
@@ -629,16 +651,17 @@ return "<uptime>";
 
 
 
-	// stop thread pools
-	@xAppStep(type=StepType.SHUTDOWN, title="ThreadPools", priority=100)
-	public void __SHUTDOWN_threadpools() {
-		try {
-			xThreadPoolFactory
-				.ShutdownAll();
-		} catch (Exception e) {
-			Failure.fail(e);
-		}
-	}
+//	// stop thread pools
+//	@xAppStep(type=StepType.SHUTDOWN, title="ThreadPools", priority=100)
+//	public void __SHUTDOWN_threadpools() {
+//		try {
+//TODO:
+//			xThreadPoolFactory
+//				.ShutdownAll();
+//		} catch (Exception e) {
+//			Failure.fail(e);
+//		}
+//	}
 
 
 
