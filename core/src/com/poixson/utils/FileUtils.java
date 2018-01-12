@@ -3,8 +3,6 @@ package com.poixson.utils;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.security.CodeSource;
 import java.util.LinkedList;
 
@@ -18,13 +16,14 @@ public final class FileUtils {
 
 	private static volatile String cwd = null;
 	private static volatile String pwd = null;
+	private static volatile String exe = null;
 
 
 
 	public static boolean SearchLocalFile(final String fileNames[]) {
 		if (Utils.isEmpty(fileNames)) throw new RequiredArgumentException("fileNames");
 		final String[] workingPaths = (
-			FileUtils.inRunDirectory()
+			FileUtils.inRunDir()
 			? new String[] { FileUtils.cwd() }
 			: new String[] { FileUtils.cwd(), FileUtils.pwd() }
 		);
@@ -39,6 +38,16 @@ public final class FileUtils {
 			}
 		}
 		return false;
+	}
+
+
+
+	public static boolean inRunDir() {
+		final String cwd = cwd();
+		if (cwd == null) return false;
+		final String pwd = pwd();
+		if (pwd == null) return false;
+		return (cwd.equals(pwd));
 	}
 
 
@@ -70,19 +79,33 @@ public final class FileUtils {
 	// get running directory
 	public static String pwd() {
 		if (Utils.isEmpty(pwd))
-			populatePwd();
+			populatePwdExe();
 		return pwd;
 	}
-	private static void populatePwd() {
+	public static String exe() {
+		if (Utils.isEmpty(exe))
+			populatePwdExe();
+		return exe;
+	}
+	private static void populatePwdExe() {
 		if (Utils.notEmpty(pwd))
 			return;
 		final CodeSource source = FileUtils.class.getProtectionDomain().getCodeSource();
-		final String path = source.getLocation().getPath();
-		try {
-			pwd = URLDecoder.decode(path, "UTF-8");
-		} catch (UnsupportedEncodingException ignore) {
-			pwd = path;
-		}
+		final String pathRaw = source.getLocation().getPath();
+		final String path = StringUtils.decodeDef(pathRaw, pathRaw);
+		if (Utils.isEmpty(path)) throw new RuntimeException("Failed to get pwd path");
+		final int pos = path.lastIndexOf('/');
+		if (pos < 0) throw new RuntimeException("Invalid pwd path: "+path);
+		pwd =
+			StringUtils.Trim(
+				path.substring(0, pos),
+				'/'
+			);
+		exe =
+			StringUtils.TrimFront(
+				path.substring(pos + 1),
+				'/'
+			);
 	}
 
 
