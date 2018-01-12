@@ -8,7 +8,8 @@ import com.poixson.exceptions.RequiredArgumentException;
 // can also use Executors.callable(run) which returns RunnableAdapter
 public class RemappedCallableRunnable<V> implements Callable<Object>, Runnable {
 
-	protected final Runnable task;
+	protected final Runnable run;
+
 	protected volatile V result;
 
 
@@ -19,12 +20,12 @@ public class RemappedCallableRunnable<V> implements Callable<Object>, Runnable {
 	public RemappedCallableRunnable(final V result) {
 		this(null, result);
 	}
-	public RemappedCallableRunnable(final Runnable task) {
-		this(task, null);
+	public RemappedCallableRunnable(final Runnable run) {
+		this(run, null);
 	}
-	public RemappedCallableRunnable(final Runnable task, final V result) {
+	public RemappedCallableRunnable(final Runnable run, final V result) {
 		super();
-		this.task   = task;
+		this.run    = run;
 		this.result = result;
 	}
 
@@ -32,16 +33,16 @@ public class RemappedCallableRunnable<V> implements Callable<Object>, Runnable {
 
 	@Override
 	public V call() throws Exception {
-		if (this.task == null) {
+		if (this.run == null) {
 			this.run();
 		} else {
-			this.task.run();
+			this.run.run();
 		}
 		return this.result;
 	}
 	@Override
 	public void run() {
-		throw new RequiredArgumentException("task");
+		throw new RequiredArgumentException("run");
 	}
 
 
