@@ -126,41 +126,8 @@ public abstract class xApp implements xStartable, AttachedLogger {
 			);
 			return;
 		}
-
 		// init logger
-		{
-			final xLog log = xLog.getRoot();
-			if (Failure.hasFailed()) {
-				xVars.getOriginalOut()
-					.println("Failure, pre-init!");
-				System.exit(1);
-			}
-			// initialize console and enable colors
-			if (System.console() != null) {
-				if (!Utils.isJLineAvailable()) {
-					Failure.fail("jline library not found");
-				}
-//TODO: detect when no console color is supported
-				log.setHandler(
-					new xLogHandlerConsole()
-				);
-				// enable console color
-				log.setFormatter(
-					new xLogFormatter_Color(),
-					xLogHandlerConsole.class
-				);
-			}
-		}
-		// slf4j logger
-		{
-			final xLog slf4jLog = slf4jLoggerFactory.getLog();
-			slf4jLog
-				.setLevel(
-					this.log().isLoggable(xLevel.DETAIL)
-					? xLevel.DETAIL
-					: xLevel.OFF
-				);
-		}
+		this.initLogger();
 //		// process command line arguments
 //		final List<String> argsList = new LinkedList<String>();
 //		argsList.addAll(Arrays.asList(args));
@@ -362,6 +329,32 @@ public abstract class xApp implements xStartable, AttachedLogger {
 		}
 		// finished stopping
 		this.step.set(STEP_OFF);
+	}
+
+
+
+	protected void initLogger() {
+		final xLog log = xLog.getRoot();
+		if (Failure.hasFailed()) {
+			xVars.getOriginalOut()
+				.println("Failure, pre-init!");
+			System.exit(1);
+		}
+		// initialize console and enable colors
+		if (System.console() != null) {
+			if (!Utils.isJLineAvailable()) {
+				Failure.fail("jline library not found");
+			}
+//TODO: detect when no console color is supported
+			log.setHandler(
+				new xLogHandlerConsole()
+			);
+			// enable console color
+			log.setFormatter(
+				new xLogFormatter_Color(),
+				xLogHandlerConsole.class
+			);
+		}
 	}
 
 
