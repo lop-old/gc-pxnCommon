@@ -1,6 +1,7 @@
 package com.poixson.tools.threadpool;
 
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.poixson.app.Failure;
 import com.poixson.logger.xLog;
@@ -13,6 +14,9 @@ import com.poixson.utils.ThreadUtils;
 
 public class ShutdownTask implements Runnable {
 
+	private static final AtomicReference<ShutdownTask> instance =
+			new AtomicReference<ShutdownTask>(null);
+
 	protected final xThreadPool pool;
 
 	protected final HangCatcher hangCatch;
@@ -24,7 +28,23 @@ public class ShutdownTask implements Runnable {
 
 
 
-	public ShutdownTask() {
+	public static ShutdownTask get() {
+		// existing instance
+		{
+			final ShutdownTask task = instance.get();
+			if (task != null)
+				return task;
+		}
+		// new instance
+		{
+			final ShutdownTask task =
+				new ShutdownTask();
+			if (instance.compareAndSet(null, task))
+				return task;
+			return instance.get();
+		}
+	}
+	private ShutdownTask() {
 		this.pool = xThreadPool_Main.get();
 		this.hangCatch =
 			new HangCatcher(
@@ -56,8 +76,18 @@ public class ShutdownTask implements Runnable {
 
 
 
+	public void queueIt() {
+		xThreadPool_Main.get()
+			.runTaskLazy(
+				this
+			);
+	}
+
+
+
 	@Override
 	public void run() {
+		this.resetTimeout();
 		int totalCount = 0;
 		OUTER_LOOP:
 		while (true) {
@@ -67,7 +97,8 @@ public class ShutdownTask implements Runnable {
 			//INNER_LOOP:
 			while (it.hasNext()) {
 				final Runnable run = it.next();
-				this.pool.runTaskLazy(run);
+				this.pool
+					.runTaskLazy(run);
 				count++;
 				this.resetTimeout();
 			}
@@ -80,9 +111,8 @@ public class ShutdownTask implements Runnable {
 		// queue another shutdown task (to wait for things to finish)
 		if (totalCount > 0) {
 			// run this again
-			this.pool.runTaskLazy(
-				new ShutdownTask()
-			);
+			this.resetTimeout();
+			this.queueIt();
 		// finished running hooks
 		} else {
 			final Thread kill = new KillTask();
