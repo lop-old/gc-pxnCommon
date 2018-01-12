@@ -2,6 +2,8 @@ package com.poixson.utils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -21,6 +23,48 @@ public final class StringUtils {
 
 
 	public static final Charset UTF8 = Charset.forName("UTF-8");
+	public static final Charset DEFAULT_CHARSET = UTF8;
+
+
+
+	// decode string
+	public static String decode(final String raw) {
+		return decode(
+			raw,
+			null,
+			null
+		);
+	}
+	public static String decodeDef(final String raw, final String defaultStr) {
+		return
+			decode(
+				raw,
+				defaultStr,
+				null
+			);
+	}
+	public static String decodeCh(final String raw, final String charset) {
+		return
+			decode(
+				raw,
+				null,
+				charset
+			);
+	}
+	public static String decode(final String raw, final String defaultStr, final String charset) {
+		if (charset == null) {
+			return
+				decode(
+					raw,
+					defaultStr,
+					DEFAULT_CHARSET.name()
+				);
+		}
+		try {
+			return URLDecoder.decode(raw, charset);
+		} catch (UnsupportedEncodingException ignore) {}
+		return defaultStr;
+	}
 
 
 
