@@ -57,10 +57,6 @@ public class slf4jLoggerFactory implements ILoggerFactory {
 		// disable logging if not detail mode
 		if (!xLog.getRoot().isLoggable(xLevel.DETAIL)) {
 			log.setLevel(xLevel.WARNING);
-		} else
-		// default to info log level
-		if (log.peekLevel() == null) {
-			log.setLevel(xLevel.INFO);
 		}
 		return log;
 	}

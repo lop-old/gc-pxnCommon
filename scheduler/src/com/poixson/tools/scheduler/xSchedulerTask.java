@@ -120,7 +120,8 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 		try {
 			this.waitForNextRunStart.signalAll();
 		} catch (IllegalMonitorStateException ignore) {}
-		threadPool.runLater(this);
+//TODO: improve priorities
+		threadPool.runTaskLater(this);
 		try {
 			this.waitForNextRunCompleted.signalAll();
 		} catch (IllegalMonitorStateException ignore) {}
@@ -330,7 +331,7 @@ public class xSchedulerTask extends xRunnable implements xEnableable {
 		}
 	}
 	public xSchedulerTask setName(final String taskName) {
-		this.setTaskName(taskName);
+		this.setName(taskName);
 		return this;
 	}
 	@Override

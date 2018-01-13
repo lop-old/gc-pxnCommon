@@ -361,12 +361,12 @@ public final class StringUtils {
 		}
 		String out = str;
 		boolean changed = true;
-		outerloop:
+		OUTER_LOOP:
 		while (changed) {
 			changed = false;
-			innerloop:
+			INNER_LOOP:
 			for (int index = 0; index < stripCount; index++) {
-				if (stripLen[index] == 0) continue innerloop;
+				if (stripLen[index] == 0) continue INNER_LOOP;
 				if (trimFront) {
 					while (out.startsWith(strip[index])) {
 						out = out.substring(stripLen[index]);
@@ -381,7 +381,7 @@ public final class StringUtils {
 				}
 			}
 			if (out.length() == 0) {
-				break outerloop;
+				break OUTER_LOOP;
 			}
 		}
 		return out;

@@ -3,7 +3,6 @@ package com.poixson.tools.remapped;
 import java.lang.reflect.Method;
 
 import com.poixson.exceptions.RequiredArgumentException;
-import com.poixson.logger.xLog;
 import com.poixson.utils.ReflectUtils;
 import com.poixson.utils.Utils;
 
@@ -68,13 +67,6 @@ public class RemappedMethod extends xRunnable {
 			this.method,
 			this.args
 		);
-	}
-
-
-
-	// logger
-	public static xLog log() {
-		return Utils.log();
 	}
 
 
