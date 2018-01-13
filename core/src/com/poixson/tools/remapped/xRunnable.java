@@ -4,7 +4,7 @@ import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.utils.Utils;
 
 
-public class xRunnable implements Runnable {
+public class xRunnable implements RunnableNamed {
 
 	protected volatile String taskName = null;
 	protected final Runnable task;
@@ -37,34 +37,68 @@ public class xRunnable implements Runnable {
 		if (Utils.notEmpty(taskName)) {
 			this.taskName = taskName;
 		} else
-		if (run instanceof xRunnable) {
-			this.taskName = ((xRunnable) run).getTaskName();
+		if (run instanceof RunnableNamed) {
+			this.taskName = ((RunnableNamed) run).getTaskName();
 		}
 		this.task = run;
 	}
 
 
 
+	// cast
 	public static xRunnable cast(final Runnable run) {
 		return cast(null, run);
 	}
 	public static xRunnable cast(final String taskName, final Runnable run) {
-		if (run == null) throw new RequiredArgumentException("run");
+		// already correct type
 		if (run instanceof xRunnable) {
-			final xRunnable xrun = (xRunnable) run;
-			if (Utils.notEmpty(taskName)) {
-				xrun.setTaskName(taskName);
-			}
-			return xrun;
+			return cast(
+				taskName,
+				(xRunnable) run
+			);
 		}
-		return new xRunnable(
-			(
-				Utils.isEmpty(taskName)
-				? "<Runnable>"
-				: taskName
-			),
-			run
-		);
+		// get name from interface
+		if (run instanceof RunnableNamed) {
+			return cast(
+				taskName,
+				(RunnableNamed) run
+			);
+		}
+		// new instance
+		final xRunnable xrun =
+			new xRunnable(
+				taskName,
+				run
+			);
+		return xrun;
+	}
+
+	public static xRunnable cast(final RunnableNamed run) {
+		return cast(null, run);
+	}
+	public static xRunnable cast(final String taskName, final RunnableNamed run) {
+		// already correct type
+		if (run instanceof xRunnable) {
+			return cast(
+				taskName,
+				(xRunnable) run
+			);
+		}
+		// get name from interface
+		final xRunnable xrun =
+			new xRunnable(
+				run.getTaskName(),
+				run
+			);
+		return xrun;
+	}
+
+	public static xRunnable cast(final xRunnable run) {
+		return cast(null, run);
+	}
+	public static xRunnable cast(final String taskName, final xRunnable run) {
+		run.setTaskName(taskName);
+		return run;
 	}
 
 
@@ -78,15 +112,18 @@ public class xRunnable implements Runnable {
 
 
 
+	@Override
 	public String getTaskName() {
 		return this.taskName;
 	}
+	@Override
 	public void setTaskName(final String taskName) {
 		this.taskName =
 			Utils.isEmpty(taskName)
 			? null
 			: taskName;
 	}
+	@Override
 	public boolean taskNameEquals(final String taskName) {
 		if (Utils.isEmpty(taskName))
 			return Utils.isEmpty(this.taskName);
