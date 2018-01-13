@@ -26,6 +26,26 @@ public class Dumper {
 			dump(obj)
 		);
 	}
+	public static void printHead(final Object obj, final int lineCount) {
+		String msg = dump(obj);
+		msg = msg.replace("\r", "");
+		int count = lineCount;
+		while (true) {
+			if (msg.isEmpty()) break;
+			if (count <= 0)    break;
+			final int pos = msg.indexOf('\n');
+			final String line;
+			if (pos == -1) {
+				line = msg;
+				msg = "";
+			} else {
+				line = msg.substring(0, pos - 1);
+				msg = msg.substring(pos + 1);
+			}
+			System.out.println(line);
+			count--;
+		}
+	}
 	protected static String dump(final Object obj) {
 		return dump(
 			obj,
