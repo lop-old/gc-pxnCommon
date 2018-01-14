@@ -1,6 +1,6 @@
-package com.poixson.tools.threadpool.types;
+package com.poixson.threadpool.types;
 
-import com.poixson.tools.threadpool.xThreadPool;
+import com.poixson.threadpool.xThreadPool;
 
 
 public class xThreadPool_Dynamic extends xThreadPool {

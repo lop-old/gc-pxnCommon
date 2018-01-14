@@ -1,10 +1,10 @@
 package com.poixson.logger;
 
+import com.poixson.threadpool.xThreadPoolQueue.TaskPriority;
+import com.poixson.threadpool.types.xThreadPool_Main;
 import com.poixson.tools.events.xEventData;
 import com.poixson.tools.events.xEventListener;
 import com.poixson.tools.events.xHandlerSimple;
-import com.poixson.tools.threadpool.xThreadPoolQueue.TaskPriority;
-import com.poixson.tools.threadpool.types.xThreadPool_Main;
 
 
 public class xCommandHandler extends xHandlerSimple {

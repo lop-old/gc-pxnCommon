@@ -1,4 +1,4 @@
-package com.poixson.tools.threadpool;
+package com.poixson.threadpool;
 
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -6,10 +6,10 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import com.poixson.app.Failure;
 import com.poixson.logger.xLog;
+import com.poixson.threadpool.types.xThreadPool_Main;
 import com.poixson.tools.HangCatcher;
 import com.poixson.tools.Keeper;
 import com.poixson.tools.xTime;
-import com.poixson.tools.threadpool.types.xThreadPool_Main;
 import com.poixson.utils.ThreadUtils;
 
 

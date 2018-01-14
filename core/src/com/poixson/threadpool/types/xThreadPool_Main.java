@@ -1,6 +1,6 @@
-package com.poixson.tools.threadpool.types;
+package com.poixson.threadpool.types;
 
-import com.poixson.tools.threadpool.xThreadPool;
+import com.poixson.threadpool.xThreadPoolWorker;
 
 
 public class xThreadPool_Main extends xThreadPool {
