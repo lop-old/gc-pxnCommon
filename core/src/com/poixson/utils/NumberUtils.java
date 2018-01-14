@@ -98,6 +98,19 @@ public final class NumberUtils {
 
 
 
+	public static int SafeToInt(final long value) {
+		// < int min
+		if ( value < ((long)Integer.MIN_VALUE) )
+			return Integer.MIN_VALUE;
+		// > int max
+		if ( value > ((long)Integer.MAX_VALUE) )
+			return Integer.MAX_VALUE;
+		// within int range
+		return (int) value;
+	}
+
+
+
 	// parse number
 	public static Integer toInteger(final String value) {
 		if (Utils.isEmpty(value))
