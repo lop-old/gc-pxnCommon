@@ -4,11 +4,13 @@ import java.lang.reflect.Method;
 
 import com.poixson.app.xAppStep.StepType;
 import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.logger.xLog;
+import com.poixson.tools.remapped.RunnableNamed;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
 
 
-public class xAppStepDAO implements Runnable {
+public class xAppStepDAO implements RunnableNamed {
 
 	public final StepType type;
 	public final int      priority;
@@ -66,6 +68,8 @@ public class xAppStepDAO implements Runnable {
 
 
 	public void invoke() throws ReflectiveOperationException, RuntimeException {
+		xLog.getRoot()
+			.fine("Invoking step {}: {}", this.priority, this.name);
 		this.method.invoke(this.app);
 	}
 	@Override
@@ -75,6 +79,23 @@ public class xAppStepDAO implements Runnable {
 		} catch (ReflectiveOperationException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+
+
+	@Override
+	public String getTaskName() {
+		return this.name;
+	}
+	@Override
+	public void setTaskName(final String name) {
+		throw new UnsupportedOperationException();
+	}
+	@Override
+	public boolean taskNameEquals(final String name) {
+		if (Utils.isEmpty(name))
+			return false;
+		return name.equals(this.getTaskName());
 	}
 
 
