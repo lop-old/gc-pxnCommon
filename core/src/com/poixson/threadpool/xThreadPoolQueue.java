@@ -1,4 +1,4 @@
-package com.poixson.tools.threadpool;
+package com.poixson.threadpool;
 
 import java.util.concurrent.Future;
 

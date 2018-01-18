@@ -1,4 +1,4 @@
-package com.poixson.tools.threadpool;
+package com.poixson.threadpool;
 
 import java.lang.ref.SoftReference;
 import java.util.concurrent.atomic.AtomicBoolean;

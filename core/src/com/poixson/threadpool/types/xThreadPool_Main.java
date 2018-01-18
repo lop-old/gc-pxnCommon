@@ -1,9 +1,11 @@
 package com.poixson.threadpool.types;
 
-import com.poixson.threadpool.xThreadPoolWorker;
+import com.poixson.threadpool.xThreadPool;
 
 
 public class xThreadPool_Main extends xThreadPool {
+
+	public static final String MAIN_POOL_NAME = "main";
 
 
 

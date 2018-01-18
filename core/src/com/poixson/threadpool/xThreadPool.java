@@ -1,4 +1,4 @@
-package com.poixson.tools.threadpool;
+package com.poixson.threadpool;
 
 import java.lang.ref.SoftReference;
 import java.util.Iterator;
@@ -12,12 +12,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.xLevel;
 import com.poixson.logger.xLog;
+import com.poixson.threadpool.types.xThreadPool_Main;
 import com.poixson.tools.CoolDown;
 import com.poixson.tools.Keeper;
 import com.poixson.tools.xTime;
 import com.poixson.tools.xTimeU;
 import com.poixson.tools.remapped.xRunnable;
-import com.poixson.tools.threadpool.types.xThreadPool_Main;
 import com.poixson.utils.NumberUtils;
 import com.poixson.utils.ReflectUtils;
 import com.poixson.utils.ThreadUtils;
@@ -27,7 +27,7 @@ import com.poixson.utils.Utils;
 public abstract class xThreadPool extends xThreadPoolQueue {
 
 	protected static final ConcurrentHashMap<String, xThreadPool> pools =
-			new ConcurrentHashMap<String, xThreadPool>();
+			new ConcurrentHashMap<String, xThreadPool>(3);
 
 	protected static final xTime THREAD_LOOP_TIME        = xTime.getNew("1s");
 	protected static final xTime INACTIVE_THREAD_TIMEOUT = xTime.getNew("10s");
