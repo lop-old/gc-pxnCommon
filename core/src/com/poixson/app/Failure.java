@@ -1,14 +1,13 @@
 package com.poixson.app;
 
+import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.poixson.logger.xLog;
 import com.poixson.tools.Keeper;
 import com.poixson.tools.xTime;
-import com.poixson.tools.remapped.xRunnable;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.ThreadUtils;
 import com.poixson.utils.Utils;
@@ -23,7 +22,8 @@ public final class Failure {
 	private static final List<String> messages = new CopyOnWriteArrayList<String>();
 	private static volatile boolean failed = false;
 
-	private static final Set<xRunnable> actions = new CopyOnWriteArraySet<xRunnable>();
+	private static final CopyOnWriteArraySet<Runnable> actions =
+			new CopyOnWriteArraySet<Runnable>();
 
 
 
@@ -66,15 +66,22 @@ public final class Failure {
 
 
 	// fail actions
-	public static void register(final xRunnable action) {
+	public static void register(final Runnable action) {
 		actions.add(action);
+		if (failed) {
+			doFailActions();
+		}
 	}
 	// perform actions
 	protected static void doFailActions() {
-		final xRunnable[] acts = actions.toArray(new xRunnable[0]);
-		for (final xRunnable run : acts) {
-			run.run();
-			actions.remove(run);
+		failed = true;
+		while (!actions.isEmpty()) {
+			final Iterator<Runnable> it = actions.iterator();
+			while (it.hasNext()) {
+				final Runnable run = it.next();
+				it.remove();
+				run.run();
+			}
 		}
 		ExitNow();
 	}
