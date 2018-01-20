@@ -68,10 +68,17 @@ public final class ThreadUtils {
 		// build message
 		final StringBuilder msg =
 				(new StringBuilder())
-					.append("Threads still running:  ")
-					.append(threadNames.length);
+					.append("Threads still running: [")
+					.append(threadNames.length)
+					.append(']');
+		boolean hasDestroyJavaVM = false;
 		for (final String name : threadNames) {
+			if ("DestroyJavaVM".equals(name))
+				hasDestroyJavaVM = true;
 			msg.append("\n  ").append(name);
+		}
+		if (hasDestroyJavaVM) {
+			msg.append("\n\nShould use xApp.waitUntilClosed() when main() is finished.\n");
 		}
 		xLog.getRoot()
 			.publish(msg.toString());
