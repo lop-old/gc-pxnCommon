@@ -41,7 +41,9 @@ public class AppProps {
 						.append(PROPS_FILE)
 						.append(" resource from jar")
 						.toString();
-				Failure.fail(msg, new RuntimeException(msg));
+				final RuntimeException e = new RuntimeException(msg);
+				Failure.fail(msg, e);
+				throw(e);
 			}
 			props.load(in);
 		} catch (IOException e) {

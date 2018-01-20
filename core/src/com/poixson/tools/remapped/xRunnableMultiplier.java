@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import com.poixson.exceptions.RequiredArgumentException;
+
 
 public class xRunnableMultiplier extends xRunnable {
 
@@ -30,8 +32,7 @@ public class xRunnableMultiplier extends xRunnable {
 
 
 	public void add(final xRunnable run) {
-		if (run == null)
-			throw new NullPointerException("run argument is required!");
+		if (run == null) throw new RequiredArgumentException("run");
 		this.runs.add(run);
 	}
 

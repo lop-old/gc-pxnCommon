@@ -449,8 +449,8 @@ public final class Utils {
 		// split string by .
 		final String[] splitA = Pattern.compile(".", Pattern.LITERAL).split(versionA);
 		final String[] splitB = Pattern.compile(".", Pattern.LITERAL).split(versionB);
-		if (Utils.isEmpty(splitA)) throw new NullPointerException();
-		if (Utils.isEmpty(splitB)) throw new NullPointerException();
+		if (Utils.isEmpty(splitA)) throw new RuntimeException();
+		if (Utils.isEmpty(splitB)) throw new RuntimeException();
 		// find longest part
 		int width = -1;
 		for (final String part : splitA) {
@@ -463,7 +463,7 @@ public final class Utils {
 				width = part.length();
 			}
 		}
-		if (width == -1) throw new NullPointerException();
+		if (width == -1) throw new RuntimeException();
 		// build padded string
 		final StringBuilder outA = new StringBuilder();
 		for (final String part : splitA) {

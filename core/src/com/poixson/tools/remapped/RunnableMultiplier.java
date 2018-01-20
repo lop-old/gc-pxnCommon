@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import com.poixson.exceptions.RequiredArgumentException;
+
 
 public class RunnableMultiplier implements Runnable {
 
@@ -18,8 +20,7 @@ public class RunnableMultiplier implements Runnable {
 
 
 	public void add(final Runnable run) {
-		if (run == null)
-			throw new NullPointerException("run argument is required!");
+		if (run == null) throw new RequiredArgumentException("run");
 		this.runs.add(run);
 	}
 

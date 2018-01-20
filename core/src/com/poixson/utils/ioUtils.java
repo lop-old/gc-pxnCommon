@@ -84,7 +84,7 @@ public final class ioUtils {
 	public static void ExportResource(
 			final String targetFileStr, final InputStream in)
 			throws IOException {
-		if (Utils.isEmpty(targetFileStr)) throw new RequiredArgumentException("outputFileStr");
+		if (Utils.isEmpty(targetFileStr)) throw new RequiredArgumentException("targetFileStr");
 		if (in == null)                   throw new RequiredArgumentException("in");
 		final File file = new File(targetFileStr);
 		try {

@@ -38,6 +38,9 @@ public class xVars {
 		}
 		return bool.booleanValue();
 	}
+	public static boolean notDebug() {
+		return ! debug();
+	}
 	public static void debug(final boolean value) {
 		synchronized(debugLock) {
 			// check existing value

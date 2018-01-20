@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import com.poixson.exceptions.RequiredArgumentException;
+
 
 public final class ReflectUtils {
 	private ReflectUtils() {}
@@ -75,17 +77,16 @@ public final class ReflectUtils {
 
 
 	public static String getStaticString(final Class<?> clss, final String name) {
-		if (clss == null)        throw new NullPointerException();
-		if (Utils.isEmpty(name)) throw new NullPointerException();
+		if (clss == null)        throw new RequiredArgumentException("clss");
+		if (Utils.isEmpty(name)) throw new RequiredArgumentException("name");
 		final Field field;
 		final String value;
 		try {
 			field = clss.getField(name);
+			final Object o = field.get(null);
+			value = (String) o;
 		} catch (NoSuchFieldException | SecurityException e) {
 			throw new IllegalArgumentException("Invalid field: "+name, e);
-		}
-		try {
-			value = (String) field.get(String.class);
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			throw new IllegalArgumentException("Failed to get field: "+name, e);
 		}

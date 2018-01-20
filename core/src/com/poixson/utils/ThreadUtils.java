@@ -61,7 +61,7 @@ public final class ThreadUtils {
 	}
 	// display threads still running
 	public static void DisplayStillRunning() {
-		if ( ! xVars.debug()) return;
+		if (xVars.notDebug()) return;
 		final String[] threadNames = getThreadNames(false);
 		// no threads still running
 		if (Utils.isEmpty(threadNames)) return;
