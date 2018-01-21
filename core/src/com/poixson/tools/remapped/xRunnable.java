@@ -90,20 +90,29 @@ public class xRunnable implements RunnableNamed {
 
 	@Override
 	public String getTaskName() {
+		if (this.task != null) {
+			if (this.task instanceof RunnableNamed) {
+				final String taskName = ((RunnableNamed) this.task).getTaskName();
+				if (Utils.notEmpty(taskName))
+					return taskName;
+			}
+		}
 		return this.taskName;
 	}
 	@Override
 	public void setTaskName(final String taskName) {
-		this.taskName =
+		this.taskName = (
 			Utils.isEmpty(taskName)
 			? null
-			: taskName;
+			: taskName
+		);
 	}
 	@Override
 	public boolean taskNameEquals(final String taskName) {
+		final String thisName = this.getTaskName();
 		if (Utils.isEmpty(taskName))
-			return Utils.isEmpty(this.taskName);
-		return taskName.equals(this.taskName);
+			return Utils.isEmpty(thisName);
+		return taskName.equals(thisName);
 	}
 
 
