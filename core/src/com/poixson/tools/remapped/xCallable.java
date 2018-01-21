@@ -6,7 +6,7 @@ import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.xLog;
 
 
-public class CallRunnable<V> implements Runnable, Callable<V> {
+public class xCallable<V> extends xRunnable implements Callable<V> {
 
 	protected ThreadLocal<Boolean> lock = new ThreadLocal<Boolean>();
 
@@ -18,22 +18,22 @@ public class CallRunnable<V> implements Runnable, Callable<V> {
 
 
 
-	public CallRunnable() {
+	public xCallable() {
 		this(null, null, null);
 	}
-	public CallRunnable(final Callable<V> call) {
+	public xCallable(final Callable<V> call) {
 		this(null, null, null);
 	}
-	public CallRunnable(final Runnable run) {
+	public xCallable(final Runnable run) {
 		this(null, null, null);
 	}
-	public CallRunnable(final Runnable run, final V result) {
+	public xCallable(final Runnable run, final V result) {
 		this(null, null, null);
 	}
-	public CallRunnable(final Callable<V> call, final V result) {
+	public xCallable(final Callable<V> call, final V result) {
 		this(null, null, null);
 	}
-	protected CallRunnable(final V result,
+	protected xCallable(final V result,
 			final Callable<V> call, final Runnable run) {
 		this.result = result;
 		this.call   = call;
