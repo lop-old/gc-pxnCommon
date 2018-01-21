@@ -7,7 +7,7 @@ import com.poixson.utils.Utils;
 
 public class xCallable<V> extends xRunnable implements Callable<V> {
 
-	protected final Callable<V> call;
+	public final Callable<V> call;
 
 	protected final ThreadLocal<Boolean> callDepth = new ThreadLocal<Boolean>();
 
@@ -17,11 +17,13 @@ public class xCallable<V> extends xRunnable implements Callable<V> {
 
 
 	public xCallable() {
-		this(null, null, null);
+		super();
+		this.call   = null;
+		this.result = null;
 	}
 	public xCallable(final String taskName) {
 		this(null, null, null);
-		super.setTaskName(taskName);
+		this.taskName = taskName;
 	}
 	public xCallable(final V result) {
 		this(result, null, null);
@@ -43,7 +45,8 @@ public class xCallable<V> extends xRunnable implements Callable<V> {
 		super(run);
 		if (run != null && call != null)
 			throw new IllegalArgumentException("Cannot set runnable and callable at the same time!");
-		this.call = call;
+		this.call   = call;
+		this.result = result;
 	}
 
 

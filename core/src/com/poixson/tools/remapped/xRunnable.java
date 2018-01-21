@@ -6,8 +6,8 @@ import com.poixson.utils.Utils;
 
 public class xRunnable implements RunnableNamed {
 
-	protected volatile String taskName = null;
-	protected final Runnable task;
+	public volatile String taskName = null;
+	public final Runnable task;
 
 
 
