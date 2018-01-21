@@ -45,61 +45,32 @@ public class xRunnable implements RunnableNamed {
 
 
 
+	// ------------------------------------------------------------------------------- //
 	// cast
+
+
+
 	public static xRunnable cast(final Runnable run) {
-		return cast(null, run);
-	}
-	public static xRunnable cast(final String taskName, final Runnable run) {
+		if (run == null)
+			return null;
 		// already correct type
-		if (run instanceof xRunnable) {
-			return cast(
-				taskName,
-				(xRunnable) run
-			);
-		}
+		if (run instanceof xRunnable)
+			return (xRunnable) run;
 		// get name from interface
 		if (run instanceof RunnableNamed) {
-			return cast(
-				taskName,
-				(RunnableNamed) run
-			);
+			return
+				new xRunnable(
+					((RunnableNamed) run).getTaskName(),
+					run
+				);
 		}
-		// new instance
-		final xRunnable xrun =
-			new xRunnable(
-				taskName,
-				run
-			);
-		return xrun;
+		return new xRunnable(run);
 	}
 
-	public static xRunnable cast(final RunnableNamed run) {
-		return cast(null, run);
-	}
-	public static xRunnable cast(final String taskName, final RunnableNamed run) {
-		// already correct type
-		if (run instanceof xRunnable) {
-			return cast(
-				taskName,
-				(xRunnable) run
-			);
-		}
-		// get name from interface
-		final xRunnable xrun =
-			new xRunnable(
-				run.getTaskName(),
-				run
-			);
-		return xrun;
-	}
 
-	public static xRunnable cast(final xRunnable run) {
-		return cast(null, run);
-	}
-	public static xRunnable cast(final String taskName, final xRunnable run) {
-		run.setTaskName(taskName);
-		return run;
-	}
+
+	// ------------------------------------------------------------------------------- //
+	// run task
 
 
 
@@ -109,6 +80,11 @@ public class xRunnable implements RunnableNamed {
 		if (task == null) throw new RequiredArgumentException("task");
 		task.run();
 	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// config
 
 
 
