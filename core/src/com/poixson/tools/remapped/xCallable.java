@@ -2,16 +2,12 @@ package com.poixson.tools.remapped;
 
 import java.util.concurrent.Callable;
 
-import com.poixson.exceptions.RequiredArgumentException;
-import com.poixson.logger.xLog;
-
 
 public class xCallable<V> extends xRunnable implements Callable<V> {
 
-	protected ThreadLocal<Boolean> lock = new ThreadLocal<Boolean>();
-
 	protected final Callable<V> call;
-	protected final Runnable    run;
+
+	protected final ThreadLocal<Boolean> callDepth = new ThreadLocal<Boolean>();
 
 	protected volatile V result;
 	protected volatile Exception e = null;
@@ -21,88 +17,119 @@ public class xCallable<V> extends xRunnable implements Callable<V> {
 	public xCallable() {
 		this(null, null, null);
 	}
-	public xCallable(final Callable<V> call) {
+	public xCallable(final String taskName) {
 		this(null, null, null);
+		super.setTaskName(taskName);
+	}
+	public xCallable(final V result) {
+		this(result, null, null);
 	}
 	public xCallable(final Runnable run) {
-		this(null, null, null);
+		this(null, run, null);
 	}
-	public xCallable(final Runnable run, final V result) {
-		this(null, null, null);
+	public xCallable(final Callable<V> call) {
+		this(null, null, call);
 	}
-	public xCallable(final Callable<V> call, final V result) {
-		this(null, null, null);
+	public xCallable(final V result, final Runnable run) {
+		this(result, run, null);
+	}
+	public xCallable(final V result, final Callable<V> call) {
+		this(result, null, call);
 	}
 	protected xCallable(final V result,
-			final Callable<V> call, final Runnable run) {
-		this.result = result;
-		this.call   = call;
-		this.run    = run;
-		this.lock.set(Boolean.FALSE);
-		this.validate();
+			final Runnable run, final Callable<V> call) {
+		super(run);
+		if (run != null && call != null)
+			throw new IllegalArgumentException("Cannot set runnable and callable at the same time!");
+		this.call = call;
 	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// cast
+
+
+
+	@SuppressWarnings("unchecked")
+	public static <V> xCallable<V> cast(final Object obj) {
+		if (obj == null)
+			return null;
+		// already correct type
+		if (obj instanceof xCallable)
+			return (xCallable<V>) obj;
+		// cast from runnable
+		if (obj instanceof Runnable) {
+			final Runnable run = (Runnable) obj;
+			final xCallable<V> result = new xCallable<V>(run);
+			// get name from interface
+			if (run instanceof RunnableNamed) {
+				result.setTaskName(
+					((RunnableNamed) run).getTaskName()
+				);
+			}
+			return result;
+		} else
+		// cast from callable
+		if (obj instanceof Callable) {
+			final Callable<V> call = (Callable<V>) obj;
+			final xCallable<V> result = new xCallable<V>(call);
+			// get name from interface
+			if (call instanceof RunnableNamed) {
+				result.setTaskName(
+					((RunnableNamed) call).getTaskName()
+				);
+			}
+			return result;
+		}
+		// unknown object
+		throw new UnsupportedOperationException("Invalid object, cannot cast!");
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// run task
 
 
 
 	@Override
-	public V call() throws Exception {
-		if (this.lock.get().booleanValue())
-			throw new RequiredArgumentException("run/call");
-		if (this.call != null) {
-			try {
-				this.result = this.call.call();
-			} catch (Exception e) {
-				this.e = e;
-				final xLog log = this.log();
-				if (log != null)
-					log.trace(e);
-				this.result = null;
-				return null;
-			}
-		} else
-		if (this.run != null) {
-			this.run.run();
+	public void run() {
+		if (this.task != null) {
+			this.task.run();
+			return;
 		}
-		this.lock.set(Boolean.TRUE);
+		if (this.callDepth.get().booleanValue())
+			throw new UnsupportedOperationException("Must set or override run() or call()");
 		try {
+			this.callDepth.set(Boolean.TRUE);
+			this.result = this.call();
+		} finally {
+			this.callDepth.set(Boolean.FALSE);
+		}
+	}
+	@Override
+	public V call() {
+		if (this.call != null) {
+			this.result =
+				this.call();
+			return this.result;
+		}
+		if (this.callDepth.get().booleanValue())
+			throw new UnsupportedOperationException("Must set or override run() or call()");
+		try {
+			this.callDepth.set(Boolean.TRUE);
 			this.run();
 		} finally {
-			this.lock.set(Boolean.FALSE);
+			this.callDepth.set(Boolean.FALSE);
 		}
 		return this.result;
 	}
-	@Override
-	public void run() {
-		if (this.lock.get().booleanValue())
-			throw new RequiredArgumentException("run/call");
-		if (this.call != null) {
-			try {
-				this.result = this.call.call();
-			} catch (Exception e) {
-				this.e = e;
-				final xLog log = this.log();
-				if (log != null)
-					log.trace(e);
-				this.result = null;
-				return;
-			}
-		} else
-		if (this.run != null) {
-			this.run.run();
-		}
-		this.lock.set(Boolean.TRUE);
-		try {
-			this.result = this.call();
-		} catch (Exception e) {
-			this.e = e;
-			final xLog log = this.log();
-			if (log != null)
-				log.trace(e);
-			this.result = null;
-		} finally {
-			this.lock.set(Boolean.FALSE);
-		}
-	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// result
 
 
 
@@ -117,32 +144,6 @@ public class xCallable<V> extends xRunnable implements Callable<V> {
 
 	public Exception getException() {
 		return this.e;
-	}
-
-
-
-	public void validate() {
-		int count = 0;
-		if (this.call != null)
-			count++;
-		if (this.run != null)
-			count++;
-		try {
-			this.call();
-			count++;
-		} catch (Exception ignore) {}
-		try {
-			this.run();
-			count++;
-		} catch (Exception ignore) {}
-		if (count == 0) throw new RequiredArgumentException("run/call");
-		if (count > 1)  throw new RuntimeException("To many runs/calls implemented");
-	}
-
-
-
-	public xLog log() {
-		return null;
 	}
 
 
