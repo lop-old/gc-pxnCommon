@@ -1,14 +1,14 @@
 package com.poixson.tools;
 
-import java.util.concurrent.atomic.AtomicLong;
-
 import com.poixson.utils.Utils;
 
 
 public class CoolDown {
 
 	protected final xTime duration = xTime.getNew();
-	protected final AtomicLong last = new AtomicLong(-1L);
+	protected long last = -1L;
+
+	protected final Object lock = new Object();
 
 
 
@@ -40,18 +40,22 @@ public class CoolDown {
 	 * @return true if period reached and reset, false if not yet reached.
 	 */
 	public boolean runAgain() {
-		final long current = this.getCurrent();
-		// first run
-		if (this.last.compareAndSet(-1L, current)) {
-			return true;
-		}
-		// run again
-		final long expected = this.last.get();
-		if (expected == -1L) {
-			return false;
-		}
-		if (current - expected >= this.duration.getMS()) {
-			return this.last.compareAndSet(expected, current);
+		synchronized (this.lock) {
+			final long current = this.getCurrent();
+			final long last    = this.last;
+			// first run
+			if (last == -1L) {
+				this.last = current;
+				return true;
+			}
+			// run again
+			final long duration = this.duration.getMS();
+			if (duration <= 0L)
+				return false;
+			if (current - last >= duration) {
+				this.last = current;
+				return true;
+			}
 		}
 		// cooling
 		return false;
@@ -63,31 +67,40 @@ public class CoolDown {
 		return Utils.getSystemMillis();
 	}
 	public long getLast() {
-		return this.last.get();
+		return this.last;
 	}
 
 
 
 	public long getTimeSince() {
-		final long last = this.last.get();
-		if (last == -1L)
-			return -1L;
-		return this.getCurrent() - last;
+		final long last = this.last;
+		return (
+			last == -1L
+			? -1L
+			: this.getCurrent() - last
+		);
 	}
 	public long getTimeUntil() {
-		final long last = this.last.get();
+		final long last = this.last;
 		if (last == -1L)
 			return -1L;
-		return (last + this.duration.getMS()) - this.getCurrent();
+		final long duration = this.duration.getMS();
+		if (duration <= 0L)
+			return -1L;
+		return ( (last + duration) - this.getCurrent() );
 	}
 
 
 
-	public void reset() {
-		this.last.set(-1L);
+	public void resetClean() {
+		synchronized (this.lock) {
+			this.last = -1L;
+		}
 	}
 	public void resetRun() {
-		this.last.set(Utils.getSystemMillis());
+		synchronized (this.lock) {
+			this.last = this.getCurrent();
+		}
 	}
 
 
