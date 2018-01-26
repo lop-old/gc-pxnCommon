@@ -107,10 +107,10 @@ public abstract class xWindow extends JFrame implements Closeable, AttachedLogge
 
 	@Override
 	public void close() {
-		if (guiUtils.forceDispatchThread(this, "close"))
+		if (guiUtils.forceDispatch(this, "close", false))
 			return;
 		// only close once
-		if ( ! this.closing.compareAndSet(false, true))
+		if ( ! this.closing.compareAndSet(false, true) )
 			return;
 		// close window
 		this.log().fine("Closing window: {}", this.getWindowKey());
@@ -129,7 +129,7 @@ public abstract class xWindow extends JFrame implements Closeable, AttachedLogge
 
 
 	public void autoHeight(final int width) {
-		if (guiUtils.forceDispatchThread(this, "autoHeight", Integer.valueOf(width)))
+		if (guiUtils.forceDispatch(this, "autoHeight", true, Integer.valueOf(width)))
 			return;
 		this.pack();
 		this.setSize(width, this.getHeight());
@@ -138,7 +138,7 @@ public abstract class xWindow extends JFrame implements Closeable, AttachedLogge
 
 
 	public void showFocused() {
-		if (guiUtils.forceDispatchThread(this, "showFocused"))
+		if (guiUtils.forceDispatch(this, "showFocused", true))
 			return;
 		this.setVisible(true);
 		if (!this.isFocused()) {
