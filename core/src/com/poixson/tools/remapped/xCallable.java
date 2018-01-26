@@ -104,13 +104,11 @@ public class xCallable<V> extends xRunnable implements Callable<V> {
 			this.task.run();
 			return;
 		}
-		if (this.callDepth.get().booleanValue())
-			throw new UnsupportedOperationException("Must set or override run() or call()");
 		try {
-			this.callDepth.set(Boolean.TRUE);
+			this.checkCallDepth();
 			this.result = this.call();
 		} finally {
-			this.callDepth.set(Boolean.FALSE);
+			this.releaseCallDepth();
 		}
 	}
 	@Override
@@ -120,15 +118,26 @@ public class xCallable<V> extends xRunnable implements Callable<V> {
 				this.call();
 			return this.result;
 		}
-		if (this.callDepth.get().booleanValue())
-			throw new UnsupportedOperationException("Must set or override run() or call()");
 		try {
-			this.callDepth.set(Boolean.TRUE);
+			this.checkCallDepth();
 			this.run();
 		} finally {
-			this.callDepth.set(Boolean.FALSE);
+			this.releaseCallDepth();
 		}
 		return this.result;
+	}
+	private void checkCallDepth() {
+		final Boolean depth = this.callDepth.get();
+		if (depth == null) {
+			this.callDepth.set(Boolean.TRUE);
+			return;
+		}
+		if (depth.booleanValue())
+			throw new UnsupportedOperationException("Must set or override run() or call()");
+		this.callDepth.set(Boolean.TRUE);
+	}
+	private void releaseCallDepth() {
+		this.callDepth.set(Boolean.FALSE);
 	}
 
 
@@ -162,7 +171,7 @@ public class xCallable<V> extends xRunnable implements Callable<V> {
 	public String getTaskName() {
 		if (this.call != null) {
 			if (this.call instanceof RunnableNamed) {
-				final String taskName = ((RunnableNamed) call).getTaskName();
+				final String taskName = ((RunnableNamed) this.call).getTaskName();
 				if (Utils.notEmpty(taskName))
 					return taskName;
 			}
