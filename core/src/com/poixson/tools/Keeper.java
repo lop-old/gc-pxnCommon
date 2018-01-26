@@ -97,8 +97,7 @@ public class Keeper {
 				return detail.booleanValue();
 		}
 		final boolean detail =
-			log()
-				.isLoggable(xLevel.DETAIL);
+			log().isLoggable(xLevel.DETAIL);
 		_detail = new SoftReference<Boolean>(Boolean.valueOf(detail));
 		return detail;
 	}
