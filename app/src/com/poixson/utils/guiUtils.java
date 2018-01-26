@@ -5,13 +5,14 @@ import java.awt.Font;
 import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 
+import com.poixson.exceptions.ContinueException;
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.xLog;
+import com.poixson.tools.remapped.RemappedMethod;
 
 
 public final class guiUtils {
@@ -74,72 +75,89 @@ public final class guiUtils {
 
 
 	/**
-	 * Forces a function to be called from the event dispatch thread.
-	 * @param callingFrom Class object which contains the function.
-	 * @param callingMethod The function which is being called.
-	 * @param args Arguments being passed to the function.
-	 * @return false if already in the event dispatch thread;
-	 *   if not calling from the event dispatch thread, this will
-	 *   create a new Runnable instance, calling the provided function
-	 *   later from the proper thread.
+	 * Forces a method to be called from the event dispatch thread.
+	 * @param callingFrom Class object which contains the method.
+	 * @param methodName The method which is being called.
+	 * @param args Arguments being passed to the method.
+	 * @return resulting return value if not in the event dispatch thread.
+	 *   this will queue a task to run in the event dispatch thread.
+	 *   if already in the event dispatch thread, ContinueException is
+	 *   throws to signal to continue running the method following.
+	 * Example:
+	 * public boolean getSomething() {
+	 *     try {
+	 *         return guiUtils
+	 *             .forceDispatchResult(this, "getSomething");
+	 *     } catch (ContinueException ignore) {}
+	 *     // do something here
+	 *     return result;
+	 * }
 	 */
-	public static boolean forceDispatchThread(final Object callingFrom,
-			final String methodStr, final Object...args) {
-		if (callingFrom == null)      throw new RequiredArgumentException("callingFrom");
-		if (Utils.isEmpty(methodStr)) throw new RequiredArgumentException("methodStr");
+	public <V> V forceDispatchResult(final Object callingFrom,
+			final String methodName, final Object...args)
+			throws ContinueException {
+		if (callingFrom == null)       throw new RequiredArgumentException("callingFrom");
+		if (Utils.isEmpty(methodName)) throw new RequiredArgumentException("methodName");
 		// already running from event dispatch thread
-		if (SwingUtilities.isEventDispatchThread()) {
-			return false;
-		}
-		// get calling method
-		final Method method;
+		if (SwingUtilities.isEventDispatchThread())
+			throw new ContinueException();
+		// queue to run in event dispatch thread
+		final RemappedMethod<V> run =
+			new RemappedMethod<V>(
+				callingFrom,
+				methodName,
+				args
+			);
 		try {
-			final Class<?> clss = callingFrom.getClass();
-			final Class<?>[] params = ReflectUtils.ArgsToClasses(args);
-			method = clss.getMethod(methodStr, params);
-		} catch (NoSuchMethodException e) {
-			log().trace(e);
-			throw new IllegalArgumentException("Method not found");
+			SwingUtilities.invokeAndWait(run);
+			return run.getResult();
+		} catch (InvocationTargetException e) {
+			throw new RuntimeException(e);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
 		}
-		// pass to dispatch thread
-		{
-			final Runnable run =
-				new Runnable() {
-					private volatile Object   o = null;
-					private volatile Method   m = null;
-					private volatile Object[] a = null;
-					public Runnable init(final Object ob,
-							final Method mth, final Object[] ags) {
-						this.o = ob;
-						this.m = mth;
-						this.a = ags;
-						return this;
-					}
-					@Override
-					public void run() {
-						try {
-							this.m.invoke(
-								this.o,
-								this.a
-							);
-						} catch (IllegalAccessException e) {
-							log().trace(e);
-						} catch (IllegalArgumentException e) {
-							log().trace(e);
-						} catch (InvocationTargetException e) {
-							log().trace(e);
-						} catch (Exception e) {
-							log().trace(e);
-						}
-					}
-				}.init(callingFrom, method, args);
-			try {
+	}
+	/**
+	 * Forces a method to be called from the event dispatch thread.
+	 * @param callingFrom Class object which contains the method.
+	 * @param methodName The method which is being called.
+	 * @param now wait for the result.
+	 * @param args Arguments being passed to the method.
+	 * @return false if already in the event dispatch thread;
+	 *   true if calling from some other thread. this will queue
+	 *   a task to call the method in the event dispatch thread and return
+	 *   true to signal bypassing the method following.
+	 * Example:
+	 * public void getSomething() {
+	 *     if (guiUtils.forceDispatch(this, "getSomething"))
+	 *             return;
+	 *     // do something here
+	 * }
+	 */
+	public static boolean forceDispatch(final Object callingFrom,
+			final String methodName, final boolean now, final Object...args) {
+		if (callingFrom == null)       throw new RequiredArgumentException("callingFrom");
+		if (Utils.isEmpty(methodName)) throw new RequiredArgumentException("methodName");
+		// already running from event dispatch thread
+		if (SwingUtilities.isEventDispatchThread())
+			return false;
+		// queue to run in event dispatch thread
+		final RemappedMethod<Object> run =
+			new RemappedMethod<Object>(
+				callingFrom,
+				methodName,
+				args
+			);
+		try {
+			if (now) {
 				SwingUtilities.invokeAndWait(run);
-			} catch (InvocationTargetException e) {
-				log().trace(e);
-			} catch (InterruptedException e) {
-				log().trace(e);
+			} else {
+				SwingUtilities.invokeLater(run);
 			}
+		} catch (InvocationTargetException e) {
+			log().trace(e);
+		} catch (InterruptedException e) {
+			log().trace(e);
 		}
 		return true;
 	}
