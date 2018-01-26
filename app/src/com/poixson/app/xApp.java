@@ -3,34 +3,29 @@ package com.poixson.app;
 import java.io.PrintStream;
 import java.lang.ref.SoftReference;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
-
-import org.fusesource.jansi.Ansi;
 
 import com.poixson.abstractions.xStartable;
 import com.poixson.app.xAppStep.StepType;
+import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.AttachedLogger;
 import com.poixson.logger.xLevel;
 import com.poixson.logger.xLog;
-import com.poixson.logger.xLogFormatter_Color;
-import com.poixson.logger.xLogHandlerConsole;
 import com.poixson.logger.xLogPrintStream;
 import com.poixson.threadpool.xThreadPool;
 import com.poixson.threadpool.types.xThreadPool_Main;
 import com.poixson.tools.AppProps;
+import com.poixson.tools.AsciiArtBuilder;
 import com.poixson.tools.HangCatcher;
 import com.poixson.tools.Keeper;
-import com.poixson.tools.LockFile;
 import com.poixson.tools.xClock;
 import com.poixson.tools.xTime;
-import com.poixson.tools.remapped.RemappedMethod;
+import com.poixson.tools.xTimeU;
+import com.poixson.tools.remapped.xRunnable;
 import com.poixson.utils.ProcUtils;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.ThreadUtils;
@@ -42,19 +37,471 @@ import com.poixson.utils.Utils;
  *   10  prevent root
  *   50  load main configs
  *   60  sync clock
- *   80  display logo
- *   90  lock file
- *  100  start thread pools
- *  150  start scheduler
+ *   70  display logo
+ *   80  lock file
+ *   90  start console input
+ *  100  start aux thread pools
+ *  150  start schedulers
  * Shutdown sequence
- *  150  stop scheduler
- *  100  stop thread pools
+ *  150  stop schedulers
+ *  100  stop aux thread pools
  *   60  display uptime
  *   30  stop console input
  *   20  release lock file
  *   10  final garpage collect
  */
 public abstract class xApp implements xStartable, AttachedLogger {
+
+	protected static final int STATE_OFF     = 0;
+	protected static final int STATE_START   = 1;
+	protected static final int STATE_STOP    = Integer.MIN_VALUE + 1;
+	protected static final int STATE_RUNNING = Integer.MAX_VALUE;
+
+	// startup/shutdown steps
+	protected final AtomicInteger state = new AtomicInteger(0);
+	protected final HashMap<Integer, List<xAppStepDAO>> currentSteps =
+			new HashMap<Integer, List<xAppStepDAO>>();
+	protected final Object runLock = new Object();
+	protected volatile HangCatcher hangCatcher = null;
+
+	protected final xTime startTime = xTime.getNew();
+
+	// mvn properties
+	protected final AppProps props;
+
+
+
+	protected xApp() {
+		this.props = new AppProps(this.getClass());
+		Keeper.add(this);
+	}
+
+
+
+	protected abstract Object[] getStepObjects(final StepType type);
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// start/stop app
+
+
+
+	@Override
+	public void start() {
+		if (Failure.hasFailed()) return;
+		// check state (should be 0 stopped)
+		{
+			final int stepInt = this.state.get();
+			if (stepInt != STATE_OFF) {
+				// <0 already stopping
+				if (stepInt < STATE_OFF) {
+					this.warning(
+//						ERR_ALREADY_STOPPING_EXCEPTION,
+						stepInt
+					);
+				}
+				// >0 already starting or running
+				return;
+			}
+		}
+		// set starting state
+		if ( ! this.state.compareAndSet(STATE_OFF, STATE_START)) {
+			this.warning(
+//				ERR_INVALID_STATE_EXCEPTION,
+				this.state.get()
+			);
+			return;
+		}
+		if (Failure.hasFailed()) return;
+		// start hang catcher
+		this.startHangCatcher();
+		// load startup steps
+		{
+			final xThreadPool_Main pool = xThreadPool_Main.get();
+			pool.runTaskNow(
+					new xRunnable("Load startup steps") {
+						private volatile xThreadPool pool = null;
+						public xRunnable init(final xThreadPool pool) {
+							this.pool = pool;
+							return this;
+						}
+						@Override
+						public void run() {
+							if (Failure.hasFailed()) return;
+							final xApp app = xApp.this;
+							app.publish();
+							app.title("Starting {}..", app.getTitle());
+							// prepare startup steps
+							synchronized (app.currentSteps) {
+								app.currentSteps.clear();
+								app.loadSteps(StepType.STARTUP);
+							}
+							if (Failure.hasFailed()) return;
+							// queue startup sequence
+							final int stepInt = xApp.this.state.get();
+							xApp.QueueNextStep(xApp.this, this.pool, stepInt);
+						}
+					}.init(pool)
+				);
+		}
+	}
+	@Override
+	public void stop() {
+	}
+
+
+
+	public void join() {
+		xThreadPool_Main.get()
+			.joinWorkers();
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// startup/shutdown queue
+
+
+
+	// run next step
+	@Override
+	public void run() {
+		if (Failure.hasFailed()) return;
+		synchronized (this.runLock) {
+			// finished startup/shutdown
+			if (this.currentSteps.isEmpty()) {
+				this.stopHangCatcher();
+				final int stepInt = this.state.get();
+				if (stepInt == STATE_START || stepInt == STATE_STOP) {
+					this.state.set(STATE_OFF);
+					this.log()
+						.severe(
+							"No {} steps found!",
+							(stepInt > STATE_OFF ? "startup" : "shutdown")
+						);
+				} else
+				if (stepInt > STATE_OFF) {
+					this.state.set(STATE_RUNNING);
+					this.info("Finished startup!");
+				} else {
+					this.state.set(STATE_OFF);
+					this.info("Finished shutdown.");
+				}
+				return;
+			}
+			// get current step
+			final xAppStepDAO step = this.grabNextStepDAO();
+			if (Failure.hasFailed()) return;
+			final int stepInt = this.state.get();
+			if (step != null) {
+				if (this.log().isLoggable(xLevel.DETAIL)) {
+					this.fine(
+						"{} step {}.. {}",
+						( stepInt > STATE_OFF ? "Startup" : "Shutdown" ),
+						stepInt,
+						step.title
+					);
+				}
+				// run current step
+				this.resetHangCatcher();
+				step.run();
+				if (Failure.hasFailed()) return;
+				this.resetHangCatcher();
+			}
+			// queue next step
+			final xThreadPool_Main pool = xThreadPool_Main.get();
+			QueueNextStep(this, pool, stepInt);
+		}
+	}
+
+
+
+	protected static void QueueNextStep(final xApp app,
+			final xThreadPool pool, final int stepInt) {
+		if (Failure.hasFailed()) return;
+		pool.runTaskLater(
+				(stepInt > STATE_OFF ? "Startup" : "Shutdown")
+					+Integer.toString(stepInt),
+				app
+			);
+	}
+	protected xAppStepDAO grabNextStepDAO() {
+		if (Failure.hasFailed()) return null;
+		synchronized (this.currentSteps) {
+			// is finished
+			if (this.currentSteps.isEmpty())
+				return null;
+			final int stepInt = this.state.get();
+			// check current step
+			final List<xAppStepDAO> steps = this.currentSteps.get( Integer.valueOf(stepInt) );
+			if (steps != null && !steps.isEmpty()) {
+				// run next task in current step
+				final xAppStepDAO nextStep;
+				synchronized (this.currentSteps) {
+					nextStep = steps.get(0);
+					if (nextStep == null)
+						throw new RuntimeException("Failed to get next startup step!");
+					steps.remove(0);
+				}
+				return nextStep;
+			}
+			// find next step int
+			this.currentSteps.remove( Integer.valueOf(stepInt) );
+			if (this.currentSteps.isEmpty())
+				return null;
+			int nextStepInt;
+			final Iterator<Integer> it = this.currentSteps.keySet().iterator();
+			// startup
+			if (stepInt > STATE_OFF) {
+				nextStepInt = Integer.MAX_VALUE;
+				while (it.hasNext()) {
+					final int index = it.next().intValue();
+					if (index < nextStepInt) {
+						nextStepInt = index;
+					}
+				}
+				// no steps left
+				if (nextStepInt == Integer.MAX_VALUE)
+					return null;
+			// shutdown
+			} else {
+				nextStepInt = Integer.MIN_VALUE;
+				while (it.hasNext()) {
+					final int index = it.next().intValue();
+					if (index > nextStepInt) {
+						nextStepInt = index;
+					}
+				}
+				// no steps left
+				if (nextStepInt == Integer.MIN_VALUE)
+					return null;
+			}
+			this.state.set(nextStepInt);
+			return this.grabNextStepDAO();
+		}
+	}
+
+
+
+	protected void loadSteps(final StepType type) {
+		this.loadSteps(type, this);
+	}
+	protected void loadSteps(final StepType type, final Object[] containers) {
+		for (final Object obj : containers) {
+			this.loadSteps(type, obj);
+		}
+	}
+	protected void loadSteps(final StepType type, final Object container) {
+		if (type      == null) throw new RequiredArgumentException("type");
+		if (container == null) throw new RequiredArgumentException("container");
+		if (Failure.hasFailed()) return;
+		synchronized (this.currentSteps) {
+			// find annotations
+			final Class<?> clss = container.getClass();
+			if (clss == null) throw new RuntimeException("Failed to get app step container class!");
+			final Method[] methods = clss.getMethods();
+			if (Utils.isEmpty(methods)) throw new RuntimeException("Failed to get app methods!");
+			for (final Method m : methods) {
+				final xAppStep anno = m.getAnnotation(xAppStep.class);
+				if (anno == null) continue;
+				// found step method
+				if (type.equals(anno.type())) {
+					final xAppStepDAO dao =
+						new xAppStepDAO(
+							this,
+							m,
+							anno
+						);
+					// store the step
+					final List<xAppStepDAO> list = new ArrayList<xAppStepDAO>();
+					list.add(dao);
+					final List<xAppStepDAO> existing =
+						this.currentSteps.putIfAbsent(
+							Integer.valueOf(dao.priority),
+							list
+						);
+					if (existing != null)
+						existing.add(dao);
+				}
+			}
+		}
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// startup steps
+
+
+
+	// clock
+	@xAppStep(type=StepType.STARTUP, title="Clock", priority=60)
+	public void __STARTUP_clock() {
+		final xClock clock = xClock.get(true);
+		this.startTime.set(
+			clock.millis(),
+			xTimeU.MS
+		);
+		this.startTime.lock();
+	}
+
+
+
+	// display logo
+	@xAppStep(type=StepType.STARTUP, title="DisplayLogo", priority=70)
+	public void __STARTUP_displaylogo() {
+		this.displayLogo();
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// shutdown steps
+
+
+
+	// garbage collect
+	@xAppStep(type=StepType.SHUTDOWN,title="GarbageCollect", priority=10)
+	public void __SHUTDOWN_gc() {
+		System.gc();
+		xVars.getOriginalOut()
+			.println();
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// hang catcher
+
+
+
+	private void startHangCatcher() {
+		if (ProcUtils.isDebugWireEnabled())
+			return;
+		final HangCatcher catcher =
+			new HangCatcher(
+				xTime.getNew("10s").getMS(),
+				100L,
+				new Runnable() {
+					@Override
+					public void run() {
+						xApp.this.publish();
+						xApp.this.publish(" *********************** ");
+						xApp.this.publish(" *  Startup has hung!  * ");
+						xApp.this.publish(" *********************** ");
+						xApp.this.publish();
+						ThreadUtils.DisplayStillRunning();
+						System.exit(1);
+					}
+				}
+		);
+		catcher.start();
+		this.hangCatcher = catcher;
+	}
+	private void resetHangCatcher() {
+		final HangCatcher catcher = this.hangCatcher;
+		if (catcher != null) {
+			catcher.resetTimeout();
+		}
+	}
+	private void stopHangCatcher() {
+		final HangCatcher catcher = this.hangCatcher;
+		if (catcher != null) {
+			catcher.stop();
+		}
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// state
+
+
+
+	@Override
+	public boolean isRunning() {
+		return (this.state.get() == STATE_RUNNING);
+	}
+	public boolean isStarting() {
+		return (this.state.get() > STATE_OFF);
+	}
+	@Override
+	public boolean isStopping() {
+		return (this.state.get() < STATE_OFF);
+	}
+	public boolean isStopped() {
+		return (this.state.get() == STATE_OFF);
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// config
+
+
+
+	// mvn properties
+	public String getName() {
+		return this.props.name;
+	}
+	public String getTitle() {
+		return this.props.title;
+	}
+	public String getFullTitle() {
+		return this.props.full_title;
+	}
+	public String getVersion() {
+		return this.props.version;
+	}
+	public String getCommitHash() {
+		final String hash = this.getCommitHashFull();
+		if (Utils.isEmpty(hash))
+			return "N/A";
+		return hash.substring(0, 7);
+	}
+	public String getCommitHashFull() {
+		return this.props.commitHash;
+	}
+	public String getURL() {
+		return this.props.url;
+	}
+	public String getOrgName() {
+		return this.props.org_name;
+	}
+	public String getOrgURL() {
+		return this.props.org_url;
+	}
+	public String getIssueName() {
+		return this.props.issue_name;
+	}
+	public String getIssueURL() {
+		return this.props.issue_url;
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// logger
+
+
+
+	private volatile SoftReference<xLog> _log = null;
+	@Override
+	public xLog log() {
+		if (this._log != null) {
+			final xLog log = this._log.get();
+			if (log != null) {
+				return log;
+			}
+		}
+		final xLog log = xLog.getRoot();
+		this._log = new SoftReference<xLog>(log);
+		return log;
+	}
+
+
+
 	private static final String APP_ALREADY_STARTED_EXCEPTION    = "Cannot init app, already inited!";
 	private static final String APP_ALREADY_STOPPING_EXCEPTION   = "Cannot start app, already stopping!";
 	private static final String APP_INVALID_STATE_EXCEPTION      = "Invalid state, cannot start: {}";
