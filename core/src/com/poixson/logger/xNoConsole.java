@@ -4,6 +4,7 @@ import java.lang.ref.SoftReference;
 
 
 public class xNoConsole implements xConsole {
+	protected static final String CONSOLE_NAME = "xNoConsole";
 
 	private final Object printLock = new Object();
 
@@ -15,6 +16,13 @@ public class xNoConsole implements xConsole {
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		throw new CloneNotSupportedException();
+	}
+
+
+
+	@Override
+	public String getName() {
+		return CONSOLE_NAME;
 	}
 
 

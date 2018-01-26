@@ -6,6 +6,8 @@ import com.poixson.abstractions.xStartable;
 public interface xConsole extends xStartable {
 
 
+	public String getName();
+
 	@Override
 	public void start();
 	@Override

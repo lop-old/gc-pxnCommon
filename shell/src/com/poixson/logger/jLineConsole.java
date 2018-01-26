@@ -23,6 +23,7 @@ import jline.console.history.History;
 
 
 public class jLineConsole implements xConsole {
+	protected static final String  CONSOLE_NAME   = "jLineConsole";
 	protected static final String  DEFAULT_PROMPT = " #>";
 	protected static final boolean OVERRIDE_STDIO = true;
 	protected static final boolean BELL_ENABLED   = true;
@@ -124,6 +125,13 @@ public class jLineConsole implements xConsole {
 				this.stop();
 			}
 		}
+	}
+
+
+
+	@Override
+	public String getName() {
+		return CONSOLE_NAME;
 	}
 
 
