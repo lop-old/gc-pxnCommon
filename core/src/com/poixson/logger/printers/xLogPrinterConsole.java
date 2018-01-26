@@ -1,11 +1,16 @@
-package com.poixson.logger;
+package com.poixson.logger.printers;
+
+import com.poixson.logger.xLog;
+import com.poixson.logger.xLogRecord;
+import com.poixson.logger.console.xConsole;
 
 
-public class xLogHandlerConsole extends xLogHandler {
+public class xLogPrinterConsole extends xLogPrinter {
 
 
 
-	public xLogHandlerConsole() {
+	public xLogPrinterConsole() {
+		super();
 	}
 
 
@@ -18,7 +23,7 @@ public class xLogHandlerConsole extends xLogHandler {
 	}
 	@Override
 	public void publish(final String msg) {
-		final xConsole console = xLog.getConsole();
+		final xConsole console = xLog.getConsoleHandler();
 		if (console == null) {
 			System.out.println(msg);
 		} else {

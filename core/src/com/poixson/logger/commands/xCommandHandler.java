@@ -1,4 +1,4 @@
-package com.poixson.logger;
+package com.poixson.logger.commands;
 
 import com.poixson.threadpool.xThreadPoolQueue.TaskPriority;
 import com.poixson.threadpool.types.xThreadPool_Main;

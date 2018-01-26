@@ -1,6 +1,8 @@
-package com.poixson.logger;
+package com.poixson.logger.formatters;
 
 import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.logger.xLevel;
+import com.poixson.logger.xLogRecord;
 import com.poixson.utils.StringUtils;
 
 

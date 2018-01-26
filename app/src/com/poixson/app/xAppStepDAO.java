@@ -70,7 +70,11 @@ public class xAppStepDAO implements RunnableNamed {
 	public void invoke() throws ReflectiveOperationException, RuntimeException {
 		xLog.getRoot()
 			.fine("Invoking step {}: {}", this.priority, this.name);
-		this.method.invoke(this.app);
+		try {
+			this.method.invoke(this.app);
+		} catch (Exception e) {
+			Failure.fail(e);
+		}
 	}
 	@Override
 	public void run() {

@@ -1,14 +1,24 @@
-package com.poixson.logger;
+package com.poixson.logger.printers;
 
 import java.lang.ref.SoftReference;
 
+import com.poixson.logger.xLevel;
+import com.poixson.logger.xLogRecord;
+import com.poixson.logger.formatters.xLogFormatter;
+import com.poixson.logger.formatters.xLogFormatter_Default;
 
-public abstract class xLogHandler {
+
+public abstract class xLogPrinter {
 
 	private volatile xLogFormatter formatter = null;
 	private volatile SoftReference<xLogFormatter> formatterDefault = null;
 
 	private volatile xLevel level = null;
+
+
+
+	public xLogPrinter() {
+	}
 
 
 

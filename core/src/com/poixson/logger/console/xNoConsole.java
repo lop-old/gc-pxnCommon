@@ -1,6 +1,9 @@
-package com.poixson.logger;
+package com.poixson.logger.console;
 
 import java.lang.ref.SoftReference;
+
+import com.poixson.logger.xLog;
+import com.poixson.logger.commands.xCommandHandler;
 
 
 public class xNoConsole implements xConsole {

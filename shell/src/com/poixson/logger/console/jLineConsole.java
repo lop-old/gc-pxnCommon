@@ -1,4 +1,4 @@
-package com.poixson.logger;
+package com.poixson.logger.console;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +11,9 @@ import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
 import com.poixson.app.xVars;
+import com.poixson.logger.xLog;
+import com.poixson.logger.commands.xCommandEvent;
+import com.poixson.logger.commands.xCommandHandler;
 import com.poixson.tools.remapped.OutputStreamLineRemapper;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.ThreadUtils;

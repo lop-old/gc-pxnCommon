@@ -1,6 +1,7 @@
-package com.poixson.logger;
+package com.poixson.logger.console;
 
 import com.poixson.abstractions.xStartable;
+import com.poixson.logger.commands.xCommandHandler;
 
 
 public interface xConsole extends xStartable {

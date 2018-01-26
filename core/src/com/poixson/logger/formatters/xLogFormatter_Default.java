@@ -1,9 +1,10 @@
-package com.poixson.logger;
+package com.poixson.logger.formatters;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.logger.xLogRecord;
 import com.poixson.utils.StringUtils;
 
 

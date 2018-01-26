@@ -2,6 +2,7 @@ package com.poixson.logger;
 
 import java.util.List;
 
+import com.poixson.logger.printers.xLogPrinter;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
 
@@ -24,8 +25,8 @@ public abstract class xLogPrinting {
 
 	public abstract List<String> getNameTree();
 
-	public abstract void addHandler(final xLogHandler handler);
-	public abstract void setHandler(final xLogHandler handler);
+	public abstract void addPrinter(final xLogPrinter printer);
+	public abstract void setPrinter(final xLogPrinter printer);
 
 
 

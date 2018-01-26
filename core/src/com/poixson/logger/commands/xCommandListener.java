@@ -1,4 +1,4 @@
-package com.poixson.logger;
+package com.poixson.logger.commands;
 
 import com.poixson.tools.events.xEventListener;
 
