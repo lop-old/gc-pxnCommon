@@ -16,7 +16,10 @@ import com.poixson.logger.commands.xCommandHandler;
 import com.poixson.logger.console.xConsole;
 import com.poixson.logger.console.xNoConsole;
 import com.poixson.logger.formatters.xLogFormatter;
+import com.poixson.logger.formatters.xLogFormatter_Color;
+import com.poixson.logger.formatters.xLogFormatter_Default;
 import com.poixson.logger.printers.xLogPrinter;
+import com.poixson.logger.printers.xLogPrinterConsole;
 import com.poixson.tools.Keeper;
 import com.poixson.utils.FileUtils;
 import com.poixson.utils.Utils;
@@ -159,27 +162,34 @@ public class xLog extends xLogPrinting {
 
 	// sub-loggers
 	private final ConcurrentMap<String, xLog> loggers = new ConcurrentHashMap<String, xLog>();
-	// printers
-	private final List<xLogPrinter> printers = new CopyOnWriteArrayList<xLogPrinter>();
+	// handlers
+	private final List<xLogPrinter> handlers = new CopyOnWriteArrayList<xLogPrinter>();
 
 
 
 	// get root logger
 	public static xLog getRoot() {
+		// existing root logger
 		if (root.get() != null)
 			return root.get();
+		// new root logger instance
 		final xLog log = new xLog(null, null);
 		log.setLevel(DEFAULT_LEVEL);
-//TODO:
-//		initDefaultPrinters();
-//		// default log handlers
-//		private static void initDefaultPrinters() {
-//			// console printer
-//			final xLogPrinter printer = new xLogPrinterConsole();
-//			printer.setFormatter(new xLogFormatter_Default());
-//			root.addPrinter(printer);
-//		}
-		if (!root.compareAndSet(null, log)) {
+//			xVars.debug()
+//			? xLevel.ALL
+//			: DEFAULT_LEVEL
+//		);
+		// default log handlers
+		{
+			final xLogPrinter handler = new xLogPrinterConsole();
+			handler.setFormatter(
+				System.console() == null
+				? new xLogFormatter_Default()
+				: new xLogFormatter_Color()
+			);
+			log.addPrinter(handler);
+		}
+		if ( ! root.compareAndSet(null, log) ) {
 			return root.get();
 		}
 		if (FileUtils.SearchLocalFile(xVars.SEARCH_DEBUG_FILES)) {
@@ -283,8 +293,8 @@ public class xLog extends xLogPrinting {
 	@Override
 	public void setLevel(final xLevel lvl) {
 		this.level = lvl;
-		// printers
-		final Iterator<xLogPrinter> it = this.printers.iterator();
+		// handlers
+		final Iterator<xLogPrinter> it = this.handlers.iterator();
 		while (it.hasNext()) {
 			it.next()
 				.setLevel(lvl);
@@ -292,7 +302,11 @@ public class xLog extends xLogPrinting {
 	}
 	@Override
 	public xLevel getLevel() {
-		return this.level;
+		return (
+			xVars.debug()
+			? xLevel.DETAIL
+			: this.level
+		);
 	}
 	@Override
 	public xLevel peekLevel() {
@@ -325,16 +339,16 @@ public class xLog extends xLogPrinting {
 
 
 	// formatter
-	public void setFormatter(final xLogFormatter formatter, final Class<?> printerType) {
+	public void setFormatter(final xLogFormatter formatter, final Class<?> handlerType) {
 		if (formatter == null) throw new RequiredArgumentException("formatter");
-		final Iterator<xLogPrinter> it = this.printers.iterator();
+		final Iterator<xLogPrinter> it = this.handlers.iterator();
 		while (it.hasNext()) {
-			final xLogPrinter printer = it.next();
-			if (printerType == null) {
-				printer.setFormatter(formatter);
+			final xLogPrinter handler = it.next();
+			if (handlerType == null) {
+				handler.setFormatter(formatter);
 			} else
-			if (printerType.equals(printer.getClass())) {
-				printer.setFormatter(formatter);
+			if (handlerType.equals(handler.getClass())) {
+				handler.setFormatter(formatter);
 			}
 		}
 	}
@@ -344,15 +358,15 @@ public class xLog extends xLogPrinting {
 
 
 
-	// log printers
+	// log handlers
 	@Override
-	public void addPrinter(final xLogPrinter printer) {
-		this.printers.add(printer);
+	public void addPrinter(final xLogPrinter handler) {
+		this.handlers.add(handler);
 	}
 	@Override
-	public void setPrinter(final xLogPrinter printer) {
-		this.printers.clear();
-		this.printers.add(printer);
+	public void setPrinter(final xLogPrinter handler) {
+		this.handlers.clear();
+		this.handlers.add(handler);
 	}
 
 
@@ -387,7 +401,7 @@ public class xLog extends xLogPrinting {
 
 
 
-	// publish record to printers
+	// publish record to handlers
 	@Override
 	public void publish(final xLogRecord record) {
 		final xLevel lvl = record.level();
@@ -399,7 +413,7 @@ public class xLog extends xLogPrinting {
 		if (this.parent != null) {
 			this.parent.publish(record);
 		}
-		if (this.printers.isEmpty()) {
+		if (this.handlers.isEmpty()) {
 			if (this.isRoot()) {
 				getOriginalOut()
 					.println(
@@ -407,16 +421,16 @@ public class xLog extends xLogPrinting {
 					);
 			}
 		} else {
-			final Iterator<xLogPrinter> it = this.printers.iterator();
+			final Iterator<xLogPrinter> it = this.handlers.iterator();
 			while (it.hasNext()) {
-				final xLogPrinter printer = it.next();
-				if (printer.isLoggable(lvl)) {
-					printer.publish(record);
+				final xLogPrinter handler = it.next();
+				if (handler.isLoggable(lvl)) {
+					handler.publish(record);
 				}
 			}
 		}
 	}
-	// publish string to printers
+	// publish string to handlers
 	@Override
 	public void publish(final String msg) {
 		if (msg == null) {
@@ -427,9 +441,12 @@ public class xLog extends xLogPrinting {
 		if (this.parent != null) {
 			this.parent.publish(msg);
 		}
-		// publish to printers
-		if (!this.printers.isEmpty()) {
-			final Iterator<xLogPrinter> it = this.printers.iterator();
+		// publish to handlers
+		if (this.handlers.isEmpty()) {
+			getOriginalOut()
+				.println("[OUT]"+msg);
+		} else {
+			final Iterator<xLogPrinter> it = this.handlers.iterator();
 			while (it.hasNext()) {
 				it.next()
 					.publish(msg);
@@ -444,19 +461,40 @@ public class xLog extends xLogPrinting {
 
 
 
-	private static volatile xConsole consoleHandler = null;
+	private static final AtomicReference<xConsole> consoleHandler =
+			new AtomicReference<xConsole>(null);
 
-	public static void setConsoleHandler(final xConsole console) {
-		consoleHandler = console;
+	public static void setConsole(final xConsole console) {
+		final xLog log = getRoot();
+		if (log.isLoggable(xLevel.DETAIL)) {
+			final xConsole existing = consoleHandler.get();
+			if (existing != null) {
+				log.detail(
+					"Replacing {} console with {}",
+					( existing == null ? "" : existing.getName() ),
+					console.getName()
+				);
+			}
+		}
+		consoleHandler.set(console);
 	}
 	public static xConsole getConsoleHandler() {
-		if (consoleHandler == null) {
-			consoleHandler = new xNoConsole();
+		// existing console handler
+		{
+			final xConsole console = consoleHandler.get();
+			if (console != null)
+				return console;
 		}
-		return consoleHandler;
+		// new default console handler
+		{
+			final xConsole console = new xNoConsole();
+			if ( ! consoleHandler.compareAndSet(null, console))
+				return consoleHandler.get();
+			return console;
+		}
 	}
 	public static xConsole peekConsoleHandler() {
-		return consoleHandler;
+		return consoleHandler.get();
 	}
 
 
