@@ -31,10 +31,10 @@
 	</properties>
 	<modules>
 		<module>core</module>
+		<module>app</module>
 		<module>loggers</module>
 		<module>shell</module>
 		<module>config</module>
-		<module>app</module>
 		<module>plugin</module>
 		<module>scheduler</module>
 	</modules>
