@@ -6,9 +6,12 @@ import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import com.poixson.exceptions.ContinueException;
 import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.tools.remapped.RemappedMethod;
 import com.poixson.tools.remapped.xCallable;
 import com.poixson.tools.remapped.xRunnable;
+import com.poixson.utils.Utils;
 
 
 public abstract class xThreadPoolQueue extends xThreadPool {
@@ -121,6 +124,88 @@ public abstract class xThreadPoolQueue extends xThreadPool {
 
 	// ------------------------------------------------------------------------------- //
 	// queue task
+
+
+
+	/**
+	 * Forces a method to be called from the correct thread.
+	 * @param callingFrom Class object which contains the method.
+	 * @param methodName The method which is being called.
+	 * @param now wait for the result.
+	 * @param args Arguments being passed to the method.
+	 * @return false if already in the correct thread;
+	 *   true if calling from some other thread. this will queue
+	 *   a task to call the method in the correct thread and return
+	 *   true to signal bypassing the method following.
+	 * Example:
+	 * public void getSomething() {
+	 *     if (xThreadPool_Main.get()
+	 *         .force(this, "getSomething", false))
+	 *             return;
+	 *     // do something here
+	 * }
+	 */
+	public boolean force(final Object callingFrom,
+			final String methodName, final boolean now, final Object...args) {
+		if (callingFrom == null)       throw new RequiredArgumentException("callingFrom");
+		if (Utils.isEmpty(methodName)) throw new RequiredArgumentException("methodName");
+		// already running in correct thread
+		if (this.isCurrentThread())
+			return false;
+		// queue to run in correct thread
+		final RemappedMethod<Object> run =
+			new RemappedMethod<Object>(
+				callingFrom,
+				methodName,
+				args
+			);
+		if (now) {
+			this.runTaskNow(run);
+		} else {
+			this.runTaskLater(run);
+		}
+		return true;
+	}
+
+
+
+	/**
+	 * Forces a method to be called from the correct thread.
+	 * @param callingFrom Class object which contains the method.
+	 * @param methodName The method which is being called.
+	 * @param args Arguments being passed to the method.
+	 * @return resulting return value if not in the correct thread.
+	 *   this will queue a task to run in the correct thread.
+	 *   if already in the correct thread, ContinueException is
+	 *   throws to signal to continue running the method following.
+	 * Example:
+	 * public boolean getSomething() {
+	 *     try {
+	 *         return xThreadPool_Main.get()
+	 *             .forceResult(this, "getSomething");
+	 *     } catch (ContinueException ignore) {}
+	 *     // do something here
+	 *     return result;
+	 * }
+	 */
+	public <V> V forceResult(final Object callingFrom,
+			final String methodName, final Object...args)
+			throws ContinueException {
+		if (callingFrom == null)       throw new RequiredArgumentException("callingFrom");
+		if (Utils.isEmpty(methodName)) throw new RequiredArgumentException("methodName");
+		// already running in correct thread
+		if (this.isCurrentThread())
+			throw new ContinueException();
+		// queue to run in correct thread
+		final RemappedMethod<V> run =
+			new RemappedMethod<V>(
+				callingFrom,
+				methodName,
+				args
+			);
+		this.runTaskNow(run);
+		return run.getResult();
+	}
 
 
 
