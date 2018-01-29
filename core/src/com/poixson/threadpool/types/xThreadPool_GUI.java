@@ -9,26 +9,26 @@ import com.poixson.threadpool.xThreadPoolTask;
 import com.poixson.threadpool.xThreadPoolWorker;
 
 
-public class xThreadPool_EventDispatch extends xThreadPool_SingleWorker {
+public class xThreadPool_GUI extends xThreadPool_SingleWorker {
 
-	public static final String DISPATCH_POOL_NAME = "event-dispatch";
+	public static final String DISPATCH_POOL_NAME = "gui";
 
-	private final static AtomicReference<xThreadPool_EventDispatch> instance =
-			new AtomicReference<xThreadPool_EventDispatch>(null);
+	private final static AtomicReference<xThreadPool_GUI> instance =
+			new AtomicReference<xThreadPool_GUI>(null);
 
 
 
-	public static xThreadPool_EventDispatch get() {
+	public static xThreadPool_GUI get() {
 		// existing instance
 		{
-			final xThreadPool_EventDispatch pool = instance.get();
+			final xThreadPool_GUI pool = instance.get();
 			if (pool != null)
 				return pool;
 		}
 		// new instance
 		{
-			final xThreadPool_EventDispatch pool = new xThreadPool_EventDispatch();
-			if (!instance.compareAndSet(null, pool))
+			final xThreadPool_GUI pool = new xThreadPool_GUI();
+			if ( ! instance.compareAndSet(null, pool) )
 				return instance.get();
 			return pool;
 		}
@@ -36,7 +36,7 @@ public class xThreadPool_EventDispatch extends xThreadPool_SingleWorker {
 
 
 
-	protected xThreadPool_EventDispatch() {
+	protected xThreadPool_GUI() {
 		super(DISPATCH_POOL_NAME);
 		new DispatchWorker(this);
 	}
@@ -68,9 +68,9 @@ public class xThreadPool_EventDispatch extends xThreadPool_SingleWorker {
 
 
 
-	protected class DispatchWorker extends xThreadPoolWorker {
+	protected class xThreadPool_GUI_Worker extends xThreadPoolWorker {
 
-		public DispatchWorker(final xThreadPool pool) {
+		public xThreadPool_GUI_Worker(final xThreadPool pool) {
 			super(pool);
 			pool.registerWorker(this);
 		}
