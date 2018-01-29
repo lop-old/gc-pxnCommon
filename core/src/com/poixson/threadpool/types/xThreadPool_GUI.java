@@ -38,7 +38,6 @@ public class xThreadPool_GUI extends xThreadPool_SingleWorker {
 
 	protected xThreadPool_GUI() {
 		super(DISPATCH_POOL_NAME);
-		new DispatchWorker(this);
 	}
 
 
@@ -52,10 +51,16 @@ public class xThreadPool_GUI extends xThreadPool_SingleWorker {
 
 	@Override
 	protected void startNewWorkerIfNeededAndAble() {
-		if (this.worker.get() == null) {
-			final DispatchWorker worker = new DispatchWorker(this);
-			this.worker.compareAndSet(null, worker);
+		xThreadPoolWorker worker =
+			this.worker.get();
+		if (worker == null) {
+			try {
+				worker = new xThreadPool_GUI_Worker(this);
+				if ( ! this.worker.compareAndSet(null, worker) )
+					worker = this.worker.get();
+			} catch (RuntimeException ignore) {}
 		}
+		if (worker == null) throw new NullPointerException();
 		SwingUtilities.invokeLater(
 			this.worker.get()
 		);

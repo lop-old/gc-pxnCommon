@@ -22,10 +22,8 @@ public class xThreadPool_Main extends xThreadPool_SingleWorker {
 		// new instance
 		{
 			final xThreadPool_Main pool = new xThreadPool_Main();
-			final xThreadPool_Main existing =
-				instance.getAndSet(pool);
-			if (existing != null)
-				return existing;
+			if ( ! instance.compareAndSet(null, pool) )
+				return instance.get();
 			return pool;
 		}
 	}

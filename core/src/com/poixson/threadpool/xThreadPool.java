@@ -129,8 +129,8 @@ public abstract class xThreadPool implements xStartable {
 	public abstract xThreadPoolTask<?> grabNextTask() throws InterruptedException;
 
 //TODO:
-	protected void checkTaskTimeouts(final long currentTime) {
-	}
+//	protected void checkTaskTimeouts(final long currentTime) {
+//	}
 
 
 
