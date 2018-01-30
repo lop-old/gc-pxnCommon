@@ -196,16 +196,48 @@ public final class StringUtils {
 
 
 
-	public static String FormatMessage(final String format, final Object... args) {
-		if (Utils.isEmpty(format)) return format;
-		String msg = format;
-		for (final Object obj : args) {
-			msg = msg.replaceFirst(
-				"\\{\\}",
-				toString(obj)
+	public static String FormatMessage(final String msg, final Object... args) {
+		if (Utils.isEmpty(msg))
+			return msg;
+		final StringBuilder result = new StringBuilder(msg);
+		for (int index=0; index<args.length; index++) {
+			final Object obj = args[index];
+			final String val = (
+				obj == null
+				? "<null>"
+				: toString(obj)
 			);
+			// {#}
+			{
+				final String key = "{"+Integer.toString(index+1)+"}";
+				final int pos = result.indexOf(key);
+				if (pos >= 0) {
+					result.replace(
+						pos,
+						pos + key.length(),
+						val
+					);
+					continue;
+				}
+			}
+			// {}
+			{
+				final int pos = result.indexOf("{}");
+				if (pos >= 0) {
+					result.replace(
+						pos,
+						pos + 2,
+						val
+					);
+					continue;
+				}
+			}
+			// append
+			result
+				.append(' ')
+				.append(val);
 		}
-		return msg;
+		return result.toString();
 	}
 
 
