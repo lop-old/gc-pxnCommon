@@ -41,22 +41,23 @@ public class xVars {
 	public static boolean notDebug() {
 		return ! debug();
 	}
-	public static void debug(final boolean value) {
+	public static void debug(final boolean enabled) {
 		synchronized(debugLock) {
 			// check existing value
-			final Boolean bool = debug;
-			if (bool != null) {
-				if (bool.booleanValue() == value) {
+			final Boolean current = debug;
+			if (current != null) {
+				// unchanged
+				if (current.booleanValue() == enabled)
 					return;
+				// change debug state
+				if ( ! current.booleanValue() ) {
+					final xLog log = xLog.peekRoot();
+					if (log != null)
+						log.fine("Disabled debug mode");
 				}
 			}
-			// change debug state
-			if (!value) {
-				xLog.getRoot()
-					.fine("Disabled debug mode");
-			}
-			debug = Boolean.valueOf(value);
-			if (value) {
+			debug = Boolean.valueOf(enabled);
+			if (enabled) {
 				xLog.getRoot()
 					.fine("Enabled debug mode");
 			}
