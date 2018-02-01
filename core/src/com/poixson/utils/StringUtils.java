@@ -837,6 +837,22 @@ public final class StringUtils {
 		}
 		return buf.toString();
 	}
+	public static String MergeStrings(final char delim, final String... addThis) {
+		if (Utils.isEmpty(addThis)) throw new RequiredArgumentException("addThis");
+		final StringBuilder buf = new StringBuilder();
+		boolean first = true;
+		for (final String line : addThis) {
+			if (Utils.isEmpty(line)) continue;
+			if (!first)
+				buf.append(delim);
+			buf.append(line);
+			if (first) {
+				if (buf.length() > 0)
+					first = false;
+			}
+		}
+		return buf.toString();
+	}
 
 
 
