@@ -7,7 +7,10 @@ import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -22,8 +25,14 @@ public final class StringUtils {
 
 
 
-	public static final Charset UTF8 = Charset.forName("UTF-8");
-	public static final Charset DEFAULT_CHARSET = UTF8;
+	public static final Charset CHARSET_UTF8  = StandardCharsets.UTF_8;
+	public static final Charset CHARSET_ASCII = StandardCharsets.US_ASCII;
+	public static final Charset DEFAULT_CHARSET = CHARSET_UTF8;
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// convert string
 
 
 
@@ -113,7 +122,6 @@ public final class StringUtils {
 	public static String[] BytesToStringArray(final byte[] bytes) {
 		if (bytes == null)     return null;
 		if (bytes.length == 0) return new String[0];
-		final Charset charset = StandardCharsets.US_ASCII;
 		final List<String> list = new ArrayList<String>();
 		final int bytesSize = bytes.length;
 		int last = 0;
@@ -125,7 +133,7 @@ public final class StringUtils {
 						bytes,
 						last,
 						i - last,
-						charset
+						StringUtils.CHARSET_ASCII
 					)
 				);
 				last = i+1;
@@ -137,12 +145,17 @@ public final class StringUtils {
 					bytes,
 					last,
 					bytesSize,
-					charset
+					StringUtils.CHARSET_ASCII
 				)
 			);
 		}
 		return list.toArray(new String[0]);
 	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// check value
 
 
 
@@ -193,6 +206,11 @@ public final class StringUtils {
 		}
 		return true;
 	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// replace {} tags
 
 
 
@@ -284,6 +302,11 @@ public final class StringUtils {
 		if (aEmpty || bEmpty) return false;
 		return a.equalsIgnoreCase(b);
 	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// trim
 
 
 
@@ -434,6 +457,11 @@ public final class StringUtils {
 
 
 
+	// ------------------------------------------------------------------------------- //
+	// modify string
+
+
+
 	public static String RemoveFromStr(final String str, final String...strip) {
 		if (Utils.isEmpty(strip)) return str;
 		String dat = str;
@@ -490,6 +518,11 @@ public final class StringUtils {
 			}
 		}
 	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// find position
 
 
 
@@ -706,6 +739,11 @@ public final class StringUtils {
 
 
 
+	// ------------------------------------------------------------------------------- //
+	// split string
+
+
+
 	// split by many delims
 	public static String[] SplitByDelims(final String string, final char...delims) {
 		final List<String> list = new ArrayList<String>();
@@ -757,6 +795,11 @@ public final class StringUtils {
 		}
 		return buf.toString();
 	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// generate string
 
 
 
@@ -816,6 +859,11 @@ public final class StringUtils {
 					NumberUtils.MinMax(length, 0, buf.length())
 				);
 	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// build string
 
 
 
@@ -880,6 +928,11 @@ public final class StringUtils {
 
 
 
+	// ------------------------------------------------------------------------------- //
+	// pad string
+
+
+
 	public static String Pad(final int width, final String text, final char padding) {
 		if (width < 1) return null;
 		final int count = width - text.length();
@@ -928,36 +981,16 @@ public final class StringUtils {
 
 
 	public static String Pad(final int width, final int value) {
-		return
-			Pad(
-				width,
-				Integer.toString(value),
-				'0'
-			);
+		return Pad(       width, Integer.toString(value), '0' );
 	}
 	public static String PadFront(final int width, final int value) {
-		return
-			PadFront(
-				width,
-				Integer.toString(value),
-				'0'
-			);
+		return PadFront(  width, Integer.toString(value), '0' );
 	}
 	public static String PadEnd(final int width, final int value) {
-		return
-			PadEnd(
-				width,
-				Integer.toString(value),
-				'0'
-			);
+		return PadEnd(    width, Integer.toString(value), '0' );
 	}
 	public static String PadCenter(final int width, final int value) {
-		return
-			PadCenter(
-				width,
-				Integer.toString(value),
-				'0'
-			);
+		return PadCenter( width, Integer.toString(value), '0' );
 	}
 
 
