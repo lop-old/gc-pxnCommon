@@ -182,7 +182,7 @@ public class AsciiArtBuilder {
 		if (posY < 0) throw new IllegalArgumentException("posY is out of range: "+Integer.toString(posY));
 		if (posY > this.colorLocations.size()) {
 			throw new IllegalArgumentException(
-				StringUtils.FormatMessage(
+				StringUtils.ReplaceTags(
 					"posY is out of range: {} > {}",
 					posY,
 					this.colorLocations.size()
@@ -195,8 +195,8 @@ public class AsciiArtBuilder {
 		final String existing = entry.get( Integer.valueOf(posX) );
 		entry.put(
 			Integer.valueOf(posX),
-			StringUtils.AddStrings(
-				",",
+			StringUtils.MergeStrings(
+				',',
 				existing,
 				color
 			)

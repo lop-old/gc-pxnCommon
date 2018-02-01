@@ -27,7 +27,7 @@ public class xLogFormatter_Default implements xLogFormatter {
 		parts[2] = partCrumbs(record);
 		// message
 		parts[3] = partMessage(record);
-		return StringUtils.AddArray(" ", parts);
+		return StringUtils.MergeStrings(' ', parts);
 	}
 
 

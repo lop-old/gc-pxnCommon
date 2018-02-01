@@ -64,7 +64,7 @@ public class xCommandEvent extends xEventData {
 
 	@Override
 	public String toString() {
-		return "CMD:"+StringUtils.AddArray(" ", this.args);
+		return "CMD:"+StringUtils.MergeStrings(' ', this.args);
 	}
 
 

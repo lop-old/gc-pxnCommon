@@ -337,7 +337,7 @@ public final class FileUtils {
 		}
 		// build path
 		final String path =
-			StringUtils.AddStrings(
+			StringUtils.MergeStrings(
 				File.separator,
 				list.toArray(new String[0])
 			);
