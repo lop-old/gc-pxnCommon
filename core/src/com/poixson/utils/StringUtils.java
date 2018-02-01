@@ -856,6 +856,30 @@ public final class StringUtils {
 
 
 
+	// add objects to string with delimiter
+	public static String MergeObjects(final String delim, final Object... addThis) {
+		if (Utils.isEmpty(addThis)) throw new RequiredArgumentException("addThis");
+		String[] addStrings = new String[ addThis.length ];
+		int index = 0;
+		for (final Object obj : addThis) {
+			addStrings[index] = toString(obj);
+			index++;
+		}
+		return MergeStrings(delim, addStrings);
+	}
+	public static String MergeObjects(final char delim, final Object... addThis) {
+		if (Utils.isEmpty(addThis)) throw new RequiredArgumentException("addThis");
+		String[] addStrings = new String[ addThis.length ];
+		int index = 0;
+		for (final Object obj : addThis) {
+			addStrings[index] = toString(obj);
+			index++;
+		}
+		return MergeStrings(delim, addStrings);
+	}
+
+
+
 	public static String Pad(final int width, final String text, final char padding) {
 		if (width < 1) return null;
 		final int count = width - text.length();
