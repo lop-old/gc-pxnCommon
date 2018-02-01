@@ -634,6 +634,37 @@ public final class StringUtils {
 
 
 
+	// ------------------------------------------------------------------------------- //
+	// replace within string
+
+
+
+	// replace range
+	public static String ReplaceStringRange(
+			final String str, final String chunk,
+			final int startPos, final int endPos) {
+		if (str == null) throw new RequiredArgumentException("str");
+		if (str.length() == 0)
+			return chunk;
+		final StringBuilder result = new StringBuilder();
+		if (startPos > 0) {
+			result.append(
+				str.substring(0, startPos)
+			);
+		}
+		if (Utils.notEmpty(chunk)) {
+			result.append(chunk);
+		}
+		if (endPos < str.length()) {
+			result.append(
+				str.substring(endPos)
+			);
+		}
+		return result.toString();
+	}
+
+
+
 	// replace with array
 	public static String ReplaceWith(final String replaceWhat, final String[] withWhat, final String data) {
 		if (Utils.isEmpty(replaceWhat)) return data;

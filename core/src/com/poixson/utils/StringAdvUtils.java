@@ -219,7 +219,7 @@ public final class StringAdvUtils {
 					if (pos == -1)
 						break REPLACE_LOOP;
 					result[lineIndex] =
-						StringUtils.ReplaceInString(
+						StringUtils.ReplaceStringRange(
 							result[lineIndex],
 							str,
 							pos,
@@ -261,7 +261,7 @@ public final class StringAdvUtils {
 						continue LINE_LOOP;
 					}
 					result[lineIndex] =
-						StringUtils.ReplaceInString(
+						StringUtils.ReplaceStringRange(
 							result[lineIndex],
 							str,
 							pos,
@@ -322,7 +322,7 @@ public final class StringAdvUtils {
 					if (pos == -1)
 						break REPLACE_LOOP;
 					result[lineIndex] =
-						StringUtils.ReplaceInString(
+						StringUtils.ReplaceStringRange(
 							result[lineIndex],
 							str,
 							pos,
