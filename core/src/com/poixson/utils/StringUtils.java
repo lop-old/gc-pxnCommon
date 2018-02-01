@@ -862,6 +862,44 @@ public final class StringUtils {
 
 
 
+	// generate regex from string with wildcard *
+	public static String WildcardToRegex(final String wildcard) {
+		final StringBuilder buf = new StringBuilder(wildcard.length());
+		buf.append('^');
+		final int len = wildcard.length();
+		for (int i = 0; i < len; i++) {
+			char c = wildcard.charAt(i);
+			switch (c) {
+			case '*':
+				buf.append(".*");
+				break;
+			case '?':
+				buf.append(".");
+				break;
+			case '(':
+			case ')':
+			case '[':
+			case ']':
+			case '$':
+			case '^':
+			case '.':
+			case '{':
+			case '}':
+			case '|':
+			case '\\':
+				buf.append('\\').append(c);
+				break;
+			default:
+				buf.append(c);
+				break;
+			}
+		}
+		buf.append('$');
+		return buf.toString();
+	}
+
+
+
 	// ------------------------------------------------------------------------------- //
 	// build string
 
@@ -991,43 +1029,6 @@ public final class StringUtils {
 	}
 	public static String PadCenter(final int width, final int value) {
 		return PadCenter( width, Integer.toString(value), '0' );
-	}
-
-
-
-	public static String WildcardToRegex(final String wildcard) {
-		final StringBuilder buf = new StringBuilder(wildcard.length());
-		buf.append('^');
-		final int len = wildcard.length();
-		for (int i = 0; i < len; i++) {
-			char c = wildcard.charAt(i);
-			switch (c) {
-			case '*':
-				buf.append(".*");
-				break;
-			case '?':
-				buf.append(".");
-				break;
-			case '(':
-			case ')':
-			case '[':
-			case ']':
-			case '$':
-			case '^':
-			case '.':
-			case '{':
-			case '}':
-			case '|':
-			case '\\':
-				buf.append('\\').append(c);
-				break;
-			default:
-				buf.append(c);
-				break;
-			}
-		}
-		buf.append('$');
-		return buf.toString();
 	}
 
 
