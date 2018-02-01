@@ -13,8 +13,8 @@ import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.tools.Keeper;
 
 
-public final class StringUtils {
-	private StringUtils() {}
+public class StringUtils extends StringAdvUtils {
+	StringUtils() {}
 	{ Keeper.add(new StringUtils()); }
 
 

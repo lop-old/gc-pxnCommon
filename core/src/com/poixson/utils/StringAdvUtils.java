@@ -9,8 +9,8 @@ import java.util.Map;
 import com.poixson.tools.byref.StringRef;
 
 
-public final class StringAdvUtils {
-	private StringAdvUtils() {}
+class StringAdvUtils {
+	StringAdvUtils() {}
 
 
 
