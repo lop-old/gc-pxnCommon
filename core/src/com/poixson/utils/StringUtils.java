@@ -820,12 +820,8 @@ public final class StringUtils {
 
 
 	// add strings with delimiter
-	public static String AddStrings(final String delim, final String...addThis) {
-		return AddArray(delim, addThis);
-	}
-	public static String AddArray(final String delim, final String[] addThis) {
-		if (addThis == null)     return null;
-		if (addThis.length == 0) return "";
+	public static String MergeStrings(final String delim, final String... addThis) {
+		if (Utils.isEmpty(addThis)) throw new RequiredArgumentException("addThis");
 		final String dlm = (Utils.isEmpty(delim) ? null : delim);
 		final StringBuilder buf = new StringBuilder();
 		boolean b = false;
