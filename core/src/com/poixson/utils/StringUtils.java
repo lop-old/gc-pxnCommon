@@ -196,29 +196,42 @@ public final class StringUtils {
 
 
 
+	// replace {} or {#} tags
 	public static String FormatMessage(final String msg, final Object... args) {
 		if (Utils.isEmpty(msg))
 			return msg;
 		final StringBuilder result = new StringBuilder(msg);
+		ARG_LOOP:
 		for (int index=0; index<args.length; index++) {
 			final Object obj = args[index];
-			final String val = (
+			final String str = (
 				obj == null
 				? "<null>"
 				: toString(obj)
 			);
 			// {#}
 			{
-				final String key = "{"+Integer.toString(index+1)+"}";
-				final int pos = result.indexOf(key);
-				if (pos >= 0) {
+				final String tag =
+					(new StringBuilder())
+						.append('{')
+						.append(index + 1)
+						.append('}')
+						.toString();
+				boolean found = false;
+				REPLACE_LOOP:
+				while (true) {
+					final int pos = result.indexOf(tag);
+					if (pos == -1)
+						break REPLACE_LOOP;
 					result.replace(
 						pos,
-						pos + key.length(),
-						val
+						pos + tag.length(),
+						str
 					);
-					continue;
-				}
+					found = true;
+				} // end REPLACE_LOOP
+				if (found)
+					continue ARG_LOOP;
 			}
 			// {}
 			{
@@ -227,16 +240,16 @@ public final class StringUtils {
 					result.replace(
 						pos,
 						pos + 2,
-						val
+						str
 					);
-					continue;
+					continue ARG_LOOP;
 				}
 			}
 			// append
 			result
 				.append(' ')
-				.append(val);
-		}
+				.append(str);
+		} // end ARG_LOOP
 		return result.toString();
 	}
 
