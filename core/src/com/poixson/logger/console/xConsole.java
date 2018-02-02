@@ -27,7 +27,7 @@ public interface xConsole extends xStartable {
 	public void clearLine();
 	public void flush();
 
-	public void print(final String msg);
+	public void println(final String line);
 
 	public String getPrompt();
 	public void setPrompt(final String prompt);

@@ -416,7 +416,7 @@ public class jLineConsole implements xConsole {
 
 	// print then restore prompt
 	@Override
-	public void print(final String msg) {
+	public void println(final String line) {
 		// render jAnsi
 		final String str = renderAnsi(msg);
 		synchronized(this.printLock){
