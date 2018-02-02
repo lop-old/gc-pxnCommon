@@ -1,66 +1,92 @@
 package com.poixson.logger.formatters;
 
-import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.xLevel;
 import com.poixson.logger.xLogRecord;
 import com.poixson.utils.StringUtils;
 
 
-public class xLogFormatter_Color extends xLogFormatter_Default {
+public class xLogFormatter_Color extends xLogFormatter {
 
 
 
-	// level
+	public xLogFormatter_Color() {
+	}
+
+
+
 	@Override
+	public String formatMsg(final xLogRecord record, final int lineIndex) {
+		// timestamp [level] [crumbs]
+		return
+			StringUtils.MergeStrings(
+				' ',
+				// timestamp
+				this.partTimestamp(
+					record,
+					"D yyyy-MM-dd HH:mm:ss",
+					"@|FG_WHITE ",
+					"|@"
+				),
+				// [level]
+				this.partLevel(record),
+				// [crumbs]
+				this.partCrumbs(record),
+				// message
+				this.partMessage(record, lineIndex)
+			);
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// parts
+
+
+
+	// [level]
 	protected String partLevel(final xLogRecord record) {
-		if (record == null) throw new RequiredArgumentException("record");
-		final xLevel level = record.level();
-		final String color;
-		// all, finest, finer, fine
-		if (level.isLoggable(xLevel.FINE)) {
-			color = "FG_BLACK,BOLD";
-			//color = "FG_WHITE,BOLD";
-		} else
-		// info
-		if (level.isLoggable(xLevel.INFO)) {
-			color = "FG_CYAN";
-			//color = "FG_CYAN,BOLD";
-		} else
-		// warning
-		if (level.isLoggable(xLevel.WARNING)) {
-			color = "FG_RED";
-		} else
-		// severe
-		if (level.isLoggable(xLevel.SEVERE)) {
-			color = "FG_RED,BOLD";
-		} else
-		// fatal
-		if (level.isLoggable(xLevel.FATAL)) {
-			color = "FG_RED,BOLD,UNDERLINE";
-		} else
-		// stdout
-		if (level.isLoggable(xLevel.STDOUT)) {
-			color = "FG_GREEN";
-		} else
-		// stderr
-		if (level.isLoggable(xLevel.STDERR)) {
-			color = "FG_YELLOW";
-		// off
-		} else {
-			color = "FG_BLACK,BOLD";
-		}
 		return (new StringBuilder())
 			.append("@|FG_BLACK,BOLD [|@@|")
-			.append(color)
-			.append(" ")
-			.append(
-				StringUtils.PadCenter(
-					7,
-					level.toString(),
-					' '
-				)
-			)
+			.append( this.getLevelColor(record.level) )
+			.append(' ')
+			.append( StringUtils.PadCenter(7, record.getLevelStr(), ' ') )
 			.append("|@@|FG_BLACK,BOLD ]|@")
+			.toString();
+	}
+	protected String getLevelColor(final xLevel level) {
+		// all, finest, finer, fine
+		if (level.isLoggable(xLevel.FINE))
+			return "FG_BLACK,BOLD";
+		// info
+		if (level.isLoggable(xLevel.INFO))
+			return "FG_CYAN";
+		// warning
+		if (level.isLoggable(xLevel.WARNING))
+			return "FG_RED";
+		// severe
+		if (level.isLoggable(xLevel.SEVERE))
+			return "FG_RED,BOLD";
+		// fatal
+		if (level.isLoggable(xLevel.FATAL))
+			return "FG_RED,BOLD,UNDERLINE";
+		// stdout
+		if (level.isLoggable(xLevel.STDOUT))
+			return "FG_GREEN";
+		// stderr
+		if (level.isLoggable(xLevel.STDERR))
+			return "FG_YELLOW";
+		// off
+		return "FG_BLACK,BOLD";
+	}
+
+
+
+	// crumbs
+	protected String partCrumbs(final xLogRecord record) {
+		return (new StringBuilder())
+			.append("@|FG_BLACK,BOLD ")
+			.append( super.partCrumbs(record, "[", "] [", "]") )
+			.append("|@")
 			.toString();
 	}
 
