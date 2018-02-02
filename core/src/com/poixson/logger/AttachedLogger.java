@@ -1,7 +1,5 @@
 package com.poixson.logger;
 
-import java.util.List;
-
 
 public interface AttachedLogger {
 
@@ -16,21 +14,21 @@ public interface AttachedLogger {
 		this.log()
 			.publish(record);
 	}
-	default void publish(final String msg) {
+	default void publish(final String[] lines) {
 		this.log()
-			.publish(msg);
+			.publish(lines);
 	}
-	default void publish(final String msg, final Object... args) {
+	default void publish(final String line) {
 		this.log()
-			.publish(msg, args);
+			.publish(line);
 	}
-	default void publish(final xLevel level, final String msg) {
+	default void publish(final xLevel level, final String line) {
 		this.log()
-			.publish(level, msg);
+			.publish(level, line);
 	}
-	default void publish(final xLevel level, final String msg, final Object... args) {
+	default void publish(final xLevel level, final String line, final Object... args) {
 		this.log()
-			.publish(level, msg, args);
+			.publish(level, line, args);
 	}
 	default void publish() {
 		this.log()
@@ -40,145 +38,153 @@ public interface AttachedLogger {
 
 
 	// title
-	default void title(final String msg) {
+	default void title(final String... lines) {
 		this.log()
-			.title(msg);
-	}
-	default void title(final String[] msgs) {
-		this.log()
-			.title(msgs);
-	}
-	default void title(final List<String> list) {
-		this.log()
-			.title(list);
-	}
-	default void title(final String msg, final Object... args) {
-		this.log()
-			.title(msg, args);
+			.title(lines);
 	}
 
 
 
-	// trace
+	// trace exception
 	default void trace(final Throwable e) {
 		this.log()
 			.trace(e);
 	}
-	default void trace(final Throwable e, final String msg) {
+	default void trace(final Throwable e, final String line, final Object... args) {
 		this.log()
-			.trace(e, msg);
+			.trace(e, line, args);
 	}
-	default void trace(final Throwable e, final String msg, final Object... args) {
+
+
+
+	// stdout
+	default void stdout(final String line, final Object... args) {
 		this.log()
-			.trace(e, msg, args);
+			.stdout(line, args);
+	}
+	default void stdout(final String[] lines, final Object... args) {
+		this.log()
+			.stdout(lines, args);
+	}
+
+
+
+	// stderr
+	default void stderr(final String line, final Object... args) {
+		this.log()
+			.stderr(line, args);
+	}
+	default void stderr(final String[] lines, final Object... args) {
+		this.log()
+			.stderr(lines, args);
 	}
 
 
 
 	// detail
-	default void detail(final String msg) {
+	default void detail(final String line, final Object... args) {
 		this.log()
-			.detail(msg);
+			.detail(line, args);
 	}
-	default void detail(final String msg, final Object... args) {
+	default void detail(final String[] lines, final Object... args) {
 		this.log()
-			.detail(msg, args);
+			.detail(lines, args);
 	}
 
 
 
 	// finest
-	default void finest(final String msg) {
+	default void finest(final String line, final Object... args) {
 		this.log()
-			.finest(msg);
+			.finest(line, args);
 	}
-	default void finest(final String msg, final Object... args) {
+	default void finest(final String[] lines, final Object... args) {
 		this.log()
-			.finest(msg, args);
+			.finest(lines, args);
 	}
 
 
 
 	// finer
-	default void finer(final String msg) {
+	default void finer(final String line, final Object... args) {
 		this.log()
-			.finer(msg);
+			.finer(line, args);
 	}
-	default void finer(final String msg, final Object... args) {
+	default void finer(final String[] lines, final Object... args) {
 		this.log()
-			.finer(msg, args);
+			.finer(lines, args);
 	}
 
 
 
 	// fine
-	default void fine(final String msg) {
+	default void fine(final String line, final Object... args) {
 		this.log()
-			.fine(msg);
+			.fine(line, args);
 	}
-	default void fine(final String msg, final Object... args) {
+	default void fine(final String[] lines, final Object... args) {
 		this.log()
-			.fine(msg, args);
+			.fine(lines, args);
 	}
 
 
 
 	// stats
-	default void stats(final String msg) {
+	default void stats(final String line, final Object... args) {
 		this.log()
-			.stats(msg);
+			.stats(line, args);
 	}
-	default void stats(final String msg, final Object... args) {
+	default void stats(final String[] lines, final Object... args) {
 		this.log()
-			.stats(msg, args);
+			.stats(lines, args);
 	}
 
 
 
 	// info
-	default void info(final String msg) {
+	default void info(final String line, final Object... args) {
 		this.log()
-			.info(msg);
+			.info(line, args);
 	}
-	default void info(final String msg, final Object... args) {
+	default void info(final String[] lines, final Object... args) {
 		this.log()
-			.info(msg, args);
+			.info(lines, args);
 	}
 
 
 
 	// warning
-	default void warning(final String msg) {
+	default void warning(final String line, final Object... args) {
 		this.log()
-			.warning(msg);
+			.warning(line, args);
 	}
-	default void warning(final String msg, final Object... args) {
+	default void warning(final String[] lines, final Object... args) {
 		this.log()
-			.warning(msg, args);
+			.warning(lines, args);
 	}
 
 
 
 	// severe
-	default void severe(final String msg) {
+	default void severe(final String line, final Object... args) {
 		this.log()
-			.severe(msg);
+			.severe(line, args);
 	}
-	default void severe(final String msg, final Object... args) {
+	default void severe(final String[] lines, final Object... args) {
 		this.log()
-			.severe(msg, args);
+			.severe(lines, args);
 	}
 
 
 
 	// fatal
-	default void fatal(final String msg) {
+	default void fatal(final String line, final Object... args) {
 		this.log()
-			.fatal(msg);
+			.fatal(line, args);
 	}
-	default void fatal(final String msg, final Object... args) {
+	default void fatal(final String[] lines, final Object... args) {
 		this.log()
-			.fatal(msg, args);
+			.fatal(lines, args);
 	}
 
 
