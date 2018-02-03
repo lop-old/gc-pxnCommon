@@ -81,7 +81,9 @@ public final class ThreadUtils {
 			msg.append("\n\nShould use xApp.waitUntilClosed() when main() is finished.\n");
 		}
 		xLog.getRoot()
-			.publish(msg.toString());
+			.publish(
+				msg.toString()
+			);
 	}
 
 

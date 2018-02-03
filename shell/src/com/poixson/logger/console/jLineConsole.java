@@ -163,7 +163,7 @@ public class jLineConsole implements xConsole {
 	@Override
 	public void start() {
 		if (xVars.debug()) {
-			log().finest("Start jlineConsole");
+			log().finest("Start jLineConsole");
 		}
 		if (this.isStopping()) throw new RuntimeException("Console already stopped");
 		if (this.isRunning())  throw new RuntimeException("Console already running");
@@ -418,7 +418,7 @@ public class jLineConsole implements xConsole {
 	@Override
 	public void println(final String line) {
 		// render jAnsi
-		final String str = renderAnsi(msg);
+		final String str = renderAnsi(line);
 		synchronized(this.printLock){
 			this.clearLine();
 			// print line

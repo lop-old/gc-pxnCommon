@@ -285,7 +285,10 @@ public abstract class xApp implements xStartable, AttachedLogger {
 
 
 	protected void loadSteps(final StepType type) {
-		this.loadSteps(type, this);
+		this.loadSteps(
+			type,
+			this.getStepObjects(type)
+		);
 	}
 	protected void loadSteps(final StepType type, final Object[] containers) {
 		for (final Object obj : containers) {
@@ -310,6 +313,7 @@ public abstract class xApp implements xStartable, AttachedLogger {
 					final xAppStepDAO dao =
 						new xAppStepDAO(
 							this,
+							container,
 							m,
 							anno
 						);
@@ -337,7 +341,7 @@ public abstract class xApp implements xStartable, AttachedLogger {
 
 	// clock
 	@xAppStep(type=StepType.STARTUP, title="Clock", priority=60)
-	public void __STARTUP_clock() {
+	public void __STARTUP_clock(final xApp app) {
 		final xClock clock = xClock.get(true);
 		this.startTime.set(
 			clock.millis(),
@@ -350,7 +354,7 @@ public abstract class xApp implements xStartable, AttachedLogger {
 
 	// display logo
 	@xAppStep(type=StepType.STARTUP, title="DisplayLogo", priority=70)
-	public void __STARTUP_displaylogo() {
+	public void __STARTUP_displaylogo(final xApp app) {
 		this.displayLogo();
 	}
 
@@ -358,6 +362,14 @@ public abstract class xApp implements xStartable, AttachedLogger {
 
 	// ------------------------------------------------------------------------------- //
 	// shutdown steps
+
+
+
+	// display uptime
+	@xAppStep(type=StepType.SHUTDOWN, title="Uptime", priority=60)
+	public void __SHUTDOWN_uptimestats() {
+//TODO: display total time running
+	}
 
 
 
