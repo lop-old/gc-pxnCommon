@@ -1,35 +1,42 @@
 package com.poixson.logger;
 
-import java.util.List;
-
+import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.tools.xClock;
 
 
 public class xLogRecord {
 
-	private final xLog   log;
-	private final xLevel level;
-	private final long   timestamp;
-	private final String msg;
+	public final xLog     log;
+	public final xLevel   level;
+	public final long     timestamp;
+	public final String[] lines;
+	public final Object[] args;
 
 
 
 	// new record instance
-	public xLogRecord(final xLog log, final xLevel level, final String msg) {
+	public xLogRecord(final xLog log, final xLevel level,
+			final String[] lines, Object[] args) {
+		if (log == null) throw new RequiredArgumentException("log");
 		this.timestamp = xClock.get(false).millis();
 		this.log   = log;
 		this.level = level;
-		this.msg   = msg;
+		this.lines  = lines;
+		this.args  = args;
 	}
 
 
 
-	// get level
-	public xLevel level() {
-		return this.level;
+	// level
+	public String getLevelStr() {
+		return (
+			this.level == null
+			? "<null>"
+			: this.level.toString()
+		);
 	}
 	// java util level type
-	public java.util.logging.Level javaLevel() {
+	public java.util.logging.Level getJavaLevel() {
 		if (this.level == null)
 			return null;
 		return this.level.getJavaLevel();
@@ -37,25 +44,10 @@ public class xLogRecord {
 
 
 
-	// get timestamp
-	public long timestamp() {
-		return this.timestamp;
-	}
-
-
-
-	// get message
-	public String msg() {
-		if (this.msg == null)
-			return "";
-		return this.msg;
-	}
-
-
-
 	// [logger] [crumbs]
-	public List<String> getNameTree() {
-		return this.log.getNameTree();
+	public String[] getNameTree() {
+		return this.log
+				.getNameTree();
 	}
 
 
