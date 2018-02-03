@@ -18,20 +18,24 @@ public class xAppStepDAO implements RunnableNamed {
 	public final String   title;
 
 	public final xApp     app;
+	public final Object   container;
 	public final Method   method;
 	public final xAppStep anno;
 
 
 
-	public xAppStepDAO(final xApp app, final Method method, final xAppStep anno) {
-		if (app    == null) throw new RequiredArgumentException("app");
-		if (method == null) throw new RequiredArgumentException("method");
-		if (anno   == null) throw new RequiredArgumentException("annotation");
+	public xAppStepDAO(final xApp app,
+			final Object container, final Method method, final xAppStep anno) {
+		if (app       == null) throw new RequiredArgumentException("app");
+		if (container == null) throw new RequiredArgumentException("container");
+		if (method    == null) throw new RequiredArgumentException("method");
+		if (anno      == null) throw new RequiredArgumentException("annotation");
 		this.type = anno.type();
-		this.priority = Math.abs(anno.priority());
-		this.app    = app;
-		this.method = method;
-		this.anno   = anno;
+		this.priority  = Math.abs(anno.priority());
+		this.app       = app;
+		this.container = container;
+		this.method    = method;
+		this.anno      = anno;
 		{
 			String name = method.getName();
 			name = StringUtils.Trim(
@@ -71,7 +75,7 @@ public class xAppStepDAO implements RunnableNamed {
 		xLog.getRoot()
 			.fine("Invoking step {}: {}", this.priority, this.name);
 		try {
-			this.method.invoke(this.app);
+			this.method.invoke(this.container, this.app);
 		} catch (Exception e) {
 			Failure.fail(e);
 		}
