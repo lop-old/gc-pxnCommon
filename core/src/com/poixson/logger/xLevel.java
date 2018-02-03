@@ -33,6 +33,8 @@ public class xLevel implements Serializable {
 	public static final transient xLevel DETAIL  = new xLevel("DE", "DETAIL",  100);
 	public static final transient xLevel ALL     = new xLevel("AL", "ALL",     Integer.MIN_VALUE);
 
+	public static final xLevel DEFAULT = xLevel.FINEST;
+
 	public final String name;
 	public final String shortName;
 	public final int    value;

@@ -1,300 +1,610 @@
 package com.poixson.logger;
 
-import java.util.List;
+import java.lang.ref.SoftReference;
+import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
+import com.poixson.app.xVars;
+import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.logger.formatters.xLogFormatter;
 import com.poixson.logger.printers.xLogPrinter;
+import com.poixson.tools.Keeper;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
 
 
-public abstract class xLogPrinting {
+public class xLog implements xLogPrinter {
+
+	// child-loggers
+	private final ConcurrentMap<String, xLog> loggers =
+			new ConcurrentHashMap<String, xLog>();
+
+	protected final String name;
+	protected final xLog   parent;
+	protected final AtomicReference<xLevel> level =
+			new AtomicReference<xLevel>(null);
+	protected SoftReference<Boolean> parentsLoggable = null;
+
+	// handlers
+	private final CopyOnWriteArrayList<xLogPrinter> printers =
+			new CopyOnWriteArrayList<xLogPrinter>();
 
 
-	public abstract xLog get(final String name);
-	public abstract xLog getWeak();
-	public abstract xLog getWeak(final String name);
+
+	// ------------------------------------------------------------------------------- //
+
+
+
+	// get logger
+	public static xLog getRoot() {
+		return xLogRoot.get();
+	}
+	public static xLog peekRoot() {
+		return xLogRoot.peek();
+	}
+	public xLog get(final String logName) {
+		if (Utils.isEmpty(logName))
+			return xLogRoot.get();
+		// existing logger instance
+		{
+			final xLog log = this.loggers.get(logName);
+			if (log != null)
+				return log;
+		}
+		// new logger instance
+		{
+			final xLog log = new xLog(this, logName);
+			final xLog existing = this.loggers.putIfAbsent(logName, log);
+			if (existing != null)
+				return existing;
+			Keeper.add(log);
+			return log;
+		}
+	}
+	// new instance (weak reference)
+	public xLog getWeak(final String logName) {
+		if (Utils.isEmpty(logName))
+			return this.getWeak();
+		return new xLog(this, logName);
+	}
+	public xLog getWeak() {
+		return new xLog(this, this.name);
+	}
+
+
+
+	protected xLog(final xLog parent, final String logName) {
+		// root logger
+		if (this.isRoot()) {
+			this.parent = null;
+			this.name   = null;
+		// child logger
+		} else {
+			if (parent == null) throw new RequiredArgumentException("parent");
+			if (Utils.isEmpty(logName)) throw new RequiredArgumentException("logName");
+			this.parent = parent;
+			this.name  = logName;
+		}
+	}
 	@Override
-	public abstract xLog clone();
-
-	public abstract boolean isRoot();
-
-	public abstract void setLevel(final xLevel lvl);
-	public abstract xLevel getLevel();
-	public abstract xLevel peekLevel();
-	public abstract boolean isLoggable(final xLevel lvl);
-
-	public abstract List<String> getNameTree();
-
-	public abstract void addPrinter(final xLogPrinter printer);
-	public abstract void setPrinter(final xLogPrinter printer);
+	public xLog clone() {
+		return this.getWeak();
+	}
 
 
 
-	public static String ReplaceArgs(final String msg, final Object[] args) {
-		if (msg == null)
-			return null;
-		if (args.length == 0)
-			return msg;
-		if (args.length == 1) {
-			return msg.replaceFirst("\\{\\}", args[0].toString());
+	// ------------------------------------------------------------------------------- //
+	// config
+
+
+
+	public xLevel getLevel() {
+		if (xVars.debug())
+			return xLevel.DETAIL;
+		return this.level.get();
+	}
+	public xLevel peekLevel() {
+		return this.level.get();
+	}
+	@Override
+	public void setLevel(final xLevel lvl) {
+		this.level.set(lvl);
+		this.flushLoggableChildren();
+	}
+
+
+
+	// is level loggable
+	public boolean isLoggable(final xLevel level) {
+		if (level == null) throw new RequiredArgumentException("level");
+		// forced debug mode
+		if (xVars.debug())
+			return true;
+		// check local level
+		final xLevel currentLevel = this.getLevel();
+		if (currentLevel != null) {
+			if (!currentLevel.isLoggable(level))
+				return false;
 		}
-		String str = msg;
-		for (final Object arg : args) {
-			final String argStr = (
-				arg == null
-				? "<null>"
-				: arg.toString()
+		// check cached parent level
+		{
+			final SoftReference<Boolean> soft = this.parentsLoggable;
+			if (soft != null) {
+				final Boolean bool = soft.get();
+				if (bool != null) {
+					return bool.booleanValue();
+				}
+			}
+		}
+		// check parent level
+		if (this.parent != null) {
+			final boolean loggable = this.parent.isLoggable(level);
+			this.parentsLoggable =
+				new SoftReference<Boolean>(
+					Boolean.valueOf( loggable )
+				);
+			return loggable;
+		}
+		// allow by default
+		return true;
+	}
+	protected void flushLoggableChildren() {
+		this.parentsLoggable = null;
+		if (this.loggers.isEmpty())
+			return;
+		final Iterator<xLog> it = this.loggers.values().iterator();
+		while (it.hasNext()) {
+			it.next()
+				.flushLoggableChildren();
+		}
+	}
+
+
+
+	// is root logger
+	public boolean isRoot() {
+		return false;
+	}
+
+
+
+	public String[] getNameTree() {
+//TODO: (remember to cache this)
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// printers/handlers
+
+
+
+	public xLogPrinter[] getPrinters() {
+		return this.printers
+				.toArray(new xLogPrinter[0]);
+	}
+	public void addPrinter(final xLogPrinter printer) {
+		this.printers
+			.add(printer);
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// publish
+
+
+
+	@Override
+	public void publish(final xLogRecord record) {
+		// not loggable
+		if ( ! this.isLoggable(record.level) )
+			return;
+		// pass to printers/handlers
+		boolean handled = false;
+		final xLogPrinter[] printers = this.getPrinters();
+		if (Utils.notEmpty(printers)) {
+			PRINTER_LOOP:
+			for (final xLogPrinter printer : printers) {
+				if (printer == null) continue;
+				try {
+					if ( ! printer.isLoggable(record.level) )
+						continue PRINTER_LOOP;
+					printer.publish(record);
+					handled = true;
+				} catch (Exception e) {
+					e.printStackTrace(
+						xVars.getOriginalErr()
+					);
+				}
+			} // end PRINTER_LOOP
+		}
+		// pass to parent
+		if (this.parent != null) {
+			this.parent
+				.publish(record);
+			handled = true;
+		}
+		if (!handled) {
+			final RuntimeException e = new RuntimeException("No log handlers found!");
+			e.printStackTrace(
+				xVars.getOriginalErr()
 			);
-			str = str.replaceFirst("\\{\\}", argStr);
 		}
-		return str;
 	}
 
 
 
-	// publish message
-	public abstract void publish(final xLogRecord record);
-	public abstract void publish(final String msg);
-	public void publish(final String msg, final Object... args) {
-		this.publish(
-			ReplaceArgs(msg, args)
-		);
+	public void getPublishLock() {
+		throw new UnsupportedOperationException();
+	}
+	public void releasePublishLock() {
+		throw new UnsupportedOperationException();
 	}
 
 
 
-	// publish message with level
-	public void publish(final xLevel level, final String msg) {
-		if (level == null) {
-			this.publish(msg);
-			return;
-		}
-		if (xLevel.TITLE.equals(level)) {
-			this.title(msg);
-			return;
-		}
+	public xLogFormatter getFormatter() {
+		throw new UnsupportedOperationException();
+	}
+	public void setFormatter(final xLogFormatter formatter) {
+		throw new UnsupportedOperationException();
+	}
+
+
+
+	public void publish(final xLevel level,
+			final String line, final Object... args) {
 		this.publish(
 			new xLogRecord(
-				(xLog) this,
+				this,
 				level,
-				msg
+				new String[] { line },
+				args
 			)
 		);
 	}
-	public void publish(final xLevel level, final String msg, final Object... args) {
+	@Override
+	public void publish(final String[] lines) {
 		this.publish(
-			level,
-			ReplaceArgs(msg, args)
+			new xLogRecord(
+				this,
+				(xLevel)   null,
+				lines,
+				(Object[]) null
+			)
+		);
+	}
+	@Override
+	public void publish(final String line) {
+		this.publish(
+			new xLogRecord(
+				this,
+				(xLevel)   null,
+				new String[] { line },
+				(Object[]) null
+			)
+		);
+	}
+	public void publish() {
+		this.publish(
+			new xLogRecord(
+				this,
+				(xLevel)   null,
+				(String[]) null,
+				(Object[]) null
+			)
 		);
 	}
 
 
 
-	public void publish() {
-		publish("");
-	}
+	// ------------------------------------------------------------------------------- //
+	// publish levels
 
 
 
 	// title
-	public void title(final String msg) {
-		if (msg == null) {
-			this.publish(" @|FG_MAGENTA [[|@ @|FG_CYAN <null>|@ @|FG_MAGENTA ]]|@");
-		} else
-		if (msg.contains("\n")) {
-			msg.replace("\r", "");
-			this.title(
-				msg.split("\n")
-			);
-		} else {
-			this.publish(" @|FG_MAGENTA [[|@ @|FG_CYAN "+msg+"|@ @|FG_MAGENTA ]]|@");
-		}
-	}
-	// multi-lined title
-	public void title(final String[] msgs) {
-		if (msgs.length == 0)
-			return;
-		if (msgs.length == 1) {
-			this.title(msgs[0]);
-			return;
-		}
-		// find max length
-		int len = 0;
-		for (final String line : msgs) {
-			if (line.length() > len) {
-				len = line.length();
-			}
-		}
-		// print lines
-		for (final String line : msgs) {
-			this.title( line + StringUtils.Repeat(len - line.length(), " ") );
-		}
-	}
-	public void title(final List<String> list) {
-		if (list == null) return;
-		this.title(list.toArray(new String[0]));
-	}
-	public void title(final String msg, final Object... args) {
-		this.title(
-			ReplaceArgs(msg, args)
+	public void title(final String... lines) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.TITLE,
+				lines,
+				(Object[]) null
+			)
 		);
 	}
 
 
 
-	// exception
+	// trace exception
 	public void trace(final Throwable e) {
 		this.trace(e, null);
 	}
-	public void trace(final Throwable e, final String msg) {
+	public void trace(final Throwable e, final String line, final Object... args) {
 		final StringBuilder str = new StringBuilder();
-		if (Utils.notEmpty(msg)) {
-			str.append(msg).append(" - ");
+		if (Utils.notEmpty(line)) {
+			str.append(line)
+				.append(" - ");
 		}
 		str.append(
 			StringUtils.ExceptionToString(e)
 		);
 		this.publish(
-			xLevel.SEVERE,
-			str.toString()
-		);
-	}
-	public void trace(final Throwable e, final String msg, final Object... args) {
-		this.trace(
-			e,
-			ReplaceArgs(msg, args)
+			new xLogRecord(
+				this,
+				xLevel.SEVERE,
+				new String[] { str.toString() },
+				args
+			)
 		);
 	}
 
 
 
 	// stdout
-	public void stdout(final String msg) {
-		this.publish(xLevel.STDOUT, msg);
+	public void stdout(final String line, final Object... args) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.STDOUT,
+				new String[] { line },
+				args
+			)
+		);
 	}
-	public void stdout(final String msg, final Object... args) {
-		this.stdout(
-			ReplaceArgs(msg, args)
+	public void stdout(final String[] lines, final Object... args) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.STDOUT,
+				lines,
+				args
+			)
 		);
 	}
 
 
 
 	// stderr
-	public void stderr(final String msg) {
-		this.publish(xLevel.STDERR, msg);
+	public void stderr(final String line, final Object... args) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.STDERR,
+				new String[] { line },
+				args
+			)
+		);
 	}
-	public void stderr(final String msg, final Object... args) {
-		this.stderr(
-			ReplaceArgs(msg, args)
+	public void stderr(final String[] lines, final Object... args) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.STDERR,
+				lines,
+				args
+			)
 		);
 	}
 
 
 
 	// detail
-	public void detail(final String msg) {
-		this.publish(xLevel.DETAIL, msg);
+	public void detail(final String line, final Object... args) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.DETAIL,
+				new String[] { line },
+				args
+			)
+		);
 	}
-	public void detail(final String msg, final Object... args) {
-		this.detail(
-			ReplaceArgs(msg, args)
+	public void detail(final String[] lines, final Object... args) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.DETAIL,
+				lines,
+				args
+			)
 		);
 	}
 
 
 
 	// finest
-	public void finest(final String msg) {
-		this.publish(xLevel.FINEST, msg);
+	public void finest(final String line, final Object... args) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.FINEST,
+				new String[] { line },
+				args
+			)
+		);
 	}
-	public void finest(final String msg, final Object... args) {
-		this.finest(
-			ReplaceArgs(msg, args)
+	public void finest(final String[] lines, final Object... args) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.FINEST,
+				lines,
+				args
+			)
 		);
 	}
 
 
 
 	// finer
-	public void finer(final String msg) {
-		this.publish(xLevel.FINER, msg);
+	public void finer(final String line, final Object... args) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.FINER,
+				new String[] { line },
+				args
+			)
+		);
 	}
-	public void finer(final String msg, final Object... args) {
-		this.finer(
-			ReplaceArgs(msg, args)
+	public void finer(final String[] lines, final Object... args) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.FINER,
+				lines,
+				args
+			)
 		);
 	}
 
 
 
 	// fine
-	public void fine(final String msg) {
-		this.publish(xLevel.FINE, msg);
+	public void fine(final String line, final Object... args) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.FINE,
+				new String[] { line },
+				args
+			)
+		);
 	}
-	public void fine(final String msg, final Object... args) {
-		this.fine(
-			ReplaceArgs(msg, args)
+	public void fine(final String[] lines, final Object... args) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.FINE,
+				lines,
+				args
+			)
 		);
 	}
 
 
 
 	// stats
-	public void stats(final String msg) {
-		this.publish(xLevel.STATS, msg);
+	public void stats(final String line, final Object... args) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.STATS,
+				new String[] { line },
+				args
+			)
+		);
 	}
-	public void stats(final String msg, final Object... args) {
-		this.stats(
-			ReplaceArgs(msg, args)
+	public void stats(final String[] lines, final Object... args) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.STATS,
+				lines,
+				args
+			)
 		);
 	}
 
 
 
 	// info
-	public void info(final String msg) {
-		this.publish(xLevel.INFO, msg);
+	public void info(final String line, final Object... args) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.INFO,
+				new String[] { line },
+				args
+			)
+		);
 	}
-	public void info(final String msg, final Object... args) {
-		this.info(
-			ReplaceArgs(msg, args)
+	public void info(final String[] lines, final Object... args) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.INFO,
+				lines,
+				args
+			)
 		);
 	}
 
 
 
 	// warning
-	public void warning(final String msg) {
-		this.publish(xLevel.WARNING, msg);
+	public void warning(final String line, final Object... args) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.WARNING,
+				new String[] { line },
+				args
+			)
+		);
 	}
-	public void warning(final String msg, final Object... args) {
-		this.warning(
-			ReplaceArgs(msg, args)
+	public void warning(final String[] lines, final Object... args) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.WARNING,
+				lines,
+				args
+			)
 		);
 	}
 
 
 
 	// severe
-	public void severe(final String msg) {
-		this.publish(xLevel.SEVERE, msg);
+	public void severe(final String line, final Object... args) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.SEVERE,
+				new String[] { line },
+				args
+			)
+		);
 	}
-	public void severe(final String msg, final Object... args) {
-		this.severe(
-			ReplaceArgs(msg, args)
+	public void severe(final String[] lines, final Object... args) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.SEVERE,
+				lines,
+				args
+			)
 		);
 	}
 
 
 
 	// fatal
-	public void fatal(final String msg) {
-		this.publish(xLevel.FATAL, msg);
+	public void fatal(final String line, final Object... args) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.FATAL,
+				new String[] { line },
+				args
+			)
+		);
 	}
-	public void fatal(final String msg, final Object... args) {
-		this.fatal(
-			ReplaceArgs(msg, args)
+	public void fatal(final String[] lines, final Object... args) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.FATAL,
+				lines,
+				args
+			)
 		);
 	}
 
