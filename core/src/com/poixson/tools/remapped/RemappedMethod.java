@@ -7,11 +7,14 @@ import com.poixson.utils.ReflectUtils;
 import com.poixson.utils.Utils;
 
 
-public class RemappedMethod extends xRunnable {
+public class RemappedMethod<V> extends xRunnable {
 
 	public final Object container;
 	public final Method method;
 	public final Object[] args;
+
+	protected volatile V result = null;
+	protected volatile boolean done = false;
 
 
 
@@ -60,13 +63,30 @@ public class RemappedMethod extends xRunnable {
 
 
 	// invoke stored method
+	@SuppressWarnings("unchecked")
 	@Override
 	public void run() {
-		ReflectUtils.InvokeMethod(
-			this.container,
-			this.method,
-			this.args
-		);
+		try {
+			this.result = (V)
+				ReflectUtils.InvokeMethod(
+					this.container,
+					this.method,
+					this.args
+				);
+		} finally {
+			this.done = true;
+		}
+	}
+
+
+
+	public V getResult() {
+		if ( ! this.done )
+			return null;
+		return this.result;
+	}
+	public boolean isDone() {
+		return this.done;
 	}
 
 
