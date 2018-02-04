@@ -23,8 +23,19 @@ public class xLogRecord {
 		this.timestamp = xClock.get(false).millis();
 		this.log   = log;
 		this.level = level;
-		this.lines  = lines;
 		this.args  = args;
+		if (lines == null || lines.length == 0) {
+			this.lines = null;
+		} else
+		if (lines.length == 1 && lines[0] != null
+		&& lines[0].contains("\n")) {
+			this.lines =
+				lines[0]
+					.replace("\r", "")
+					.split("\n");
+		} else {
+			this.lines = lines;
+		}
 	}
 
 
