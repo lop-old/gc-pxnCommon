@@ -634,6 +634,21 @@ public class StringUtils extends StringAdvUtils {
 
 
 
+	// find longest line
+	public static int FindLongestLine(final String[] lines) {
+		if (Utils.isEmpty(lines))
+			return -1;
+		int len = 0;
+		for (final String line : lines) {
+			if (line == null) continue;
+			if (line.length() > len)
+				len = line.length();
+		}
+		return len;
+	}
+
+
+
 	// ------------------------------------------------------------------------------- //
 	// replace within string
 
