@@ -19,11 +19,11 @@ public class xLogFormatter_Simple extends xLogFormatter {
 			StringUtils.MergeStrings(
 				' ',
 				// timestamp
-				this.partTimestamp(record, "D HH:mm:ss"),
+				this.genTimestamp(record, "D HH:mm:ss"),
 				// [level]
-				this.partLevel(record, "[", "]"),
+				this.genLevel(record, "[", "]"),
 				// message
-				this.partMessage(record, lineIndex)
+				this.genMessage(record, lineIndex)
 			);
 	}
 

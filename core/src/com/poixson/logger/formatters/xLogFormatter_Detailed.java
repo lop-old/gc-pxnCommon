@@ -20,13 +20,13 @@ public class xLogFormatter_Detailed extends xLogFormatter {
 			StringUtils.MergeStrings(
 				' ',
 				// timestamp
-				this.partTimestamp(record, "D yyyy-MM-dd HH:mm:ss"),
+				this.genTimestamp(record, "D yyyy-MM-dd HH:mm:ss"),
 				// [level]
-				this.partLevel(record, "[", "]"),
+				this.genLevel(record, "[", "]"),
 				// [crumbs]
-				this.partCrumbs(record, "[", "] [", "]"),
+				this.genCrumbs(record, "[", "] [", "]"),
 				// message
-				this.partMessage(record, lineIndex)
+				this.genMessage(record, lineIndex)
 			);
 	}
 

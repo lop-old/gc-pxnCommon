@@ -21,30 +21,30 @@ public class xLogFormatter_Color extends xLogFormatter {
 			StringUtils.MergeStrings(
 				' ',
 				// timestamp
-				this.partTimestamp(
+				this.genTimestamp(
 					record,
 					"D yyyy-MM-dd HH:mm:ss",
 					"@|FG_WHITE ",
 					"|@"
 				),
 				// [level]
-				this.partLevel(record),
+				this.genLevel(record),
 				// [crumbs]
-				this.partCrumbs(record),
+				this.genCrumbs(record),
 				// message
-				this.partMessage(record, lineIndex)
+				this.genMessage(record, lineIndex)
 			);
 	}
 
 
 
 	// ------------------------------------------------------------------------------- //
-	// parts
+	// generate parts
 
 
 
 	// [level]
-	protected String partLevel(final xLogRecord record) {
+	protected String genLevel(final xLogRecord record) {
 		return (new StringBuilder())
 			.append("@|FG_BLACK,BOLD [|@@|")
 			.append( this.getLevelColor(record.level) )
@@ -82,10 +82,10 @@ public class xLogFormatter_Color extends xLogFormatter {
 
 
 	// crumbs
-	protected String partCrumbs(final xLogRecord record) {
+	protected String genCrumbs(final xLogRecord record) {
 		return (new StringBuilder())
 			.append("@|FG_BLACK,BOLD ")
-			.append( super.partCrumbs(record, "[", "] [", "]") )
+			.append( super.genCrumbs(record, "[", "] [", "]") )
 			.append("|@")
 			.toString();
 	}

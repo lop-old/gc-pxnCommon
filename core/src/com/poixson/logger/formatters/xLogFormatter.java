@@ -13,26 +13,26 @@ public class xLogFormatter {
 
 	public String formatMsg(final xLogRecord record, final int lineIndex) {
 		// message only
-		return this.partMessage(record, lineIndex);
+		return this.genMessage(record, lineIndex);
 	}
 
 
 
 	// ------------------------------------------------------------------------------- //
-	// parts
+	// generate parts
 
 
 
 	// timestamp
-	protected String partTimestamp(final xLogRecord record, final String format,
+	protected String genTimestamp(final xLogRecord record, final String format,
 			final String preStr, final String postStr) {
 		return (new StringBuilder())
 			.append(preStr)
-			.append( this.partTimestamp(record, format) )
+			.append( this.genTimestamp(record, format) )
 			.append(postStr)
 			.toString();
 	}
-	protected String partTimestamp(final xLogRecord record, final String format) {
+	protected String genTimestamp(final xLogRecord record, final String format) {
 		final SimpleDateFormat dateFormat =
 			new SimpleDateFormat(format);
 		return
@@ -44,22 +44,22 @@ public class xLogFormatter {
 
 
 	// level
-	protected String partLevel(final xLogRecord record,
+	protected String genLevel(final xLogRecord record,
 			final String preStr, final String postStr) {
 		return (new StringBuilder())
 			.append(preStr)
-			.append( this.partLevel(record) )
+			.append( this.genLevel(record) )
 			.append(postStr)
 			.toString();
 	}
-	protected String partLevel(final xLogRecord record) {
+	protected String genLevel(final xLogRecord record) {
 		return StringUtils.PadCenter(7, record.getLevelStr(), ' ');
 	}
 
 
 
 	// crumbs
-	protected String partCrumbs(final xLogRecord record,
+	protected String genCrumbs(final xLogRecord record,
 			final String preStr, final String midStr, final String postStr) {
 		final String[] tree = record.getNameTree();
 		if (Utils.isEmpty(tree))
@@ -78,7 +78,7 @@ public class xLogFormatter {
 
 
 	// message
-	protected String partMessage(final xLogRecord record, final int lineIndex) {
+	protected String genMessage(final xLogRecord record, final int lineIndex) {
 		return (new StringBuilder())
 			.append(' ')
 			.append( record.lines[ lineIndex ] )
