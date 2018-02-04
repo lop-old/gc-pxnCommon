@@ -318,6 +318,16 @@ public class xLog implements xLogPrinter {
 			)
 		);
 	}
+	public void title(final String[] lines, final Object... args) {
+		this.publish(
+			new xLogRecord(
+				this,
+				xLevel.TITLE,
+				lines,
+				args
+			)
+		);
+	}
 
 
 

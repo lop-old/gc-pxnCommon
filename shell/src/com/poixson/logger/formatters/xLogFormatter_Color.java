@@ -16,6 +16,16 @@ public class xLogFormatter_Color extends xLogFormatter {
 
 	@Override
 	public String formatMsg(final xLogRecord record, final int lineIndex) {
+		// [[ title ]]
+		if (xLevel.TITLE.equals(record.level)) {
+			return
+				this.genTitle(
+					record,
+					lineIndex,
+					" @|FG_MAGENTA [[|@ @|FG_CYAN ",
+					"|@ @|FG_MAGENTA ]]|@ "
+				);
+		}
 		// timestamp [level] [crumbs]
 		return
 			StringUtils.MergeStrings(
