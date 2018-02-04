@@ -12,6 +12,7 @@ public class xLogRecord {
 	public final xLevel   level;
 	public final long     timestamp;
 	public final String[] lines;
+	public final int      lineCount;
 	public final Object[] args;
 
 
@@ -36,6 +37,11 @@ public class xLogRecord {
 		} else {
 			this.lines = lines;
 		}
+		this.lineCount = (
+			this.lines == null
+			? 0
+			: this.lines.length
+		);
 	}
 
 

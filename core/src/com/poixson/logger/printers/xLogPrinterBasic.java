@@ -34,10 +34,9 @@ public abstract class xLogPrinterBasic implements xLogPrinter {
 	public void publish(final xLogRecord record) {
 		try {
 			final xLogFormatter formatter = this.getFormatter();
-			String[] lines = new String[ record.lines.length ];
-			final int linesCount = record.lines.length;
+			String[] lines = new String[ record.lineCount ];
 			//LINES_LOOP:
-			for (int lineIndex=0; lineIndex<linesCount; lineIndex++) {
+			for (int lineIndex=0; lineIndex<record.lineCount; lineIndex++) {
 				lines[ lineIndex ] =
 					formatter.formatMsg(
 						record,
