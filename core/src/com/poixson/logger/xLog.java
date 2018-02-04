@@ -119,10 +119,9 @@ public class xLog implements xLogPrinter {
 
 	// is level loggable
 	public boolean isLoggable(final xLevel level) {
-		if (level == null) throw new RequiredArgumentException("level");
+		if (level == null) return true;
 		// forced debug mode
-		if (xVars.debug())
-			return true;
+		if (xVars.debug()) return true;
 		// check local level
 		final xLevel currentLevel = this.getLevel();
 		if (currentLevel != null) {
