@@ -2,6 +2,8 @@ package com.poixson.logger;
 
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.tools.xClock;
+import com.poixson.utils.StringUtils;
+import com.poixson.utils.Utils;
 
 
 public class xLogRecord {
@@ -23,6 +25,19 @@ public class xLogRecord {
 		this.level = level;
 		this.lines  = lines;
 		this.args  = args;
+	}
+
+
+
+	// message lines
+	public int getLongestLine() {
+		return StringUtils.FindLongestLine(this.lines);
+	}
+	public boolean isEmpty() {
+		return Utils.isEmpty(this.lines);
+	}
+	public boolean notEmpty() {
+		return Utils.notEmpty(this.lines);
 	}
 
 
