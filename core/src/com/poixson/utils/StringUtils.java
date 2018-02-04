@@ -880,14 +880,7 @@ public class StringUtils extends StringAdvUtils {
 
 
 	public static String Pad(final int width, final String text, final char padding) {
-		if (width < 1) return null;
-		final int count = width - text.length();
-		if (count < 1) return text;
-		return
-			(new StringBuilder(width))
-				.append( text                   )
-				.append( Repeat(count, padding) )
-				.toString();
+		return PadEnd(width, text, padding);
 	}
 	public static String PadFront(final int width, final String text, final char padding) {
 		if (width < 1) return null;
