@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
 import com.poixson.exceptions.ContinueException;
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.xLog;
+import com.poixson.logger.xLogRoot;
 import com.poixson.tools.remapped.RemappedMethod;
 
 
@@ -57,7 +58,7 @@ public final class guiUtils {
 			if (file.exists()) {
 				try {
 					final ImageIcon image = new ImageIcon(path);
-					log().finer("Loaded image file: "+path);
+					log().finer("Loaded image file: ", path);
 					return image;
 				} catch(Exception ignore) {}
 			}
@@ -65,10 +66,10 @@ public final class guiUtils {
 		// open resource
 		try {
 			final ImageIcon image = new ImageIcon(ClassLoader.getSystemResource(path));
-			log().finer("Loaded image resource: "+path);
+			log().finer("Loaded image resource: ", path);
 			return image;
 		} catch(Exception ignore) {}
-		log().warning("Failed to load image: "+path);
+		log().warning("Failed to load image: ", path);
 		return null;
 	}
 
@@ -166,7 +167,7 @@ public final class guiUtils {
 
 	// logger
 	public static xLog log() {
-		return xLog.getRoot()
+		return xLogRoot.get()
 				.get(LOG_NAME);
 	}
 

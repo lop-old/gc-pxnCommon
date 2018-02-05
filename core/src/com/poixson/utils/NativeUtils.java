@@ -9,7 +9,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.ErrorMode;
-import com.poixson.logger.xLevel;
 import com.poixson.logger.xLog;
 
 
@@ -27,21 +26,29 @@ public final class NativeUtils {
 		try {
 			NativeUtils.LoadLibrary(fileStr);
 		} catch (SecurityException e) {
-			log().severe(e.getMessage());
+			log().severe( e.getMessage() );
 			if (ErrorMode.EXCEPTION.equals(errorMode)) {
 				throw e;
 			} else
 			if (ErrorMode.LOG.equals(errorMode)) {
-				log().severe("Failed to load library: {}  {}", fileStr, e.getMessage());
+				log().severe(
+					"Failed to load library: {}  {}",
+					fileStr,
+					e.getMessage()
+				);
 			}
 			return false;
 		} catch (UnsatisfiedLinkError e) {
-			log().severe(e.getMessage());
+			log().severe( e.getMessage() );
 			if (ErrorMode.EXCEPTION.equals(errorMode)) {
 				throw e;
 			} else
 			if (ErrorMode.LOG.equals(errorMode)) {
-				log().severe("Failed to load library: {}  {}", fileStr, e.getMessage());
+				log().severe(
+					"Failed to load library: {}  {}",
+					fileStr,
+					e.getMessage()
+				);
 			}
 			return false;
 		}
@@ -54,14 +61,16 @@ public final class NativeUtils {
 			throws SecurityException, UnsatisfiedLinkError {
 		final String pathStr = FileUtils.MergePaths(filePath);
 		if ( ! libsLoaded.add(pathStr) ) {
-			if (log().isLoggable(xLevel.DETAIL)) {
-				log().detail("Library already loaded: {}", pathStr);
-			}
+			log().detail(
+				"Library already loaded: ",
+				pathStr
+			);
 			return;
 		}
-		if (log().isLoggable(xLevel.DETAIL)) {
-			log().detail("NativeUtils::LoadLibrary(path={})", pathStr);
-		}
+		log().detail(
+			"NativeUtils::LoadLibrary(path={})",
+			pathStr
+		);
 		System.load(pathStr);
 	}
 
@@ -87,16 +96,22 @@ public final class NativeUtils {
 		final File outFile = new File(outFilePath);
 		InputStream      in  = null;
 		FileOutputStream out = null;
-		if (log().isLoggable(xLevel.DETAIL)) {
-			log().detail("NativeUtils::ExtractLibrary(outFilePath={},resPath={},fileName={},classRef={})",
-				outFilePath, resPath, fileName, classRef.getName());
-		}
+		log().detail(
+			"NativeUtils::ExtractLibrary(outFilePath={},resPath={},fileName={},classRef={})",
+			outFilePath,
+			resPath,
+			fileName,
+			classRef.getName()
+		);
 		// open resource
 		in = classRef.getResourceAsStream(resPath);
 		if (in == null)
 			throw new IOException("Resource file not found: "+resPath);
 		if (outFile.isFile()) {
-			log().info("Removing existing library file: {}", outFilePath);
+			log().info(
+				"Removing existing library file: ",
+				outFilePath
+			);
 			if (!outFile.delete())
 				throw new IOException("Failed to remove library file: "+outFilePath);
 		}
@@ -110,7 +125,10 @@ public final class NativeUtils {
 					break;
 				out.write(buf, 0, read);
 			}
-			log().info("Extracted library file: {}", outFilePath);
+			log().info(
+				"Extracted library file: ",
+				outFilePath
+			);
 		} catch (FileNotFoundException e) {
 			throw new IOException("Cannot write to file: "+outFilePath, e);
 		} finally {
@@ -122,9 +140,7 @@ public final class NativeUtils {
 
 
 	public static xLog log() {
-		return
-			xLog.getRoot()
-				.get("LibUtils");
+		return Utils.log();
 	}
 
 

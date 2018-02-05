@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.poixson.exceptions.RequiredArgumentException;
-import com.poixson.logger.xLevel;
 import com.poixson.logger.xLog;
 import com.poixson.tools.remapped.RunnableNamed;
 import com.poixson.utils.Utils;
@@ -81,14 +80,12 @@ public class xThreadPoolTask<V> implements Future<V>, RunnableNamed {
 			// set thread name
 			final String nameFormatted = this.getNameFormatted();
 			if (this.worker.get() == null) {
-				log.warning("Task doesn't have a worker set: {}", nameFormatted);
+				log.warning("Task doesn't have a worker set: ", nameFormatted);
 			}
 			currentThread.setName(nameFormatted);
 			// detailed log
 			if (log != null) {
-				if (log.isLoggable(xLevel.DETAIL)) {
-					log.finest("Running Task: {}", nameFormatted);
-				}
+				log.detail("Running Task: ", nameFormatted);
 			}
 			// run the task
 			try {

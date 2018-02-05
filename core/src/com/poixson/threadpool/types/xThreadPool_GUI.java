@@ -118,13 +118,11 @@ public class xThreadPool_GUI extends xThreadPool_SingleWorker {
 					return;
 				}
 			} catch (InterruptedException e) {
-				this.log()
-					.trace(e);
+				this.log().trace(e);
 				return;
 			}
 			// idle
-			this.log()
-				.detail("Idle thread..");
+			this.log().detail("Idle thread..");
 			if (this.stopping)
 				this.running.set(false);
 		}

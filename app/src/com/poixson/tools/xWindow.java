@@ -21,14 +21,13 @@ import com.poixson.utils.guiUtils;
 
 public abstract class xWindow extends JFrame implements Closeable, AttachedLogger {
 	private static final long serialVersionUID = 1L;
-	private static final String LOG_NAME = "GUI";
 
 	private static final ConcurrentMap<String, xWindow> allWindows =
 			new ConcurrentHashMap<String, xWindow>();
 
 	private final String windowKey;
 
-	private final AtomicBoolean closing     = new AtomicBoolean(false);
+	private final AtomicBoolean closing = new AtomicBoolean(false);
 
 
 
@@ -54,7 +53,7 @@ public abstract class xWindow extends JFrame implements Closeable, AttachedLogge
 					throw new RuntimeException("Detected duplicate window key when attempting to generate a unique key!");
 				if (allWindows.putIfAbsent(name, this) == null) {
 					this.windowKey = name;
-					this.log().fine("New window created: {}", name);
+					this.log().fine("New window created: ", name);
 					break;
 				}
 				last = name;
@@ -113,7 +112,7 @@ public abstract class xWindow extends JFrame implements Closeable, AttachedLogge
 		if ( ! this.closing.compareAndSet(false, true) )
 			return;
 		// close window
-		this.log().fine("Closing window: {}", this.getWindowKey());
+		this.log().fine("Closing window: ", this.getWindowKey());
 		this.dispose();
 	}
 	public boolean isClosing() {
@@ -151,8 +150,7 @@ public abstract class xWindow extends JFrame implements Closeable, AttachedLogge
 	// logger
 	@Override
 	public xLog log() {
-		return xLog.getRoot()
-				.get(LOG_NAME);
+		return guiUtils.log();
 	}
 
 

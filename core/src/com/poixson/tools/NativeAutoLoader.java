@@ -127,7 +127,12 @@ public class NativeAutoLoader {
 
 		// load existing local
 		if (localFile.exists()) {
-			this.log().fine("Found library {} at local path {}", fileName, localPath);
+			this.log()
+				.fine(
+					"Found library {} at local path {}",
+					fileName,
+					localPath
+				);
 			return NativeUtils.SafeLoad(localFilePath, errorMode);
 		}
 
@@ -143,7 +148,12 @@ public class NativeAutoLoader {
 				final File searchFile = new File(searchPath);
 System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 				if (searchFile.exists()) {
-					this.log().fine("Found library {} at search path {}", fileName, path);
+					this.log()
+						.fine(
+							"Found library {} at search path {}",
+							fileName,
+							path
+						);
 					return NativeUtils.SafeLoad(searchPath, errorMode);
 				}
 			}
@@ -154,13 +164,21 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 			final File dir = new File(localPath);
 			if (!dir.isDirectory()) {
 				if (dir.mkdirs()) {
-					this.log().info("Created libraries dir: {}", localPath);
+					this.log()
+						.info(
+							"Created libraries dir: ",
+							localPath
+						);
 				} else {
 					if (ErrorMode.EXCEPTION.equals(errorMode)) {
 						throw new IORuntimeException("Failed to create directory: "+localPath);
 					} else
 					if (ErrorMode.LOG.equals(errorMode)) {
-						this.log().severe("Failed to create directory: {}", localPath);
+						this.log()
+							.severe(
+								"Failed to create directory: ",
+								localPath
+							);
 					}
 					return false;
 				}
@@ -172,7 +190,11 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 			final boolean exists = localFile.isFile();
 			if (exists) {
 				if (enableReplace && enableExtract) {
-					this.log().fine("Replacing existing library file: {}", fileName);
+					this.log()
+						.fine(
+							"Replacing existing library file: ",
+							fileName
+						);
 					localFile.delete();
 				}
 			}
@@ -190,12 +212,17 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 						classRef
 					);
 				} catch (IOException e) {
-					this.log().severe(e.getMessage());
+					this.log()
+						.severe( e.getMessage() );
 					if (ErrorMode.EXCEPTION.equals(errorMode)) {
 						throw new IORuntimeException("Failed to extract library file: "+localFilePath, e);
 					} else
 					if (ErrorMode.LOG.equals(errorMode)) {
-						this.log().severe("Failed to extract library file: {}", localFilePath);
+						this.log()
+							.severe(
+								"Failed to extract library file: ",
+								localFilePath
+							);
 					}
 					return false;
 				}
@@ -210,7 +237,11 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 					throw new IORuntimeException("Library file not found: "+localFilePath);
 				} else
 				if (ErrorMode.LOG.equals(errorMode)) {
-					this.log().severe("Library file not found: {}", localFilePath);
+					this.log()
+						.severe(
+							"Library file not found: ",
+							localFilePath
+						);
 				}
 				return false;
 			}

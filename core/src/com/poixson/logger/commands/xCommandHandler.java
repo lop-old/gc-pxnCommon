@@ -70,10 +70,11 @@ public class xCommandHandler extends xHandlerSimple {
 		// unknown command
 		if (!event.isHandled()) {
 			final xCommandEvent cmdEvent = (xCommandEvent) event;
-			log().publish(
-				"Unknown command: {}",
-				cmdEvent.getArg(0)
-			);
+			this.log()
+				.publish(
+					"Unknown command: ",
+					cmdEvent.getArg(0)
+				);
 		}
 	}
 

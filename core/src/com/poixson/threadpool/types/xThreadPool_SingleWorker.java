@@ -72,8 +72,7 @@ public abstract class xThreadPool_SingleWorker extends xThreadPoolQueue {
 		try {
 			worker.join(timeout);
 		} catch (InterruptedException e) {
-			this.log()
-				.trace(e);
+			this.log().trace(e);
 		}
 	}
 	@Override

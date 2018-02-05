@@ -8,10 +8,10 @@ import java.lang.reflect.Method;
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.xLog;
 import com.poixson.utils.Utils;
+import com.poixson.utils.guiUtils;
 
 
 public class RemappedItemListener implements ItemListener {
-	private static final String LOG_NAME = "GUI";
 
 	protected final Object obj;
 	protected final Method method;
@@ -33,16 +33,20 @@ public class RemappedItemListener implements ItemListener {
 		final Class<?> clss = listenerClass.getClass();
 		this.method = clss.getMethod(methodStr, ItemEvent.class);
 		if (this.method == null) {
-			log().severe("Method: {}() in class: {}",
-				methodStr,
-				listenerClass.getClass().getName()
-			);
+			this.log()
+				.severe(
+					"Method: {}() in class: {}",
+					methodStr,
+					listenerClass.getClass().getName()
+				);
 			throw new NoSuchMethodException();
 		}
-		log().finest("New ItemListener created for: {}::{}()",
-			clss.getName(),
-			methodStr
-		);
+		this.log()
+			.detail(
+				"New ItemListener created for: {}::{}()",
+				clss.getName(),
+				methodStr
+			);
 	}
 
 
@@ -52,22 +56,21 @@ public class RemappedItemListener implements ItemListener {
 		try {
 			this.method.invoke(this.obj, event);
 		} catch (IllegalAccessException e) {
-			log().trace(e);
+			this.log().trace(e);
 		} catch (IllegalArgumentException e) {
-			log().trace(e);
+			this.log().trace(e);
 		} catch (InvocationTargetException e) {
-			log().trace(e);
+			this.log().trace(e);
 		} catch (Exception e) {
-			log().trace(e);
+			this.log().trace(e);
 		}
 	}
 
 
 
 	// logger
-	public static xLog log() {
-		return xLog.getRoot()
-				.get(LOG_NAME);
+	public xLog log() {
+		return guiUtils.log();
 	}
 
 

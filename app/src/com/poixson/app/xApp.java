@@ -1,7 +1,6 @@
 package com.poixson.app;
 
 import java.io.PrintStream;
-import java.lang.ref.SoftReference;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +15,7 @@ import com.poixson.logger.AttachedLogger;
 import com.poixson.logger.xLevel;
 import com.poixson.logger.xLog;
 import com.poixson.logger.xLogPrintStream;
+import com.poixson.logger.xLogRoot;
 import com.poixson.threadpool.xThreadPool;
 import com.poixson.threadpool.types.xThreadPool_Main;
 import com.poixson.tools.AppProps;
@@ -498,18 +498,10 @@ public abstract class xApp implements xStartable, AttachedLogger {
 
 
 
-	private volatile SoftReference<xLog> _log = null;
+	private final xLog _log;
 	@Override
 	public xLog log() {
-		if (this._log != null) {
-			final xLog log = this._log.get();
-			if (log != null) {
-				return log;
-			}
-		}
-		final xLog log = xLog.getRoot();
-		this._log = new SoftReference<xLog>(log);
-		return log;
+		return this._log;
 	}
 
 

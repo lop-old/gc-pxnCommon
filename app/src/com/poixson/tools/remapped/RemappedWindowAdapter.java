@@ -8,10 +8,10 @@ import java.lang.reflect.Method;
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.xLog;
 import com.poixson.utils.Utils;
+import com.poixson.utils.guiUtils;
 
 
 public class RemappedWindowAdapter extends WindowAdapter {
-	private static final String LOG_NAME = "GUI";
 
 	protected final Object obj;
 	protected final Method method;
@@ -33,18 +33,19 @@ public class RemappedWindowAdapter extends WindowAdapter {
 		final Class<?> clss = listenerClass.getClass();
 		this.method = clss.getMethod(methodStr);
 		if (this.method == null) {
-			log().severe(
+			this.log().severe(
 				"Method: {}() in class: {}",
 				methodStr,
 				listenerClass.getClass().getName()
 			);
 			throw new NoSuchMethodException();
 		}
-		log().finest(
-			"New WindowAdapter created for: {}::{}()",
-			clss.getName(),
-			methodStr
-		);
+		this.log()
+			.detail(
+				"New WindowAdapter created for: {}::{}()",
+				clss.getName(),
+				methodStr
+			);
 	}
 
 
@@ -54,22 +55,21 @@ public class RemappedWindowAdapter extends WindowAdapter {
 		try {
 			this.method.invoke(this.obj);
 		} catch (IllegalAccessException e) {
-			log().trace(e);
+			this.log().trace(e);
 		} catch (IllegalArgumentException e) {
-			log().trace(e);
+			this.log().trace(e);
 		} catch (InvocationTargetException e) {
-			log().trace(e);
+			this.log().trace(e);
 		} catch (Exception e) {
-			log().trace(e);
+			this.log().trace(e);
 		}
 	}
 
 
 
 	// logger
-	public static xLog log() {
-		return xLog.getRoot()
-				.get(LOG_NAME);
+	public xLog log() {
+		return guiUtils.log();
 	}
 
 

@@ -138,8 +138,7 @@ public class xThreadPoolWorker implements xStartable {
 						continue OUTER_LOOP;
 					}
 				} catch (InterruptedException e) {
-					this.log()
-						.trace(e);
+					this.log().trace(e);
 					break;
 				}
 				// idle

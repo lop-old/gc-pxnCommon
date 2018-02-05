@@ -5,10 +5,10 @@ import java.awt.Font;
 import com.poixson.logger.xLog;
 import com.poixson.utils.NumberUtils;
 import com.poixson.utils.Utils;
+import com.poixson.utils.guiUtils;
 
 
 public class xFont {
-	private static final String LOG_NAME = "GUI";
 
 	protected volatile String family = null;
 	protected volatile Style  style  = Style.PLAIN;
@@ -118,14 +118,14 @@ public class xFont {
 				}
 				final Integer i = NumberUtils.toInteger(tmp);
 				if (i == null) {
-					log().warning("Invalid font size value: {}", part);
+					this.log().warning("Invalid font size value: ", part);
 					continue;
 				}
 				this.size = i.intValue();
 				continue;
 			}
 			// unknown format
-			log().warning("Unknown font formatting: {}", part);
+			this.log().warning("Unknown font formatting: ", part);
 		}
 		return this;
 	}
@@ -133,9 +133,8 @@ public class xFont {
 
 
 	// logger
-	public static xLog log() {
-		return xLog.getRoot()
-				.get(LOG_NAME);
+	public xLog log() {
+		return guiUtils.log();
 	}
 
 

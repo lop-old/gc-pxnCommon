@@ -32,7 +32,8 @@ public class xNoConsole implements xConsole {
 
 	@Override
 	public void start() {
-		log().finest("Start xNoConsole");
+		this.log()
+			.finest("Start xNoConsole");
 		this.running = true;
 	}
 	@Override

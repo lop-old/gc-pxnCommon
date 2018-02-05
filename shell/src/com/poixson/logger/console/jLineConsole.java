@@ -286,7 +286,7 @@ public class jLineConsole implements xConsole {
 				);
 			} catch (Exception e) {
 //TODO: is this right?
-//				if ("Stream closed".equals(e.getMessage()))
+//				if ("Stream closed".equals( e.getMessage() ))
 //					break;
 				log().trace(e);
 				break;

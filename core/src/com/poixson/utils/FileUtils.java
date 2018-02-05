@@ -197,7 +197,7 @@ public final class FileUtils {
 		// get lib path
 		final File file = new File(libDir);
 		if (!file.exists() || !file.isDirectory()) {
-			log().warning("Library path not found: "+libDir);
+			log().warning("Library path not found: ", libDir);
 			return;
 		}
 		final String libPath = file.getAbsolutePath();
@@ -205,7 +205,7 @@ public final class FileUtils {
 		// get current paths
 		final String currentPaths = System.getProperty("java.library.path");
 		if (currentPaths == null) return;
-//		pxnLog.get().debug("Adding lib path: "+libDir);
+//		pxnLog.get().debug("Adding lib path: ", libDir);
 		// set library paths
 		if (currentPaths.isEmpty()) {
 			System.setProperty("java.library.path", libPath);

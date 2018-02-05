@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.xLevel;
 import com.poixson.logger.xLog;
+import com.poixson.logger.xLogRoot;
 
 
 public class Keeper {
@@ -38,9 +39,8 @@ public class Keeper {
 		holder.add(obj);
 		if (isDetailedLogging()) {
 			log().detail(
-				"Added to Keeper: {}",
-				obj.getClass()
-					.getName()
+				"Added to Keeper: ",
+				obj.getClass().getName()
 			);
 		}
 	}
@@ -53,8 +53,7 @@ public class Keeper {
 		if (isDetailedLogging()) {
 			log().detail(
 				"Removed from Keeper: ",
-				obj.getClass()
-					.getName()
+				obj.getClass().getName()
 			);
 		}
 	}
@@ -82,7 +81,7 @@ public class Keeper {
 
 	// logger
 	private static xLog log() {
-		return xLog.getRoot()
+		return xLogRoot.get()
 				.get(LOG_NAME);
 	}
 

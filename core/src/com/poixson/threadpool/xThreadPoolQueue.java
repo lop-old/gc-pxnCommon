@@ -261,7 +261,7 @@ public abstract class xThreadPoolQueue extends xThreadPool {
 				// failed to queue task
 				task.log()
 					.warning(
-						"Thread queue jammed!{}",
+						"Thread queue jammed!",
 						( i>0 ? " attempt "+Integer.toString(i+1) : "" )
 					);
 			}
@@ -281,7 +281,10 @@ public abstract class xThreadPoolQueue extends xThreadPool {
 			}
 			if (this.isDetailedLogging()) {
 				this.log()
-					.detail("Task queued: {}", task.getNameFormatted());
+					.detail(
+						"Task queued: ",
+						task.getNameFormatted()
+					);
 			}
 		}
 		// new worker if needed
@@ -289,8 +292,7 @@ public abstract class xThreadPoolQueue extends xThreadPool {
 		try {
 			return (Future<V>) task.getFuture();
 		} catch (Exception e) {
-			this.log()
-				.trace(e);
+			this.log().trace(e);
 		}
 		return null;
 	}

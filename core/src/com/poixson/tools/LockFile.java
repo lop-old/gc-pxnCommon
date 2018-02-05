@@ -109,17 +109,17 @@ public class LockFile {
 		try {
 			this.handle = new RandomAccessFile(this.file, "rw");
 		} catch (FileNotFoundException e) {
-			log().trace(e);
+			this.log().trace(e);
 			return false;
 		}
 		this.channel  = this.handle.getChannel();
 		try {
 			this.fileLock = this.channel.tryLock();
 		} catch (OverlappingFileLockException e) {
-			log().trace(e);
+			this.log().trace(e);
 			return false;
 		} catch (IOException e) {
-			log().trace(e);
+			this.log().trace(e);
 			return false;
 		}
 		if (this.fileLock == null)
@@ -131,11 +131,15 @@ public class LockFile {
 					.getBytes()
 			);
 		} catch (IOException e) {
-			log().trace(e);
+			this.log().trace(e);
 			this.fileLock = null;
 			return false;
 		}
-		log().fine("Locked file: {}", this.filename);
+		this.log()
+			.fine(
+				"Locked file: ",
+				this.filename
+			);
 		return true;
 	}
 	// release file lock
@@ -153,7 +157,10 @@ public class LockFile {
 		this.fileLock = null;
 		this.channel = null;
 		this.handle  = null;
-		log().fine("Released file lock: {}", this.filename);
+		log().fine(
+			"Released file lock: ",
+			this.filename
+		);
 		try {
 			this.file.delete();
 		} catch (Exception ignore) {}

@@ -83,13 +83,11 @@ public abstract class xThreadPool implements xStartable {
 			new xRunnable("xThreadPool-Startup") {
 				@Override
 				public void run() {
-					xThreadPool.this
-						.log().fine(
-							(new StringBuilder())
-							.append("Thread queue ")
-							.append(xThreadPool.this.getPoolName())
-							.append(" is running..")
-							.toString()
+					xThreadPool.this.log()
+						.fine(
+							"Thread queue {} is running..",
+							xThreadPool.this
+								.getPoolName()
 						);
 				}
 			}

@@ -112,7 +112,7 @@ public class Dumper {
 					Object value = Array.get(obj, i);
 					buffer.append(dumpValue(value, ctx));
 				} catch (Exception e) {
-					buffer.append(e.getMessage());
+					buffer.append( e.getMessage() );
 				}
 				if (i < Array.getLength(obj) - 1) {
 					buffer.append(",");
@@ -165,7 +165,7 @@ public class Dumper {
 								final Object value = fields[i].get(obj);
 								buffer.append(dumpValue(value, ctx));
 							} catch (Exception e) {
-								buffer.append(e.getMessage());
+								buffer.append( e.getMessage() );
 							}
 							buffer.append("\n");
 						} else {
