@@ -282,7 +282,7 @@ public abstract class xThreadPoolQueue extends xThreadPool {
 			if (this.isDetailedLogging()) {
 				this.log()
 					.detail(
-						"Task queued: ",
+						"Task queued:",
 						task.getNameFormatted()
 					);
 			}

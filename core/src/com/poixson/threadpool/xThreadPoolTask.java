@@ -80,12 +80,12 @@ public class xThreadPoolTask<V> implements Future<V>, RunnableNamed {
 			// set thread name
 			final String nameFormatted = this.getNameFormatted();
 			if (this.worker.get() == null) {
-				log.warning("Task doesn't have a worker set: ", nameFormatted);
+				log.warning("Task doesn't have a worker set:", nameFormatted);
 			}
 			currentThread.setName(nameFormatted);
 			// detailed log
 			if (log != null) {
-				log.detail("Running Task: ", nameFormatted);
+				log.detail("Running Task:", nameFormatted);
 			}
 			// run the task
 			try {

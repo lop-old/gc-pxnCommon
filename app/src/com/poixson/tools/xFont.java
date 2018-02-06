@@ -118,14 +118,14 @@ public class xFont {
 				}
 				final Integer i = NumberUtils.toInteger(tmp);
 				if (i == null) {
-					this.log().warning("Invalid font size value: ", part);
+					this.log().warning("Invalid font size value:", part);
 					continue;
 				}
 				this.size = i.intValue();
 				continue;
 			}
 			// unknown format
-			this.log().warning("Unknown font formatting: ", part);
+			this.log().warning("Unknown font formatting:", part);
 		}
 		return this;
 	}

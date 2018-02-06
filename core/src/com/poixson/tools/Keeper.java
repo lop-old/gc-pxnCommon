@@ -39,7 +39,7 @@ public class Keeper {
 		holder.add(obj);
 		if (isDetailedLogging()) {
 			log().detail(
-				"Added to Keeper: ",
+				"Added to Keeper:",
 				obj.getClass().getName()
 			);
 		}
@@ -52,7 +52,7 @@ public class Keeper {
 		holder.remove(obj);
 		if (isDetailedLogging()) {
 			log().detail(
-				"Removed from Keeper: ",
+				"Removed from Keeper:",
 				obj.getClass().getName()
 			);
 		}

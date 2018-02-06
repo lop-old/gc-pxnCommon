@@ -53,7 +53,7 @@ public abstract class xWindow extends JFrame implements Closeable, AttachedLogge
 					throw new RuntimeException("Detected duplicate window key when attempting to generate a unique key!");
 				if (allWindows.putIfAbsent(name, this) == null) {
 					this.windowKey = name;
-					this.log().fine("New window created: ", name);
+					this.log().fine("New window created:", name);
 					break;
 				}
 				last = name;
@@ -112,7 +112,7 @@ public abstract class xWindow extends JFrame implements Closeable, AttachedLogge
 		if ( ! this.closing.compareAndSet(false, true) )
 			return;
 		// close window
-		this.log().fine("Closing window: ", this.getWindowKey());
+		this.log().fine("Closing window:", this.getWindowKey());
 		this.dispose();
 	}
 	public boolean isClosing() {

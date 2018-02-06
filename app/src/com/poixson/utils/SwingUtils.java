@@ -36,17 +36,17 @@ public final class SwingUtils {
 		if ((new File(path)).exists()) {
 			try {
 				final ImageIcon image = new ImageIcon(path);
-				log().fine("Loaded image file: ", path);
+				log().fine("Loaded image file:", path);
 				return image;
 			} catch(Exception ignore) {}
 		}
 		// open resource
 		try {
 			final ImageIcon image = new ImageIcon(ClassLoader.getSystemResource(path));
-			log().fine("Loaded image resource: ", path);
+			log().fine("Loaded image resource:", path);
 			return image;
 		} catch(Exception ignore) {}
-		log().warning("Failed to load image: ", path);
+		log().warning("Failed to load image:", path);
 		return null;
 	}
 

@@ -92,7 +92,7 @@ public abstract class xHandlerGeneric extends xHandler {
 			if (size == 1) {
 				this.log()
 					.finest(
-						"Registered listener in class: {}",
+						"Registered listener in class:",
 						listener.getClass()
 							.getName()
 					);

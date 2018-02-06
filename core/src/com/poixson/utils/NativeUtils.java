@@ -61,10 +61,7 @@ public final class NativeUtils {
 			throws SecurityException, UnsatisfiedLinkError {
 		final String pathStr = FileUtils.MergePaths(filePath);
 		if ( ! libsLoaded.add(pathStr) ) {
-			log().detail(
-				"Library already loaded: ",
-				pathStr
-			);
+			log().detail("Library already loaded:", pathStr);
 			return;
 		}
 		log().detail(
@@ -108,10 +105,7 @@ public final class NativeUtils {
 		if (in == null)
 			throw new IOException("Resource file not found: "+resPath);
 		if (outFile.isFile()) {
-			log().info(
-				"Removing existing library file: ",
-				outFilePath
-			);
+			log().info("Removing existing library file:", outFilePath);
 			if (!outFile.delete())
 				throw new IOException("Failed to remove library file: "+outFilePath);
 		}
@@ -125,10 +119,7 @@ public final class NativeUtils {
 					break;
 				out.write(buf, 0, read);
 			}
-			log().info(
-				"Extracted library file: ",
-				outFilePath
-			);
+			log().info("Extracted library file:", outFilePath);
 		} catch (FileNotFoundException e) {
 			throw new IOException("Cannot write to file: "+outFilePath, e);
 		} finally {

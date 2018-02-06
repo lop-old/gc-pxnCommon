@@ -135,11 +135,7 @@ public class LockFile {
 			this.fileLock = null;
 			return false;
 		}
-		this.log()
-			.fine(
-				"Locked file: ",
-				this.filename
-			);
+		this.log().fine("Locked file:", this.filename);
 		return true;
 	}
 	// release file lock
@@ -157,10 +153,7 @@ public class LockFile {
 		this.fileLock = null;
 		this.channel = null;
 		this.handle  = null;
-		log().fine(
-			"Released file lock: ",
-			this.filename
-		);
+		log().fine("Released file lock:", this.filename);
 		try {
 			this.file.delete();
 		} catch (Exception ignore) {}

@@ -164,21 +164,13 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 			final File dir = new File(localPath);
 			if (!dir.isDirectory()) {
 				if (dir.mkdirs()) {
-					this.log()
-						.info(
-							"Created libraries dir: ",
-							localPath
-						);
+					this.log().info("Created libraries dir:", localPath);
 				} else {
 					if (ErrorMode.EXCEPTION.equals(errorMode)) {
 						throw new IORuntimeException("Failed to create directory: "+localPath);
 					} else
 					if (ErrorMode.LOG.equals(errorMode)) {
-						this.log()
-							.severe(
-								"Failed to create directory: ",
-								localPath
-							);
+						this.log().severe("Failed to create directory:", localPath);
 					}
 					return false;
 				}
@@ -190,11 +182,7 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 			final boolean exists = localFile.isFile();
 			if (exists) {
 				if (enableReplace && enableExtract) {
-					this.log()
-						.fine(
-							"Replacing existing library file: ",
-							fileName
-						);
+					this.log().fine("Replacing existing library file:", fileName);
 					localFile.delete();
 				}
 			}
@@ -218,11 +206,7 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 						throw new IORuntimeException("Failed to extract library file: "+localFilePath, e);
 					} else
 					if (ErrorMode.LOG.equals(errorMode)) {
-						this.log()
-							.severe(
-								"Failed to extract library file: ",
-								localFilePath
-							);
+						this.log().severe("Failed to extract library file:", localFilePath);
 					}
 					return false;
 				}
@@ -233,15 +217,10 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 		{
 			final boolean exists = localFile.isFile();
 			if (!exists) {
-				if (ErrorMode.EXCEPTION.equals(errorMode)) {
+				if (ErrorMode.EXCEPTION.equals(errorMode))
 					throw new IORuntimeException("Library file not found: "+localFilePath);
-				} else
 				if (ErrorMode.LOG.equals(errorMode)) {
-					this.log()
-						.severe(
-							"Library file not found: ",
-							localFilePath
-						);
+					this.log().severe("Library file not found:", localFilePath);
 				}
 				return false;
 			}
