@@ -19,6 +19,8 @@ package com.poixson.utils.apache;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.poixson.utils.StringUtils;
+
 
 // original: http://grepcode.com/file/repo1.maven.org/maven2/commons-lang/commons-lang/2.6/org/apache/commons/lang/StringUtils.java?av=f
 public final class ApacheCommons {
@@ -144,12 +146,11 @@ public final class ApacheCommons {
 		// if recursing, this shouldnt be less than 0
 		if (ttl < 0) {
 			throw new IllegalStateException(
-				(new StringBuilder())
-					.append("TimeToLive of ")
-					.append(ttl)
-					.append(" is less than 0: ")
-					.append(text)
-					.toString()
+				StringUtils.ReplaceTags(
+					"TimeToLive of: {} is less than 0: {}",
+					ttl,
+					text
+				)
 			);
 		}
 		final int searchSize  = search.length;
@@ -157,12 +158,11 @@ public final class ApacheCommons {
 		// make sure lengths are ok, these need to be equal
 		if (searchSize != replaceSize) {
 			throw new IllegalArgumentException(
-				(new StringBuilder())
-					.append("Search and Replace array lengths don't match: ")
-					.append(searchSize)
-					.append(" vs ")
-					.append(replaceSize)
-					.toString()
+				StringUtils.ReplaceTags(
+					"Search and Replace array lengths don't match: {} vs {}",
+					searchSize,
+					replaceSize
+				)
 			);
 		}
 		// keep track of which still have matches

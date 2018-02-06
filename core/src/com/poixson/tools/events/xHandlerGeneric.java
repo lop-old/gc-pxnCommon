@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.tools.events.xEventListener.ListenerPriority;
+import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
 
 
@@ -57,12 +58,11 @@ public abstract class xHandlerGeneric extends xHandler {
 			final xEvent anno = method.getAnnotation(xEvent.class);
 			if (anno == null) {
 				throw new RuntimeException(
-					(new StringBuilder())
-						.append("Event listener method is missing @xEvent annotation: ")
-						.append(listener.getClass().getName())
-						.append(" -> ")
-						.append(method.getName())
-						.toString()
+					StringUtils.ReplaceTags(
+						"Event listener method is missing @xEvent annotation: {} -> {}",
+						listener.getClass().getName(),
+						method.getName()
+					)
 				);
 			}
 			// get properties

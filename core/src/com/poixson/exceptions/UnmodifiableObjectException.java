@@ -28,13 +28,11 @@ public class UnmodifiableObjectException extends UnsupportedOperationException {
 				final String parentMethodName =
 					StringUtils.Trim(e.getMethodName(), '<', '>');
 				return
-					(new StringBuilder())
-						.append( "Object cannot be modified! " )
-						.append( parentClassName               )
-						.append( "->"                          )
-						.append( parentMethodName              )
-						.append( "()"                          )
-						.toString();
+					StringUtils.ReplaceTags(
+						"Object cannot be modified! {}->{}()",
+						parentClassName,
+						parentMethodName
+					);
 			}
 		}
 		return null;

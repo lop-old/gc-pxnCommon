@@ -175,11 +175,8 @@ public class xScheduler implements xStartable {
 			if (this.isDetailedLogging()) {
 				final double sleepLessSec = ((double)sleepLess) / 1000.0;
 				log().finest(
-					(new StringBuilder())
-						.append("Sleeping.. ")
-						.append(NumberUtils.FormatDecimal("0.000", sleepLessSec))
-						.append('s')
-						.toString()
+					"Sleeping.. {} s",
+					NumberUtils.FormatDecimal("0.000", sleepLessSec)
 				);
 			}
 			// sleep until next check

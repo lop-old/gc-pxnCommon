@@ -9,6 +9,7 @@ import com.poixson.abstractions.xStartable;
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.xLog;
 import com.poixson.tools.CoolDown;
+import com.poixson.utils.StringUtils;
 import com.poixson.utils.ThreadUtils;
 
 
@@ -252,12 +253,11 @@ public class xThreadPoolWorker implements xStartable {
 
 	public String getNameFormatted() {
 		return
-			(new StringBuilder())
-				.append(this.pool.getPoolName())
-				.append("[w")
-				.append(this.workerIndex)
-				.append(']')
-				.toString();
+			StringUtils.ReplaceTags(
+				"{}[w{}]",
+				this.pool.getPoolName(),
+				this.workerIndex
+			);
 	}
 
 

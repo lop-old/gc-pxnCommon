@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.tools.events.xEventListener.ListenerPriority;
+import com.poixson.utils.StringUtils;
 
 
 /**
@@ -36,12 +37,11 @@ public abstract class xHandlerSimple extends xHandler {
 //			final Class<? extends xEventListener> expected = this.getEventListenerType();
 //			if (!expected.equals(listener.getClass())) {
 //				throw new IllegalArgumentException(
-//					(new StringBuilder())
-//						.append("Invalid event listener type:  ")
-//						.append(listener.getClass().getName())
-//						.append("  expected: ")
-//						.append(expected.getName())
-//						.toString()
+//					StringUtils.ReplaceTags(
+//						"Invalid event listener type: {}  expected: {}",
+//						listener.getClass().getName(),
+//						expected.getName()
+//					)
 //				);
 //			}
 //		}
@@ -55,24 +55,22 @@ public abstract class xHandlerSimple extends xHandler {
 			);
 		} catch (NoSuchMethodException e) {
 			throw new RuntimeException(
-				(new StringBuilder())
-					.append("No event listener method ")
-					.append(methodName)
-					.append("() found in class: ")
-					.append(listener.getClass().getName())
-					.toString()
+				StringUtils.ReplaceTags(
+					"No event listener method {}() found in class: {}",
+					methodName,
+					listener.getClass().getName()
+				)
 			);
 		} catch (SecurityException e) {
 			throw new RuntimeException(e);
 		}
 		if (methodFound == null) {
 			throw new RuntimeException(
-				(new StringBuilder())
-					.append("No event listener method ")
-					.append(methodName)
-					.append("() found in class: ")
-					.append(listener.getClass().getName())
-					.toString()
+				StringUtils.ReplaceTags(
+					"No event listener method {}() found in class: {}",
+					methodName,
+					listener.getClass().getName()
+				)
 			);
 		}
 		// set properties

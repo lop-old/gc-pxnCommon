@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import com.poixson.app.Failure;
 import com.poixson.logger.xLog;
+import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
 
 
@@ -36,11 +37,10 @@ public class AppProps {
 			in = clss.getResourceAsStream(PROPS_FILE);
 			if (in == null) {
 				final String msg =
-					(new StringBuilder())
-						.append("Failed to load ")
-						.append(PROPS_FILE)
-						.append(" resource from jar")
-						.toString();
+					StringUtils.ReplaceTags(
+						"Failed to load {} resource from jar",
+						PROPS_FILE
+					);
 				final RuntimeException e = new RuntimeException(msg);
 				Failure.fail(msg, e);
 				throw(e);

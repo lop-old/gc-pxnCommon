@@ -1,5 +1,6 @@
 package com.poixson.exceptions;
 
+import com.poixson.utils.StringUtils;
 
 public class RequiredArgumentException extends NullPointerException {
 	private static final long serialVersionUID = 1L;
@@ -8,10 +9,10 @@ public class RequiredArgumentException extends NullPointerException {
 
 	public RequiredArgumentException(final String argName) {
 		super(
-			(new StringBuilder())
-				.append(argName)
-				.append(" argument is required!")
-				.toString()
+			StringUtils.ReplaceTags(
+				"{} argument is required!",
+				argName
+			)
 		);
 	}
 

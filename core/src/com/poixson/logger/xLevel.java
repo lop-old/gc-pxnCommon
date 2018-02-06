@@ -7,6 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.utils.NumberUtils;
+import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
 
 
@@ -60,23 +61,21 @@ public class xLevel implements Serializable {
 				// duplicate short-name
 				if (shortName.equals(level.shortName)) {
 					throw new RuntimeException(
-						(new StringBuilder())
-							.append("Duplicate xLevel short-name: ")
-							.append(shortName)
-							.append(" - ")
-							.append(name)
-							.toString()
+						StringUtils.ReplaceTags(
+							"Duplicate xLevel short-name: {} - {}",
+							shortName,
+							name
+						)
 					);
 				}
 				// duplicate value
 				if (value == level.value) {
 					throw new RuntimeException(
-						(new StringBuilder())
-							.append("Duplicate xLevel value: ")
-							.append(value)
-							.append(" - ")
-							.append(name)
-							.toString()
+						StringUtils.ReplaceTags(
+							"Duplicate xLevel value: {} - {}",
+							value,
+							name
+						)
 					);
 				}
 			}
