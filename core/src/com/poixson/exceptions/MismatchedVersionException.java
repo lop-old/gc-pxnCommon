@@ -1,7 +1,7 @@
 package com.poixson.exceptions;
 
 
-public class MismatchedLibraryVersionException extends Exception {
+public class MismatchedVersionException extends Exception {
 	private static final long serialVersionUID = 1L;
 
 	public final String expectedVersion;
@@ -9,7 +9,7 @@ public class MismatchedLibraryVersionException extends Exception {
 
 
 
-	public MismatchedLibraryVersionException(
+	public MismatchedVersionException(
 			final String expectedVersion, final String libraryVersion) {
 		super(
 			(new StringBuilder())
