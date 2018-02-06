@@ -5,7 +5,9 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.tools.byref.StringRef;
 
 
@@ -45,6 +47,21 @@ class StringAdvUtils {
 			);
 		}
 		return list.toArray(new String[0]);
+	}
+
+
+
+	// find longest line
+	public static int FindLongestLine(final String[] lines) {
+		if (Utils.isEmpty(lines))
+			return -1;
+		int len = 0;
+		for (final String line : lines) {
+			if (line == null) continue;
+			if (line.length() > len)
+				len = line.length();
+		}
+		return len;
 	}
 
 
@@ -351,6 +368,72 @@ class StringAdvUtils {
 
 
 	// ------------------------------------------------------------------------------- //
+	// build string
+
+
+
+	// add strings with delimiter
+	public static String MergeStrings(final String delim, final String... addThis) {
+		if (Utils.isEmpty(addThis)) throw new RequiredArgumentException("addThis");
+		final String dlm = (Utils.isEmpty(delim) ? null : delim);
+		final StringBuilder buf = new StringBuilder();
+		boolean b = false;
+		for (final String line : addThis) {
+			if (Utils.isEmpty(line)) continue;
+			if (b && dlm != null) {
+				buf.append(dlm);
+			}
+			buf.append(line);
+			if (!b && buf.length() > 0) {
+				b = true;
+			}
+		}
+		return buf.toString();
+	}
+	public static String MergeStrings(final char delim, final String... addThis) {
+		if (Utils.isEmpty(addThis)) throw new RequiredArgumentException("addThis");
+		final StringBuilder buf = new StringBuilder();
+		boolean first = true;
+		for (final String line : addThis) {
+			if (Utils.isEmpty(line)) continue;
+			if (!first)
+				buf.append(delim);
+			buf.append(line);
+			if (first) {
+				if (buf.length() > 0)
+					first = false;
+			}
+		}
+		return buf.toString();
+	}
+
+
+
+	// add objects to string with delimiter
+	public static String MergeObjects(final String delim, final Object... addThis) {
+		if (Utils.isEmpty(addThis)) throw new RequiredArgumentException("addThis");
+		String[] addStrings = new String[ addThis.length ];
+		int index = 0;
+		for (final Object obj : addThis) {
+			addStrings[index] = StringUtils.toString(obj);
+			index++;
+		}
+		return MergeStrings(delim, addStrings);
+	}
+	public static String MergeObjects(final char delim, final Object... addThis) {
+		if (Utils.isEmpty(addThis)) throw new RequiredArgumentException("addThis");
+		String[] addStrings = new String[ addThis.length ];
+		int index = 0;
+		for (final Object obj : addThis) {
+			addStrings[index] = StringUtils.toString(obj);
+			index++;
+		}
+		return MergeStrings(delim, addStrings);
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
 	// split string
 
 
@@ -379,6 +462,72 @@ class StringAdvUtils {
 			}
 		}
 		return list.toArray(new String[0]);
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// generate string
+
+
+
+	/**
+	 * Generate a random string hash.
+	 * @param length Number of characters to generate
+	 * @return The generated hash string
+	 */
+	public static String RandomString(final int length) {
+		if (length < 1) return null;
+		final StringBuilder buf = new StringBuilder(length);
+		while (buf.length() < length) {
+			final String str = UUID.randomUUID().toString();
+			if (str == null) throw new RequiredArgumentException("str");
+			buf.append(str);
+		}
+		return
+			buf.toString()
+				.substring(
+					0,
+					NumberUtils.MinMax(length, 0, buf.length())
+				);
+	}
+
+
+
+	// generate regex from string with wildcard *
+	public static String WildcardToRegex(final String wildcard) {
+		final StringBuilder buf = new StringBuilder(wildcard.length());
+		buf.append('^');
+		final int len = wildcard.length();
+		for (int i = 0; i < len; i++) {
+			char c = wildcard.charAt(i);
+			switch (c) {
+			case '*':
+				buf.append(".*");
+				break;
+			case '?':
+				buf.append(".");
+				break;
+			case '(':
+			case ')':
+			case '[':
+			case ']':
+			case '$':
+			case '^':
+			case '.':
+			case '{':
+			case '}':
+			case '|':
+			case '\\':
+				buf.append('\\').append(c);
+				break;
+			default:
+				buf.append(c);
+				break;
+			}
+		}
+		buf.append('$');
+		return buf.toString();
 	}
 
 
