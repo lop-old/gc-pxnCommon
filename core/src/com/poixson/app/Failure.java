@@ -28,32 +28,31 @@ public final class Failure {
 
 
 	public static void fail() {
-		fail(null, null);
+		fail( (Throwable)null, (String)null );
 	}
-	public static void fail(final String msg) {
-		fail(msg, null);
+	public static void fail(final String msg, final Object... args) {
+		fail( (Throwable)null, msg, args);
 	}
-	public static void fail(final Exception e) {
-		fail(null, e);
+	public static void fail(final Throwable e) {
+		fail( e, (String)null );
 	}
-	public static void fail(final String msg, final Exception e) {
+	public static void fail(final Throwable e, final String msg, final Object... args) {
 		failed = true;
-		if (Utils.notEmpty(msg) || e != null) {
-			final xLog log = xLog.peekRoot();
-			if (Utils.notEmpty(msg)) {
-				if (log == null) {
-					System.out.println(msg);
-				} else {
-					log.fatal(msg);
-				}
-				addMessageSilently(msg);
+		final xLog log = xLog.peekRoot();
+		if (Utils.notEmpty(msg)) {
+			final String str = StringUtils.ReplaceTags(msg, args);
+			if (log == null) {
+				System.out.println(str);
+			} else {
+				log.fatal(str);
 			}
-			if (e != null) {
-				if (log == null) {
-					e.printStackTrace();
-				} else {
-					log.trace(e);
-				}
+			addMessageSilently(str);
+		}
+		if (e != null) {
+			if (log == null) {
+				e.printStackTrace();
+			} else {
+				log.trace(e);
 			}
 		}
 		doFailActions();
