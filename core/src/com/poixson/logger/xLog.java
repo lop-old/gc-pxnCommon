@@ -150,6 +150,9 @@ public class xLog implements xLogPrinter {
 		// allow by default
 		return true;
 	}
+	public boolean isDetailLoggable() {
+		return this.isLoggable(xLevel.DETAIL);
+	}
 	protected void flushLoggableChildren() {
 		this.parentsLoggable = null;
 		if (this.loggers.isEmpty())
