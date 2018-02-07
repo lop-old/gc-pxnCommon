@@ -13,7 +13,7 @@ import com.poixson.utils.Utils;
 public class xAppStepDAO implements RunnableNamed {
 
 	public final StepType type;
-	public final int      priority;
+	public final int      stepValue;
 	public final String   name;
 	public final String   title;
 
@@ -31,7 +31,7 @@ public class xAppStepDAO implements RunnableNamed {
 		if (method    == null) throw new RequiredArgumentException("method");
 		if (anno      == null) throw new RequiredArgumentException("annotation");
 		this.type = anno.type();
-		this.priority  = Math.abs(anno.priority());
+		this.stepValue = Math.abs(anno.priority());
 		this.app       = app;
 		this.container = container;
 		this.method    = method;
@@ -65,8 +65,11 @@ public class xAppStepDAO implements RunnableNamed {
 			return false;
 		return type.equals(this.type);
 	}
-	public boolean isPriority(final byte priority) {
-		return (this.priority == priority);
+
+
+
+	public boolean isStepValue(final int stepValue) {
+		return (this.stepValue == stepValue);
 	}
 
 

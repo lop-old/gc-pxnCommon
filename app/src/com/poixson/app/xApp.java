@@ -321,7 +321,7 @@ public abstract class xApp implements xStartable, AttachedLogger {
 					list.add(dao);
 					final List<xAppStepDAO> existing =
 						this.currentSteps.putIfAbsent(
-							Integer.valueOf(dao.priority),
+							Integer.valueOf(dao.stepValue),
 							list
 						);
 					if (existing != null)
