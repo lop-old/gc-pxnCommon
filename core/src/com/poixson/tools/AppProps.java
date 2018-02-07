@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import com.poixson.app.Failure;
-import com.poixson.logger.xLog;
+import com.poixson.logger.xLogRoot;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
 
@@ -47,8 +47,7 @@ public class AppProps {
 			}
 			props.load(in);
 		} catch (IOException e) {
-			xLog.getRoot()
-				.trace(e);
+			xLogRoot.get().trace(e);
 		} finally {
 			Utils.safeClose(in);
 		}

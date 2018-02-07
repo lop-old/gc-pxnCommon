@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 
 import com.poixson.logger.xLevel;
 import com.poixson.logger.xLog;
+import com.poixson.logger.xLogRoot;
 
 
 public class slf4jLoggerFactory implements ILoggerFactory {
@@ -52,10 +53,10 @@ public class slf4jLoggerFactory implements ILoggerFactory {
 
 	public static xLog getLog() {
 		final xLog log =
-			xLog.getRoot()
+			xLogRoot.get()
 				.get(LOG_NAME);
 		// disable logging if not detail mode
-		if (!xLog.getRoot().isLoggable(xLevel.DETAIL)) {
+		if ( ! xLogRoot.get().isDetailLoggable() ) {
 			log.setLevel(xLevel.WARNING);
 		}
 		return log;

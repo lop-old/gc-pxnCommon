@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.xLevel;
 import com.poixson.logger.xLog;
+import com.poixson.logger.xLogRoot;
 import com.poixson.tools.Keeper;
 
 
@@ -331,7 +332,7 @@ public final class Utils {
 
 	public static void MemoryStats() {
 		MemoryStats(
-			xLog.getRoot()
+			xLogRoot.get()
 		);
 	}
 	public static void MemoryStats(final xLog log) {
@@ -557,7 +558,7 @@ public final class Utils {
 				return log;
 			}
 		}
-		final xLog log = xLog.getRoot();
+		final xLog log = xLogRoot.get();
 		_log = new SoftReference<xLog>(log);
 		return log;
 	}

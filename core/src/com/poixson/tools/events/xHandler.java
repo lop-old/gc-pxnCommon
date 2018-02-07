@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.xLog;
+import com.poixson.logger.xLogRoot;
 import com.poixson.tools.events.xEventListener.ListenerPriority;
 
 
@@ -224,7 +225,7 @@ public abstract class xHandler {
 			if (log != null)
 				return log;
 		}
-		final xLog log = xLog.getRoot();
+		final xLog log = xLogRoot.get();
 		this._log = new SoftReference<xLog>(log);
 		return log;
 	}

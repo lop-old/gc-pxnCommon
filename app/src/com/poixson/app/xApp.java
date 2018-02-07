@@ -12,7 +12,6 @@ import com.poixson.abstractions.xStartable;
 import com.poixson.app.xAppStep.StepType;
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.AttachedLogger;
-import com.poixson.logger.xLevel;
 import com.poixson.logger.xLog;
 import com.poixson.logger.xLogPrintStream;
 import com.poixson.logger.xLogRoot;
@@ -195,7 +194,7 @@ public abstract class xApp implements xStartable, AttachedLogger {
 			if (Failure.hasFailed()) return;
 			final int stepInt = this.state.get();
 			if (step != null) {
-				if (this.log().isLoggable(xLevel.DETAIL)) {
+				if (this.log().isDetailLoggable()) {
 					this.fine(
 						"{} step {}.. {}",
 						( stepInt > STATE_OFF ? "Startup" : "Shutdown" ),

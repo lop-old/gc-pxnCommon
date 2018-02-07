@@ -10,8 +10,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.poixson.abstractions.xStartable;
-import com.poixson.logger.xLevel;
 import com.poixson.logger.xLog;
+import com.poixson.logger.xLogRoot;
 import com.poixson.tools.Keeper;
 import com.poixson.tools.xClock;
 import com.poixson.tools.xTime;
@@ -311,7 +311,7 @@ public class xScheduler implements xStartable {
 				return log;
 		}
 		final xLog log =
-			xLog.getRoot()
+			xLogRoot.get()
 				.get(LOG_NAME)
 				.getWeak(this.getName());
 		this._log = new SoftReference<xLog>(log);
@@ -328,9 +328,7 @@ public class xScheduler implements xStartable {
 			if (detail != null)
 				return detail.booleanValue();
 		}
-		final boolean detail =
-			this.log()
-				.isLoggable(xLevel.DETAIL);
+		final boolean detail = this.log().isDetailLoggable();
 		this._detail = new SoftReference<Boolean>(Boolean.valueOf(detail));
 		return detail;
 	}

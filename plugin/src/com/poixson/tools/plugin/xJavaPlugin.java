@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.AttachedLogger;
 import com.poixson.logger.xLog;
+import com.poixson.logger.xLogRoot;
 import com.poixson.utils.ThreadUtils;
 
 
@@ -151,7 +152,7 @@ public abstract class xJavaPlugin implements AttachedLogger {
 				return log;
 		}
 		final xLog log =
-			xLog.getRoot()
+			xLogRoot.get()
 				.get("Plugin:"+this.getPluginName());
 		this._log = new SoftReference<xLog>(log);
 		return log;

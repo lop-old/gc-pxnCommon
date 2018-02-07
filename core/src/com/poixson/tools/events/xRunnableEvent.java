@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.xLevel;
 import com.poixson.logger.xLog;
+import com.poixson.logger.xLogRoot;
 import com.poixson.tools.byref.BoolRef;
 import com.poixson.tools.events.xEventListener.ListenerPriority;
 import com.poixson.tools.events.xHandler.xListenerDAO;
@@ -78,8 +79,7 @@ public class xRunnableEvent extends xRunnable {
 			try {
 				this.hasRun.wait();
 			} catch (InterruptedException e) {
-				this.log()
-					.trace(e);
+				this.log().trace(e);
 			}
 		}
 	}
@@ -95,7 +95,7 @@ public class xRunnableEvent extends xRunnable {
 				return log;
 			}
 		}
-		final xLog log = xLog.getRoot();
+		final xLog log = xLogRoot.get();
 		this._log = new SoftReference<xLog>(log);
 		return log;
 	}

@@ -8,7 +8,7 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import com.poixson.exceptions.RequiredArgumentException;
-import com.poixson.logger.xLog;
+import com.poixson.logger.xLogRoot;
 import com.poixson.tools.xTime;
 import com.poixson.tools.scheduler.xSchedulerTrigger;
 import com.poixson.utils.Utils;
@@ -68,7 +68,7 @@ public class TriggerClock extends xSchedulerTrigger {
 			final long untilNext = time - now;
 			if (0 - untilNext > grace) {
 //TODO: what should we do here?
-xLog.getRoot().warning("Skipping old scheduled clock trigger..");
+xLogRoot.get().warning("Skipping old scheduled clock trigger..");
 				this.setDisabled();
 				return Long.MIN_VALUE;
 			}

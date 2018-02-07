@@ -11,6 +11,7 @@ import com.poixson.exceptions.IORuntimeException;
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.ErrorMode;
 import com.poixson.logger.xLog;
+import com.poixson.logger.xLogRoot;
 import com.poixson.utils.FileUtils;
 import com.poixson.utils.NativeUtils;
 import com.poixson.utils.StringUtils;
@@ -448,7 +449,7 @@ System.out.println("SEARCH PATH: "+FileUtils.MergePaths(path, fileName));
 				return log;
 		}
 		final xLog log =
-			xLog.getRoot()
+			xLogRoot.get()
 				.get("LibLoader");
 		this._log = new SoftReference<xLog>(log);
 		return log;

@@ -110,7 +110,7 @@ public class ShutdownTask implements Runnable {
 			if (count == 0)
 				break OUTER_LOOP;
 			totalCount += count;
-			xLog.getRoot().fine("Running {} shutdown hooks..", count);
+			xLogRoot.get().fine("Running {} shutdown hooks..", count);
 			ThreadUtils.Sleep(20L);
 		} // end OUTER_LOOP
 		// queue another shutdown task (to wait for things to finish)

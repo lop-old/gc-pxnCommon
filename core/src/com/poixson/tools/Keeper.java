@@ -6,7 +6,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.poixson.exceptions.RequiredArgumentException;
-import com.poixson.logger.xLevel;
 import com.poixson.logger.xLog;
 import com.poixson.logger.xLogRoot;
 
@@ -95,8 +94,7 @@ public class Keeper {
 			if (detail != null)
 				return detail.booleanValue();
 		}
-		final boolean detail =
-			log().isLoggable(xLevel.DETAIL);
+		final boolean detail = log().isDetailLoggable();
 		_detail = new SoftReference<Boolean>(Boolean.valueOf(detail));
 		return detail;
 	}

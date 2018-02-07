@@ -180,7 +180,7 @@ public class jLineConsole implements xConsole {
 						new OutputStreamLineRemapper() {
 							@Override
 							public void line(final String line) {
-								xLog.getRoot()
+								xLogRoot.get()
 									.stdout(line);
 							}
 						}
@@ -193,7 +193,7 @@ public class jLineConsole implements xConsole {
 						new OutputStreamLineRemapper() {
 							@Override
 							public void line(final String line) {
-								xLog.getRoot()
+								xLogRoot.get()
 									.stderr(line);
 							}
 						}
@@ -517,7 +517,7 @@ public class jLineConsole implements xConsole {
 			}
 		}
 		final xLog log =
-			xLog.getRoot()
+			xLogRoot.get()
 				.get("jLine");
 		_log = new SoftReference<xLog>(log);
 		return log;

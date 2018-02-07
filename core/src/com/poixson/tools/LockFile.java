@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.xLog;
+import com.poixson.logger.xLogRoot;
 import com.poixson.utils.ProcUtils;
 import com.poixson.utils.ReflectUtils;
 import com.poixson.utils.SanUtils;
@@ -179,7 +180,7 @@ public class LockFile {
 				);
 		}
 		final xLog log =
-			xLog.getRoot()
+			xLogRoot.get()
 				.get(this._className);
 		this._log = new SoftReference<xLog>(log);
 		return log;

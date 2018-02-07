@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.poixson.abstractions.xStartable;
 import com.poixson.exceptions.RequiredArgumentException;
-import com.poixson.logger.xLog;
+import com.poixson.logger.xLogRoot;
 import com.poixson.utils.Utils;
 
 
@@ -84,8 +84,7 @@ public class StreamBridge implements xStartable {
 			} catch (IOException e) {
 				if (!this.stopping) {
 					if (!Thread.interrupted()) {
-						xLog.getRoot()
-							.trace(e);
+						xLogRoot.get().trace(e);
 					}
 				}
 				break;
@@ -97,8 +96,7 @@ public class StreamBridge implements xStartable {
 			} catch (IOException e) {
 				if (!this.stopping) {
 					if (!Thread.interrupted()) {
-						xLog.getRoot()
-							.trace(e);
+						xLogRoot.get().trace(e);
 					}
 				}
 				break;

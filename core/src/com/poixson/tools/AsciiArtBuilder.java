@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.poixson.exceptions.RequiredArgumentException;
-import com.poixson.logger.xLog;
 import com.poixson.logger.xLogPrintStream;
+import com.poixson.logger.xLogRoot;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
 
@@ -36,7 +36,7 @@ public class AsciiArtBuilder {
 		if (Utils.isEmpty(lines)) throw new RequiredArgumentException("lines");
 		this.out = (
 			out == null
-			? new xLogPrintStream( xLog.getRoot() )
+			? new xLogPrintStream( xLogRoot.get() )
 			: out
 		);
 		this.lines = lines;

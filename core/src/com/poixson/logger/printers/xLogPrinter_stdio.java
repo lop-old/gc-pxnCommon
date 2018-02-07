@@ -38,7 +38,8 @@ public class xLogPrinter_stdio extends xLogPrinterBasic {
 			final SoftReference<xConsole> soft = this.softConsole;
 			xConsole console = null;
 			if (soft == null) {
-				console = xLogRoot.get().getConsole();
+				console = xLogRoot.get()
+						.getConsole();
 				this.softConsole = new SoftReference<xConsole>( console );
 			} else {
 				console = soft.get();

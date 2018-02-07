@@ -87,8 +87,7 @@ public final class ProcUtils {
 //		} catch (IllegalAccessException | IllegalArgumentException
 //				| InvocationTargetException | NoSuchFieldException
 //				| SecurityException | NoSuchMethodException e) {
-//			xLog.getRoot()
-//				.trace(e);
+//			xLogRoot.get().trace(e);
 //		}
 //		return -1;
 	}
@@ -132,12 +131,12 @@ public final class ProcUtils {
 			);
 			return true;
 		} catch (OverlappingFileLockException e) {
-			final xLog log = xLog.getRoot();
+			final xLog log = xLogRoot.get();
 			log.severe("Unable to create or lock file:", file.toString());
 			log.severe("File may already be locked!");
 			return false;
 		} catch (Exception e) {
-			final xLog log = xLog.getRoot();
+			final xLog log = xLogRoot.get();
 			log.severe("Unable to create or lock file:", file.toString());
 			log.trace(e);
 		} finally {
@@ -166,7 +165,7 @@ public final class ProcUtils {
 				utils.safeClose(this.access);
 				this.file.delete();
 			} catch (Exception e) {
-				final xLog log = xLog.getRoot();
+				final xLog log = xLogRoot.get();
 				log.severe("Unable to release lock file:", this.file.toString());
 				log.trace(e);
 			}

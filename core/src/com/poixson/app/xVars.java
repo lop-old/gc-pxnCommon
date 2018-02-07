@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 
 import com.poixson.logger.xLog;
+import com.poixson.logger.xLogRoot;
 import com.poixson.tools.Keeper;
 import com.poixson.utils.NumberUtils;
 
@@ -58,7 +59,7 @@ public class xVars {
 			}
 			debug = Boolean.valueOf(enabled);
 			if (enabled) {
-				xLog.getRoot()
+				xLogRoot.get()
 					.fine("Enabled debug mode");
 			}
 		}

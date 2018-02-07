@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 
 import com.poixson.app.xAppStep.StepType;
 import com.poixson.exceptions.RequiredArgumentException;
-import com.poixson.logger.xLog;
+import com.poixson.logger.xLogRoot;
 import com.poixson.tools.remapped.RunnableNamed;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
@@ -72,7 +72,7 @@ public class xAppStepDAO implements RunnableNamed {
 
 
 	public void invoke() throws ReflectiveOperationException, RuntimeException {
-		xLog.getRoot()
+		xLogRoot.get()
 			.fine("Invoking step {}: {}", this.priority, this.name);
 		try {
 			this.method.invoke(this.container, this.app);

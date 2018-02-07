@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.poixson.app.xVars;
-import com.poixson.logger.xLog;
+import com.poixson.logger.xLogRoot;
 import com.poixson.tools.Keeper;
 import com.poixson.tools.xTime;
 
@@ -66,11 +66,10 @@ public final class ThreadUtils {
 		// no threads still running
 		if (Utils.isEmpty(threadNames)) return;
 		// build message
-		final StringBuilder msg =
-				(new StringBuilder())
-					.append("Threads still running: [")
-					.append(threadNames.length)
-					.append(']');
+		final StringBuilder msg = new StringBuilder();
+		msg.append("Threads still running: [")
+			.append(threadNames.length)
+			.append(']');
 		boolean hasDestroyJavaVM = false;
 		for (final String name : threadNames) {
 			if ("DestroyJavaVM".equals(name))
@@ -80,7 +79,7 @@ public final class ThreadUtils {
 		if (hasDestroyJavaVM) {
 			msg.append("\n\nShould use xApp.waitUntilClosed() when main() is finished.\n");
 		}
-		xLog.getRoot()
+		xLogRoot.get()
 			.publish(
 				msg.toString()
 			);

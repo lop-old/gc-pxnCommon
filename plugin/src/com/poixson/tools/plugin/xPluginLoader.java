@@ -16,6 +16,7 @@ import org.xeustechnologies.jcl.context.JclContext;
 
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.xLog;
+import com.poixson.logger.xLogRoot;
 import com.poixson.tools.config.ConfigUtils;
 import com.poixson.utils.Utils;
 import com.poixson.utils.ioUtils;
@@ -62,8 +63,7 @@ public class xPluginLoader<T extends xJavaPlugin> {
 				this.pluginMainClassKey
 			);
 		} catch (IOException e) {
-			this.log()
-				.trace(e);
+			this.log().trace(e);
 			return null;
 		} finally {
 			Utils.safeClose(in);
@@ -113,8 +113,7 @@ public class xPluginLoader<T extends xJavaPlugin> {
 //		try {
 //			required = cfg.getStringSet("Requires");
 //		} catch (Exception e) {
-//			this.log()
-//				.trace(e);
+//			this.log().trace(e);
 //			return null;
 //		}
 //		// check plugin dependencies
@@ -148,12 +147,10 @@ public class xPluginLoader<T extends xJavaPlugin> {
 				jcl.loadClass(classStr)
 			);
 		} catch (ClassNotFoundException e) {
-			this.log()
-				.trace(e);
+			this.log().trace(e);
 			return null;
 		} catch (MalformedURLException e) {
-			this.log()
-				.trace(e);
+			this.log().trace(e);
 			return null;
 		}
 		// get plugin class constructor
@@ -161,8 +158,7 @@ public class xPluginLoader<T extends xJavaPlugin> {
 		try {
 			construct = clss.getConstructor();
 		} catch (NoSuchMethodException | SecurityException e) {
-			this.log()
-				.trace(e);
+			this.log().trace(e);
 			return null;
 		}
 		// new plugin class instance
@@ -171,8 +167,7 @@ public class xPluginLoader<T extends xJavaPlugin> {
 			plugin = construct.newInstance();
 		} catch (InstantiationException | IllegalAccessException
 		| IllegalArgumentException | InvocationTargetException e) {
-			this.log()
-				.trace(e);
+			this.log().trace(e);
 			return null;
 		}
 		plugin.init(this.manager, yml);
@@ -229,7 +224,7 @@ public class xPluginLoader<T extends xJavaPlugin> {
 	public xLog log() {
 		return (
 			this.manager == null
-			? xLog.getRoot()
+			? xLogRoot.get()
 			: this.manager.log()
 		);
 	}

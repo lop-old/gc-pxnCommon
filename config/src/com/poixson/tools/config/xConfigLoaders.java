@@ -9,7 +9,7 @@ import java.util.Map;
 
 import com.poixson.exceptions.CreateDefaultYmlFileException;
 import com.poixson.exceptions.RequiredArgumentException;
-import com.poixson.logger.xLog;
+import com.poixson.logger.xLogRoot;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
 import com.poixson.utils.ioUtils;
@@ -141,7 +141,7 @@ public final class xConfigLoaders {
 				if (cfg != null) {
 					// copy default file
 					try {
-						xLog.getRoot()
+						xLogRoot.get()
 							.info("Creating default file: {}", fileStr);
 						ioUtils.ExportResource(
 							fileStr,
@@ -154,8 +154,7 @@ public final class xConfigLoaders {
 				}
 			}
 		} catch (Exception e) {
-			xLog.getRoot()
-				.trace(e);
+			xLogRoot.get().trace(e);
 		}
 		return null;
 	}

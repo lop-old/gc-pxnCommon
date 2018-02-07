@@ -11,8 +11,8 @@ import com.poixson.abstractions.xStartable;
 import com.poixson.exceptions.ContinueException;
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.exceptions.UnknownThreadPoolException;
-import com.poixson.logger.xLevel;
 import com.poixson.logger.xLog;
+import com.poixson.logger.xLogRoot;
 import com.poixson.threadpool.xThreadPoolQueue.TaskPriority;
 import com.poixson.tools.Keeper;
 import com.poixson.tools.remapped.xRunnable;
@@ -294,7 +294,7 @@ public abstract class xThreadPool implements xStartable {
 	public xLog log() {
 		if (this._log == null) {
 			this._log =
-				xLog.getRoot()
+				xLogRoot.get()
 					.get(this.getPoolName());
 		}
 		return this._log;
@@ -310,9 +310,7 @@ public abstract class xThreadPool implements xStartable {
 			if (detail != null)
 				return detail.booleanValue();
 		}
-		final boolean detail =
-			this.log()
-				.isLoggable(xLevel.DETAIL);
+		final boolean detail = this.log().isDetailLoggable();
 		this._detail = new SoftReference<Boolean>(Boolean.valueOf(detail));
 		return detail;
 	}

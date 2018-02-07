@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.xLog;
+import com.poixson.logger.xLogRoot;
 import com.poixson.utils.Utils;
 
 
@@ -154,7 +155,7 @@ public class xPluginManager<T extends xJavaPlugin> {
 				return log;
 		}
 		final xLog log =
-			xLog.getRoot()
+			xLogRoot.get()
 				.get(LOG_NAME);
 		this._log = new SoftReference<xLog>(log);
 		return log;
