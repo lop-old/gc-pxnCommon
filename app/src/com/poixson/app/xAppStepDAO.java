@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 
 import com.poixson.app.xAppStep.StepType;
 import com.poixson.exceptions.RequiredArgumentException;
-import com.poixson.logger.xLogRoot;
+import com.poixson.logger.xLog;
 import com.poixson.tools.remapped.RunnableNamed;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
@@ -75,12 +75,32 @@ public class xAppStepDAO implements RunnableNamed {
 
 
 	public void invoke() throws ReflectiveOperationException, RuntimeException {
-		xLogRoot.get()
-			.fine("Invoking step {}: {}", this.priority, this.name);
+		final String stepStr =
+			StringUtils.MergeStrings(
+				'-',
+				( this.stepValue > xApp.STATE_OFF ? "startup" : "shutdown" ),
+				Integer.toString(this.stepValue),
+				( Utils.isEmpty(this.title) ? this.name : this.title )
+			);
+		final xLog log = this.app.log()
+				.getWeak(stepStr);
+		log.detail("Invoking step {}: {}", this.stepValue, this.name);
+		final Thread currentThread = Thread.currentThread();
+		final String originalThreadName = currentThread.getName();
+		currentThread.setName(stepStr);
 		try {
-			this.method.invoke(this.container, this.app);
+			this.method.invoke(this.container, log);
 		} catch (Exception e) {
-			Failure.fail(e);
+			Failure.fail(
+				e,
+				StringUtils.ReplaceTags(
+					"Exception in {} step {}",
+					(this.stepValue > 0 ? "startup" : "shutdown"),
+					this.stepValue
+				)
+			);
+		} finally {
+			currentThread.setName(originalThreadName);
 		}
 	}
 	@Override
