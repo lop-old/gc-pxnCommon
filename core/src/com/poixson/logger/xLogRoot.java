@@ -130,8 +130,28 @@ public class xLogRoot extends xLog {
 			if (formatter != null)
 				return formatter;
 		}
+		// enable console color if possible
+		if (xVars.isColorEnabled()) {
+			try {
+				final Class<?> clss =
+					Class.forName(
+						"com.poixson.logger.formatters.xLogFormatter_Color"
+					);
+				if (clss == null) throw new ClassNotFoundException();
+				final xLogFormatter formatter =
+					(xLogFormatter) clss.newInstance();
+				if ( ! this.defaultFormatter.compareAndSet(null, formatter) )
+					return this.defaultFormatter.get();
+				return formatter;
+			} catch (ClassNotFoundException ignore) {
+			} catch (InstantiationException ignore) {
+			} catch (IllegalAccessException ignore) {
+			}
+		}
+		// new default formatter
 		{
-			final xLogFormatter formatter = new xLogFormatter_Detailed();
+			final xLogFormatter formatter =
+				new xLogFormatter_Detailed();
 			if ( ! this.defaultFormatter.compareAndSet(null, formatter) )
 				return this.defaultFormatter.get();
 			return formatter;
