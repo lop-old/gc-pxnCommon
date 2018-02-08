@@ -8,6 +8,7 @@ import com.poixson.logger.formatters.xLogFormatter;
 import com.poixson.logger.formatters.xLogFormatter_Detailed;
 import com.poixson.logger.printers.xLogPrinter;
 import com.poixson.logger.printers.xLogPrinter_stdio;
+import com.poixson.tools.Keeper;
 import com.poixson.utils.Utils;
 
 
@@ -45,6 +46,7 @@ public class xLogRoot extends xLog {
 			// init root logger
 			{
 				log.setLevel(DEFAULT_LEVEL);
+				Keeper.add(log);
 			}
 			return log;
 		}
@@ -68,7 +70,7 @@ public class xLogRoot extends xLog {
 
 	@Override
 	public xLevel getLevel() {
-		if (xVars.debug())
+		if (xVars.isDebug())
 			return xLevel.DETAIL;
 		final xLevel lvl = super.level.get();
 		if (lvl != null)
