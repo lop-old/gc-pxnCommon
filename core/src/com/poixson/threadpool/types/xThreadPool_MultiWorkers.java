@@ -166,11 +166,12 @@ public abstract class xThreadPool_MultiWorkers extends xThreadPoolQueue {
 
 
 
-//TODO: this isn't working yet
 	// force to run tasks in main pool
+	@Override
 	public boolean imposeMainPool() {
 		return (this.maxWorkers <= 0);
 	}
+	@Override
 	public void setImposeMainPool() {
 		this.setMaxWorkers(0);
 	}

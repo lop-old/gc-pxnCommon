@@ -1,5 +1,6 @@
 package com.poixson.threadpool.types;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.poixson.exceptions.RequiredArgumentException;
@@ -13,6 +14,9 @@ public abstract class xThreadPool_SingleWorker extends xThreadPoolQueue {
 
 	protected final AtomicReference<xThreadPoolWorker> worker =
 			new AtomicReference<xThreadPoolWorker>(null);
+
+	protected final AtomicBoolean imposeMain =
+			new AtomicBoolean(false);
 
 
 
@@ -118,6 +122,21 @@ public abstract class xThreadPool_SingleWorker extends xThreadPoolQueue {
 			worker.setPriority(priority);
 		}
 		return this;
+	}
+
+
+
+	// force to run tasks in main pool
+	@Override
+	public boolean imposeMainPool() {
+		return this.imposeMain.get();
+	}
+	@Override
+	public void setImposeMainPool() {
+		this.imposeMain.set(true);
+	}
+	public void disableImposeMainPool() {
+		this.imposeMain.set(false);
 	}
 
 

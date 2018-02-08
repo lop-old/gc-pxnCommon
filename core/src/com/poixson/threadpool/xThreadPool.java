@@ -203,6 +203,11 @@ public abstract class xThreadPool implements xStartable {
 
 
 
+	public abstract boolean imposeMainPool();
+	public abstract void setImposeMainPool();
+
+
+
 	// ------------------------------------------------------------------------------- //
 	// which thread
 

@@ -52,6 +52,20 @@ public class xThreadPool_Main extends xThreadPool_SingleWorker {
 
 
 
+	@Override
+	public boolean imposeMainPool() {
+		return false;
+	}
+	@Override
+	public void setImposeMainPool() {
+		throw new UnsupportedOperationException();
+	}
+	public void disableImposeMainPool() {
+		throw new UnsupportedOperationException();
+	}
+
+
+
 	// ------------------------------------------------------------------------------- //
 	// stats
 
