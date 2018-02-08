@@ -52,15 +52,10 @@ public abstract class xThreadPool_SingleWorker extends xThreadPoolQueue {
 		if ( ! worker.equals(existing) ) {
 			worker.stop();
 			throw new RuntimeException(
-				StringUtils.MergeObjects(
-					' ',
+				StringUtils.ReplaceTags(
 					"Cannot start, invalid worker registered!",
 					worker.getWorkerIndex(),
-					(
-						existing == null
-						? "-null-"
-						: Long.valueOf( existing.getWorkerIndex() )
-					)
+					existing.getWorkerIndex()
 				)
 			);
 		}

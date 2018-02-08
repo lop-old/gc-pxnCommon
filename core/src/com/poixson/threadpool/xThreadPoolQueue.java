@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.poixson.exceptions.ContinueException;
 import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.threadpool.types.xThreadPool_Main;
 import com.poixson.tools.remapped.RemappedMethod;
 import com.poixson.tools.remapped.xCallable;
 import com.poixson.tools.remapped.xRunnable;
@@ -274,6 +275,17 @@ public abstract class xThreadPoolQueue extends xThreadPool {
 			? TaskPriority.NORM
 			: priority
 		);
+		// run now as current thread
+		if (TaskPriority.HIGH.equals(pr)) {
+			if (this.isCurrentThread()) {
+				final xThreadPoolWorker worker = this.getCurrentWorker();
+				if (worker == null) throw new RuntimeException("Failed to get current worker!");
+				// just run it
+				task.setWorker(worker);
+				task.run();
+				return task.getFuture();
+			}
+		}
 		// get task queue (default to normal/later)
 		final LinkedBlockingQueue< xThreadPoolTask<?> > queue =
 			this.getQueueByPriority(pr);
