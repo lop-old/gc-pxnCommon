@@ -24,7 +24,7 @@ public class xAppSteps_Console {
 
 
 
-	@xAppStep(type=StepType.STARTUP, title="", priority=90)
+	@xAppStep( Type=StepType.STARTUP, Title="Console", StepValue=90 )
 	public void __STARTUP_console(final xApp app) {
 		if (Failure.hasFailed())
 			return;
@@ -45,7 +45,7 @@ public class xAppSteps_Console {
 
 
 	// stop console input
-	@xAppStep(type=StepType.SHUTDOWN, title="Console", priority=30)
+	@xAppStep( Type=StepType.SHUTDOWN, Title="Console", StepValue=30)
 	public void __SHUTDOWN_console() {
 		xLog.Shutdown();
 	}

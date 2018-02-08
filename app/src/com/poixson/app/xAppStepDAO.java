@@ -30,8 +30,8 @@ public class xAppStepDAO implements RunnableNamed {
 		if (container == null) throw new RequiredArgumentException("container");
 		if (method    == null) throw new RequiredArgumentException("method");
 		if (anno      == null) throw new RequiredArgumentException("annotation");
-		this.type = anno.type();
-		this.stepValue = Math.abs(anno.priority());
+		this.type = anno.Type();
+		this.stepValue = Math.abs( anno.StepValue() );
 		this.app       = app;
 		this.container = container;
 		this.method    = method;
@@ -52,9 +52,9 @@ public class xAppStepDAO implements RunnableNamed {
 				: name;
 		}
 		this.title = (
-			Utils.isEmpty(anno.title())
+			Utils.isEmpty(anno.Title())
 			? this.name
-			: anno.title()
+			: anno.Title()
 		);
 	}
 

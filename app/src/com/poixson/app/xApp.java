@@ -308,7 +308,7 @@ public abstract class xApp implements xStartable, AttachedLogger {
 				final xAppStep anno = m.getAnnotation(xAppStep.class);
 				if (anno == null) continue;
 				// found step method
-				if (type.equals(anno.type())) {
+				if (type.equals(anno.Type())) {
 					final xAppStepDAO dao =
 						new xAppStepDAO(
 							this,

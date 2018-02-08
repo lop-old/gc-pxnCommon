@@ -15,10 +15,15 @@ public class xAppSteps_Config {
 
 
 	// load configs
-	@xAppStep(type=StepType.STARTUP, title="Configs", priority=50)
+	@xAppStep( Type=StepType.STARTUP, Title="Configs", StepValue=50 )
 	public void __STARTUP_configs(final xApp app) {
 //TODO:
 	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// shutdown steps
 
 
 

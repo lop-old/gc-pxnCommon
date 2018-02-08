@@ -13,9 +13,9 @@ public @interface xAppStep {
 
 	public enum StepType {STARTUP, SHUTDOWN};
 
-	StepType type();
-	int priority() default 100;
-	String title() default "";
+	StepType Type();
+	int    StepValue() default 100;
+	String Title()     default "";
 
 
 }
