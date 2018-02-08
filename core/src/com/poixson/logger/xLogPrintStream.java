@@ -44,6 +44,12 @@ public class xLogPrintStream extends PrintStream {
 
 
 
+	@Override
+	public void flush() {
+	}
+
+
+
 	// ------------------------------------------------------------------------------- //
 	// output stream class
 
