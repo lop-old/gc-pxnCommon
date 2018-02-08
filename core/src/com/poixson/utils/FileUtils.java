@@ -20,24 +20,33 @@ public final class FileUtils {
 
 
 
-	public static boolean SearchLocalFile(final String fileNames[]) {
+	public static String SearchLocalFile(final String fileNames[], final int parents) {
 		if (Utils.isEmpty(fileNames)) throw new RequiredArgumentException("fileNames");
 		final String[] workingPaths = (
 			FileUtils.inRunDir()
 			? new String[] { FileUtils.cwd() }
 			: new String[] { FileUtils.cwd(), FileUtils.pwd() }
 		);
-		for (final String workPath : workingPaths) {
-			for (final String fileName : fileNames) {
-				final String path =
-					FileUtils.MergePaths(workPath, fileName);
-				final File file = new File(path);
-				if (file.exists()) {
-					return true;
-				}
-			}
-		}
-		return false;
+		//PARENTS_LOOP:
+		for (int parentIndex=0; parentIndex<parents; parentIndex++) {
+			//PATH_LOOP:
+			for (final String workPath : workingPaths) {
+				//FILE_LOOP:
+				for (final String fileName : fileNames) {
+					final String path =
+						FileUtils.MergePaths(
+							workPath,
+							StringUtils.Repeat(parentIndex, "../"),
+							fileName
+						);
+					final File file = new File(path);
+					if (file.exists()) {
+						return path;
+					}
+				} // end FILE_LOOP
+			} // end PATH_LOOP
+		} // end PARENTS_LOOP
+		return null;
 	}
 
 
