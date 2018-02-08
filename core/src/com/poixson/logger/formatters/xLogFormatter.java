@@ -12,12 +12,17 @@ public class xLogFormatter {
 
 
 
-	public String formatMsg(final xLogRecord record, final int lineIndex) {
+	public xLogFormatter() {
+	}
+
+
+
+	public String[] formatMessage(final xLogRecord record) {
 		// [[ title ]]
 		if (xLevel.TITLE.equals(record.level))
-			return this.genTitle(record, lineIndex);
+			return this.genTitle(record);
 		// message only
-		return this.genMessage(record, lineIndex);
+		return record.getPreparedLines();
 	}
 
 
@@ -28,36 +33,45 @@ public class xLogFormatter {
 
 
 	// title
-	protected String genTitle(final xLogRecord record, final int lineIndex) {
+	protected String[] genTitle(final xLogRecord record) {
 		return
 			this.genTitle(
 				record,
-				lineIndex,
 				" [[ ",
 				" ]] "
 			);
 	}
-	protected String genTitle(final xLogRecord record, final int lineIndex,
+	protected String[] genTitle(final xLogRecord record,
 			final String preStr, final String postStr) {
 		if (record.isEmpty()) {
-			return (new StringBuilder())
+			final String msg =
+				(new StringBuilder())
+					.append(preStr)
+					.append("<null>")
+					.append(postStr)
+					.toString();
+			return new String[] { msg };
+		}
+		final int len =
+			StringUtils.FindLongestLine(
+				record.getPreparedLines()
+			);
+		final String[] result = new String[ record.lineCount ];
+		for (int index=0; index<record.lineCount; index++) {
+			final String line =
+				StringUtils.PadEnd(
+					len,
+					record.getPreparedLine(index),
+					' '
+				);
+			result[index] =
+				(new StringBuilder())
 				.append(preStr)
-				.append("<null>")
+				.append(line)
 				.append(postStr)
 				.toString();
 		}
-		final int len = record.getLongestLine();
-		return (new StringBuilder())
-			.append(preStr)
-			.append(
-				StringUtils.PadEnd(
-					len,
-					record.lines[lineIndex],
-					' '
-				)
-			)
-			.append(postStr)
-			.toString();
+		return result;
 	}
 
 
@@ -120,7 +134,7 @@ public class xLogFormatter {
 	protected String genMessage(final xLogRecord record, final int lineIndex) {
 		return (new StringBuilder())
 			.append(' ')
-			.append( record.lines[ lineIndex ] )
+			.append( record.getPreparedLine(lineIndex) )
 			.toString();
 	}
 

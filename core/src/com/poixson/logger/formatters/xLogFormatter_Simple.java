@@ -10,25 +10,32 @@ public class xLogFormatter_Simple extends xLogFormatter {
 
 
 	public xLogFormatter_Simple() {
+		super();
 	}
 
 
 
 	@Override
-	public String formatMsg(final xLogRecord record, final int lineIndex) {
+	public String[] formatMessage(final xLogRecord record) {
 		// [[ title ]]
 		if (xLevel.TITLE.equals(record.level))
-			return this.genTitle(record, lineIndex);
-		return
-			StringUtils.MergeStrings(
-				' ',
-				// timestamp
-				this.genTimestamp(record, "D HH:mm:ss"),
-				// [level]
-				this.genLevel(record, "[", "]"),
-				// message
-				this.genMessage(record, lineIndex)
-			);
+			return this.genTitle(record);
+		// format message lines
+		final String[] result = new String[ record.lineCount ];
+		for (int index=0; index<record.lineCount; index++) {
+			// timestamp [level] message
+			result[index] =
+				StringUtils.MergeStrings(
+					' ',
+					// timestamp
+					this.genTimestamp(record, "D HH:mm:ss"),
+					// [level]
+					this.genLevel(record, "[", "]"),
+					// message
+					this.genMessage(record, index)
+				);
+		}
+		return result;
 	}
 
 

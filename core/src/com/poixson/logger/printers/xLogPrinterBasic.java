@@ -9,6 +9,7 @@ import com.poixson.logger.xLogRecord;
 import com.poixson.logger.xLogRoot;
 import com.poixson.logger.formatters.xLogFormatter;
 import com.poixson.tools.xTimeU;
+import com.poixson.utils.Utils;
 
 
 public abstract class xLogPrinterBasic implements xLogPrinter {
@@ -34,16 +35,11 @@ public abstract class xLogPrinterBasic implements xLogPrinter {
 	public void publish(final xLogRecord record) {
 		try {
 			final xLogFormatter formatter = this.getFormatter();
-			String[] lines = new String[ record.lineCount ];
-			//LINES_LOOP:
-			for (int lineIndex=0; lineIndex<record.lineCount; lineIndex++) {
-				lines[ lineIndex ] =
-					formatter.formatMsg(
-						record,
-						lineIndex
-					);
-			} // end LINES_LOOP
-			this.publish( lines );
+			this.publish(
+				formatter.formatMessage(
+					record
+				)
+			);
 		} catch (IOException e) {
 			e.printStackTrace(
 				xVars.getOriginalErr()
@@ -53,8 +49,12 @@ public abstract class xLogPrinterBasic implements xLogPrinter {
 	@Override
 	public void publish(final String[] lines) throws IOException {
 		this.getPublishLock();
-		for (final String line : lines) {
-			this.publish(line);
+		if (Utils.isEmpty(lines)) {
+			this.publish( (String) null );
+		} else {
+			for (final String line : lines) {
+				this.publish(line);
+			}
 		}
 		this.releasePublishLock();
 	}

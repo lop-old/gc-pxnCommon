@@ -10,40 +10,45 @@ public class xLogFormatter_Color extends xLogFormatter {
 
 
 	public xLogFormatter_Color() {
+		super();
 	}
 
 
 
 	@Override
-	public String formatMsg(final xLogRecord record, final int lineIndex) {
+	public String[] formatMessage(final xLogRecord record) {
 		// [[ title ]]
 		if (xLevel.TITLE.equals(record.level)) {
 			return
 				this.genTitle(
 					record,
-					lineIndex,
 					" @|FG_MAGENTA [[|@ @|FG_CYAN ",
 					"|@ @|FG_MAGENTA ]]|@ "
 				);
 		}
-		// timestamp [level] [crumbs]
-		return
-			StringUtils.MergeStrings(
-				' ',
-				// timestamp
-				this.genTimestamp(
-					record,
-					"D yyyy-MM-dd HH:mm:ss",
-					"@|FG_WHITE ",
-					"|@"
-				),
-				// [level]
-				this.genLevel(record),
-				// [crumbs]
-				this.genCrumbs(record),
-				// message
-				this.genMessage(record, lineIndex)
-			);
+		// format message lines
+		final String[] result = new String[ record.lineCount ];
+		for (int index=0; index<record.lineCount; index++) {
+			// timestamp [level] [crumbs] message
+			result[index] =
+				StringUtils.MergeStrings(
+					' ',
+					// timestamp
+					this.genTimestamp(
+						record,
+						"D yyyy-MM-dd HH:mm:ss",
+						"@|FG_WHITE ",
+						"|@"
+					),
+					// [level]
+					this.genLevelColored(record),
+					// [crumbs]
+					this.genCrumbsColored(record),
+					// message
+					this.genMessage(record, index)
+				);
+		}
+		return result;
 	}
 
 
@@ -54,7 +59,7 @@ public class xLogFormatter_Color extends xLogFormatter {
 
 
 	// [level]
-	protected String genLevel(final xLogRecord record) {
+	protected String genLevelColored(final xLogRecord record) {
 		return (new StringBuilder())
 			.append("@|FG_BLACK,BOLD [|@@|")
 			.append( this.getLevelColor(record.level) )
@@ -92,7 +97,7 @@ public class xLogFormatter_Color extends xLogFormatter {
 
 
 	// crumbs
-	protected String genCrumbs(final xLogRecord record) {
+	protected String genCrumbsColored(final xLogRecord record) {
 		return (new StringBuilder())
 			.append("@|FG_BLACK,BOLD ")
 			.append( super.genCrumbs(record, "[", "] [", "]") )
