@@ -89,7 +89,21 @@ public class xAppStepDAO implements RunnableNamed {
 		final String originalThreadName = currentThread.getName();
 		currentThread.setName(stepStr);
 		try {
-			this.method.invoke(this.container, this.app, log);
+			// ()
+			this.method.invoke(this.container);
+		} catch (IllegalArgumentException ignore1) {
+			try {
+				// (log)
+				this.method.invoke(this.container, log);
+			} catch (IllegalArgumentException ignore2) {
+				try {
+					// (app)
+					this.method.invoke(this.container, this.app);
+				} catch (IllegalArgumentException ignore3) {
+					// (app, log)
+					this.method.invoke(this.container, this.app, log);
+				}
+			}
 		} catch (Exception e) {
 			Failure.fail(
 				e,
