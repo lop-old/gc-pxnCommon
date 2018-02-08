@@ -2,12 +2,12 @@ package com.poixson.logger.printers;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.lang.ref.SoftReference;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.poixson.app.xVars;
 import com.poixson.logger.xLogRoot;
 import com.poixson.logger.console.xConsole;
+import com.poixson.utils.StringUtils;
 
 
 public class xLogPrinter_stdio extends xLogPrinterBasic {
@@ -15,7 +15,6 @@ public class xLogPrinter_stdio extends xLogPrinterBasic {
 	protected static final ReentrantLock globalPublishLock = new ReentrantLock(true);
 
 	protected final PrintStream out;
-	protected SoftReference<xConsole> softConsole = null;
 
 
 
@@ -35,15 +34,9 @@ public class xLogPrinter_stdio extends xLogPrinterBasic {
 	@Override
 	public void publish(final String line) {
 		{
-			final SoftReference<xConsole> soft = this.softConsole;
-			xConsole console = null;
-			if (soft == null) {
-				console = xLogRoot.get()
-						.getConsole();
-				this.softConsole = new SoftReference<xConsole>( console );
-			} else {
-				console = soft.get();
-			}
+			final xConsole console =
+				xLogRoot.get()
+					.getConsole();
 			if (console != null) {
 				if (line == null) {
 					console.println();
