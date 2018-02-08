@@ -17,6 +17,10 @@ public class xLogFormatter_Color extends xLogFormatter {
 
 	@Override
 	public String[] formatMessage(final xLogRecord record) {
+		// publish plain message
+		if (record.level == null) {
+			return record.getPreparedLines();
+		}
 		// [[ title ]]
 		if (xLevel.TITLE.equals(record.level)) {
 			return
@@ -69,6 +73,8 @@ public class xLogFormatter_Color extends xLogFormatter {
 			.toString();
 	}
 	protected String getLevelColor(final xLevel level) {
+		if (level == null)
+			return "FG_BLACK,BOLD";
 		// all, finest, finer, fine
 		if (level.isLoggable(xLevel.FINE))
 			return "FG_BLACK,BOLD";
