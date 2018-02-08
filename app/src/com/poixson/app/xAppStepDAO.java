@@ -89,7 +89,7 @@ public class xAppStepDAO implements RunnableNamed {
 		final String originalThreadName = currentThread.getName();
 		currentThread.setName(stepStr);
 		try {
-			this.method.invoke(this.container, log);
+			this.method.invoke(this.container, this.app, log);
 		} catch (Exception e) {
 			Failure.fail(
 				e,
@@ -105,6 +105,7 @@ public class xAppStepDAO implements RunnableNamed {
 	}
 	@Override
 	public void run() {
+		if (Failure.hasFailed()) return;
 		try {
 			this.invoke();
 		} catch (ReflectiveOperationException e) {

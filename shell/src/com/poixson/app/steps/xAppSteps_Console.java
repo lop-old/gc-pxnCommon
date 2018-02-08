@@ -26,8 +26,6 @@ public class xAppSteps_Console {
 
 	@xAppStep( Type=StepType.STARTUP, Title="Console", StepValue=90 )
 	public void __STARTUP_console(final xApp app) {
-		if (Failure.hasFailed())
-			return;
 		// initialize console and enable colors
 		if (System.console() != null) {
 			if ( ! Utils.isJLineAvailable()) {
