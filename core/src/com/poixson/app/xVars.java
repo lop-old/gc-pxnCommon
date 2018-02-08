@@ -3,18 +3,24 @@ package com.poixson.app;
 import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.concurrent.atomic.AtomicReference;
 
-import com.poixson.logger.xLog;
 import com.poixson.logger.xLogRoot;
 import com.poixson.tools.Keeper;
-import com.poixson.utils.NumberUtils;
+import com.poixson.utils.Utils;
 
 
-public class xVars {
+public final class xVars {
 	private xVars() {}
-	{ Keeper.add(new xVars()); }
 
-	private static final boolean DEFAULT_DEBUG = false;
+	// defaults
+	private static final boolean DEFAULT_DEBUG              = false;
+
+	private static final boolean DEFAULT_CONSOLE_COLOR      = true;
+
+	public  static final int     MAX_JLINE_HISTORY_SIZE     = 10000;
+	private static final int     DEFAULT_JLINE_HISTORY_SIZE = 200;
+	private static final String  DEFAULT_JLINE_HISTORY_FILE = null;
 
 	public static final String[] SEARCH_DEBUG_FILES =
 		new String[] {
@@ -24,43 +30,69 @@ public class xVars {
 
 
 
+	// debug mode
+	private static final AtomicReference<Boolean> debug =
+			new AtomicReference<Boolean>(null);
+
+	// original out/err/in
+	private static final AtomicReference<PrintStream> originalOut =
+			new AtomicReference<PrintStream>(null);
+	private static final AtomicReference<PrintStream> originalErr =
+			new AtomicReference<PrintStream>(null);
+	private static final AtomicReference<InputStream> originalIn  =
+			new AtomicReference<InputStream>(null);
+
+	// console color
+	private static final AtomicReference<Boolean> colorEnabled =
+			new AtomicReference<Boolean>(null);
+
+	// jline history size
+	private static final AtomicReference<Integer> jlineHistorySize =
+			new AtomicReference<Integer>(null);
+	private static final AtomicReference<String> jlineHistoryFile =
+			new AtomicReference<String>(null);
+
+
+
+	// init
+	static {
+		Keeper.add(new xVars());
+	}
+
+
+
 	// ------------------------------------------------------------------------------- //
 	// debug mode
 
 
 
-	private static volatile Boolean debug = null;
-	private static final Object debugLock = new Object();
-
-	public static boolean debug() {
-		final Boolean bool = debug;
-		if (bool == null) {
+	public static boolean isDebug() {
+		final Boolean bool = debug.get();
+		// default
+		if (bool == null)
 			return DEFAULT_DEBUG;
-		}
 		return bool.booleanValue();
 	}
 	public static boolean notDebug() {
-		return ! debug();
+		return ! isDebug();
 	}
-	public static void debug(final boolean enabled) {
-		synchronized(debugLock) {
-			// check existing value
-			final Boolean current = debug;
-			if (current != null) {
-				// unchanged
-				if (current.booleanValue() == enabled)
-					return;
-				// change debug state
-				if ( ! current.booleanValue() ) {
-					final xLog log = xLog.peekRoot();
-					if (log != null)
-						log.fine("Disabled debug mode");
-				}
-			}
-			debug = Boolean.valueOf(enabled);
-			if (enabled) {
+	public static Boolean peekDebug() {
+		return debug.get();
+	}
+	public static void setDebug(final boolean enable) {
+		final Boolean previous =
+			debug.getAndSet(
+				Boolean.valueOf(enable)
+			);
+		if (previous != null) {
+			if (previous.booleanValue()) {
 				xLogRoot.get()
-					.fine("Enabled debug mode");
+					.info("Enabled debug mode");
+			} else {
+				final xLogRoot log = xLogRoot.peek();
+				if (log != null) {
+					log.info("Disabled debug mode");
+				}
 			}
 		}
 	}
@@ -68,17 +100,13 @@ public class xVars {
 
 
 	// ------------------------------------------------------------------------------- //
-	// original std out/err/in
+	// original out/err/in
 
 
 
-	private static volatile PrintStream originalOut = null;
-	private static volatile PrintStream originalErr = null;
-	private static volatile InputStream originalIn  = null;
-
-	// original std-out stream
+	// out stream
 	public static PrintStream getOriginalOut() {
-		final PrintStream out = originalOut;
+		final PrintStream out = originalOut.get();
 		return (
 			out == null
 			? System.out
@@ -87,13 +115,13 @@ public class xVars {
 	}
 	public static void setOriginalOut(final PrintStream out) {
 		if (out != null) {
-			originalOut = out;
+			originalOut.set(out);
 		}
 	}
 
-	// original std-err stream
+	// err stream
 	public static PrintStream getOriginalErr() {
-		final PrintStream err = originalErr;
+		final PrintStream err = originalErr.get();
 		return (
 			err == null
 			? System.err
@@ -102,13 +130,13 @@ public class xVars {
 	}
 	public static void setOriginalErr(final PrintStream err) {
 		if (err != null) {
-			originalErr = err;
+			originalErr.set(err);
 		}
 	}
 
-	// original std-in stream
+	// in stream
 	public static InputStream getOriginalIn() {
-		final InputStream in = originalIn;
+		final InputStream in = originalIn.get();
 		return (
 			in == null
 			? System.in
@@ -117,76 +145,125 @@ public class xVars {
 	}
 	public static void setOriginalIn(final InputStream in) {
 		if (in != null) {
-			originalIn = in;
+			originalIn.set(in);
 		}
 	}
 
 
 
 	// ------------------------------------------------------------------------------- //
-	// console settings
-
-
-
 	// console color
-	private static volatile Boolean consoleColorEnabled = null;
 
-	public static Boolean getConsoleColorEnabled() {
-		return consoleColorEnabled;
+
+
+	public static boolean isColorEnabled() {
+		final Boolean bool = colorEnabled.get();
+		// default
+		if (bool == null)
+			return DEFAULT_CONSOLE_COLOR;
+		return bool.booleanValue();
 	}
-	public static boolean isConsoleColorEnabled() {
-		final Boolean enabled = consoleColorEnabled;
-		if (enabled == null)
-			return false;
-		return enabled.booleanValue();
+	public static boolean isColorDisabled() {
+		return ! isColorEnabled();
 	}
-	public static boolean isConsoleColorDisabled() {
-		final Boolean enabled = consoleColorEnabled;
-		if (enabled == null)
-			return false;
-		return enabled.booleanValue();
+	public static Boolean peekColorEnabled() {
+		return colorEnabled.get();
 	}
-	public static void setConsoleColor(final boolean enabled) {
-		consoleColorEnabled = Boolean.valueOf(enabled);
+	public static void setColorEnabled(final boolean enable) {
+		if (enable) {
+			if (System.console() == null) {
+				final xLogRoot log = xLogRoot.peek();
+				if (log != null) {
+					log.fine("Cannot enable console color");
+				}
+			}
+		}
+		final Boolean previous =
+			colorEnabled.getAndSet(
+				Boolean.valueOf(enable)
+			);
+		if (previous != null) {
+			final xLogRoot log = xLogRoot.peek();
+			if (log != null) {
+				if (previous.booleanValue()) {
+					log.fine("Enabled console color");
+				} else {
+					log.fine("Disabled console color");
+				}
+			}
+		}
 	}
 
 
 
 	// ------------------------------------------------------------------------------- //
-	// jline history
+	// jline history size
 
 
 
 	// history size
-	private static volatile int jLineHistorySize = 200;
-
 	public static int getJLineHistorySize() {
-		return jLineHistorySize;
+		final Integer size = jlineHistorySize.get();
+		// default
+		if (size == null)
+			return DEFAULT_JLINE_HISTORY_SIZE;
+		return size.intValue();
+	}
+	public static Integer peekJLineHistorySize() {
+		return jlineHistorySize.get();
+	}
+	public static boolean isJLineHistory() {
+		return (getJLineHistorySize() != 0);
+	}
+	public static boolean notJLineHistory() {
+		return ! isJLineHistory();
 	}
 	public static void setJLineHistorySize(final int size) {
-		jLineHistorySize =
-			NumberUtils.MinMax(
-				size,
-				1,
-				10000
-			);
+//TODO: update print handlers
+		final int value;
+		if (size < -1) {
+			value = 0;
+		} else
+		if (size > MAX_JLINE_HISTORY_SIZE) {
+			value = MAX_JLINE_HISTORY_SIZE;
+		} else {
+			value = size;
+		}
+		jlineHistorySize.set(
+			Integer.valueOf(value)
+		);
 	}
 
 
 
 	// history file
-	private static volatile File jLineHistoryFile = null;
-
-	public static File getJLineHistoryFile() {
-		return jLineHistoryFile;
+	public static String getJLineHistoryFileStr() {
+		final String fileStr = jlineHistoryFile.get();
+		// mark using default
+		if (fileStr == null) {
+			jlineHistoryFile.set("");
+			return DEFAULT_JLINE_HISTORY_FILE;
+		}
+		// using default
+		if (fileStr.length() == 0) {
+			return DEFAULT_JLINE_HISTORY_FILE;
+		}
+		return fileStr;
 	}
-	public static void setJLineHistoryFile(final String fileStr) {
-		setJLineHistoryFile(
-			new File(fileStr)
+	public static File getJLineHistoryFile() {
+		final String fileStr = getJLineHistoryFileStr();
+		return (
+			Utils.isEmpty(fileStr)
+			? null
+			: new File(fileStr)
 		);
 	}
-	public static void setJLineHistoryFile(final File file) {
-		jLineHistoryFile = file;
+	public static String peekJLineHistoryFile() {
+		return jlineHistoryFile.get();
+	}
+	public static void setJLineHistoryFile(final String fileStr) {
+//TODO: update print handlers
+		jlineHistoryFile.set(fileStr);
 	}
 
 
