@@ -56,7 +56,11 @@ public class xLogPrinter_stdio extends xLogPrinterBasic {
 		if (line == null) {
 			this.out.println();
 		} else {
-			this.out.println(line);
+			this.out.println(
+				StringUtils.StripColorTags(
+					line
+				)
+			);
 		}
 	}
 
