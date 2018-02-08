@@ -131,7 +131,7 @@ public abstract class xThreadPoolQueue extends xThreadPool {
 	 * Forces a method to be called from the correct thread.
 	 * @param callingFrom Class object which contains the method.
 	 * @param methodName The method which is being called.
-	 * @param now wait for the result.
+	 * @param priority
 	 * @param args Arguments being passed to the method.
 	 * @return false if already in the correct thread;
 	 *   true if calling from some other thread. this will queue
@@ -145,10 +145,13 @@ public abstract class xThreadPoolQueue extends xThreadPool {
 	 *     // do something here
 	 * }
 	 */
-	public boolean force(final Object callingFrom,
-			final String methodName, final boolean now, final Object...args) {
+	@Override
+	public boolean force(
+			final Object callingFrom, final String methodName,
+			final TaskPriority priority, final Object...args) {
 		if (callingFrom == null)       throw new RequiredArgumentException("callingFrom");
 		if (Utils.isEmpty(methodName)) throw new RequiredArgumentException("methodName");
+		if (priority == null)          throw new RequiredArgumentException("priority");
 		// already running in correct thread
 		if (this.isCurrentThread())
 			return false;
@@ -159,12 +162,20 @@ public abstract class xThreadPoolQueue extends xThreadPool {
 				methodName,
 				args
 			);
-		if (now) {
-			this.runTaskNow(run);
-		} else {
-			this.runTaskLater(run);
-		}
+		this.addTask(run, priority);
 		return true;
+	}
+	@Override
+	public boolean force(
+			final Object callingFrom, final String methodName,
+			final Object...args) {
+		return
+			this.force(
+				callingFrom,
+				methodName,
+				TaskPriority.NORM,
+				args
+			);
 	}
 
 
@@ -173,6 +184,7 @@ public abstract class xThreadPoolQueue extends xThreadPool {
 	 * Forces a method to be called from the correct thread.
 	 * @param callingFrom Class object which contains the method.
 	 * @param methodName The method which is being called.
+	 * @param priority
 	 * @param args Arguments being passed to the method.
 	 * @return resulting return value if not in the correct thread.
 	 *   this will queue a task to run in the correct thread.
@@ -188,11 +200,14 @@ public abstract class xThreadPoolQueue extends xThreadPool {
 	 *     return result;
 	 * }
 	 */
-	public <V> V forceResult(final Object callingFrom,
-			final String methodName, final Object...args)
+	@Override
+	public <V> V forceResult(
+			final Object callingFrom, final String methodName,
+			final TaskPriority priority, final Object...args)
 			throws ContinueException {
 		if (callingFrom == null)       throw new RequiredArgumentException("callingFrom");
 		if (Utils.isEmpty(methodName)) throw new RequiredArgumentException("methodName");
+		if (priority == null)          throw new RequiredArgumentException("priority");
 		// already running in correct thread
 		if (this.isCurrentThread())
 			throw new ContinueException();
@@ -203,8 +218,20 @@ public abstract class xThreadPoolQueue extends xThreadPool {
 				methodName,
 				args
 			);
-		this.runTaskNow(run);
+		this.addTask(run, priority);
 		return run.getResult();
+	}
+	@Override
+	public <V> V forceResult(
+			final Object callingFrom, final String methodName,
+			final Object...args) throws ContinueException {
+		return
+			this.forceResult(
+				callingFrom,
+				methodName,
+				TaskPriority.HIGH,
+				args
+			);
 	}
 
 
@@ -236,7 +263,12 @@ public abstract class xThreadPoolQueue extends xThreadPool {
 	@Override
 	public <V> Future<V> addTask(final xThreadPoolTask<V> task, final TaskPriority priority) {
 		if (task == null) throw new RequiredArgumentException("task");
-//TODO:
+		// pass to main thread pool
+		if (this.imposeMainPool()) {
+			return
+				xThreadPool_Main.get()
+					.addTask(task, priority);
+		}
 		final TaskPriority pr = (
 			priority == null
 			? TaskPriority.NORM

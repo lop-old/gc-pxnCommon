@@ -140,11 +140,17 @@ public abstract class xThreadPool implements xStartable {
 	public abstract boolean force(
 			final Object callingFrom, final String methodName,
 			final TaskPriority priority, final Object...args);
-
 	public abstract <V> V forceResult(
 			final Object callingFrom, final String methodName,
 			final TaskPriority priority, final Object...args)
 			throws ContinueException;
+
+	public abstract boolean force(
+			final Object callingFrom, final String methodName,
+			final Object...args);
+	public abstract <V> V forceResult(
+			final Object callingFrom, final String methodName,
+			final Object...args) throws ContinueException;
 
 
 
