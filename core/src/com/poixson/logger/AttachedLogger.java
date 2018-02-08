@@ -42,6 +42,10 @@ public interface AttachedLogger {
 		this.log()
 			.title(lines);
 	}
+	default void title(final String[] lines, final Object... args) {
+		this.log()
+			.title(lines, args);
+	}
 
 
 
