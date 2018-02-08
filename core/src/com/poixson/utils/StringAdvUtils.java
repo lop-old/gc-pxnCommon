@@ -278,7 +278,7 @@ class StringAdvUtils {
 							result[lineIndex],
 							str,
 							pos,
-							2
+							pos + 2
 						);
 					continue ARG_LOOP;
 				} // end LINE_LOOP
