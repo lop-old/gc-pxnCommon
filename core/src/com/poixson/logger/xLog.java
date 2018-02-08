@@ -26,7 +26,6 @@ public class xLog implements xLogPrinter {
 	protected final xLog   parent;
 	protected final AtomicReference<xLevel> level =
 			new AtomicReference<xLevel>(null);
-	protected SoftReference<Boolean> parentsLoggable = null;
 
 	// handlers
 	private final CopyOnWriteArrayList<xLogPrinter> printers =
@@ -112,7 +111,6 @@ public class xLog implements xLogPrinter {
 	@Override
 	public void setLevel(final xLevel lvl) {
 		this.level.set(lvl);
-		this.flushLoggableChildren();
 	}
 
 
@@ -128,23 +126,9 @@ public class xLog implements xLogPrinter {
 			if (!currentLevel.isLoggable(level))
 				return false;
 		}
-		// check cached parent level
-		{
-			final SoftReference<Boolean> soft = this.parentsLoggable;
-			if (soft != null) {
-				final Boolean bool = soft.get();
-				if (bool != null) {
-					return bool.booleanValue();
-				}
-			}
-		}
 		// check parent level
 		if (this.parent != null) {
 			final boolean loggable = this.parent.isLoggable(level);
-			this.parentsLoggable =
-				new SoftReference<Boolean>(
-					Boolean.valueOf( loggable )
-				);
 			return loggable;
 		}
 		// allow by default
@@ -152,16 +136,6 @@ public class xLog implements xLogPrinter {
 	}
 	public boolean isDetailLoggable() {
 		return this.isLoggable(xLevel.DETAIL);
-	}
-	protected void flushLoggableChildren() {
-		this.parentsLoggable = null;
-		if (this.loggers.isEmpty())
-			return;
-		final Iterator<xLog> it = this.loggers.values().iterator();
-		while (it.hasNext()) {
-			it.next()
-				.flushLoggableChildren();
-		}
 	}
 
 
