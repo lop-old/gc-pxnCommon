@@ -12,6 +12,7 @@ public class xLogRecord {
 	public final xLevel   level;
 	public final long     timestamp;
 	public final String[] linesRaw;
+	public       String[] linesPrepared = null;
 	public final int      lineCount;
 	public final Object[] args;
 
@@ -47,9 +48,31 @@ public class xLogRecord {
 
 
 	// message lines
-	public int getLongestLine() {
-		return StringUtils.FindLongestLine(this.lines);
+	public String[] getRawLines() {
+		return this.linesRaw;
 	}
+	public String getRawLine(final int lineIndex) {
+		return this.linesRaw[lineIndex];
+	}
+
+	public String[] getPreparedLines() {
+		if (this.linesPrepared != null)
+			return this.linesPrepared;
+		this.linesPrepared =
+			StringUtils.ReplaceTags(
+				this.linesRaw,
+				this.args
+			);
+		return this.linesPrepared;
+	}
+	public String getPreparedLine(final int lineIndex) {
+		if (this.linesPrepared == null)
+			this.getPreparedLines();
+		return this.linesPrepared[lineIndex];
+	}
+
+
+
 	public boolean isEmpty() {
 		return Utils.isEmpty(this.linesRaw);
 	}
