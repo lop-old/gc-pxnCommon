@@ -45,11 +45,19 @@ public class xLogPrinter_stdio extends xLogPrinterBasic {
 				console = soft.get();
 			}
 			if (console != null) {
-				console.println(line);
+				if (line == null) {
+					console.println();
+				} else {
+					console.println(line);
+				}
 				return;
 			}
 		}
-		this.out.println(line);
+		if (line == null) {
+			this.out.println();
+		} else {
+			this.out.println(line);
+		}
 	}
 
 

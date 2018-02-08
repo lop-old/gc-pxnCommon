@@ -34,6 +34,10 @@ public abstract class xLogPrinterBasic implements xLogPrinter {
 	@Override
 	public void publish(final xLogRecord record) {
 		try {
+			if (record.isEmpty()) {
+				this.publish( (String[]) null );
+				return;
+			}
 			final xLogFormatter formatter = this.getFormatter();
 			this.publish(
 				formatter.formatMessage(

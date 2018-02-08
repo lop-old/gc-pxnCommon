@@ -215,8 +215,8 @@ public class xLog implements xLogPrinter {
 				try {
 					if ( ! printer.isLoggable(record.level) )
 						continue PRINTER_LOOP;
-					printer.publish(record);
 					handled = true;
+					printer.publish(record);
 				} catch (Exception e) {
 					e.printStackTrace(
 						xVars.getOriginalErr()
@@ -230,7 +230,7 @@ public class xLog implements xLogPrinter {
 				.publish(record);
 			handled = true;
 		}
-		if (!handled) {
+		if ( ! handled ) {
 			final RuntimeException e = new RuntimeException("No log handlers found!");
 			e.printStackTrace(
 				xVars.getOriginalErr()
