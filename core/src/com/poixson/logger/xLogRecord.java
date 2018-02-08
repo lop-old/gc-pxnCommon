@@ -11,7 +11,7 @@ public class xLogRecord {
 	public final xLog     log;
 	public final xLevel   level;
 	public final long     timestamp;
-	public final String[] lines;
+	public final String[] linesRaw;
 	public final int      lineCount;
 	public final Object[] args;
 
@@ -26,21 +26,21 @@ public class xLogRecord {
 		this.level = level;
 		this.args  = args;
 		if (lines == null || lines.length == 0) {
-			this.lines = null;
+			this.linesRaw = null;
 		} else
 		if (lines.length == 1 && lines[0] != null
 		&& lines[0].contains("\n")) {
-			this.lines =
+			this.linesRaw =
 				lines[0]
 					.replace("\r", "")
 					.split("\n");
 		} else {
-			this.lines = lines;
+			this.linesRaw = lines;
 		}
 		this.lineCount = (
-			this.lines == null
+			this.linesRaw == null
 			? 0
-			: this.lines.length
+			: this.linesRaw.length
 		);
 	}
 
@@ -51,10 +51,10 @@ public class xLogRecord {
 		return StringUtils.FindLongestLine(this.lines);
 	}
 	public boolean isEmpty() {
-		return Utils.isEmpty(this.lines);
+		return Utils.isEmpty(this.linesRaw);
 	}
 	public boolean notEmpty() {
-		return Utils.notEmpty(this.lines);
+		return Utils.notEmpty(this.linesRaw);
 	}
 
 
