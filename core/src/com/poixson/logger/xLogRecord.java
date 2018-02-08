@@ -1,7 +1,6 @@
 package com.poixson.logger;
 
 import com.poixson.exceptions.RequiredArgumentException;
-import com.poixson.tools.xClock;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
 
@@ -22,7 +21,7 @@ public class xLogRecord {
 	public xLogRecord(final xLog log, final xLevel level,
 			final String[] lines, Object[] args) {
 		if (log == null) throw new RequiredArgumentException("log");
-		this.timestamp = xClock.get(false).millis();
+		this.timestamp = Utils.getSystemMillis();
 		this.log   = log;
 		this.level = level;
 		this.args  = args;
