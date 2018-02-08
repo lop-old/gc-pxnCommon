@@ -12,7 +12,6 @@ import com.poixson.app.xVars;
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.formatters.xLogFormatter;
 import com.poixson.logger.printers.xLogPrinter;
-import com.poixson.tools.Keeper;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
 
@@ -61,7 +60,6 @@ public class xLog implements xLogPrinter {
 			final xLog existing = this.loggers.putIfAbsent(logName, log);
 			if (existing != null)
 				return existing;
-			Keeper.add(log);
 			return log;
 		}
 	}
@@ -80,6 +78,8 @@ public class xLog implements xLogPrinter {
 	protected xLog(final xLog parent, final String logName) {
 		// root logger
 		if (this.isRoot()) {
+			if (parent != null)          throw new IllegalArgumentException("Cannot set parent for root logger!");
+			if (Utils.notEmpty(logName)) throw new IllegalArgumentException("Cannot set name for root logger!");
 			this.parent = null;
 			this.name   = null;
 		// child logger
@@ -103,7 +103,7 @@ public class xLog implements xLogPrinter {
 
 
 	public xLevel getLevel() {
-		if (xVars.debug())
+		if (xVars.isDebug())
 			return xLevel.DETAIL;
 		return this.level.get();
 	}
@@ -121,7 +121,7 @@ public class xLog implements xLogPrinter {
 	public boolean isLoggable(final xLevel level) {
 		if (level == null) return true;
 		// forced debug mode
-		if (xVars.debug()) return true;
+		if (xVars.isDebug()) return true;
 		// check local level
 		final xLevel currentLevel = this.getLevel();
 		if (currentLevel != null) {
@@ -203,6 +203,12 @@ public class xLog implements xLogPrinter {
 
 	@Override
 	public void publish(final xLogRecord record) {
+		if (record == null) {
+			this.publish(
+				(xLogRecord) null
+			);
+			return;
+		}
 		// not loggable
 		if ( ! this.isLoggable(record.level) )
 			return;
