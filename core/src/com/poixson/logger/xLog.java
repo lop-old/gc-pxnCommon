@@ -1,7 +1,8 @@
 package com.poixson.logger;
 
 import java.lang.ref.SoftReference;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -26,6 +27,7 @@ public class xLog implements xLogPrinter {
 	protected final xLog   parent;
 	protected final AtomicReference<xLevel> level =
 			new AtomicReference<xLevel>(null);
+	protected volatile SoftReference<String[]> cachedNameTree = null;
 
 	// handlers
 	private final CopyOnWriteArrayList<xLogPrinter> printers =
@@ -148,7 +150,32 @@ public class xLog implements xLogPrinter {
 
 
 	public String[] getNameTree() {
-//TODO: (remember to cache this)
+		if (this.isRoot())
+			return new String[0];
+		// cached name tree
+		{
+			final SoftReference<String[]> soft = this.cachedNameTree;
+			if (soft != null) {
+				final String[] list = soft.get();
+				if (list != null)
+					return list;
+			}
+		}
+		// build name tree
+		{
+			final List<String> list = new ArrayList<String>();
+			this.buildNameTree(list);
+			final String[] result = list.toArray(new String[0]);
+			this.cachedNameTree = new SoftReference<String[]>(result);
+			return result;
+		}
+	}
+	private void buildNameTree(final List<String> list) {
+		if (this.isRoot())       return;
+		if (this.parent == null) return;
+		this.parent.buildNameTree(list);
+		if (Utils.notEmpty(this.name))
+			list.add(this.name);
 	}
 
 
