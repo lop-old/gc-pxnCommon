@@ -1,14 +1,11 @@
 package com.poixson.tools;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import com.poixson.exceptions.RequiredArgumentException;
-import com.poixson.logger.xLogPrintStream;
-import com.poixson.logger.xLogRoot;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
 
@@ -25,20 +22,10 @@ public class AsciiArtBuilder {
 
 	protected int indent = 0;
 
-	protected final PrintStream out;
-
 
 
 	public AsciiArtBuilder(final String...lines) {
-		this(null, lines);
-	}
-	public AsciiArtBuilder(final PrintStream out, final String...lines) {
 		if (Utils.isEmpty(lines)) throw new RequiredArgumentException("lines");
-		this.out = (
-			out == null
-			? new xLogPrintStream( xLogRoot.get() )
-			: out
-		);
 		this.lines = lines;
 		for (int i=0; i<lines.length; i++) {
 			this.colorLocations.put(
@@ -50,80 +37,90 @@ public class AsciiArtBuilder {
 
 
 
-	public void display() {
-		final String bgColor = this.bgColor;
-		final boolean hasBgColor = Utils.notBlank(bgColor);
+	public String[] build() {
+		final int lineCount = this.lines.length;
+		String[] result = new String[ lineCount ];
+		final String bgColor = this.getBgColor();
 		final int indent = this.indent;
-		LINES_LOOP:
-		for (int posY=0; posY<this.lines.length; posY++) {
-			String line = this.lines[posY];
+		final StringBuilder buf = new StringBuilder();
+		final int maxLineSize = StringUtils.FindLongestLine(this.lines);
+		boolean withinTag = false;
+		LINE_LOOP:
+		for (int lineIndex=0; lineIndex<lineCount; lineIndex++) {
+			final String line = this.lines[lineIndex];
+			// blank line
 			if (Utils.isEmpty(line)) {
-				this.out.println();
-				continue LINES_LOOP;
+				result[ lineIndex ] =
+					StringUtils.Repeat(
+						(indent * 2) + maxLineSize,
+						' '
+					);
+				continue LINE_LOOP;
+			}
+			buf.setLength(0);
+			if (indent > 0) {
+				buf.append(
+					StringUtils.Repeat(indent, ' ')
+				);
 			}
 			// handle colors
-			final HashMap<Integer, String> colors =
-				this.colorLocations.get( Integer.valueOf(posY) );
-			boolean withinTag = false;
-			final StringBuilder buf = new StringBuilder();
+			withinTag = false;
+			final HashMap<Integer, String> colorsMap =
+				this.colorLocations.get(
+					Integer.valueOf(lineIndex)
+				);
 			// no colors to set
-			if (Utils.isEmpty(colors)) {
-				if (indent > 0) {
-					buf.append(
-						StringUtils.Repeat(indent, ' ')
-					);
-				}
-				if (hasBgColor) {
+			if (Utils.isEmpty(colorsMap)) {
+				if (bgColor != null) {
+					withinTag = true;
 					buf.append("@|")
 						.append(bgColor)
 						.append(' ');
-					withinTag = true;
 				}
 				buf.append(line);
 			// has colors
 			} else {
+				// order by position in line
 				final List<Integer> ordered =
 					new ArrayList<Integer>(
-						colors.keySet()
+						colorsMap.keySet()
 					);
 				Collections.sort(ordered);
-				int lastX = 0;
+				int lastX = -1;
 				COLOR_LOOP:
 				for (final Integer posX : ordered) {
-					final String colorStr = colors.get(posX);
+					final String colorStr = colorsMap.get(posX);
 					if (Utils.isEmpty(colorStr))
 						continue COLOR_LOOP;
-					if (posX > lastX) {
-						if (lastX == 0) {
-							if (indent > 0) {
-								buf.append(
-									StringUtils.Repeat(indent, ' ')
-								);
-							}
-							if (hasBgColor) {
+					// color doesn't start at front of line
+					if (lastX == -1) {
+						lastX = 0;
+						if (posX > 0) {
+							if (bgColor != null) {
+								withinTag = true;
 								buf.append("@|")
 									.append(bgColor)
 									.append(' ');
-								withinTag = true;
 							}
 						}
-						buf.append(
-							line.substring(lastX, posX)
-						);
 					}
-					lastX = posX;
+					// fill up to first color
+					if (posX > 0) {
+						buf.append( line.substring(lastX, posX) );
+					}
 					if (withinTag) {
 						buf.append("|@");
 					}
+					// set color at position
 					withinTag = true;
 					buf.append("@|");
-					if (hasBgColor) {
-						buf.append("bg_")
-							.append(bgColor)
+					if (bgColor != null) {
+						buf.append(bgColor)
 							.append(',');
 					}
 					buf.append(colorStr)
 						.append(' ');
+					lastX = posX;
 				} // end COLOR_LOOP
 				if (lastX < line.length()) {
 					buf.append(
@@ -136,11 +133,15 @@ public class AsciiArtBuilder {
 			}
 			if (indent > 0) {
 				buf.append(
-					StringUtils.Repeat(indent, ' ')
+					StringUtils.Repeat(
+						(maxLineSize - line.length()) + indent,
+						' '
+					)
 				);
 			}
-			this.out.println( buf.toString() );
-		} // end LINES_LOOP
+			result[ lineIndex ] = buf.toString();
+		} // end LINE_LOOP
+		return result;
 	}
 
 
@@ -155,10 +156,15 @@ public class AsciiArtBuilder {
 
 	// default background color
 	public String getBgColor() {
-		return this.bgColor;
+		final String bgColor = this.bgColor;
+		return (
+			Utils.isEmpty(bgColor)
+			? null
+			: bgColor
+		);
 	}
 	public AsciiArtBuilder setBgColor(final String bgColor) {
-		this.bgColor = bgColor;
+		this.bgColor = StringUtils.ForceStarts("bg_", bgColor);
 		return this;
 	}
 
@@ -203,12 +209,12 @@ public class AsciiArtBuilder {
 		);
 		return this;
 	}
-	public AsciiArtBuilder setBgColor(final String color,
+	public AsciiArtBuilder setBgColor(final String bgColor,
 			final int posX, final int posY) {
-		if (Utils.isEmpty(color)) throw new RequiredArgumentException("color");
+		if (Utils.isEmpty(bgColor)) throw new RequiredArgumentException("bgColor");
 		return
 			this.setColor(
-				"bg_"+color,
+				StringUtils.ForceStarts("bg_", bgColor),
 				posX,
 				posY
 			);
