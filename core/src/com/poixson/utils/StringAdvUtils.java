@@ -65,42 +65,6 @@ class StringAdvUtils {
 
 
 
-	// strip color tags
-	public static String StripColorTags(final String line) {
-		if (Utils.isEmpty(line))
-			return line;
-		final StringBuilder result = new StringBuilder(line);
-		boolean changed = false;
-		while (true) {
-			final int posA = result.indexOf("@|");
-			if (posA == -1) break;
-			final int posB = result.indexOf(" ", posA);
-			final int posC = result.indexOf("|@", posB);
-			if (posB == -1) break;
-			if (posC == -1) break;
-			result.replace(posC, posC+2, "");
-			result.replace(posA, posB+1, "");
-			changed = true;
-		}
-		if (changed)
-			return result.toString();
-		return line;
-	}
-	public static String[] StripColorTags(final String[] lines) {
-		if (Utils.isEmpty(lines))
-			return lines;
-		String[] result = new String[ lines.length ];
-		for (int index=0; index<lines.length; index++) {
-			result[index] =
-				StripColorTags(
-					result[index]
-				);
-		}
-		return result;
-	}
-
-
-
 	// ------------------------------------------------------------------------------- //
 	// replace {} tags
 
