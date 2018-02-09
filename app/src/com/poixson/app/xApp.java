@@ -1,6 +1,5 @@
 package com.poixson.app;
 
-import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,12 +12,10 @@ import com.poixson.app.xAppStep.StepType;
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.AttachedLogger;
 import com.poixson.logger.xLog;
-import com.poixson.logger.xLogPrintStream;
 import com.poixson.logger.xLogRoot;
 import com.poixson.threadpool.xThreadPool;
 import com.poixson.threadpool.types.xThreadPool_Main;
 import com.poixson.tools.AppProps;
-import com.poixson.tools.AsciiArtBuilder;
 import com.poixson.tools.HangCatcher;
 import com.poixson.tools.Keeper;
 import com.poixson.tools.xClock;
@@ -347,14 +344,6 @@ public abstract class xApp implements xStartable, AttachedLogger {
 			xTimeU.MS
 		);
 		this.startTime.lock();
-	}
-
-
-
-	// display logo
-	@xAppStep(type=StepType.STARTUP, title="DisplayLogo", priority=70)
-	public void __STARTUP_displaylogo(final xApp app) {
-		this.displayLogo();
 	}
 
 
@@ -1188,255 +1177,13 @@ return "<uptime>";
 
 
 
-	protected static void DisplayLineColors(
-			final PrintStream out, final String bgColor,
-			final Map<Integer, String> colors, final String line) {
-		final StringBuilder buffer = new StringBuilder();
-		int last = 0;
-		final Map<Integer, String> cols;
-		final boolean hasBgColor = Utils.notBlank(bgColor);
-		if (hasBgColor) {
-			// prepend background color
-			cols = new LinkedHashMap<Integer, String>();
-			cols.put(Integer.valueOf(1), "bg_"+bgColor);
-			cols.putAll(colors);
-		} else {
-			cols = colors;
-		}
-		boolean withinColorTag = false;
-		for (final Entry<Integer, String> entry : cols.entrySet()) {
-			final int pos = entry.getKey().intValue() - 1;
-			if (pos > last) {
-				buffer.append(
-					line.substring(last, pos)
-				);
-			}
-			last = pos;
-			if (withinColorTag) {
-				buffer.append("|@");
-			}
-			withinColorTag = true;
-			buffer.append("@|");
-			if (hasBgColor) {
-				buffer
-					.append("bg_")
-					.append(bgColor)
-					.append(',');
-			}
-			buffer
-				.append(entry.getValue())
-				.append(' ');
-		}
-		if (last < line.length()) {
-			buffer.append(line.substring(last));
-		}
-		if (withinColorTag) {
-			buffer.append("|@");
-		}
-		{
-			final String str =
-				Ansi.ansi().a(' ')
-					.render(buffer.toString())
-					.reset().a(' ')
-					.toString();
-			out.println(str);
-		}
 	}
 
 
 
-//	protected void displayTestColors() {
-//		final PrintStream out = AnsiConsole.out;
-//		out.println(Ansi.ansi().reset());
-//		for (final Ansi.Color color : Ansi.Color.values()) {
-//			final String name = Strings.padCenter(7, color.name(), ' ');
-//			out.println(Ansi.ansi()
-//				.a("   ")
-//				.fg(color).a(name)
-//				.a("   ")
-//				.bold().a("BOLD-"+name)
-//				.a("   ")
-//				.boldOff().fg(Ansi.Color.WHITE).bg(color).a(name)
-//				.reset()
-//			);
-//		}
-//		out.println(Ansi.ansi().reset());
-//		out.println();
-//		out.flush();
-//	}
 
 
 
-//	public void displayStartupVars() {
-//		final PrintStream out = AnsiConsole.out;
-//		final String hash;
-//		out.println();
-//		out.println(" Pid: "+Proc.getPid());
-//		out.println(" Version: "+this.getVersion());
-//		out.println(" Commit:  "+this.getCommitHash());
-//		out.println(" Running as:  "+System.getProperty("user.name"));
-//		out.println(" Current dir: "+System.getProperty("user.dir"));
-//		out.println(" java home:   "+System.getProperty("java.home"));
-//		out.println(" Terminal:    "+System.getProperty("jline.terminal"));
-//		if (xVars.debug())
-//			out.println(" Debug: true");
-//		if (Utils.notEmpty(args)) {
-//			out.println();
-//			out.println(utilsString.addStrings(" ", args));
-//		}
-//		out.println();
-//		out.flush();
-//	}
-
-
-
-	// ascii header
-	protected void displayLogo() {
-		// colors
-		final String COLOR_BG = "blue";
-		final String COLOR_PXN_P       = "bold,green";
-		final String COLOR_PXN_OI      = "bold,blue";
-		final String COLOR_PXN_X       = "bold,green";
-		final String COLOR_PXN_SON     = "bold,blue";
-		final String COLOR_SOFTWARE    = "bold,black";
-		final String COLOR_VERSION     = "cyan";
-		final String COLOR_GRASS       = "green";
-		final String COLOR_DOG         = "yellow";
-		final String COLOR_DOG_EYES    = "cyan";
-		final String COLOR_DOG_MOUTH   = "red";
-		final String COLOR_DOG_COLLAR  = "red";
-		final String COLOR_DOG_NOSE    = "bold,black";
-		final String COLOR_FROG        = "green";
-		final String COLOR_FROG_EYES   = "bold,black";
-		final String COLOR_WITCH       = "bold,black";
-		final String COLOR_WITCH_EYES  = "red";
-		final String COLOR_WITCH_BROOM = "yellow";
-		final String COLOR_CAT         = "white";
-		final String COLOR_CAT_EYES    = "white";
-		final String COLOR_CAT_MOUTH   = "red";
-		final String COLOR_CAT_COLLAR  = "blue";
-		final String COLOR_CAT_NOSE    = "bold,black";
-		// line 1
-		final Map<Integer, String> colors1 = new LinkedHashMap<Integer, String>();
-		colors1.put(new Integer(38), COLOR_WITCH);
-		// line 2
-		final Map<Integer, String> colors2 = new LinkedHashMap<Integer, String>();
-		colors2.put(new Integer(10), COLOR_DOG);
-		colors2.put(new Integer(21), COLOR_PXN_P);
-		colors2.put(new Integer(22), COLOR_PXN_OI);
-		colors2.put(new Integer(24), COLOR_PXN_X);
-		colors2.put(new Integer(25), COLOR_PXN_SON);
-		colors2.put(new Integer(38), COLOR_WITCH);
-		colors2.put(new Integer(40), COLOR_WITCH_EYES);
-		colors2.put(new Integer(41), COLOR_WITCH);
-		colors2.put(new Integer(51), COLOR_CAT);
-		// line 3
-		final Map<Integer, String> colors3 = new LinkedHashMap<Integer, String>();
-		colors3.put(new Integer(10), COLOR_DOG);
-		colors3.put(new Integer(12), COLOR_DOG_EYES);
-		colors3.put(new Integer(14), COLOR_DOG_MOUTH);
-		colors3.put(new Integer(15), COLOR_DOG_NOSE);
-		colors3.put(new Integer(20), COLOR_SOFTWARE);
-		colors3.put(new Integer(33), COLOR_WITCH_BROOM);
-		colors3.put(new Integer(38), COLOR_WITCH);
-		colors3.put(new Integer(50), COLOR_CAT);
-		// line 4
-		final Map<Integer, String> colors4 = new LinkedHashMap<Integer, String>();
-		colors4.put(new Integer(8),  COLOR_DOG);
-		colors4.put(new Integer(9),  COLOR_DOG_COLLAR);
-		colors4.put(new Integer(13), COLOR_DOG_NOSE);
-		colors4.put(new Integer(14), COLOR_DOG_MOUTH);
-		colors4.put(new Integer(17), COLOR_VERSION);
-		colors4.put(new Integer(33), COLOR_WITCH_BROOM);
-		colors4.put(new Integer(37), COLOR_WITCH);
-		colors4.put(new Integer(42), COLOR_WITCH_BROOM);
-		colors4.put(new Integer(49), COLOR_CAT);
-		colors4.put(new Integer(51), COLOR_CAT_EYES);
-		colors4.put(new Integer(57), COLOR_CAT);
-		// line 5
-		final Map<Integer, String> colors5 = new LinkedHashMap<Integer, String>();
-		colors5.put(new Integer(7),  COLOR_DOG);
-		colors5.put(new Integer(38), COLOR_WITCH);
-		colors5.put(new Integer(48), COLOR_CAT);
-		colors5.put(new Integer(53), COLOR_CAT_NOSE);
-		colors5.put(new Integer(57), COLOR_CAT);
-		// line 6
-		final Map<Integer, String> colors6 = new LinkedHashMap<Integer, String>();
-		colors6.put(new Integer(6),  COLOR_DOG);
-		colors6.put(new Integer(27), COLOR_FROG_EYES);
-		colors6.put(new Integer(28), COLOR_FROG);
-		colors6.put(new Integer(30), COLOR_FROG_EYES);
-		colors6.put(new Integer(50), COLOR_CAT);
-		colors6.put(new Integer(53), COLOR_CAT_MOUTH);
-		colors6.put(new Integer(54), COLOR_CAT);
-		// line 7
-		final Map<Integer, String> colors7 = new LinkedHashMap<Integer, String>();
-		colors7.put(new Integer(2),  COLOR_DOG);
-		colors7.put(new Integer(24), COLOR_FROG);
-		colors7.put(new Integer(50), COLOR_CAT);
-		colors7.put(new Integer(53), COLOR_CAT_COLLAR);
-		colors7.put(new Integer(58), COLOR_CAT);
-		// line 8
-		final Map<Integer, String> colors8 = new LinkedHashMap<Integer, String>();
-		colors8.put(new Integer(3),  COLOR_DOG);
-		colors8.put(new Integer(23), COLOR_FROG);
-		colors8.put(new Integer(49), COLOR_CAT);
-		// line 9
-		final Map<Integer, String> colors9 = new LinkedHashMap<Integer, String>();
-		colors9.put(new Integer(4),  COLOR_DOG);
-		colors9.put(new Integer(23), COLOR_FROG);
-		colors9.put(new Integer(49), COLOR_CAT);
-		// line 10
-		final Map<Integer, String> colors10 = new LinkedHashMap<Integer, String>();
-		colors10.put(new Integer(1),  COLOR_GRASS);
-		colors10.put(new Integer(56), COLOR_CAT);
-		colors10.put(new Integer(62), COLOR_GRASS);
-		// line 11
-		final Map<Integer, String> colors11 = new LinkedHashMap<Integer, String>();
-		colors11.put(new Integer(1),  COLOR_GRASS);
-
-		// build lines
-		final String version = StringUtils.PadCenter(15, this.getVersion(), ' ');
-		final PrintStream out =
-			new xLogPrintStream(
-				xLog.getRoot(),
-				null
-			);
-		out.println();
-		DisplayLineColors(out, COLOR_BG, colors1, "                                     _/\\_                        "    );
-		DisplayLineColors(out, COLOR_BG, colors2, "         |`-.__     PoiXson          (('>         _   _          "     );
-		DisplayLineColors(out, COLOR_BG, colors3, "         / ' _/    Software     _    /^|         /\\\\_/ \\         "  );
-		DisplayLineColors(out, COLOR_BG, colors4, "       -****\\\"  "+version+" =>--/_\\|m---    / 0  0  \\        "     );
-		DisplayLineColors(out, COLOR_BG, colors5, "      /    }                         ^^        /_   v   _\\       "    );
-		DisplayLineColors(out, COLOR_BG, colors6, "     /    \\               @..@                   \\__^___/        "   );
-		DisplayLineColors(out, COLOR_BG, colors7, " \\ /`    \\\\\\             (----)                  /  0    \\       ");
-		DisplayLineColors(out, COLOR_BG, colors8, "  `\\     /_\\\\           ( >__< )                /        \\__     " );
-		DisplayLineColors(out, COLOR_BG, colors9, "   `~~~~~~``~`          ^^ ~~ ^^                \\_(_|_)___  \\    "   );
-		DisplayLineColors(out, COLOR_BG, colors10,"^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^(____//^/^"     );
-		DisplayLineColors(out, COLOR_BG, colors11,"/////////////////////////////////////////////////////////////////"     );
-		out.println();
-		out.println(" This program comes with absolutely no warranty. This is free");
-		out.println(" software and you are welcome to modify it or redistribute it");
-		out.println(" under certain conditions. Type 'show license' at the command");
-		out.println(" prompt for license details, or go to www.growcontrol.com for");
-		out.println(" more information.");
-		out.println();
-		out.flush();
-	}
-//  |        A                B            C             D            |
-//1 |                                     _/\_                        |
-//2 |         |`-.__     PoiXson          (('>         _   _          |
-//3 |         / ' _/    Software     _    /^|         /\\_/ \         |
-//4 |       -****\"  <---version---> =>--/__|m---    / 0  0  \        |
-//5 |      /    }                         ^^        /_   v   _\       |
-//6 |     /    \               @..@                   \__^___/        |
-//7 | \ /`    \\\             (----)                  /  0    \       |
-//8 |  `\     /_\\           ( >__< )                /        \__     |
-//9 |   `~~~~~~``~`          ^^ ~~ ^^                \_(_|_)___  \    |
-//10 |^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^/^(____//^/^|
-//11 |/////////////////////////////////////////////////////////////////|
-//  0 2 4 6 8 0 2 4 6 8 0 2 4 6 8 0 2 4 6 8 0 2 4 6 8 0 2 4 6 8 0 2 4 |
-//  0         1         2         3         4         5         6     |
 
 
 
