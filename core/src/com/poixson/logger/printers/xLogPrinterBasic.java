@@ -1,13 +1,14 @@
 package com.poixson.logger.printers;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.poixson.app.xVars;
 import com.poixson.logger.xLevel;
 import com.poixson.logger.xLogRecord;
-import com.poixson.logger.xLogRoot;
 import com.poixson.logger.formatters.xLogFormatter;
+import com.poixson.logger.formatters.xLogFormatter_Detailed;
 import com.poixson.tools.xTimeU;
 import com.poixson.utils.Utils;
 
@@ -18,6 +19,9 @@ public abstract class xLogPrinterBasic implements xLogPrinter {
 	private volatile xLogFormatter formatter = null;
 
 	protected final ReentrantLock publishLock = new ReentrantLock(true);
+
+	protected final AtomicReference<xLogFormatter> defaultFormatter =
+			new AtomicReference<xLogFormatter>(null);
 
 
 
@@ -107,6 +111,30 @@ public abstract class xLogPrinterBasic implements xLogPrinter {
 
 
 	// ------------------------------------------------------------------------------- //
+	// default formatter
+
+
+
+	public xLogFormatter getDefaultFormatter() {
+		// existing instance
+		{
+			final xLogFormatter formatter = this.defaultFormatter.get();
+			if (formatter != null)
+				return formatter;
+		}
+		// new default formatter
+		{
+			final xLogFormatter formatter =
+				new xLogFormatter_Detailed();
+			if ( ! this.defaultFormatter.compareAndSet(null, formatter) )
+				return this.defaultFormatter.get();
+			return formatter;
+		}
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
 	// config
 
 
@@ -142,8 +170,7 @@ public abstract class xLogPrinterBasic implements xLogPrinter {
 		if (formatter != null)
 			return formatter;
 		// default formatter
-		return xLogRoot.get()
-				.getDefaultFormatter();
+		return this.getDefaultFormatter();
 	}
 	@Override
 	public void setFormatter(final xLogFormatter formatter) {

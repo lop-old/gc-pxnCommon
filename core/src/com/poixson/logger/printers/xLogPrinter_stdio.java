@@ -7,6 +7,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import com.poixson.app.xVars;
 import com.poixson.logger.xLogRoot;
 import com.poixson.logger.console.xConsole;
+import com.poixson.logger.formatters.xLogFormatter;
+import com.poixson.logger.formatters.xLogFormatter_Detailed;
 import com.poixson.utils.StringUtils;
 
 
@@ -75,6 +77,49 @@ public class xLogPrinter_stdio extends xLogPrinterBasic {
 		super.releasePublishLock(
 			globalPublishLock
 		);
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// default formatter
+
+
+
+	@Override
+	public xLogFormatter getDefaultFormatter() {
+		// existing instance
+		{
+			final xLogFormatter formatter = super.defaultFormatter.get();
+			if (formatter != null)
+				return formatter;
+		}
+		// enable console color if possible
+		if (xVars.isColorEnabled()) {
+			try {
+				final Class<?> clss =
+					Class.forName(
+						"com.poixson.logger.formatters.xLogFormatter_Color"
+					);
+				if (clss == null) throw new ClassNotFoundException();
+				final xLogFormatter formatter =
+					(xLogFormatter) clss.newInstance();
+				if ( ! super.defaultFormatter.compareAndSet(null, formatter) )
+					return super.defaultFormatter.get();
+				return formatter;
+			} catch (ClassNotFoundException ignore) {
+			} catch (InstantiationException ignore) {
+			} catch (IllegalAccessException ignore) {
+			}
+		}
+		// new default formatter
+		{
+			final xLogFormatter formatter =
+				new xLogFormatter_Detailed();
+			if ( ! super.defaultFormatter.compareAndSet(null, formatter) )
+				return super.defaultFormatter.get();
+			return formatter;
+		}
 	}
 
 
