@@ -22,6 +22,7 @@ public final class xVars {
 	private static final int     DEFAULT_JLINE_HISTORY_SIZE = 200;
 	private static final String  DEFAULT_JLINE_HISTORY_FILE = null;
 
+	public static final int      SEARCH_DEBUG_PARENTS = 1;
 	public static final String[] SEARCH_DEBUG_FILES =
 		new String[] {
 			"debug",

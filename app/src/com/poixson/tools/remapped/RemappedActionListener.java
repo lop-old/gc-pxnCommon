@@ -18,13 +18,6 @@ public class RemappedActionListener implements ActionListener {
 
 
 
-	public static RemappedActionListener getNew(final Object listenerClass, final String methodName) {
-		try {
-			return new RemappedActionListener(listenerClass, methodName);
-		} catch (NoSuchMethodException e) {
-			throw new RuntimeException(e);
-		}
-	}
 	public RemappedActionListener(final Object listenerClass, final String methodStr)
 			throws NoSuchMethodException {
 		if (listenerClass == null)    throw new RequiredArgumentException("listenerClass");

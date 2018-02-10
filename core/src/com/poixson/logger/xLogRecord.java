@@ -57,11 +57,16 @@ public class xLogRecord {
 	public String[] getPreparedLines() {
 		if (this.linesPrepared != null)
 			return this.linesPrepared;
-		this.linesPrepared =
-			StringUtils.ReplaceTags(
-				this.linesRaw,
-				this.args
-			);
+		if (Utils.isEmpty(this.args)) {
+			this.linesPrepared =
+				this.linesRaw;
+		} else {
+			this.linesPrepared =
+				StringUtils.ReplaceTags(
+					this.linesRaw,
+					this.args
+				);
+		}
 		return this.linesPrepared;
 	}
 	public String getPreparedLine(final int lineIndex) {

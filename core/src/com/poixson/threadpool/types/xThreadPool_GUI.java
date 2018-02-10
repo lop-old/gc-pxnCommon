@@ -28,9 +28,9 @@ public class xThreadPool_GUI extends xThreadPool_SingleWorker {
 		// new instance
 		{
 			final xThreadPool_GUI pool = new xThreadPool_GUI();
-			if ( ! instance.compareAndSet(null, pool) )
-				return instance.get();
-			return pool;
+			if (instance.compareAndSet(null, pool))
+				return pool;
+			return instance.get();
 		}
 	}
 

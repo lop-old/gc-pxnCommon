@@ -9,7 +9,7 @@ import com.poixson.logger.xLogRoot;
 import com.poixson.logger.console.xConsole;
 import com.poixson.logger.formatters.xLogFormatter;
 import com.poixson.logger.formatters.xLogFormatter_Detailed;
-import com.poixson.utils.StringUtils;
+import com.poixson.utils.ShellUtils;
 
 
 public class xLogPrinter_stdio extends xLogPrinterBasic {
@@ -52,7 +52,7 @@ public class xLogPrinter_stdio extends xLogPrinterBasic {
 			this.out.println();
 		} else {
 			this.out.println(
-				StringUtils.StripColorTags(
+				ShellUtils.RenderAnsi(
 					line
 				)
 			);
