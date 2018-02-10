@@ -129,61 +129,6 @@ class StringAdvUtils {
 
 
 
-	// replace {key} tags
-	public static String ReplaceTags(final String msg, final Map<String, Object> args) {
-		if (Utils.isEmpty(msg))  return msg;
-		if (Utils.isEmpty(args)) return msg;
-		final StringBuilder result = new StringBuilder(msg);
-		ARG_LOOP:
-		for (final String key : args.keySet()) {
-			final Object obj = args.get(key);
-			final String str = (
-				obj == null
-				? "<null>"
-				: StringUtils.toString(obj)
-			);
-			// {key}
-			{
-				final String tag =
-					(new StringBuilder())
-						.append('{')
-						.append(key)
-						.append('}')
-						.toString();
-				boolean found = false;
-				REPLACE_LOOP:
-				while (true) {
-					final int pos = result.indexOf(tag);
-					if (pos == -1)
-						break REPLACE_LOOP;
-					result.replace(
-						pos,
-						pos + tag.length(),
-						str
-					);
-					found = true;
-				} // end REPLACE_LOOP
-				if (found)
-					continue ARG_LOOP;
-			}
-			// {}
-			{
-				final int pos = result.indexOf("{}");
-				if (pos != -1) {
-					result.replace(
-						pos,
-						pos + 2,
-						str
-					);
-				}
-			}
-			// don't append
-		} // end ARG_LOOP
-		return result.toString();
-	}
-
-
-
 	// replace {} or {#} tags (in multiple lines)
 	public static String[] ReplaceTags(final String[] msgs, final Object... args) {
 		if (Utils.isEmpty(msgs)) return msgs;
@@ -273,8 +218,63 @@ class StringAdvUtils {
 
 
 
+	// replace {key} tags
+	public static String ReplaceTagKeys(final String msg, final Map<String, Object> args) {
+		if (Utils.isEmpty(msg))  return msg;
+		if (Utils.isEmpty(args)) return msg;
+		final StringBuilder result = new StringBuilder(msg);
+		ARG_LOOP:
+		for (final String key : args.keySet()) {
+			final Object obj = args.get(key);
+			final String str = (
+				obj == null
+				? "<null>"
+				: StringUtils.toString(obj)
+			);
+			// {key}
+			{
+				final String tag =
+					(new StringBuilder())
+						.append('{')
+						.append(key)
+						.append('}')
+						.toString();
+				boolean found = false;
+				REPLACE_LOOP:
+				while (true) {
+					final int pos = result.indexOf(tag);
+					if (pos == -1)
+						break REPLACE_LOOP;
+					result.replace(
+						pos,
+						pos + tag.length(),
+						str
+					);
+					found = true;
+				} // end REPLACE_LOOP
+				if (found)
+					continue ARG_LOOP;
+			}
+			// {}
+			{
+				final int pos = result.indexOf("{}");
+				if (pos != -1) {
+					result.replace(
+						pos,
+						pos + 2,
+						str
+					);
+				}
+			}
+			// don't append
+		} // end ARG_LOOP
+		return result.toString();
+	}
+
+
+
 	// replace {key} tags (in multiple lines)
-	public static String[] ReplaceTags(final String[] msgs, final Map<String, Object> args) {
+	public static String[] ReplaceTagKeys(final String[] msgs, final Map<String, Object> args) {
 		if (Utils.isEmpty(msgs)) return msgs;
 		if (Utils.isEmpty(args)) return msgs;
 		String[] result = Arrays.copyOf(msgs, msgs.length);
