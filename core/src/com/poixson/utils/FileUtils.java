@@ -28,7 +28,7 @@ public final class FileUtils {
 			: new String[] { FileUtils.cwd(), FileUtils.pwd() }
 		);
 		//PARENTS_LOOP:
-		for (int parentIndex=0; parentIndex<parents; parentIndex++) {
+		for (int parentIndex=0; parentIndex<parents+1; parentIndex++) {
 			//PATH_LOOP:
 			for (final String workPath : workingPaths) {
 				//FILE_LOOP:
@@ -106,7 +106,7 @@ public final class FileUtils {
 		final int pos = path.lastIndexOf('/');
 		if (pos < 0) throw new RuntimeException("Invalid pwd path: "+path);
 		pwd =
-			StringUtils.Trim(
+			StringUtils.TrimEnd(
 				path.substring(0, pos),
 				'/'
 			);
