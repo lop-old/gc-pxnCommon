@@ -449,34 +449,31 @@ public abstract class xApp implements xStartable, AttachedLogger {
 		return this.props.title;
 	}
 	public String getFullTitle() {
-		return this.props.full_title;
+		return this.props.titleFull;
 	}
 	public String getVersion() {
 		return this.props.version;
 	}
-	public String getCommitHash() {
-		final String hash = this.getCommitHashFull();
-		if (Utils.isEmpty(hash))
-			return "N/A";
-		return hash.substring(0, 7);
-	}
 	public String getCommitHashFull() {
-		return this.props.commitHash;
+		return this.props.commitHashFull;
+	}
+	public String getCommitHashShort() {
+		return this.props.commitHashShort;
 	}
 	public String getURL() {
 		return this.props.url;
 	}
 	public String getOrgName() {
-		return this.props.org_name;
+		return this.props.orgName;
 	}
 	public String getOrgURL() {
-		return this.props.org_url;
+		return this.props.orgUrl;
 	}
 	public String getIssueName() {
-		return this.props.issue_name;
+		return this.props.issueName;
 	}
 	public String getIssueURL() {
-		return this.props.issue_url;
+		return this.props.issueUrl;
 	}
 
 

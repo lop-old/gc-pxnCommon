@@ -23,7 +23,7 @@ public final class xAppUtils {
 				new LinkedHashMap<String, String>();
 		result.put( "Pid",         Integer.toString(ProcUtils.getPid()) );
 		result.put( "Version",     app.getVersion()                     );
-		result.put( "Commit",      app.getCommitHash()                  );
+		result.put( "Commit",      app.getCommitHashShort()             );
 		result.put( "Running as",  System.getProperty("user.name")      );
 		result.put( "Current dir", System.getProperty("user.dir")       );
 		result.put( "java home",   System.getProperty("java.home")      );

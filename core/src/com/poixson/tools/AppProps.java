@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import com.poixson.app.Failure;
-import com.poixson.logger.xLogRoot;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
 
@@ -17,14 +16,15 @@ public class AppProps {
 	// property values
 	public final String name;
 	public final String title;
-	public final String full_title;
+	public final String titleFull;
 	public final String version;
-	public final String commitHash;
+	public final String commitHashFull;
+	public final String commitHashShort;
 	public final String url;
-	public final String org_name;
-	public final String org_url;
-	public final String issue_name;
-	public final String issue_url;
+	public final String orgName;
+	public final String orgUrl;
+	public final String issueName;
+	public final String issueUrl;
 
 
 
@@ -36,31 +36,50 @@ public class AppProps {
 			props = new Properties();
 			in = clss.getResourceAsStream(PROPS_FILE);
 			if (in == null) {
-				final String msg =
+				throw new RuntimeException(
 					StringUtils.ReplaceTags(
 						"Failed to load {} resource from jar",
 						PROPS_FILE
-					);
-				final RuntimeException e = new RuntimeException(msg);
-				Failure.fail(msg, e);
-				throw(e);
+					)
+				);
 			}
 			props.load(in);
 		} catch (IOException e) {
-			xLogRoot.get().trace(e);
+			Failure.fail(e);
+			throw new RuntimeException(e);
 		} finally {
 			Utils.safeClose(in);
 		}
-		this.name       = props.getProperty("name");
-		this.title      = props.getProperty("title");
-		this.version    = props.getProperty("version");
-		this.commitHash = props.getProperty("commit");
-		this.full_title = this.title+" "+this.version;
-		this.url        = props.getProperty("url");
-		this.org_name   = props.getProperty("org_name");
-		this.org_url    = props.getProperty("org_url");
-		this.issue_name = props.getProperty("issue_name");
-		this.issue_url  = props.getProperty("issue_url");
+		this.name      = props.getProperty("name");
+		this.title     = props.getProperty("title");
+		this.version   = props.getProperty("version");
+		this.url       = props.getProperty("url");
+		this.orgName   = props.getProperty("org_name");
+		this.orgUrl    = props.getProperty("org_url");
+		this.issueName = props.getProperty("issue_name");
+		this.issueUrl  = props.getProperty("issue_url");
+		// title version
+		this.titleFull =
+			(new StringBuilder())
+				.append(this.title)
+				.append(' ')
+				.append(this.version)
+				.toString();
+		// commit hash
+		{
+			final String hash = props.getProperty("commit");
+			if (Utils.isEmpty(hash)) {
+				this.commitHashFull  = null;
+				this.commitHashShort = null;
+			} else
+			if (hash.startsWith("${")) {
+				this.commitHashFull  = null;
+				this.commitHashShort = null;
+			} else {
+				this.commitHashFull  = hash;
+				this.commitHashShort = hash.substring(0, 7);
+			}
+		}
 	}
 
 
