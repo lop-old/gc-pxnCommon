@@ -153,6 +153,55 @@ public abstract class xApp implements xStartable, AttachedLogger {
 	}
 	@Override
 	public void stop() {
+		// check state
+		{
+			final int stepInt = this.state.get();
+			// <=0 already stopping or stopped
+			if (stepInt <= STATE_OFF)
+				return;
+			// set stopping state
+			if ( ! this.state.compareAndSet(stepInt, STATE_STOP) ) {
+				this.warning(
+					ERR_INVALID_STOP_STATE_EXCEPTION,
+					this.state.get()
+				);
+				return;
+			}
+		}
+		this.publish();
+		this.title(
+			new String[] { "Stopping {}.." },
+			this.getTitle()
+		);
+		// start hang catcher
+		this.startHangCatcher();
+		// load shutdown steps
+		{
+			final xThreadPool_Main pool = xThreadPool_Main.get();
+			pool.runTaskNow(
+					new xRunnable("Load shutdown steps") {
+						private volatile xThreadPool pool = null;
+						public xRunnable init(final xThreadPool pool) {
+							this.pool = pool;
+							return this;
+						}
+						@Override
+						public void run() {
+							if (Failure.hasFailed()) return;
+							final xApp app = xApp.this;
+							// prepare shutdown steps
+							synchronized (app.currentSteps) {
+								app.currentSteps.clear();
+								app.loadSteps(StepType.SHUTDOWN);
+							}
+							if (Failure.hasFailed()) return;
+							// queue shutdown sequence
+							final int stepInt = xApp.this.state.get();
+							xApp.QueueNextStep(xApp.this, this.pool, stepInt);
+						}
+					}.init(pool)
+				);
+		}
 	}
 
 
