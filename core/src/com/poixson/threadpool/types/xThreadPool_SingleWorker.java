@@ -103,6 +103,23 @@ public abstract class xThreadPool_SingleWorker extends xThreadPoolQueue {
 
 
 
+	public xThreadPoolWorker getWorker() {
+		return this.worker.get();
+	}
+	@Override
+	public xThreadPoolWorker getCurrentWorker() {
+		final xThreadPoolWorker worker = this.worker.get();
+		if (worker == null)
+			return null;
+		return (
+			worker.isCurrentThread()
+			? worker
+			: null
+		);
+	}
+
+
+
 	// ------------------------------------------------------------------------------- //
 	// config
 
@@ -141,19 +158,6 @@ public abstract class xThreadPool_SingleWorker extends xThreadPoolQueue {
 
 
 
-	public xThreadPoolWorker getWorker() {
-		return this.worker.get();
-	}
-	@Override
-	public boolean isCurrentThread() {
-		final xThreadPoolWorker worker = this.getWorker();
-		if (worker == null)
-			return false;
-		return worker.isCurrentThread();
-	}
-
-
-
 	@Override
 	public boolean isSingleWorker() {
 		return true;
@@ -162,15 +166,11 @@ public abstract class xThreadPool_SingleWorker extends xThreadPoolQueue {
 
 
 	@Override
-	public xThreadPoolWorker getCurrentWorker() {
-		final xThreadPoolWorker worker = this.worker.get();
+	public boolean isCurrentThread() {
+		final xThreadPoolWorker worker = this.getWorker();
 		if (worker == null)
-			return null;
-		return (
-			worker.isCurrentThread()
-			? worker
-			: null
-		);
+			return false;
+		return worker.isCurrentThread();
 	}
 
 

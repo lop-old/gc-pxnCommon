@@ -111,9 +111,6 @@ public abstract class xThreadPool implements xStartable {
 
 
 
-
-
-
 	// ------------------------------------------------------------------------------- //
 	// run tasks
 
@@ -125,10 +122,6 @@ public abstract class xThreadPool implements xStartable {
 
 	// get next task from queue
 	public abstract xThreadPoolTask<?> grabNextTask() throws InterruptedException;
-
-//TODO:
-//	protected void checkTaskTimeouts(final long currentTime) {
-//	}
 
 
 
@@ -239,11 +232,6 @@ public abstract class xThreadPool implements xStartable {
 
 
 
-	// ------------------------------------------------------------------------------- //
-	// pool state
-
-
-
 	@Override
 	public abstract boolean isRunning();
 	@Override
@@ -310,7 +298,7 @@ public abstract class xThreadPool implements xStartable {
 		if (this._log == null) {
 			this._log =
 				xLogRoot.get()
-					.get(this.getPoolName());
+					.get("th-"+this.getPoolName());
 		}
 		return this._log;
 	}

@@ -77,6 +77,7 @@ public class xThreadPoolWorker implements xStartable {
 	}
 	public void waitForStart(final long timeout) {
 		// wait for worker to start
+		long sleep = 0L;
 		CoolDown cool = null;
 		while (true) {
 			// is running
@@ -90,7 +91,8 @@ public class xThreadPoolWorker implements xStartable {
 				if (cool.runAgain())
 					break;
 			}
-			ThreadUtils.Sleep(20L);
+			sleep += 5L;
+			ThreadUtils.Sleep(sleep);
 		}
 	}
 
@@ -254,7 +256,7 @@ public class xThreadPoolWorker implements xStartable {
 	public String getNameFormatted() {
 		return
 			StringUtils.ReplaceTags(
-				"{}[w{}]",
+				"{}-w{}",
 				this.pool.getPoolName(),
 				this.workerIndex
 			);
@@ -289,11 +291,11 @@ public class xThreadPoolWorker implements xStartable {
 				return log;
 			}
 		}
-		final xLog log =
-			this.pool.log()
-				.getWeak(
-					Long.toString(this.workerIndex)
-				);
+		final xLog log = (
+			this.pool.isSingleWorker()
+			? this.pool.log()
+			: this.pool.log().getWeak( "w-"+Long.toString(this.workerIndex) )
+		);
 		this._log = new SoftReference<xLog>(log);
 		return log;
 	}

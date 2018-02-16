@@ -303,7 +303,7 @@ public abstract class xThreadPoolQueue extends xThreadPool {
 					if (result) break QUEUE_LOOP;
 				} catch (InterruptedException ignore) {}
 				// failed to queue task
-				task.log()
+				this.log()
 					.warning(
 						"Thread queue jammed!",
 						( i>0 ? " attempt "+Integer.toString(i+1) : "" )
@@ -320,15 +320,8 @@ public abstract class xThreadPoolQueue extends xThreadPool {
 					this.log().warning("Thread queue jammed, trying a lower priority.. (norm->low)");
 					return this.addTask(task, TaskPriority.LOW);
 				default:
-					throw new RuntimeException("Thread queue jammed! Failed to queue task: "+task.getNameFormatted());
+					throw new RuntimeException("Thread queue jammed! Failed to queue task: "+task.getTaskName());
 				}
-			}
-			if (this.isDetailedLogging()) {
-				this.log()
-					.detail(
-						"Task queued:",
-						task.getNameFormatted()
-					);
 			}
 		}
 		// new worker if needed
@@ -427,9 +420,6 @@ public abstract class xThreadPoolQueue extends xThreadPool {
 		if ( ! this.queueHigh.isEmpty() ) return false;
 		return true;
 	}
-
-
-
 
 
 
