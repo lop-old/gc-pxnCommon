@@ -127,28 +127,28 @@ public abstract class xApp implements xStartable, AttachedLogger {
 		{
 			final xThreadPool_Main pool = xThreadPool_Main.get();
 			pool.runTaskNow(
-					new xRunnable("Load startup steps") {
-						private volatile xThreadPool pool = null;
-						public xRunnable init(final xThreadPool pool) {
-							this.pool = pool;
-							return this;
+				new xRunnable("Load startup steps") {
+					private volatile xThreadPool pool = null;
+					public xRunnable init(final xThreadPool pool) {
+						this.pool = pool;
+						return this;
+					}
+					@Override
+					public void run() {
+						if (Failure.hasFailed()) return;
+						final xApp app = xApp.this;
+						// prepare startup steps
+						synchronized (app.currentSteps) {
+							app.currentSteps.clear();
+							app.loadSteps(StepType.STARTUP);
 						}
-						@Override
-						public void run() {
-							if (Failure.hasFailed()) return;
-							final xApp app = xApp.this;
-							// prepare startup steps
-							synchronized (app.currentSteps) {
-								app.currentSteps.clear();
-								app.loadSteps(StepType.STARTUP);
-							}
-							if (Failure.hasFailed()) return;
-							// queue startup sequence
-							final int stepInt = xApp.this.state.get();
-							xApp.QueueNextStep(xApp.this, this.pool, stepInt);
-						}
-					}.init(pool)
-				);
+						if (Failure.hasFailed()) return;
+						// queue startup sequence
+						final int stepInt = xApp.this.state.get();
+						xApp.QueueNextStep(xApp.this, this.pool, stepInt);
+					}
+				}.init(pool)
+			);
 		}
 	}
 	@Override
@@ -179,28 +179,28 @@ public abstract class xApp implements xStartable, AttachedLogger {
 		{
 			final xThreadPool_Main pool = xThreadPool_Main.get();
 			pool.runTaskNow(
-					new xRunnable("Load shutdown steps") {
-						private volatile xThreadPool pool = null;
-						public xRunnable init(final xThreadPool pool) {
-							this.pool = pool;
-							return this;
+				new xRunnable("Load shutdown steps") {
+					private volatile xThreadPool pool = null;
+					public xRunnable init(final xThreadPool pool) {
+						this.pool = pool;
+						return this;
+					}
+					@Override
+					public void run() {
+						if (Failure.hasFailed()) return;
+						final xApp app = xApp.this;
+						// prepare shutdown steps
+						synchronized (app.currentSteps) {
+							app.currentSteps.clear();
+							app.loadSteps(StepType.SHUTDOWN);
 						}
-						@Override
-						public void run() {
-							if (Failure.hasFailed()) return;
-							final xApp app = xApp.this;
-							// prepare shutdown steps
-							synchronized (app.currentSteps) {
-								app.currentSteps.clear();
-								app.loadSteps(StepType.SHUTDOWN);
-							}
-							if (Failure.hasFailed()) return;
-							// queue shutdown sequence
-							final int stepInt = xApp.this.state.get();
-							xApp.QueueNextStep(xApp.this, this.pool, stepInt);
-						}
-					}.init(pool)
-				);
+						if (Failure.hasFailed()) return;
+						// queue shutdown sequence
+						final int stepInt = xApp.this.state.get();
+						xApp.QueueNextStep(xApp.this, this.pool, stepInt);
+					}
+				}.init(pool)
+			);
 		}
 	}
 
