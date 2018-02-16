@@ -48,6 +48,11 @@ import com.poixson.utils.Utils;
  */
 public abstract class xApp implements xStartable, AttachedLogger {
 
+	private static final String ERR_ALREADY_STOPPING_EXCEPTION    = "Cannot start app, already stopping!";
+	private static final String ERR_INVALID_STATE_EXCEPTION       = "Invalid startup/shutdown state!";
+	private static final String ERR_INVALID_START_STATE_EXCEPTION = "Invalid state, cannot start: {}";
+	private static final String ERR_INVALID_STOP_STATE_EXCEPTION  = "Invalid state, cannot shutdown: {}";
+
 	protected static final int STATE_OFF     = 0;
 	protected static final int STATE_START   = 1;
 	protected static final int STATE_STOP    = Integer.MIN_VALUE + 1;
@@ -68,6 +73,7 @@ public abstract class xApp implements xStartable, AttachedLogger {
 
 
 	protected xApp() {
+		this._log = xLogRoot.get();
 		this.props = new AppProps(this.getClass());
 		Keeper.add(this);
 	}
@@ -93,7 +99,7 @@ public abstract class xApp implements xStartable, AttachedLogger {
 				// <0 already stopping
 				if (stepInt < STATE_OFF) {
 					this.warning(
-//						ERR_ALREADY_STOPPING_EXCEPTION,
+						ERR_ALREADY_STOPPING_EXCEPTION,
 						stepInt
 					);
 				}
@@ -104,12 +110,17 @@ public abstract class xApp implements xStartable, AttachedLogger {
 		// set starting state
 		if ( ! this.state.compareAndSet(STATE_OFF, STATE_START)) {
 			this.warning(
-//				ERR_INVALID_STATE_EXCEPTION,
+				ERR_INVALID_START_STATE_EXCEPTION,
 				this.state.get()
 			);
 			return;
 		}
 		if (Failure.hasFailed()) return;
+		this.publish();
+		this.title(
+			new String[] { "Starting {}.." },
+			this.getTitle()
+		);
 		// start hang catcher
 		this.startHangCatcher();
 		// load startup steps
@@ -126,8 +137,6 @@ public abstract class xApp implements xStartable, AttachedLogger {
 						public void run() {
 							if (Failure.hasFailed()) return;
 							final xApp app = xApp.this;
-							app.publish();
-							app.title("Starting {}..", app.getTitle());
 							// prepare startup steps
 							synchronized (app.currentSteps) {
 								app.currentSteps.clear();
@@ -179,10 +188,10 @@ public abstract class xApp implements xStartable, AttachedLogger {
 				} else
 				if (stepInt > STATE_OFF) {
 					this.state.set(STATE_RUNNING);
-					this.info("Finished startup!");
+					this.info("{} is ready!", this.getTitle());
 				} else {
 					this.state.set(STATE_OFF);
-					this.info("Finished shutdown.");
+					this.info("{} has finished stopping.", this.getTitle());
 				}
 				return;
 			}
@@ -216,11 +225,13 @@ public abstract class xApp implements xStartable, AttachedLogger {
 	protected static void QueueNextStep(final xApp app,
 			final xThreadPool pool, final int stepInt) {
 		if (Failure.hasFailed()) return;
-		pool.runTaskLater(
-				(stepInt > STATE_OFF ? "Startup" : "Shutdown")
-					+Integer.toString(stepInt),
-				app
+		final String taskName =
+			StringUtils.ReplaceTags(
+				"{}({})",
+				( stepInt > STATE_OFF ? "Startup" : "Shutdown" ),
+				stepInt
 			);
+		pool.runTaskLater(taskName, app);
 	}
 	protected xAppStepDAO grabNextStepDAO() {
 		if (Failure.hasFailed()) return null;
@@ -247,6 +258,9 @@ public abstract class xApp implements xStartable, AttachedLogger {
 			if (this.currentSteps.isEmpty())
 				return null;
 			int nextStepInt;
+			if (stepInt == STATE_OFF)         throw new IllegalStateException(ERR_INVALID_STATE_EXCEPTION);
+			if (stepInt == Integer.MIN_VALUE) throw new IllegalStateException(ERR_INVALID_STATE_EXCEPTION);
+			if (stepInt == Integer.MAX_VALUE) throw new IllegalStateException(ERR_INVALID_STATE_EXCEPTION);
 			final Iterator<Integer> it = this.currentSteps.keySet().iterator();
 			// startup
 			if (stepInt > STATE_OFF) {
@@ -290,6 +304,51 @@ public abstract class xApp implements xStartable, AttachedLogger {
 		for (final Object obj : containers) {
 			this.loadSteps(type, obj);
 		}
+		// log loaded steps
+		if (this.log().isDetailLoggable()) {
+			final List<String> lines = new ArrayList<String>();
+			lines.add("Found {} {} steps:");
+			// list steps in order
+			final IntComparator compare =
+				new IntComparator(
+					StepType.SHUTDOWN.equals(type)
+				);
+			final TreeSet<Integer> orderedValues =
+				new TreeSet<Integer>( compare );
+			orderedValues.addAll(
+				this.currentSteps.keySet()
+			);
+			int count = 0;
+			//ORDERED_LOOP:
+			for (final Integer stepInt : orderedValues) {
+				final List<xAppStepDAO> list = this.currentSteps.get(stepInt);
+				if (Utils.isEmpty(list))
+					continue;
+				//LIST_LOOP:
+				for (final xAppStepDAO dao : list) {
+					count++;
+					lines.add(
+						(new StringBuilder())
+							.append(
+								StringUtils.PadFront(
+									5,
+									stepInt.toString(),
+									' '
+								)
+							)
+							.append(" - ")
+							.append(dao.title)
+							.toString()
+					);
+				} // end LIST_LOOP
+			} // end ORDERED_LOOP
+			this.log()
+				.detail(
+					lines.toArray(new String[0]),
+					count,
+					( StepType.STARTUP.equals(type) ? "Startup" : "Shutdown" )
+				);
+		} // end log steps
 	}
 	protected void loadSteps(final StepType type, final Object container) {
 		if (type      == null) throw new RequiredArgumentException("type");
@@ -386,11 +445,15 @@ public abstract class xApp implements xStartable, AttachedLogger {
 				new Runnable() {
 					@Override
 					public void run() {
-						xApp.this.publish();
-						xApp.this.publish(" *********************** ");
-						xApp.this.publish(" *  Startup has hung!  * ");
-						xApp.this.publish(" *********************** ");
-						xApp.this.publish();
+						xApp.this.publish(
+							new String[] {
+								"",
+								" *********************** ",
+								" *  Startup has hung!  * ",
+								" *********************** ",
+								""
+							}
+						);
 						ThreadUtils.DisplayStillRunning();
 						System.exit(1);
 					}
