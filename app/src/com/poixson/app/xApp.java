@@ -350,6 +350,7 @@ public abstract class xApp implements xStartable, AttachedLogger {
 		);
 	}
 	protected void loadSteps(final StepType type, final Object[] containers) {
+		this.loadSteps(type, this);
 		for (final Object obj : containers) {
 			this.loadSteps(type, obj);
 		}
@@ -421,16 +422,11 @@ public abstract class xApp implements xStartable, AttachedLogger {
 							m,
 							anno
 						);
-					// store the step
-					final List<xAppStepDAO> list = new ArrayList<xAppStepDAO>();
-					list.add(dao);
-					final List<xAppStepDAO> existing =
-						this.currentSteps.putIfAbsent(
-							Integer.valueOf(dao.stepValue),
-							list
-						);
-					if (existing != null)
-						existing.add(dao);
+					// add to existing list or new list
+					this.currentSteps.computeIfAbsent(
+						Integer.valueOf(dao.stepValue),
+						key -> new ArrayList<xAppStepDAO>()
+					).add(dao);
 				}
 			}
 		}
