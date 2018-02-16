@@ -115,12 +115,9 @@ public class xLogFormatter {
 	protected String genCrumbs(final xLogRecord record,
 			final String preStr, final String midStr, final String postStr) {
 		final String[] tree = record.getNameTree();
-		if (Utils.isEmpty(tree))
-			return "";
-		final String result =
-			StringUtils.MergeStrings(midStr, tree);
-		if (result.length() == 0)
-			return "";
+		if (Utils.isEmpty(tree)) return "";
+		final String result = StringUtils.MergeStrings(midStr, tree);
+		if (Utils.isEmpty(result)) return "";
 		return (new StringBuilder())
 			.append(preStr)
 			.append(result)
@@ -132,10 +129,7 @@ public class xLogFormatter {
 
 	// message
 	protected String genMessage(final xLogRecord record, final int lineIndex) {
-		return (new StringBuilder())
-			.append(' ')
-			.append( record.getPreparedLine(lineIndex) )
-			.toString();
+		return record.getPreparedLine(lineIndex);
 	}
 
 

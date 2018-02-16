@@ -193,8 +193,14 @@ public class xLog implements xLogPrinter {
 		this.printers
 			.add(printer);
 	}
+
+
+
 	public int getPrinterCount() {
 		return this.printers.size();
+	}
+	public boolean hasPrinter() {
+		return ! this.printers.isEmpty();
 	}
 
 

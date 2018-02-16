@@ -42,6 +42,7 @@ public abstract class xLogPrinterBasic implements xLogPrinter {
 				this.publish( (String[]) null );
 				return;
 			}
+			// handle the log entry
 			final xLogFormatter formatter = this.getFormatter();
 			this.publish(
 				formatter.formatMessage(
@@ -78,7 +79,9 @@ public abstract class xLogPrinterBasic implements xLogPrinter {
 
 	@Override
 	public void getPublishLock() throws IOException {
-		this.getPublishLock(this.publishLock);
+		this.getPublishLock(
+			this.publishLock
+		);
 	}
 	@Override
 	public void releasePublishLock() {
