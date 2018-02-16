@@ -1,5 +1,8 @@
 package com.poixson.tools.remapped;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.utils.Utils;
 
@@ -65,6 +68,12 @@ public class xRunnable implements RunnableNamed {
 				);
 		}
 		return new xRunnable(run);
+	}
+
+
+
+	public Callable<?> toCallable() {
+		return Executors.callable(this);
 	}
 
 
