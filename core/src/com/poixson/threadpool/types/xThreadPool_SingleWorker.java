@@ -137,6 +137,7 @@ public abstract class xThreadPool_SingleWorker extends xThreadPoolQueue {
 
 
 	// ------------------------------------------------------------------------------- //
+	// state
 
 
 
@@ -153,8 +154,10 @@ public abstract class xThreadPool_SingleWorker extends xThreadPoolQueue {
 
 
 
-	// ------------------------------------------------------------------------------- //
-	// pool state
+	@Override
+	public boolean isSingleWorker() {
+		return true;
+	}
 
 
 

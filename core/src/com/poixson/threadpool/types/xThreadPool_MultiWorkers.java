@@ -179,7 +179,14 @@ public abstract class xThreadPool_MultiWorkers extends xThreadPoolQueue {
 
 
 	// ------------------------------------------------------------------------------- //
-	// pool state
+	// state
+
+
+
+	@Override
+	public boolean isSingleWorker() {
+		return (this.maxWorkers <= 1);
+	}
 
 
 

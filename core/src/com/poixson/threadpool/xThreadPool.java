@@ -215,7 +215,7 @@ public abstract class xThreadPool implements xStartable {
 
 
 	// ------------------------------------------------------------------------------- //
-	// which thread
+	// state
 
 
 
@@ -225,6 +225,10 @@ public abstract class xThreadPool implements xStartable {
 	public boolean isEventDispatchPool() {
 		return false;
 	}
+
+
+
+	public abstract boolean isSingleWorker();
 
 
 
