@@ -30,20 +30,21 @@ import com.poixson.utils.Utils;
 
 /*
  * Startup sequence
- *   10  prevent root
- *   50  load main configs
- *   60  sync clock
- *   70  display logo
- *   80  lock file
- *   90  start console input
- *  100  start aux thread pools
- *  150  start schedulers
+ *   10  prevent root        - xAppSteps_Tool
+ *   50  load configs        - xAppSteps_Config
+ *   70  lock file           - xAppSteps_LockFile
+ *   80  display logo        - xAppSteps_Logo
+ *   90  start console input - xAppSteps_Console
+ *  100  sync clock          - xAppStandard
+ *  200  startup time        - xAppStandard
+ *
  * Shutdown sequence
- *  150  stop schedulers
- *  100  stop aux thread pools
- *   60  display uptime
- *   30  stop console input
- *   20  release lock file
+ *  150  stop schedulers     - xAppSteps_Scheduler
+ *  100  stop thread pools   - xAppStandard
+ *   60  display uptime      - xAppStandard
+ *   20  release lock file   - xAppSteps_LockFile
+ *   30  stop console input  - xAppSteps_Console
+ *   10  garbage collect     - xApp
  *   10  final garpage collect
  */
 public abstract class xApp implements xStartable, AttachedLogger {
@@ -439,29 +440,8 @@ public abstract class xApp implements xStartable, AttachedLogger {
 
 
 
-	// clock
-	@xAppStep(type=StepType.STARTUP, title="Clock", priority=60)
-	public void __STARTUP_clock(final xApp app) {
-		final xClock clock = xClock.get(true);
-		this.startTime.set(
-			clock.millis(),
-			xTimeU.MS
-		);
-		this.startTime.lock();
-	}
-
-
-
 	// ------------------------------------------------------------------------------- //
 	// shutdown steps
-
-
-
-	// display uptime
-	@xAppStep(type=StepType.SHUTDOWN, title="Uptime", priority=60)
-	public void __SHUTDOWN_uptimestats() {
-//TODO: display total time running
-	}
 
 
 
@@ -1060,186 +1040,13 @@ return "<uptime>";
 
 
 
-//TODO: move these functions to a new class
 	// ------------------------------------------------------------------------------- //
 	// startup steps
 
 
 
-	// ensure not root
-	@xAppStep(type=StepType.STARTUP, title="RootCheck", priority=10)
-	public void __STARTUP_rootcheck() {
-//TODO: move try/catch to calling function
-		try {
-			final String user = System.getProperty("user.name");
-			if ("root".equals(user)) {
-				this.warning("It is recommended to run as a non-root user");
-			} else
-			if ("administrator".equalsIgnoreCase(user)
-			|| "admin".equalsIgnoreCase(user)) {
-				this.warning("It is recommended to run as a non-administrator user");
-			}
-		} catch (Exception e) {
-			Failure.fail(e);
-		}
-	}
-
-
-
-	// load configs
-	@xAppStep(type=StepType.STARTUP, title="Configs", priority=50)
-	public void __STARTUP_configs() {
-//TODO:
-//		try {
-//		} catch (Exception e) {
-//			Failure.fail(e);
-//		}
-	}
-
-
-
-	// clock
-	@xAppStep(type=StepType.STARTUP, title="Clock", priority=60)
-	public void __STARTUP_clock() {
-		try {
-			final xClock clock = xClock.get(true);
-			this.startTime =
-				xTime.getNew(
-					clock.millis()
-				);
-		} catch (Exception e) {
-			Failure.fail(e);
-		}
-	}
-
-
-
-	// display logo
-	@xAppStep(type=StepType.STARTUP, title="DisplayLogo", priority=80)
-	public void __STARTUP_displaylogo() {
-		this.displayLogo();
-//		displayStartupVars();
-	}
-
-
-
-	// lock file
-	@xAppStep(type=StepType.STARTUP, title="LockFile", priority=90)
-	public void __STARTUP_lockfile() {
-		try {
-			final String filename = this.getName()+".lock";
-			final LockFile lock = LockFile.get(filename);
-			if (!lock.acquire()) {
-				Failure.fail("Failed to get lock on file: "+filename);
-			}
-		} catch (Exception e) {
-			Failure.fail(e);
-		}
-	}
-
-
-
-//	// start thread pools
-//	@xAppStep(type=StepType.STARTUP, title="ThreadPools", priority=100)
-//	public void __STARTUP_threadpools() {
-//		try {
-//			final xThreadPool pool =
-//				xThreadPool_Main.get();
-//			pool.start();
-//		} catch (Exception e) {
-//			Failure.fail(e);
-//		}
-//	}
-
-
-
-	// start scheduler
-	@xAppStep(type=StepType.STARTUP, title="Scheduler", priority=150)
-	public void __STARTUP_scheduler() {
-		try {
-//TODO:
-//			// start main scheduler
-//			final xScheduler sched = xScheduler.getMainSched();
-//			sched.start();
-//TODO:
-//			// start ticker
-//			final xTicker ticker = xTicker.get();
-//			ticker.Start();
-		} catch (Exception e) {
-			Failure.fail(e);
-		}
-	}
-
-
-
 	// ------------------------------------------------------------------------------- //
 	// shutdown steps
-
-
-
-	// stop scheduler
-	@xAppStep(type=StepType.SHUTDOWN, title="Scheduler", priority=150)
-	public void __SHUTDOWN_scheduler() {
-		try {
-//			// stop ticker
-//			final xTicker ticker = xTicker.get();
-//			ticker.Stop();
-//TODO:
-//			// stop main scheduler
-//			final xScheduler sched = xScheduler.getMainSched();
-//			sched.stop();
-		} catch (Exception e) {
-			Failure.fail(e);
-		}
-	}
-
-
-
-//	// stop thread pools
-//	@xAppStep(type=StepType.SHUTDOWN, title="ThreadPools", priority=100)
-//	public void __SHUTDOWN_threadpools() {
-//		try {
-//TODO:
-//			xThreadPoolFactory
-//				.ShutdownAll();
-//		} catch (Exception e) {
-//			Failure.fail(e);
-//		}
-//	}
-
-
-
-	// display uptime
-	@xAppStep(type=StepType.SHUTDOWN, title="Uptime", priority=60)
-	public void __SHUTDOWN_uptimestats() {
-//TODO: display total time running
-//this.getUptimeString();
-	}
-
-
-
-	// stop console input
-	@xAppStep(type=StepType.SHUTDOWN, title="Console", priority=30)
-	public void __SHUTDOWN_console() {
-		try {
-			xLog.Shutdown();
-		} catch (Exception e) {
-			Failure.fail(e);
-		}
-	}
-
-
-
-	// release lock file
-	@xAppStep(type=StepType.SHUTDOWN, title="LockFile", priority=20)
-	public void __SHUTDOWN_lockfile() {
-		try {
-			final String filename = this.getName()+".lock";
-			LockFile.getRelease(filename);
-		} catch (Exception e) {
-			Failure.fail(e);
-		}
-	}
 
 
 
