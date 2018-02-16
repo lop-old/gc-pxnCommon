@@ -5,6 +5,8 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.poixson.app.xVars;
+
 
 public class Dumper {
 	private Dumper() {}
@@ -22,9 +24,10 @@ public class Dumper {
 
 
 	public static void print(final Object obj) {
-		System.out.println(
-			dump(obj)
-		);
+		xVars.getOriginalErr()
+			.println(
+				dump(obj)
+			);
 	}
 	public static void printHead(final Object obj, final int lineCount) {
 		String msg = dump(obj);
@@ -42,7 +45,8 @@ public class Dumper {
 				line = msg.substring(0, pos - 1);
 				msg = msg.substring(pos + 1);
 			}
-			System.out.println(line);
+			xVars.getOriginalErr()
+				.println(line);
 			count--;
 		}
 	}

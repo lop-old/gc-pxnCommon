@@ -42,7 +42,8 @@ public final class Failure {
 		if (Utils.notEmpty(msg)) {
 			final String str = StringUtils.ReplaceTags(msg, args);
 			if (log == null) {
-				System.out.println(str);
+				xVars.getOriginalErr()
+					.println(str);
 			} else {
 				log.fatal(str);
 			}

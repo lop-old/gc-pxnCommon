@@ -1,12 +1,14 @@
 package com.poixson.utils;
 
 import java.io.Closeable;
+import java.io.PrintStream;
 import java.lang.ref.SoftReference;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+import com.poixson.app.xVars;
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.xLevel;
 import com.poixson.logger.xLog;
@@ -371,8 +373,11 @@ public final class Utils {
 
 
 	public static void ListProperties() {
+		ListProperties(xVars.getOriginalErr());
+	}
+	public static void ListProperties(final PrintStream out) {
 		final Properties props = System.getProperties();
-		props.list(System.out);
+		props.list(out);
 	}
 
 
@@ -532,19 +537,20 @@ public final class Utils {
 		SleepDot(msg, 1.0);
 	}
 	public static void SleepDot(final String msg, final double time) {
+		final PrintStream out = xVars.getOriginalErr();
 		String str = msg;
 		str = StringUtils.TrimEnd(str, "\r", "\n", " ", ".");
 		str = StringUtils.ForceStarts(" ", str);
-		System.out.print(str);
+		out.print(str);
 		final long dotTime = (long) (((time - 0.1) / 3.0) * 1000.0);
 		ThreadUtils.Sleep("0.1s");
-		System.out.print(".");
+		out.print(".");
 		ThreadUtils.Sleep(dotTime);
-		System.out.print(".");
+		out.print(".");
 		ThreadUtils.Sleep(dotTime);
-		System.out.print(".");
+		out.print(".");
 		ThreadUtils.Sleep(dotTime);
-		System.out.println();
+		out.println();
 	}
 
 
