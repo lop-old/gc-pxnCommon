@@ -12,7 +12,7 @@ public class UnmodifiableObjectException extends UnsupportedOperationException {
 
 
 
-	private static String getMsg() {
+	private static String BuildMsg() {
 		final Exception eTemp = new Exception();
 		final StackTraceElement[] trace = eTemp.getStackTrace();
 		final Iterator<StackTraceElement> it =
@@ -41,7 +41,7 @@ public class UnmodifiableObjectException extends UnsupportedOperationException {
 
 
 	public UnmodifiableObjectException() {
-		super(getMsg());
+		super( BuildMsg() );
 	}
 	public UnmodifiableObjectException(final String msg) {
 		super(msg);

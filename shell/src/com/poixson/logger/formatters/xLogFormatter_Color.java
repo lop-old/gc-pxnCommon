@@ -5,6 +5,7 @@ import org.fusesource.jansi.AnsiConsole;
 import com.poixson.logger.xLevel;
 import com.poixson.logger.xLogRecord;
 import com.poixson.utils.StringUtils;
+import com.poixson.utils.Utils;
 
 
 public class xLogFormatter_Color extends xLogFormatter {
@@ -107,9 +108,12 @@ public class xLogFormatter_Color extends xLogFormatter {
 
 	// crumbs
 	protected String genCrumbsColored(final xLogRecord record) {
+		final String crumbStr = super.genCrumbs(record, "[", "] [", "]");
+		if (Utils.isBlank(crumbStr))
+			return "";
 		return (new StringBuilder())
 			.append("@|FG_BLACK,BOLD ")
-			.append( super.genCrumbs(record, "[", "] [", "]") )
+			.append(crumbStr)
 			.append("|@")
 			.toString();
 	}
