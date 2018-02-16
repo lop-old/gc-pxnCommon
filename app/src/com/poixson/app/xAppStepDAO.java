@@ -51,11 +51,14 @@ public class xAppStepDAO implements RunnableNamed {
 				? StringUtils.Trim(this.method.getName(), "_")
 				: name;
 		}
-		this.title = (
-			Utils.isEmpty(anno.Title())
-			? this.name
-			: anno.Title()
-		);
+		{
+			final String title = anno.Title();
+			this.title = (
+				Utils.isEmpty(title)
+				? this.name
+				: title
+			);
+		}
 	}
 
 

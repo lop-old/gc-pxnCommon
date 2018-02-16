@@ -15,7 +15,7 @@ public class xAppSteps_Tool {
 
 
 	// ensure not root
-	@xAppStep( Type=StepType.STARTUP, Title="RootCheck", StepValue=10 )
+	@xAppStep( Type=StepType.STARTUP, Title="Root Check", StepValue=10 )
 	public void __STARTUP_rootcheck(final xLog log) {
 		final String user = System.getProperty("user.name");
 		if ("root".equals(user)) {

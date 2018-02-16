@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.poixson.abstractions.xStartable;
@@ -18,10 +19,10 @@ import com.poixson.threadpool.types.xThreadPool_Main;
 import com.poixson.tools.AppProps;
 import com.poixson.tools.HangCatcher;
 import com.poixson.tools.Keeper;
-import com.poixson.tools.xClock;
 import com.poixson.tools.xTime;
-import com.poixson.tools.xTimeU;
+import com.poixson.tools.comparators.IntComparator;
 import com.poixson.tools.remapped.xRunnable;
+import com.poixson.utils.FileUtils;
 import com.poixson.utils.ProcUtils;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.ThreadUtils;
@@ -54,6 +55,11 @@ public abstract class xApp implements xStartable, AttachedLogger {
 	private static final String ERR_INVALID_START_STATE_EXCEPTION = "Invalid state, cannot start: {}";
 	private static final String ERR_INVALID_STOP_STATE_EXCEPTION  = "Invalid state, cannot shutdown: {}";
 
+//TODO: use this?
+//	// app instance
+//	protected static final AtomicReference<xApp> instance =
+//			new AtomicReference<xApp>(null);
+
 	protected static final int STATE_OFF     = 0;
 	protected static final int STATE_START   = 1;
 	protected static final int STATE_STOP    = Integer.MIN_VALUE + 1;
@@ -66,27 +72,74 @@ public abstract class xApp implements xStartable, AttachedLogger {
 	protected final Object runLock = new Object();
 	protected volatile HangCatcher hangCatcher = null;
 
-	protected final xTime startTime = xTime.getNew();
-
 	// mvn properties
 	protected final AppProps props;
 
 
 
-	protected xApp() {
+	public xApp() {
 		this._log = xLogRoot.get();
 		this.props = new AppProps(this.getClass());
+		// debug mode
+		if (ProcUtils.isDebugWireEnabled()) {
+			xVars.setDebug(true);
+		}
+		// search for .debug file
+		if (Utils.notEmpty(xVars.SEARCH_DEBUG_FILES)) {
+			final String result =
+				FileUtils.SearchLocalFile(
+					xVars.SEARCH_DEBUG_FILES,
+					xVars.SEARCH_DEBUG_PARENTS
+				);
+			if (result != null)
+				xVars.setDebug(true);
+		}
 		Keeper.add(this);
+//TODO:
+//		Failure.register(
+//			new Runnable() {
+//				@Override
+//				public void run() {
+//					xApp.this.fail();
+//				}
+//			}
+//		);
+//TODO:
+//		// process command line arguments
+//		final List<String> argsList = new LinkedList<String>();
+//		argsList.addAll(Arrays.asList(args));
+//		instance.processArgs(argsList);
+//		instance.processDefaultArgs(argsList);
+//		if (utils.notEmpty(argsList)) {
+//			final StringBuilder str = new StringBuilder();
+//			for (final String arg : argsList) {
+//				if (utils.isEmpty(arg)) continue;
+//				if (str.length() > 0)
+//					str.append(" ");
+//				str.append(arg);
+//			}
+//			if (str.length() > 0) {
+//				xVars.getOriginalOut()
+//					.println("Unknown arguments: "+str.toString());
+//				System.exit(1);
+//				return;
+//			}
+//		}
+//		// handle command-line arguments
+//		instance.displayStartupVars();
+//		// main thread ended
+//		Failure.fail("@|FG_RED Main process ended! (this shouldn't happen)|@");
+//		System.exit(1);
 	}
-
-
-
-	protected abstract Object[] getStepObjects(final StepType type);
 
 
 
 	// ------------------------------------------------------------------------------- //
 	// start/stop app
+
+
+
+	protected abstract Object[] getStepObjects(final StepType type);
 
 
 
@@ -116,6 +169,11 @@ public abstract class xApp implements xStartable, AttachedLogger {
 			);
 			return;
 		}
+//TODO:
+//		// register shutdown hook
+//		xThreadPool.addShutdownHook(
+//			new RemappedMethod(this, "stop")
+//		);
 		if (Failure.hasFailed()) return;
 		this.publish();
 		this.title(
@@ -211,11 +269,6 @@ public abstract class xApp implements xStartable, AttachedLogger {
 		xThreadPool_Main.get()
 			.joinWorkers();
 	}
-
-
-
-	// ------------------------------------------------------------------------------- //
-	// startup/shutdown queue
 
 
 
@@ -436,26 +489,6 @@ public abstract class xApp implements xStartable, AttachedLogger {
 
 
 	// ------------------------------------------------------------------------------- //
-	// startup steps
-
-
-
-	// ------------------------------------------------------------------------------- //
-	// shutdown steps
-
-
-
-	// garbage collect
-	@xAppStep(type=StepType.SHUTDOWN,title="GarbageCollect", priority=10)
-	public void __SHUTDOWN_gc() {
-		System.gc();
-		xVars.getOriginalOut()
-			.println();
-	}
-
-
-
-	// ------------------------------------------------------------------------------- //
 	// hang catcher
 
 
@@ -470,6 +503,7 @@ public abstract class xApp implements xStartable, AttachedLogger {
 				new Runnable() {
 					@Override
 					public void run() {
+//TODO: improve this
 						xApp.this.publish(
 							new String[] {
 								"",
@@ -577,44 +611,51 @@ public abstract class xApp implements xStartable, AttachedLogger {
 
 
 	// garbage collect
-	@xAppStep(type=StepType.SHUTDOWN,title="GarbageCollect", priority=10)
-	public void __SHUTDOWN_gc() {
-//TODO:
-//		Utils.Sleep(250L);
-//		xScheduler.clearInstance();
+	@xAppStep( Type=StepType.SHUTDOWN, Title="Garbage Collect", StepValue=10 )
+	public void __SHUTDOWN_gc(final xApp app, final xLog log) {
+		Keeper.remove(this);
+		ThreadUtils.Sleep(50L);
 		System.gc();
+		xVars.getOriginalOut()
+			.println();
+		xVars.getOriginalOut()
+			.flush();
+//TODO: is this useful?
+//		xScheduler.clearInstance();
 //		if (xScheduler.hasLoaded()) {
 //			this.warning("xScheduler hasn't fully unloaded!");
 //		} else {
 //			this.finest("xScheduler has been unloaded");
 //		}
-		xVars.getOriginalOut()
-			.println();
+	}
+
+
+
+//TODO: this will be replaced with ShutdownTask
+	@xAppStep( Type=StepType.SHUTDOWN, Title="Exit", StepValue=2)
+	public void __SHUTDOWN_exit() {
+		final Thread stopThread =
+			new Thread() {
+				@Override
+				public void run() {
+					ThreadUtils.Sleep(250L);
+					System.exit(0);
+				}
+			};
+		stopThread.start();
 	}
 
 
 
 	// ------------------------------------------------------------------------------- //
-
-
-
 	// logger
-	private volatile SoftReference<xLog> _log = null;
+
+
+
+	private final xLog _log;
 	@Override
 	public xLog log() {
-		if (this._log != null) {
-			final xLog log = this._log.get();
-			if (log != null) {
-				return log;
-			}
-		}
-		final xLog log = xLog.getRoot();
-		this._log = new SoftReference<xLog>(log);
-		return log;
-	}
-
-
-
+		return this._log;
 	}
 
 

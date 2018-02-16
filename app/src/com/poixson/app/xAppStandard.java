@@ -18,6 +18,26 @@ public abstract class xAppStandard extends xApp {
 
 
 
+//TODO: remove this
+//TODO: this should be improved
+//	@Override
+//	protected void initLogger() {
+//		super.initLogger();
+//		if (Failure.hasFailed()) {
+//			xVars.getOriginalOut()
+//				.println("Failure, pre-init!");
+//			System.exit(1);
+//		}
+//		final xLog log = xLog.getRoot();
+//		if (System.console() != null) {
+//			log.setHandler(
+//				new xLogHandlerConsole()
+//			);
+//		}
+//	}
+
+
+
 	// ------------------------------------------------------------------------------- //
 	// startup steps
 
@@ -43,6 +63,23 @@ public abstract class xAppStandard extends xApp {
 
 	// ------------------------------------------------------------------------------- //
 	// shutdown steps
+
+
+
+//	// stop thread pools
+//	@xAppStep( Type=StepType.SHUTDOWN, Title="Thread Pools", StepValue=100 )
+//	public void __SHUTDOWN_threadpools(final xLog log) {
+//TODO:
+//		xThreadPool.StopAll();
+//	}
+
+
+
+//	// display uptime
+//	@xAppStep( Type=StepType.SHUTDOWN, Title="Uptime", StepValue=60 )
+//	public void __SHUTDOWN_uptime(final xLog log) {
+//TODO: display total time running
+//	}
 
 
 
