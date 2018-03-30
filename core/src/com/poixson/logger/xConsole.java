@@ -1,34 +1,18 @@
-package com.poixson.logger.console;
+package com.poixson.logger;
 
 import com.poixson.abstractions.xStartable;
-import com.poixson.logger.commands.xCommandHandler;
 
 
 public interface xConsole extends xStartable {
 
 
-	public String getName();
-
-	@Override
-	public void start();
-	@Override
-	public void stop();
-
-	@Override
-	public void run();
-	@Override
-	public boolean isRunning();
-	@Override
-	public boolean isStopping();
-
-	public Object getPrintLockObject();
-
-	public void clear();
+	public void clearScreen();
 	public void clearLine();
 	public void flush();
+	public void beep();
 
-	public void println(final String line);
-	public void println();
+	public void publish(final String line);
+	public void publish();
 
 	public String getPrompt();
 	public void setPrompt(final String prompt);
@@ -36,8 +20,6 @@ public interface xConsole extends xStartable {
 
 	public Character getMask();
 	public void setMask(final Character mask);
-
-	public xCommandHandler getCommandHandler();
 
 
 }
