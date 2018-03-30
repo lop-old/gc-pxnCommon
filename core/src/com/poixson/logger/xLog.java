@@ -230,7 +230,7 @@ public class xLog implements xLogPrinter {
 		if (Utils.notEmpty(printers)) {
 			PRINTER_LOOP:
 			for (final xLogPrinter printer : printers) {
-				if (printer == null) continue;
+				if (printer == null) continue PRINTER_LOOP;
 				try {
 					if (printer.notLoggable(record.level))
 						continue PRINTER_LOOP;
@@ -283,7 +283,7 @@ public class xLog implements xLogPrinter {
 			new xLogRecord(
 				this,
 				level,
-				new String[] { line },
+				StringUtils.StringToArray(line),
 				args
 			)
 		);
@@ -305,7 +305,7 @@ public class xLog implements xLogPrinter {
 			new xLogRecord(
 				this,
 				(xLevel)   null,
-				new String[] { line },
+				StringUtils.StringToArray(line),
 				(Object[]) null
 			)
 		);
@@ -369,7 +369,7 @@ public class xLog implements xLogPrinter {
 			new xLogRecord(
 				this,
 				xLevel.SEVERE,
-				new String[] { str.toString() },
+				StringUtils.StringToArray(str.toString()),
 				args
 			)
 		);
@@ -383,7 +383,7 @@ public class xLog implements xLogPrinter {
 			new xLogRecord(
 				this,
 				xLevel.STDOUT,
-				new String[] { line },
+				StringUtils.StringToArray(line),
 				args
 			)
 		);
@@ -407,7 +407,7 @@ public class xLog implements xLogPrinter {
 			new xLogRecord(
 				this,
 				xLevel.STDERR,
-				new String[] { line },
+				StringUtils.StringToArray(line),
 				args
 			)
 		);
@@ -431,7 +431,7 @@ public class xLog implements xLogPrinter {
 			new xLogRecord(
 				this,
 				xLevel.DETAIL,
-				new String[] { line },
+				StringUtils.StringToArray(line),
 				args
 			)
 		);
@@ -455,7 +455,7 @@ public class xLog implements xLogPrinter {
 			new xLogRecord(
 				this,
 				xLevel.FINEST,
-				new String[] { line },
+				StringUtils.StringToArray(line),
 				args
 			)
 		);
@@ -479,7 +479,7 @@ public class xLog implements xLogPrinter {
 			new xLogRecord(
 				this,
 				xLevel.FINER,
-				new String[] { line },
+				StringUtils.StringToArray(line),
 				args
 			)
 		);
@@ -503,7 +503,7 @@ public class xLog implements xLogPrinter {
 			new xLogRecord(
 				this,
 				xLevel.FINE,
-				new String[] { line },
+				StringUtils.StringToArray(line),
 				args
 			)
 		);
@@ -527,7 +527,7 @@ public class xLog implements xLogPrinter {
 			new xLogRecord(
 				this,
 				xLevel.STATS,
-				new String[] { line },
+				StringUtils.StringToArray(line),
 				args
 			)
 		);
@@ -551,7 +551,7 @@ public class xLog implements xLogPrinter {
 			new xLogRecord(
 				this,
 				xLevel.INFO,
-				new String[] { line },
+				StringUtils.StringToArray(line),
 				args
 			)
 		);
@@ -575,7 +575,7 @@ public class xLog implements xLogPrinter {
 			new xLogRecord(
 				this,
 				xLevel.WARNING,
-				new String[] { line },
+				StringUtils.StringToArray(line),
 				args
 			)
 		);
@@ -599,7 +599,7 @@ public class xLog implements xLogPrinter {
 			new xLogRecord(
 				this,
 				xLevel.SEVERE,
-				new String[] { line },
+				StringUtils.StringToArray(line),
 				args
 			)
 		);
@@ -623,7 +623,7 @@ public class xLog implements xLogPrinter {
 			new xLogRecord(
 				this,
 				xLevel.FATAL,
-				new String[] { line },
+				StringUtils.StringToArray(line),
 				args
 			)
 		);
