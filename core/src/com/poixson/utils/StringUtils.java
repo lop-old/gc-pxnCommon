@@ -73,7 +73,24 @@ public class StringUtils extends StringAdvUtils {
 	// object to string
 	public static String toString(final Object obj) {
 		// null
-		if (obj == null) return null;
+		if (obj == null)
+			return null;
+		// array
+		if (obj.getClass().isArray()) {
+			final StringBuilder result = new StringBuilder();
+			int count = 0;
+			for (final Object o : (Object[]) obj) {
+				if (o == null) continue;
+				if (count > 0)
+					result.append(' ');
+				count++;
+				result
+					.append('{')
+					.append( toString(o) )
+					.append('}');
+			}
+			return result.toString();
+		}
 		// string
 		if (obj instanceof String)
 			return (String) obj;
