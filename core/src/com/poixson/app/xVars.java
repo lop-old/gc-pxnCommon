@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.poixson.logger.xConsole;
 import com.poixson.logger.xLogRoot;
 import com.poixson.tools.Keeper;
 
@@ -25,6 +26,10 @@ public final class xVars {
 
 
 
+	// ------------------------------------------------------------------------------- //
+
+
+
 	// debug mode
 	private static final AtomicReference<Boolean> debug =
 			new AtomicReference<Boolean>(null);
@@ -36,6 +41,10 @@ public final class xVars {
 			new AtomicReference<PrintStream>(null);
 	private static final AtomicReference<InputStream> originalIn  =
 			new AtomicReference<InputStream>(null);
+
+	// console
+	private static final AtomicReference<xConsole> console =
+			new AtomicReference<xConsole>(null);
 
 	// console color
 	private static final AtomicReference<Boolean> colorEnabled =
@@ -135,6 +144,25 @@ public final class xVars {
 	public static void setOriginalIn(final InputStream in) {
 		if (in != null) {
 			originalIn.set(in);
+		}
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// console
+
+
+
+	public static xConsole getConsole() {
+		return console.get();
+	}
+	public static void setConsole(final xConsole console) {
+		if (console == null) {
+			xVars.console.set(null);
+		} else {
+			if ( ! xVars.console.compareAndSet(null, console) )
+				throw new RuntimeException("Console already set!");
 		}
 	}
 
