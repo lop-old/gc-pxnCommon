@@ -58,6 +58,22 @@ public class xLogPrinter_stdio extends xLogPrinterBasic {
 			);
 		}
 	}
+	@Override
+	public void publish() {
+		this.publish( (String) null );
+	}
+
+
+
+	@Override
+	public void flush() {
+		final xConsole console = xVars.getConsole();
+		if (console != null) {
+			console.flush();
+		} else {
+			this.out.flush();
+		}
+	}
 
 
 

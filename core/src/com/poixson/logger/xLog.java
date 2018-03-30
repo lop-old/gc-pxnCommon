@@ -310,6 +310,7 @@ public class xLog implements xLogPrinter {
 			)
 		);
 	}
+	@Override
 	public void publish() {
 		this.publish(
 			new xLogRecord(
@@ -319,6 +320,20 @@ public class xLog implements xLogPrinter {
 				(Object[]) null
 			)
 		);
+	}
+
+
+
+	@Override
+	public void flush() {
+		final xLogPrinter[] printers = this.getPrinters();
+		if (Utils.notEmpty(printers)) {
+			for (final xLogPrinter printer : printers) {
+				try {
+					printer.flush();
+				} catch (Exception ignore) {}
+			}
+		}
 	}
 
 

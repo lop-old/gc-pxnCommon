@@ -10,9 +10,11 @@ import com.poixson.logger.formatters.xLogFormatter;
 public interface xLogPrinter {
 
 
-	public void publish(final xLogRecord record);
+	public void publish(final xLogRecord record) throws IOException;
 	public void publish(final String[] lines) throws IOException;
 	public void publish(final String   line ) throws IOException;
+	public void publish() throws IOException;
+	public void flush() throws IOException;
 
 
 	public void getPublishLock() throws IOException;
