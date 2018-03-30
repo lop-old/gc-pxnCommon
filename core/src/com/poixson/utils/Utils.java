@@ -30,6 +30,19 @@ public final class Utils {
 
 
 
+	public static boolean isArray(final Object obj) {
+		if (obj == null)
+			return false;
+		return obj.getClass().isArray();
+	}
+	public static boolean notArray(final Object obj) {
+		if (obj == null)
+			return true;
+		return ! obj.getClass().isArray();
+	}
+
+
+
 	/**
 	 * Is string empty.
 	 * @param String
