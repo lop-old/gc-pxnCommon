@@ -1,13 +1,11 @@
 package com.poixson.app;
 
-import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.poixson.logger.xLogRoot;
 import com.poixson.tools.Keeper;
-import com.poixson.utils.Utils;
 
 
 public final class xVars {
@@ -17,10 +15,6 @@ public final class xVars {
 	private static final boolean DEFAULT_DEBUG              = false;
 
 	private static final boolean DEFAULT_CONSOLE_COLOR      = true;
-
-	public  static final int     MAX_JLINE_HISTORY_SIZE     = 10000;
-	private static final int     DEFAULT_JLINE_HISTORY_SIZE = 200;
-	private static final String  DEFAULT_JLINE_HISTORY_FILE = null;
 
 	public static final int      SEARCH_DEBUG_PARENTS = 1;
 	public static final String[] SEARCH_DEBUG_FILES =
@@ -46,12 +40,6 @@ public final class xVars {
 	// console color
 	private static final AtomicReference<Boolean> colorEnabled =
 			new AtomicReference<Boolean>(null);
-
-	// jline history size
-	private static final AtomicReference<Integer> jlineHistorySize =
-			new AtomicReference<Integer>(null);
-	private static final AtomicReference<String> jlineHistoryFile =
-			new AtomicReference<String>(null);
 
 
 
@@ -193,78 +181,6 @@ public final class xVars {
 				}
 			}
 		}
-	}
-
-
-
-	// ------------------------------------------------------------------------------- //
-	// jline history size
-
-
-
-	// history size
-	public static int getJLineHistorySize() {
-		final Integer size = jlineHistorySize.get();
-		// default
-		if (size == null)
-			return DEFAULT_JLINE_HISTORY_SIZE;
-		return size.intValue();
-	}
-	public static Integer peekJLineHistorySize() {
-		return jlineHistorySize.get();
-	}
-	public static boolean isJLineHistory() {
-		return (getJLineHistorySize() != 0);
-	}
-	public static boolean notJLineHistory() {
-		return ! isJLineHistory();
-	}
-	public static void setJLineHistorySize(final int size) {
-//TODO: update print handlers
-		final int value;
-		if (size < -1) {
-			value = 0;
-		} else
-		if (size > MAX_JLINE_HISTORY_SIZE) {
-			value = MAX_JLINE_HISTORY_SIZE;
-		} else {
-			value = size;
-		}
-		jlineHistorySize.set(
-			Integer.valueOf(value)
-		);
-	}
-
-
-
-	// history file
-	public static String getJLineHistoryFileStr() {
-		final String fileStr = jlineHistoryFile.get();
-		// mark using default
-		if (fileStr == null) {
-			jlineHistoryFile.set("");
-			return DEFAULT_JLINE_HISTORY_FILE;
-		}
-		// using default
-		if (fileStr.length() == 0) {
-			return DEFAULT_JLINE_HISTORY_FILE;
-		}
-		return fileStr;
-	}
-	public static File getJLineHistoryFile() {
-		final String fileStr = getJLineHistoryFileStr();
-		return (
-			Utils.isEmpty(fileStr)
-			? null
-			: new File(fileStr)
-		);
-	}
-	public static String peekJLineHistoryFile() {
-		return jlineHistoryFile.get();
-	}
-	public static void setJLineHistoryFile(final String fileStr) {
-//TODO: update print handlers
-		jlineHistoryFile.set(fileStr);
 	}
 
 
