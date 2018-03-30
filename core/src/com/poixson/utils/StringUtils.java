@@ -112,6 +112,14 @@ public class StringUtils extends StringAdvUtils {
 
 
 
+	public static String[] StringToArray(final String str) {
+		if (Utils.isEmpty(str))
+			return null;
+		return new String[] { str };
+	}
+
+
+
 	// ------------------------------------------------------------------------------- //
 	// check value
 
