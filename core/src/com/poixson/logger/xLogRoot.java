@@ -68,9 +68,9 @@ public class xLogRoot extends xLog {
 	public xLevel getLevel() {
 		if (xVars.isDebug())
 			return xLevel.DETAIL;
-		final xLevel lvl = super.level.get();
-		if (lvl != null)
-			return lvl;
+		final xLevel level = super.level.get();
+		if (level != null)
+			return level;
 		return DEFAULT_LEVEL;
 	}
 

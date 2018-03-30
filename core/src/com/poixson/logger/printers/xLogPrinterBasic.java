@@ -148,15 +148,15 @@ public abstract class xLogPrinterBasic implements xLogPrinter {
 		return this.level;
 	}
 	@Override
-	public void setLevel(final xLevel lvl) {
-		this.level = lvl;
+	public void setLevel(final xLevel level) {
+		this.level = level;
 	}
 	// is level loggable
 	@Override
-	public boolean isLoggable(final xLevel lvl) {
-		if (lvl == null || this.level == null)
+	public boolean isLoggable(final xLevel level) {
+		if (level == null || this.level == null)
 			return true;
-		return this.level.isLoggable(lvl);
+		return this.level.isLoggable(level);
 	}
 
 

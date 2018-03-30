@@ -111,8 +111,8 @@ public class xLog implements xLogPrinter {
 		return this.level.get();
 	}
 	@Override
-	public void setLevel(final xLevel lvl) {
-		this.level.set(lvl);
+	public void setLevel(final xLevel level) {
+		this.level.set(level);
 	}
 
 

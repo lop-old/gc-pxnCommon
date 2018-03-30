@@ -20,8 +20,8 @@ public interface xLogPrinter {
 
 
 	public xLevel getLevel();
-	public void setLevel(final xLevel lvl);
-	public boolean isLoggable(final xLevel lvl);
+	public void setLevel(final xLevel level);
+	public boolean isLoggable(final xLevel level);
 
 
 	public xLogFormatter getFormatter();
