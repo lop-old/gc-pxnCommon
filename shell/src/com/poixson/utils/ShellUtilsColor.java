@@ -1,6 +1,7 @@
 package com.poixson.utils;
 
 import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 
 
 public final class ShellUtilsColor extends ShellUtils {
@@ -9,6 +10,7 @@ public final class ShellUtilsColor extends ShellUtils {
 
 	protected ShellUtilsColor() {
 		super();
+		AnsiConsole.systemInstall();
 	}
 
 
