@@ -3,7 +3,6 @@ package com.poixson.logger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.poixson.app.xVars;
-import com.poixson.logger.console.xConsole;
 import com.poixson.logger.printers.xLogPrinter;
 import com.poixson.logger.printers.xLogPrinter_stdio;
 import com.poixson.tools.Keeper;
@@ -20,9 +19,6 @@ public class xLogRoot extends xLog {
 
 	private final AtomicReference<xLogPrinter> defaultPrinter =
 			new AtomicReference<xLogPrinter>(null);
-
-	private final AtomicReference<xConsole> console =
-			new AtomicReference<xConsole>(null);
 
 
 
@@ -112,20 +108,6 @@ public class xLogRoot extends xLog {
 	}
 	protected xLogPrinter newDefaultPrinter() {
 		return new xLogPrinter_stdio();
-	}
-
-
-
-	// ------------------------------------------------------------------------------- //
-	// printer formatter
-
-
-
-	public xConsole getConsole() {
-		return this.console.get();
-	}
-	public void setConsole(final xConsole console) {
-		this.console.set(console);
 	}
 
 

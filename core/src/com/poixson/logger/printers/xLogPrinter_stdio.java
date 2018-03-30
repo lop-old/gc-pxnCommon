@@ -5,8 +5,7 @@ import java.io.PrintStream;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.poixson.app.xVars;
-import com.poixson.logger.xLogRoot;
-import com.poixson.logger.console.xConsole;
+import com.poixson.logger.xConsole;
 import com.poixson.logger.formatters.xLogFormatter;
 import com.poixson.logger.formatters.xLogFormatter_Detailed;
 import com.poixson.utils.ShellUtils;
@@ -36,15 +35,9 @@ public class xLogPrinter_stdio extends xLogPrinterBasic {
 	@Override
 	public void publish(final String line) {
 		{
-			final xConsole console =
-				xLogRoot.get()
-					.getConsole();
+			final xConsole console = xVars.getConsole();
 			if (console != null) {
-				if (line == null) {
-					console.println();
-				} else {
-					console.println(line);
-				}
+				console.publish(line);
 				return;
 			}
 		}
