@@ -136,6 +136,9 @@ public class xLog implements xLogPrinter {
 		// allow by default
 		return true;
 	}
+	public boolean notLoggable(final xLevel level) {
+		return ! this.isLoggable(level);
+	}
 	public boolean isDetailLoggable() {
 		return this.isLoggable(xLevel.DETAIL);
 	}
@@ -219,7 +222,7 @@ public class xLog implements xLogPrinter {
 			return;
 		}
 		// not loggable
-		if ( ! this.isLoggable(record.level) )
+		if (this.notLoggable(record.level))
 			return;
 		// pass to printers/handlers
 		boolean handled = false;
@@ -229,7 +232,7 @@ public class xLog implements xLogPrinter {
 			for (final xLogPrinter printer : printers) {
 				if (printer == null) continue;
 				try {
-					if ( ! printer.isLoggable(record.level) )
+					if (printer.notLoggable(record.level))
 						continue PRINTER_LOOP;
 					handled = true;
 					printer.publish(record);

@@ -142,6 +142,10 @@ public class xLevel implements Serializable {
 		if (level.value == xLevel.ALL.value) return true;
 		return this.value <= level.value;
 	}
+	public boolean notLoggable(final xLevel level) {
+		if (level == null) return false;
+		return ! this.isLoggable(level);
+	}
 
 
 

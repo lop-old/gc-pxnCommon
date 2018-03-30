@@ -158,6 +158,11 @@ public abstract class xLogPrinterBasic implements xLogPrinter {
 			return true;
 		return this.level.isLoggable(level);
 	}
+	public boolean notLoggable(final xLevel level) {
+		if (level == null || this.level == null)
+			return false;
+		return this.level.notLoggable(level);
+	}
 
 
 
