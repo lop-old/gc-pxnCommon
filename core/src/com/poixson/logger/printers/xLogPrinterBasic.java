@@ -58,14 +58,17 @@ public abstract class xLogPrinterBasic implements xLogPrinter {
 	@Override
 	public void publish(final String[] lines) throws IOException {
 		this.getPublishLock();
-		if (Utils.isEmpty(lines)) {
-			this.publish( (String) null );
-		} else {
-			for (final String line : lines) {
-				this.publish(line);
+		try {
+			if (Utils.isEmpty(lines)) {
+				this.publish( (String) null );
+			} else {
+				for (final String line : lines) {
+					this.publish(line);
+				}
 			}
+		} finally {
+			this.releasePublishLock();
 		}
-		this.releasePublishLock();
 	}
 	@Override
 	public abstract void publish(final String line);
