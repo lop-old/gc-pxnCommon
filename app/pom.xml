@@ -1,4 +1,4 @@
-<!-- Generated on: January 26, 2018 15:17 UTC -->
+<!-- Generated on: April 25, 2018 23:52 UTC -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
@@ -33,7 +33,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<pxnCommon-Core-version>3.6.2</pxnCommon-Core-version>
-		<jline-version>2.14.5</jline-version>
 
 		<git-commit-id-plugin-version>2.2.2</git-commit-id-plugin-version>
 
@@ -157,11 +156,6 @@
 			<groupId>com.poixson</groupId>
 			<artifactId>common-core</artifactId>
 			<version>${pxnCommon-Core-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>jline</groupId>
-			<artifactId>jline</artifactId>
-			<version>${jline-version}</version>
 		</dependency>
 
 	</dependencies>
