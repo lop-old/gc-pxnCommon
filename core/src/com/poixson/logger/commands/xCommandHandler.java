@@ -72,6 +72,7 @@ public class xCommandHandler extends xHandlerSimple {
 			final xCommandEvent cmdEvent = (xCommandEvent) event;
 			this.log()
 				.publish(
+					null,
 					"Unknown command:",
 					cmdEvent.getArg(0)
 				);

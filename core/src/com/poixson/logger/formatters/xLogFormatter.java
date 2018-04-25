@@ -22,7 +22,7 @@ public class xLogFormatter {
 		if (xLevel.TITLE.equals(record.level))
 			return this.genTitle(record);
 		// message only
-		return record.getPreparedLines();
+		return record.getLines();
 	}
 
 
@@ -52,16 +52,13 @@ public class xLogFormatter {
 					.toString();
 			return new String[] { msg };
 		}
-		final int len =
-			StringUtils.FindLongestLine(
-				record.getPreparedLines()
-			);
+		final int len = record.getLongestLine();
 		final String[] result = new String[ record.lineCount ];
 		for (int index=0; index<record.lineCount; index++) {
 			final String line =
 				StringUtils.PadEnd(
 					len,
-					record.getPreparedLine(index),
+					record.getLine(index),
 					' '
 				);
 			result[index] =
@@ -129,7 +126,7 @@ public class xLogFormatter {
 
 	// message
 	protected String genMessage(final xLogRecord record, final int lineIndex) {
-		return record.getPreparedLine(lineIndex);
+		return record.getLine(lineIndex);
 	}
 
 

@@ -23,7 +23,7 @@ public class xLogFormatter_Color extends xLogFormatter {
 	public String[] formatMessage(final xLogRecord record) {
 		// publish plain message
 		if (record.level == null) {
-			return record.getPreparedLines();
+			return record.getLines();
 		}
 		// [[ title ]]
 		if (xLevel.TITLE.equals(record.level)) {

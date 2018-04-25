@@ -97,9 +97,9 @@ public abstract class xLogPrinterBasic implements xLogPrinter {
 
 	protected void getPublishLock(final ReentrantLock lock) throws IOException {
 		TIMEOUT_LOOP:
-		for (int i=0; i<5; i++) {
+		for (int i=0; i<50; i++) {
 			try {
-				if (lock.tryLock(100L, xTimeU.MS)) {
+				if (lock.tryLock(10L, xTimeU.MS)) {
 					return;
 				}
 			} catch (InterruptedException e) {
