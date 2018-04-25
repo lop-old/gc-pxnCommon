@@ -137,6 +137,47 @@ public class StringUtils extends StringAdvUtils {
 
 
 
+	public static String[] SplitLines(final String lines[]) {
+		if (Utils.isEmpty(lines))
+			return null;
+		int multiline = 0;
+		{
+			int index = 0;
+			for (final String line : lines) {
+				index++;
+				if (line.contains("\n")) {
+					multiline = index;
+					break;
+				}
+			}
+		}
+		if (multiline > 0)
+			return lines;
+		{
+			final List<String> result = new ArrayList<String>(lines.length + 1);
+			int index = 0;
+			for (final String line : lines) {
+				index++;
+				if (index == multiline ||
+				(index > multiline && line.contains("\n")) ) {
+					final String trimLine = StringUtils.Trim(line, "\n");
+					for (final String splitLine : trimLine.split("\n")) {
+						result.add(
+							splitLine.replace("\r",  "")
+						);
+					}
+				} else {
+					result.add(
+						line.replace("\r",  "")
+					);
+				}
+			}
+			return result.toArray(new String[0]);
+		}
+	}
+
+
+
 	// ------------------------------------------------------------------------------- //
 	// check value
 
