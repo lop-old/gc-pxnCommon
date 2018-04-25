@@ -1,6 +1,5 @@
 package com.poixson.logger;
 
-import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
 
@@ -10,78 +9,78 @@ public class xLogRecord {
 	public final xLog     log;
 	public final xLevel   level;
 	public final long     timestamp;
-	public final String[] linesRaw;
-	public       String[] linesPrepared = null;
+	public final String[] lines;
 	public final int      lineCount;
-	public final Object[] args;
 
 
 
 	// new record instance
 	public xLogRecord(final xLog log, final xLevel level,
 			final String[] lines, Object[] args) {
-		if (log == null) throw new RequiredArgumentException("log");
-		this.timestamp = Utils.getSystemMillis();
-		this.log   = log;
-		this.level = level;
-		this.args  = args;
-		if (lines == null || lines.length == 0) {
-			this.linesRaw = null;
-		} else
-		if (lines.length == 1 && lines[0] != null
-		&& lines[0].contains("\n")) {
-			this.linesRaw =
-				lines[0]
-					.replace("\r", "")
-					.split("\n");
-		} else {
-			this.linesRaw = lines;
-		}
-		this.lineCount = (
-			this.linesRaw == null
-			? 0
-			: this.linesRaw.length
+		this(
+			log,
+			level,
+			-1L, // timestamp
+			lines,
+			args
 		);
+	}
+	public xLogRecord(final xLog log, final xLevel level, final long timestamp,
+			final String[] lines, Object[] args) {
+		this.log       = log;
+		this.level     = level;
+		this.timestamp = ( timestamp < 0L ? Utils.getSystemMillis() : timestamp );
+		this.lines     = PrepareLines(lines, args);
+		this.lineCount = ( this.lines == null ? 0 : this.lines.length );
+	}
+	protected static String[] PrepareLines(final String[] lines, final Object[] args) {
+		final String[] linesSplit = StringUtils.SplitLines(lines);
+		if (linesSplit == null) {
+			// empty message
+			if (Utils.isEmpty(args))
+				return null;
+			// args only message
+			return
+				new String[] {
+					StringUtils.MergeObjects(", ", args)
+				};
+		}
+		// lines only message
+		if (Utils.isEmpty(args)) {
+			return linesSplit;
+		}
+		// insert args into lines
+		return
+			StringUtils.ReplaceTags(
+				linesSplit,
+				args
+			);
 	}
 
 
 
 	// message lines
-	public String[] getRawLines() {
-		return this.linesRaw;
+	public String[] getLines() {
+		return this.lines;
 	}
-	public String getRawLine(final int lineIndex) {
-		return this.linesRaw[lineIndex];
-	}
-
-	public String[] getPreparedLines() {
-		if (this.linesPrepared != null)
-			return this.linesPrepared;
-		if (Utils.isEmpty(this.args)) {
-			this.linesPrepared =
-				this.linesRaw;
-		} else {
-			this.linesPrepared =
-				StringUtils.ReplaceTags(
-					this.linesRaw,
-					this.args
-				);
-		}
-		return this.linesPrepared;
-	}
-	public String getPreparedLine(final int lineIndex) {
-		if (this.linesPrepared == null)
-			this.getPreparedLines();
-		return this.linesPrepared[lineIndex];
+	public String getLine(final int index) {
+		if (index >= this.lineCount) throw new IndexOutOfBoundsException();
+		return this.lines[index];
 	}
 
 
 
 	public boolean isEmpty() {
-		return Utils.isEmpty(this.linesRaw);
+		return this.lineCount == 0;
 	}
 	public boolean notEmpty() {
-		return Utils.notEmpty(this.linesRaw);
+		return this.lineCount > 0;
+	}
+
+
+
+	public int getLongestLine() {
+		return StringUtils.FindLongestLine(this.lines);
 	}
 
 
@@ -105,6 +104,8 @@ public class xLogRecord {
 
 	// [logger] [crumbs]
 	public String[] getNameTree() {
+		if (this.log == null)
+			return null;
 		return this.log
 				.getNameTree();
 	}
