@@ -112,4 +112,25 @@ public class xLogRoot extends xLog {
 
 
 
+	public void clearScreen() {
+		final xConsole console = xVars.getConsole();
+		if (console != null) {
+			console.clearScreen();
+		}
+	}
+	public void clearLine() {
+		final xConsole console = xVars.getConsole();
+		if (console != null) {
+			console.clearLine();
+		}
+	}
+	public void beep() {
+		final xConsole console = xVars.getConsole();
+		if (console != null) {
+			console.beep();
+		}
+	}
+
+
+
 }
