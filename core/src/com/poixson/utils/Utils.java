@@ -6,6 +6,7 @@ import java.lang.ref.SoftReference;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
 import com.poixson.app.xVars;
@@ -22,11 +23,8 @@ public final class Utils {
 
 
 
-	public enum jLineVersion {
-		version2x,
-		version3x
-	}
-	public static final jLineVersion JLINE_VERSION = jLineVersion.version2x;
+	private static final AtomicInteger jLineVersion = new AtomicInteger(-1);
+	private static final AtomicInteger RxTxVersion  = new AtomicInteger(-1);
 
 
 
@@ -402,30 +400,45 @@ public final class Utils {
 		} catch (ClassNotFoundException ignore) {}
 		return false;
 	}
+
+	// jLine
 	public static boolean isJLineAvailable() {
-		switch (JLINE_VERSION) {
-		case version2x:
-			if (!isLibAvailable("jline.console.ConsoleReader"))
-				return false;
-			if (!isLibAvailable("jline.Terminal"))
-				return false;
-			return true;
-		case version3x:
-			if (!isLibAvailable("org.jline.reader.LineReader"))
-				return false;
-			if (!isLibAvailable("org.jline.terminal.Terminal"))
-				return false;
-			return true;
-		default:
-			break;
+		return (findJLineVersion() > 0);
+	}
+	public static int findJLineVersion() {
+		{
+			final int version = jLineVersion.get();
+			if (version >= 0)
+				return version;
 		}
-		return false;
+		if (isLibAvailable("org.jline.reader.LineReader")) {
+			jLineVersion.set(3);
+		} else
+		if (isLibAvailable("jline.console.ConsoleReader")) {
+			jLineVersion.set(2);
+		} else {
+			jLineVersion.set(0);
+		}
+		return jLineVersion.get();
 	}
-/*
+
+	// RxTx
 	public static boolean isRxtxAvailable() {
-		return isLibAvailable("gnu.io.CommPortIdentifier");
+		return (findRxTxVersion() > 0);
 	}
-*/
+	public static int findRxTxVersion() {
+		{
+			final int version = RxTxVersion.get();
+			if (version >= 0)
+				return version;
+		}
+		if (isLibAvailable("gnu.io.CommPortIdentifier")) {
+			RxTxVersion.set(2);
+		} else {
+			RxTxVersion.set(0);
+		}
+		return RxTxVersion.get();
+	}
 
 
 
