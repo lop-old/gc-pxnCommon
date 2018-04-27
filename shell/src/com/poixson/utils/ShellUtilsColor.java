@@ -17,6 +17,8 @@ public final class ShellUtilsColor extends ShellUtils {
 
 	@Override
 	protected String renderAnsi(final String line) {
+		if (Utils.isEmpty(line))
+			return line;
 		return
 			Ansi.ansi()
 				.render(line)
@@ -24,6 +26,8 @@ public final class ShellUtilsColor extends ShellUtils {
 	}
 	@Override
 	protected String[] renderAnsi(final String[] lines) {
+		if (Utils.isEmpty(lines))
+			return lines;
 		String[] result = new String[ lines.length ];
 		for (int index=0; index<lines.length; index++) {
 			result[index] = (
