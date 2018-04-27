@@ -33,7 +33,8 @@ public class xAppSteps_Logo {
 		xAppUtils.DisplayStartupVars(app, log);
 		log.publish();
 		if (xVars.isDebug()) {
-			xAppUtils.DisplayTestColors(log);
+//TODO:
+//			DisplayTestColors(log);
 			log.publish();
 		}
 	}
@@ -47,6 +48,56 @@ public class xAppSteps_Logo {
 		log.publish(" prompt for license details, or go to www.growcontrol.com for");
 		log.publish(" more information.");
 	}
+
+
+
+/*
+	public static void DisplayTestColors(final xLog log) {
+		final Ansi.Color[] colors = Ansi.Color.values();
+		final int colorCount = colors.length;
+		final StringBuilder str = new StringBuilder();
+		COLOR_LOOP:
+		for (int index=0; index<colorCount; index++) {
+			final String colorName =
+				colors[index].name()
+					.toLowerCase();
+			String invertColor;
+			switch (colorName) {
+			case "black":
+				invertColor = "white";
+				break;
+			case "red":
+			case "green":
+			case "yellow":
+			case "blue":
+			case "magenta":
+				invertColor = "black";
+				break;
+			default:
+				continue COLOR_LOOP;
+			}
+			final Map<String, Object> map = new HashMap<String, Object>();
+			map.put("color",  colorName  );
+			map.put("invert", invertColor);
+			map.put(
+				"colorpad",
+				StringUtils.PadCenter(10, colorName, ' ')
+			);
+			str.append(
+				StringUtils.ReplaceTagKeys(
+					"   @|bg_{color},{invert} {colorpad}|@ @|bg_{invert},{color} {colorpad}|@   ",
+					map
+				)
+			);
+			if ( ((index+1) % 3) == 0 ) {
+				if (index != 2)
+					log.publish();
+				log.publish( str.toString() );
+				str.setLength(0);
+			}
+		}
+	}
+*/
 
 
 
