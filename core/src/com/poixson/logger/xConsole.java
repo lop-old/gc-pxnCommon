@@ -6,13 +6,10 @@ import com.poixson.abstractions.xStartable;
 public interface xConsole extends xStartable {
 
 
-	public void clearScreen();
-	public void clearLine();
-	public void flush();
-	public void beep();
-
-	public void publish(final String line);
-	public void publish();
+	public void doPublish(final String line);
+	public void doClearScreen();
+	public void doFlush();
+	public void doBeep();
 
 	public String getPrompt();
 	public void setPrompt(final String prompt);

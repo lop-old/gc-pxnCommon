@@ -9,6 +9,7 @@ import com.poixson.logger.xConsole;
 import com.poixson.logger.formatters.xLogFormatter;
 import com.poixson.logger.formatters.xLogFormatter_Detailed;
 import com.poixson.utils.ShellUtils;
+import com.poixson.utils.Utils;
 
 
 public class xLogPrinter_stdio extends xLogPrinterBasic {
@@ -33,27 +34,47 @@ public class xLogPrinter_stdio extends xLogPrinterBasic {
 
 
 	@Override
-	public void publish(final String line) {
-		{
-			final xConsole console = xVars.getConsole();
-			if (console != null) {
-				console.publish(line);
-				return;
+	protected void doPublish(final String[] lines) throws IOException {
+		this.getPublishLock();
+		try {
+			// blank line
+			if (Utils.isEmpty(lines)) {
+				this.doPublish( (String)null );
+			} else
+			// single line
+			if (lines.length == 1) {
+				this.doPublish(lines[0]);
+			// multiple lines
+			} else {
+				for (final String line : lines) {
+					this.doPublish(line);
+				}
 			}
+		} finally {
+			this.releasePublishLock();
 		}
-		if (line == null) {
-			this.out.println();
+	}
+	protected void doPublish(final String line) {
+		final xConsole console = xVars.getConsole();
+		// print to shell
+		if (console == null) {
+			if (line == null) {
+				this.out.println();
+			} else {
+				this.out.println(
+					ShellUtils.RenderAnsi(
+						line
+					)
+				);
+			}
+		// print to console handler
 		} else {
-			this.out.println(
+			console.doPublish(
 				ShellUtils.RenderAnsi(
 					line
 				)
 			);
 		}
-	}
-	@Override
-	public void publish() {
-		this.publish( (String) null );
 	}
 
 
@@ -62,30 +83,10 @@ public class xLogPrinter_stdio extends xLogPrinterBasic {
 	public void flush() {
 		final xConsole console = xVars.getConsole();
 		if (console != null) {
-			console.flush();
+			console.doFlush();
 		} else {
 			this.out.flush();
 		}
-	}
-
-
-
-	// ------------------------------------------------------------------------------- //
-	// publish lock
-
-
-
-	@Override
-	public void getPublishLock() throws IOException {
-		super.getPublishLock(
-			globalPublishLock
-		);
-	}
-	@Override
-	public void releasePublishLock() {
-		super.releasePublishLock(
-			globalPublishLock
-		);
 	}
 
 

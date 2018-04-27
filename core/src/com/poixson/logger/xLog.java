@@ -226,22 +226,24 @@ public class xLog implements xLogPrinter {
 			return;
 		// pass to printers/handlers
 		boolean handled = false;
-		final xLogPrinter[] printers = this.getPrinters();
-		if (Utils.notEmpty(printers)) {
-			PRINTER_LOOP:
-			for (final xLogPrinter printer : printers) {
-				if (printer == null) continue PRINTER_LOOP;
-				try {
-					if (printer.notLoggable(record.level))
-						continue PRINTER_LOOP;
-					handled = true;
-					printer.publish(record);
-				} catch (Exception e) {
-					e.printStackTrace(
-						xVars.getOriginalErr()
-					);
-				}
-			} // end PRINTER_LOOP
+		{
+			final xLogPrinter[] printers = this.getPrinters();
+			if (Utils.notEmpty(printers)) {
+				PRINTER_LOOP:
+				for (final xLogPrinter printer : printers) {
+					if (printer == null) continue PRINTER_LOOP;
+					try {
+						if (printer.notLoggable(record.level))
+							continue PRINTER_LOOP;
+						handled = true;
+						printer.publish(record);
+					} catch (Exception e) {
+						e.printStackTrace(
+							xVars.getOriginalErr()
+						);
+					}
+				} // end PRINTER_LOOP
+			}
 		}
 		// pass to parent
 		if (this.parent != null) {

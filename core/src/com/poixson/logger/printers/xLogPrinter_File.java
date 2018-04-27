@@ -20,11 +20,10 @@ throw new UnsupportedOperationException();
 
 
 	@Override
-	public void publish(final String line) {
+	protected void doPublish(final String[] lines) throws IOException {
 //TODO:
 	}
-	@Override
-	public void publish() throws IOException {
+	protected void doPublish(final String line) throws IOException {
 //TODO:
 	}
 

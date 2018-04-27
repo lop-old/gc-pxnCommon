@@ -10,7 +10,6 @@ import com.poixson.logger.xLogRecord;
 import com.poixson.logger.formatters.xLogFormatter;
 import com.poixson.logger.formatters.xLogFormatter_Detailed;
 import com.poixson.tools.xTimeU;
-import com.poixson.utils.Utils;
 
 
 public abstract class xLogPrinterBasic implements xLogPrinter {
@@ -57,21 +56,19 @@ public abstract class xLogPrinterBasic implements xLogPrinter {
 	}
 	@Override
 	public void publish(final String[] lines) throws IOException {
-		this.getPublishLock();
-		try {
-			if (Utils.isEmpty(lines)) {
-				this.publish( (String) null );
-			} else {
-				for (final String line : lines) {
-					this.publish(line);
-				}
-			}
-		} finally {
-			this.releasePublishLock();
-		}
+		this.doPublish(lines);
 	}
 	@Override
-	public abstract void publish(final String line);
+	public void publish(final String line) throws IOException {
+		this.doPublish(line);
+	}
+	@Override
+	public void publish() throws IOException {
+		this.doPublish( (String)null );
+	}
+
+	protected abstract void doPublish(final String[] lines) throws IOException;
+	protected abstract void doPublish(final String   line ) throws IOException;
 
 
 
