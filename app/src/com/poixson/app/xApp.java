@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.poixson.abstractions.xStartable;
@@ -55,10 +56,9 @@ public abstract class xApp implements xStartable, AttachedLogger {
 	private static final String ERR_INVALID_START_STATE_EXCEPTION = "Invalid state, cannot start: {}";
 	private static final String ERR_INVALID_STOP_STATE_EXCEPTION  = "Invalid state, cannot shutdown: {}";
 
-//TODO: use this?
-//	// app instance
-//	protected static final AtomicReference<xApp> instance =
-//			new AtomicReference<xApp>(null);
+	// app instances
+	protected static final CopyOnWriteArraySet<xApp> apps =
+			new CopyOnWriteArraySet<xApp>();
 
 	protected static final int STATE_OFF     = 0;
 	protected static final int STATE_START   = 1;
@@ -95,6 +95,7 @@ public abstract class xApp implements xStartable, AttachedLogger {
 				xVars.setDebug(true);
 		}
 		Keeper.add(this);
+		apps.add(this);
 //TODO:
 //		Failure.register(
 //			new Runnable() {
@@ -261,6 +262,37 @@ public abstract class xApp implements xStartable, AttachedLogger {
 				}.init(pool)
 			);
 		}
+	}
+
+
+
+	public static void shutdown() {
+		final Iterator<xApp> it = apps.iterator();
+		while (it.hasNext()) {
+			final xApp app = it.next();
+			app.stop();
+		}
+	}
+	public static void kill() {
+//TODO:
+		System.exit(1);
+	}
+
+
+
+	@SuppressWarnings("unchecked")
+	public static <T extends xApp> T getApp(final Class<T> clss) {
+		if (clss == null) throw new RequiredArgumentException("clss");
+		final Iterator<xApp> it = apps.iterator();
+		while (it.hasNext()) {
+			final xApp app = it.next();
+			if (clss.isInstance(app))
+				return (T) app;
+		}
+		return null;
+	}
+	public static xApp[] getApps() {
+		return apps.toArray(new xApp[0]);
 	}
 
 
