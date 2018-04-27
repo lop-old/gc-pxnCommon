@@ -190,13 +190,15 @@ public class xAppSteps_Console implements xConsole {
 					this.getMask()
 				);
 			} catch (UserInterruptException ignore) {
+				xApp.shutdown();
 				break READER_LOOP;
 			} catch (Exception e) {
 				xLogRoot.get()
-				.trace(e);
+					.trace(e);
 				try {
 					Thread.sleep(100L);
 				} catch (InterruptedException ignore) {
+					xApp.shutdown();
 					break READER_LOOP;
 				}
 				continue READER_LOOP;
@@ -214,6 +216,8 @@ public class xAppSteps_Console implements xConsole {
 		out.flush();
 		this.running.set(false);
 		this.thread.set(null);
+		xLogRoot.get()
+			.finest("Stopped console input thread");
 		// save command history
 		{
 			final History hist = history.get();

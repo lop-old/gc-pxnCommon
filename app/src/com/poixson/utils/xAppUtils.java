@@ -6,8 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.fusesource.jansi.Ansi;
-
 import com.poixson.app.xApp;
 import com.poixson.app.xVars;
 import com.poixson.logger.xLog;
@@ -27,7 +25,6 @@ public final class xAppUtils {
 		result.put( "Running as",  System.getProperty("user.name")      );
 		result.put( "Current dir", System.getProperty("user.dir")       );
 		result.put( "java home",   System.getProperty("java.home")      );
-		result.put( "Terminal",    System.getProperty("jline.terminal") );
 		if (xVars.isDebug())
 			result.put("Debug", "true");
 		return result;
@@ -45,7 +42,7 @@ public final class xAppUtils {
 		final int maxLineSize =
 			StringUtils.FindLongestLine(
 				varsMap.keySet().toArray(new String[0])
-			);
+			) + 1;
 		final StringBuilder str = new StringBuilder();
 		while (it.hasNext()) {
 			final Entry<String, String> entry = it.next();
