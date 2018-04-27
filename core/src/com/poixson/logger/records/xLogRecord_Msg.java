@@ -12,7 +12,6 @@ public class xLogRecord_Msg implements xLogRecord {
 	public final xLevel   level;
 	public final long     timestamp;
 	public final String[] lines;
-	public final int      lineCount;
 
 
 
@@ -33,7 +32,6 @@ public class xLogRecord_Msg implements xLogRecord {
 		this.level     = level;
 		this.timestamp = ( timestamp < 0L ? Utils.getSystemMillis() : timestamp );
 		this.lines     = PrepareLines(lines, args);
-		this.lineCount = ( this.lines == null ? 0 : this.lines.length );
 	}
 	protected static String[] PrepareLines(final String[] lines, final Object[] args) {
 		final String[] linesSplit = StringUtils.SplitLines(lines);
@@ -62,27 +60,20 @@ public class xLogRecord_Msg implements xLogRecord {
 
 
 	// message lines
+	@Override
 	public String[] getLines() {
 		return this.lines;
 	}
-	public String getLine(final int index) {
-		if (index >= this.lineCount) throw new IndexOutOfBoundsException();
-		return this.lines[index];
-	}
 
 
 
+	@Override
 	public boolean isEmpty() {
-		return this.lineCount == 0;
+		return Utils.isEmpty(this.lines);
 	}
+	@Override
 	public boolean notEmpty() {
-		return this.lineCount > 0;
-	}
-
-
-
-	public int getLongestLine() {
-		return StringUtils.FindLongestLine(this.lines);
+		return Utils.notEmpty(this.lines);
 	}
 
 

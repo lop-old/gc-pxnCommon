@@ -7,8 +7,6 @@ public interface xLogRecord {
 
 
 	public String[] getLines();
-	public String getLine(final int index);
-
 	public xLevel getLevel();
 
 	public boolean isEmpty();

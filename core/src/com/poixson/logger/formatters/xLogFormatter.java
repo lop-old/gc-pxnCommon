@@ -53,9 +53,9 @@ public class xLogFormatter {
 			return new String[] { msg };
 		}
 		final String[] lines = record.getLines();
-		final String[] result = new String[ record.lineCount ];
+		final String[] result = new String[ lines.length ];
 		final int len = StringUtils.FindLongestLine(lines);
-		for (int index=0; index<record.lineCount; index++) {
+		for (int index = 0; index < lines.length; index++) {
 			final String line =
 				StringUtils.PadEnd(
 					len,
@@ -121,13 +121,6 @@ public class xLogFormatter {
 			.append(result)
 			.append(postStr)
 			.toString();
-	}
-
-
-
-	// message
-	protected String genMessage(final xLogRecord_Msg record, final int lineIndex) {
-		return record.getLine(lineIndex);
 	}
 
 
