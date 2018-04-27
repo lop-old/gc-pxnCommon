@@ -190,7 +190,6 @@ public class xAppSteps_Console implements xConsole {
 					this.getMask()
 				);
 			} catch (UserInterruptException ignore) {
-				xApp.shutdown();
 				break READER_LOOP;
 			} catch (Exception e) {
 				xLogRoot.get()
@@ -198,7 +197,6 @@ public class xAppSteps_Console implements xConsole {
 				try {
 					Thread.sleep(100L);
 				} catch (InterruptedException ignore) {
-					xApp.shutdown();
 					break READER_LOOP;
 				}
 				continue READER_LOOP;
@@ -209,7 +207,10 @@ public class xAppSteps_Console implements xConsole {
 			if (Utils.notBlank(line)) {
 			}
 		} // end READER_LOOP
-		this.stopping = true;
+		if ( ! this.stopping ) {
+			xApp.kill();
+			this.stopping = true;
+		}
 		xVars.setConsole(null);
 		final PrintStream out = xVars.getOriginalOut();
 		out.println();
