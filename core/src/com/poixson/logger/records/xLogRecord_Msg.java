@@ -1,10 +1,12 @@
-package com.poixson.logger;
+package com.poixson.logger.records;
 
+import com.poixson.logger.xLevel;
+import com.poixson.logger.xLog;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
 
 
-public class xLogRecord {
+public class xLogRecord_Msg implements xLogRecord {
 
 	public final xLog     log;
 	public final xLevel   level;
@@ -15,7 +17,7 @@ public class xLogRecord {
 
 
 	// new record instance
-	public xLogRecord(final xLog log, final xLevel level,
+	public xLogRecord_Msg(final xLog log, final xLevel level,
 			final String[] lines, Object[] args) {
 		this(
 			log,
@@ -25,7 +27,7 @@ public class xLogRecord {
 			args
 		);
 	}
-	public xLogRecord(final xLog log, final xLevel level, final long timestamp,
+	public xLogRecord_Msg(final xLog log, final xLevel level, final long timestamp,
 			final String[] lines, Object[] args) {
 		this.log       = log;
 		this.level     = level;
@@ -86,6 +88,10 @@ public class xLogRecord {
 
 
 	// level
+	@Override
+	public xLevel getLevel() {
+		return this.level;
+	}
 	public String getLevelStr() {
 		return (
 			this.level == null
