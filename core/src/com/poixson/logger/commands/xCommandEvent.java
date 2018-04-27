@@ -1,3 +1,4 @@
+/*
 package com.poixson.logger.commands;
 
 import com.poixson.exceptions.RequiredArgumentException;
@@ -76,3 +77,4 @@ public class xCommandEvent extends xEventData {
 
 
 }
+*/

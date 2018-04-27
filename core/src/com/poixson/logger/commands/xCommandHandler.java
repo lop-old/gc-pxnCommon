@@ -1,3 +1,4 @@
+/*
 package com.poixson.logger.commands;
 
 import com.poixson.threadpool.xThreadPoolQueue.TaskPriority;
@@ -82,3 +83,4 @@ public class xCommandHandler extends xHandlerSimple {
 
 
 }
+*/

@@ -1,7 +1,6 @@
 package com.poixson.app;
 
 import com.poixson.app.xAppStep.StepType;
-import com.poixson.tools.xClock;
 import com.poixson.tools.xTime;
 import com.poixson.tools.xTimeU;
 import com.poixson.utils.Utils;
@@ -43,11 +42,12 @@ public abstract class xAppStandard extends xApp {
 
 
 
-	// sync clock
-	@xAppStep( Type=StepType.STARTUP, Title="Sync Clock", StepValue=100 )
-	public void __STARTUP_clock() {
-		xClock.get(true);
-	}
+//TODO: move this to xVars?
+//	// sync clock
+//	@xAppStep( Type=StepType.STARTUP, Title="Sync Clock", StepValue=100 )
+//	public void __STARTUP_clock() {
+//		xClock.get(true);
+//	}
 
 
 
