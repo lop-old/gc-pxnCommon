@@ -33,8 +33,9 @@ public class xLogFormatter_Color extends xLogFormatter {
 				);
 		}
 		// format message lines
-		final String[] result = new String[ record.lineCount ];
-		for (int index=0; index<record.lineCount; index++) {
+		final String[] lines = record.getLines();
+		final String[] result = new String[ lines.length ];
+		for (int index = 0; index < lines.length; index++) {
 			// timestamp [level] [crumbs] message
 			result[index] =
 				StringUtils.MergeStrings(
@@ -51,7 +52,7 @@ public class xLogFormatter_Color extends xLogFormatter {
 					// [crumbs]
 					this.genCrumbsColored(record),
 					// message
-					this.genMessage(record, index)
+					lines[index]
 				);
 		}
 		return result;
