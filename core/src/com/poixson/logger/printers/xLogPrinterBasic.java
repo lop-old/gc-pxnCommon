@@ -6,9 +6,10 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import com.poixson.app.xVars;
 import com.poixson.logger.xLevel;
-import com.poixson.logger.xLogRecord;
 import com.poixson.logger.formatters.xLogFormatter;
 import com.poixson.logger.formatters.xLogFormatter_Detailed;
+import com.poixson.logger.records.xLogRecord;
+import com.poixson.logger.records.xLogRecord_Msg;
 import com.poixson.tools.xTimeU;
 
 
@@ -43,11 +44,17 @@ public abstract class xLogPrinterBasic implements xLogPrinter {
 			}
 			// handle the log entry
 			final xLogFormatter formatter = this.getFormatter();
-			this.publish(
-				formatter.formatMessage(
-					record
-				)
-			);
+			if (record instanceof xLogRecord_Msg) {
+				this.publish(
+					formatter.formatMessage(
+						(xLogRecord_Msg) record
+					)
+				);
+			} else {
+				this.publish(
+					record.toString()
+				);
+			}
 		} catch (IOException e) {
 			e.printStackTrace(
 				xVars.getOriginalErr()

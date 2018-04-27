@@ -1,7 +1,7 @@
 package com.poixson.logger.formatters;
 
 import com.poixson.logger.xLevel;
-import com.poixson.logger.xLogRecord;
+import com.poixson.logger.records.xLogRecord_Msg;
 import com.poixson.utils.StringUtils;
 
 
@@ -16,13 +16,14 @@ public class xLogFormatter_Detailed extends xLogFormatter {
 
 
 	@Override
-	public String[] formatMessage(final xLogRecord record) {
+	public String[] formatMessage(final xLogRecord_Msg record) {
+		final xLevel level = record.getLevel();
 		// publish plain message
-		if (record.level == null) {
+		if (level == null) {
 			return record.getLines();
 		}
 		// [[ title ]]
-		if (xLevel.TITLE.equals(record.level))
+		if (xLevel.TITLE.equals(level))
 			return this.genTitle(record);
 		// format message lines
 		final String[] result = new String[ record.lineCount ];

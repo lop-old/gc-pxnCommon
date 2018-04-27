@@ -12,6 +12,8 @@ import com.poixson.app.xVars;
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.formatters.xLogFormatter;
 import com.poixson.logger.printers.xLogPrinter;
+import com.poixson.logger.records.xLogRecord;
+import com.poixson.logger.records.xLogRecord_Msg;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
 
@@ -221,8 +223,9 @@ public class xLog implements xLogPrinter {
 			);
 			return;
 		}
+		final xLevel level = record.getLevel();
 		// not loggable
-		if (this.notLoggable(record.level))
+		if ( this.notLoggable(level) )
 			return;
 		// pass to printers/handlers
 		boolean handled = false;
@@ -233,7 +236,7 @@ public class xLog implements xLogPrinter {
 				for (final xLogPrinter printer : printers) {
 					if (printer == null) continue PRINTER_LOOP;
 					try {
-						if (printer.notLoggable(record.level))
+						if ( printer.notLoggable(level) )
 							continue PRINTER_LOOP;
 						handled = true;
 						printer.publish(record);
@@ -282,7 +285,7 @@ public class xLog implements xLogPrinter {
 	public void publish(final xLevel level,
 			final String line, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				level,
 				StringUtils.StringToArray(line),
@@ -293,7 +296,7 @@ public class xLog implements xLogPrinter {
 	@Override
 	public void publish(final String[] lines) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				(xLevel)   null,
 				lines,
@@ -304,7 +307,7 @@ public class xLog implements xLogPrinter {
 	@Override
 	public void publish(final String line) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				(xLevel)   null,
 				StringUtils.StringToArray(line),
@@ -315,7 +318,7 @@ public class xLog implements xLogPrinter {
 	@Override
 	public void publish() {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				(xLevel)   null,
 				(String[]) null,
@@ -348,7 +351,7 @@ public class xLog implements xLogPrinter {
 	// title
 	public void title(final String... lines) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.TITLE,
 				lines,
@@ -358,7 +361,7 @@ public class xLog implements xLogPrinter {
 	}
 	public void title(final String[] lines, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.TITLE,
 				lines,
@@ -383,7 +386,7 @@ public class xLog implements xLogPrinter {
 			StringUtils.ExceptionToString(e)
 		);
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.SEVERE,
 				StringUtils.StringToArray(str.toString()),
@@ -397,7 +400,7 @@ public class xLog implements xLogPrinter {
 	// stdout
 	public void stdout(final String line, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.STDOUT,
 				StringUtils.StringToArray(line),
@@ -407,7 +410,7 @@ public class xLog implements xLogPrinter {
 	}
 	public void stdout(final String[] lines, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.STDOUT,
 				lines,
@@ -421,7 +424,7 @@ public class xLog implements xLogPrinter {
 	// stderr
 	public void stderr(final String line, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.STDERR,
 				StringUtils.StringToArray(line),
@@ -431,7 +434,7 @@ public class xLog implements xLogPrinter {
 	}
 	public void stderr(final String[] lines, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.STDERR,
 				lines,
@@ -445,7 +448,7 @@ public class xLog implements xLogPrinter {
 	// detail
 	public void detail(final String line, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.DETAIL,
 				StringUtils.StringToArray(line),
@@ -455,7 +458,7 @@ public class xLog implements xLogPrinter {
 	}
 	public void detail(final String[] lines, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.DETAIL,
 				lines,
@@ -469,7 +472,7 @@ public class xLog implements xLogPrinter {
 	// finest
 	public void finest(final String line, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.FINEST,
 				StringUtils.StringToArray(line),
@@ -479,7 +482,7 @@ public class xLog implements xLogPrinter {
 	}
 	public void finest(final String[] lines, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.FINEST,
 				lines,
@@ -493,7 +496,7 @@ public class xLog implements xLogPrinter {
 	// finer
 	public void finer(final String line, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.FINER,
 				StringUtils.StringToArray(line),
@@ -503,7 +506,7 @@ public class xLog implements xLogPrinter {
 	}
 	public void finer(final String[] lines, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.FINER,
 				lines,
@@ -517,7 +520,7 @@ public class xLog implements xLogPrinter {
 	// fine
 	public void fine(final String line, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.FINE,
 				StringUtils.StringToArray(line),
@@ -527,7 +530,7 @@ public class xLog implements xLogPrinter {
 	}
 	public void fine(final String[] lines, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.FINE,
 				lines,
@@ -541,7 +544,7 @@ public class xLog implements xLogPrinter {
 	// stats
 	public void stats(final String line, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.STATS,
 				StringUtils.StringToArray(line),
@@ -551,7 +554,7 @@ public class xLog implements xLogPrinter {
 	}
 	public void stats(final String[] lines, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.STATS,
 				lines,
@@ -565,7 +568,7 @@ public class xLog implements xLogPrinter {
 	// info
 	public void info(final String line, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.INFO,
 				StringUtils.StringToArray(line),
@@ -575,7 +578,7 @@ public class xLog implements xLogPrinter {
 	}
 	public void info(final String[] lines, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.INFO,
 				lines,
@@ -589,7 +592,7 @@ public class xLog implements xLogPrinter {
 	// warning
 	public void warning(final String line, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.WARNING,
 				StringUtils.StringToArray(line),
@@ -599,7 +602,7 @@ public class xLog implements xLogPrinter {
 	}
 	public void warning(final String[] lines, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.WARNING,
 				lines,
@@ -613,7 +616,7 @@ public class xLog implements xLogPrinter {
 	// severe
 	public void severe(final String line, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.SEVERE,
 				StringUtils.StringToArray(line),
@@ -623,7 +626,7 @@ public class xLog implements xLogPrinter {
 	}
 	public void severe(final String[] lines, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.SEVERE,
 				lines,
@@ -637,7 +640,7 @@ public class xLog implements xLogPrinter {
 	// fatal
 	public void fatal(final String line, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.FATAL,
 				StringUtils.StringToArray(line),
@@ -647,7 +650,7 @@ public class xLog implements xLogPrinter {
 	}
 	public void fatal(final String[] lines, final Object... args) {
 		this.publish(
-			new xLogRecord(
+			new xLogRecord_Msg(
 				this,
 				xLevel.FATAL,
 				lines,

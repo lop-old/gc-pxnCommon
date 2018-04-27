@@ -3,8 +3,8 @@ package com.poixson.logger.printers;
 import java.io.IOException;
 
 import com.poixson.logger.xLevel;
-import com.poixson.logger.xLogRecord;
 import com.poixson.logger.formatters.xLogFormatter;
+import com.poixson.logger.records.xLogRecord;
 
 
 public interface xLogPrinter {

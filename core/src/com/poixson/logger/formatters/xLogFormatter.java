@@ -3,7 +3,7 @@ package com.poixson.logger.formatters;
 import java.text.SimpleDateFormat;
 
 import com.poixson.logger.xLevel;
-import com.poixson.logger.xLogRecord;
+import com.poixson.logger.records.xLogRecord_Msg;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
 
@@ -17,7 +17,7 @@ public class xLogFormatter {
 
 
 
-	public String[] formatMessage(final xLogRecord record) {
+	public String[] formatMessage(final xLogRecord_Msg record) {
 		// [[ title ]]
 		if (xLevel.TITLE.equals(record.level))
 			return this.genTitle(record);
@@ -33,7 +33,7 @@ public class xLogFormatter {
 
 
 	// title
-	protected String[] genTitle(final xLogRecord record) {
+	protected String[] genTitle(final xLogRecord_Msg record) {
 		return
 			this.genTitle(
 				record,
@@ -41,7 +41,7 @@ public class xLogFormatter {
 				" ]] "
 			);
 	}
-	protected String[] genTitle(final xLogRecord record,
+	protected String[] genTitle(final xLogRecord_Msg record,
 			final String preStr, final String postStr) {
 		if (record.isEmpty()) {
 			final String msg =
@@ -52,13 +52,14 @@ public class xLogFormatter {
 					.toString();
 			return new String[] { msg };
 		}
-		final int len = record.getLongestLine();
+		final String[] lines = record.getLines();
 		final String[] result = new String[ record.lineCount ];
+		final int len = StringUtils.FindLongestLine(lines);
 		for (int index=0; index<record.lineCount; index++) {
 			final String line =
 				StringUtils.PadEnd(
 					len,
-					record.getLine(index),
+					lines[index],
 					' '
 				);
 			result[index] =
@@ -74,7 +75,7 @@ public class xLogFormatter {
 
 
 	// timestamp
-	protected String genTimestamp(final xLogRecord record, final String format,
+	protected String genTimestamp(final xLogRecord_Msg record, final String format,
 			final String preStr, final String postStr) {
 		return (new StringBuilder())
 			.append(preStr)
@@ -82,7 +83,7 @@ public class xLogFormatter {
 			.append(postStr)
 			.toString();
 	}
-	protected String genTimestamp(final xLogRecord record, final String format) {
+	protected String genTimestamp(final xLogRecord_Msg record, final String format) {
 		final SimpleDateFormat dateFormat =
 			new SimpleDateFormat(format);
 		return
@@ -94,7 +95,7 @@ public class xLogFormatter {
 
 
 	// level
-	protected String genLevel(final xLogRecord record,
+	protected String genLevel(final xLogRecord_Msg record,
 			final String preStr, final String postStr) {
 		return (new StringBuilder())
 			.append(preStr)
@@ -102,14 +103,14 @@ public class xLogFormatter {
 			.append(postStr)
 			.toString();
 	}
-	protected String genLevel(final xLogRecord record) {
+	protected String genLevel(final xLogRecord_Msg record) {
 		return StringUtils.PadCenter(7, record.getLevelStr(), ' ');
 	}
 
 
 
 	// crumbs
-	protected String genCrumbs(final xLogRecord record,
+	protected String genCrumbs(final xLogRecord_Msg record,
 			final String preStr, final String midStr, final String postStr) {
 		final String[] tree = record.getNameTree();
 		if (Utils.isEmpty(tree)) return "";
@@ -125,7 +126,7 @@ public class xLogFormatter {
 
 
 	// message
-	protected String genMessage(final xLogRecord record, final int lineIndex) {
+	protected String genMessage(final xLogRecord_Msg record, final int lineIndex) {
 		return record.getLine(lineIndex);
 	}
 

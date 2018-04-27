@@ -1,7 +1,7 @@
 package com.poixson.logger.formatters;
 
 import com.poixson.logger.xLevel;
-import com.poixson.logger.xLogRecord;
+import com.poixson.logger.records.xLogRecord_Msg;
 import com.poixson.utils.StringUtils;
 import com.poixson.utils.Utils;
 
@@ -17,13 +17,14 @@ public class xLogFormatter_Color extends xLogFormatter {
 
 
 	@Override
-	public String[] formatMessage(final xLogRecord record) {
+	public String[] formatMessage(final xLogRecord_Msg record) {
+		final xLevel level = record.getLevel();
 		// publish plain message
-		if (record.level == null) {
+		if (level == null) {
 			return record.getLines();
 		}
 		// [[ title ]]
-		if (xLevel.TITLE.equals(record.level)) {
+		if (xLevel.TITLE.equals(level)) {
 			return
 				this.genTitle(
 					record,
@@ -64,7 +65,7 @@ public class xLogFormatter_Color extends xLogFormatter {
 
 
 	// [level]
-	protected String genLevelColored(final xLogRecord record) {
+	protected String genLevelColored(final xLogRecord_Msg record) {
 		return (new StringBuilder())
 			.append("@|FG_BLACK,BOLD [|@@|")
 			.append( this.getLevelColor(record.level) )
@@ -104,7 +105,7 @@ public class xLogFormatter_Color extends xLogFormatter {
 
 
 	// crumbs
-	protected String genCrumbsColored(final xLogRecord record) {
+	protected String genCrumbsColored(final xLogRecord_Msg record) {
 		final String crumbStr = super.genCrumbs(record, "[", "] [", "]");
 		if (Utils.isBlank(crumbStr))
 			return "";
