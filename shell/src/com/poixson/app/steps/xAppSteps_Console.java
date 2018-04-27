@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 import org.jline.reader.History;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -78,6 +79,7 @@ public class xAppSteps_Console implements xConsole {
 			}
 			if ( ! terminal.compareAndSet(null, term) )
 				terminal.get();
+			AnsiConsole.systemInstall();
 			return term;
 		}
 	}

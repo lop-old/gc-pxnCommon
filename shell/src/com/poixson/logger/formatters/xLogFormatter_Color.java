@@ -1,7 +1,5 @@
 package com.poixson.logger.formatters;
 
-import org.fusesource.jansi.AnsiConsole;
-
 import com.poixson.logger.xLevel;
 import com.poixson.logger.xLogRecord;
 import com.poixson.utils.StringUtils;
@@ -14,7 +12,6 @@ public class xLogFormatter_Color extends xLogFormatter {
 
 	public xLogFormatter_Color() {
 		super();
-		AnsiConsole.systemInstall();
 	}
 
 
