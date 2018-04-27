@@ -1,4 +1,4 @@
-<!-- Generated on: April 26, 2018 00:05 UTC -->
+<!-- Generated on: April 27, 2018 04:59 UTC -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
@@ -35,6 +35,7 @@
 		<pxnCommon-Core-version>3.6.2</pxnCommon-Core-version>
 		<pxnCommon-App-version>3.6.2</pxnCommon-App-version>
 		<jLine-version>3.6.2</jLine-version>
+		<jAnsi-version>1.17.1</jAnsi-version>
 
 		<git-commit-id-plugin-version>2.2.2</git-commit-id-plugin-version>
 
@@ -168,6 +169,11 @@
 			<groupId>org.jline</groupId>
 			<artifactId>jline</artifactId>
 			<version>${jLine-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.fusesource.jansi</groupId>
+			<artifactId>jansi</artifactId>
+			<version>${jAnsi-version}</version>
 		</dependency>
 
 	</dependencies>

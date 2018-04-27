@@ -24,6 +24,12 @@
 			"ArtifactId": "jline",
 			"Name": "jLine",
 			"Version": "3.6.2"
+		},
+		"jAnsi": {
+			"GroupId": "org.fusesource.jansi",
+			"ArtifactId": "jansi",
+			"Name": "jAnsi",
+			"Version": "1.17.1"
 		}
 	}
 }
