@@ -141,7 +141,9 @@ public abstract class xApp implements xStartable, AttachedLogger {
 
 
 
-	protected abstract Object[] getStepObjects(final StepType type);
+	protected Object[] getStepObjects(final StepType type) {
+		return null;
+	}
 
 
 
@@ -497,9 +499,10 @@ public abstract class xApp implements xStartable, AttachedLogger {
 			if (clss == null) throw new RuntimeException("Failed to get app step container class!");
 			final Method[] methods = clss.getMethods();
 			if (Utils.isEmpty(methods)) throw new RuntimeException("Failed to get app methods!");
+			METHODS_LOOP:
 			for (final Method m : methods) {
 				final xAppStep anno = m.getAnnotation(xAppStep.class);
-				if (anno == null) continue;
+				if (anno == null) continue METHODS_LOOP;
 				// found step method
 				if (type.equals(anno.Type())) {
 					final xAppStepDAO dao =
@@ -515,7 +518,7 @@ public abstract class xApp implements xStartable, AttachedLogger {
 						key -> new ArrayList<xAppStepDAO>()
 					).add(dao);
 				}
-			}
+			} // end METHODS_LOOP
 		}
 	}
 

@@ -45,15 +45,6 @@ public class ShellUtils {
 
 
 
-	public static String RenderAnsi(final String line) {
-		return get().renderAnsi(line);
-	}
-	public static String[] RenderAnsi(final String[] lines) {
-		return get().renderAnsi(lines);
-	}
-
-
-
 	// ------------------------------------------------------------------------------- //
 	// commands
 
@@ -91,6 +82,15 @@ public class ShellUtils {
 
 	// ------------------------------------------------------------------------------- //
 	// colors
+
+
+
+	public static String RenderAnsi(final String line) {
+		return get().renderAnsi(line);
+	}
+	public static String[] RenderAnsi(final String[] lines) {
+		return get().renderAnsi(lines);
+	}
 
 
 
