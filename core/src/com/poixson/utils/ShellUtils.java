@@ -17,9 +17,9 @@ public class ShellUtils {
 			if (util != null)
 				return util;
 		}
-		// color utils if available
+		// extended utils if available
 		try {
-			final Class<?> clss = Class.forName("com.poixson.utils.ShellUtilsColor");
+			final Class<?> clss = Class.forName("com.poixson.utils.ShellUtils_Extended");
 			if (clss != null) {
 				ShellUtils util;
 				util = (ShellUtils) clss.newInstance();
@@ -49,6 +49,11 @@ public class ShellUtils {
 	public static String[] RenderAnsi(final String[] lines) {
 		return get().renderAnsi(lines);
 	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// colors
 
 
 

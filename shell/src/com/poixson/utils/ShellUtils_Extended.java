@@ -4,14 +4,19 @@ import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
 
-public final class ShellUtilsColor extends ShellUtils {
+public final class ShellUtils_Extended extends ShellUtils {
 
 
 
-	protected ShellUtilsColor() {
+	protected ShellUtils_Extended() {
 		super();
 		AnsiConsole.systemInstall();
 	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// colors
 
 
 
