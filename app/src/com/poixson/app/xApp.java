@@ -36,7 +36,8 @@ import com.poixson.utils.Utils;
  *   50  load configs        - xAppSteps_Config
  *   70  lock file           - xAppSteps_LockFile
  *   80  display logo        - xAppSteps_Logo
- *   90  start console input - xAppSteps_Console
+ *   90  prepare commands    - xCommandHandler
+ *   95  start console input - xAppSteps_Console
  *  100  sync clock          - xAppStandard
  *  200  startup time        - xAppStandard
  *

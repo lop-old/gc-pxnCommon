@@ -20,12 +20,15 @@ import com.poixson.app.Failure;
 import com.poixson.app.xApp;
 import com.poixson.app.xAppStep;
 import com.poixson.app.xAppStep.StepType;
+import com.poixson.app.xCommandHandler;
+import com.poixson.app.xCommandHandlerImpl;
 import com.poixson.app.xVars;
 import com.poixson.exceptions.IORuntimeException;
 import com.poixson.logger.xConsole;
 import com.poixson.logger.xLogRoot;
 import com.poixson.tools.Keeper;
 import com.poixson.utils.FileUtils;
+import com.poixson.utils.ShellUtils;
 import com.poixson.utils.ThreadUtils;
 import com.poixson.utils.Utils;
 
@@ -205,6 +208,14 @@ public class xAppSteps_Console implements xConsole {
 			}
 			// handle line
 			if (Utils.notBlank(line)) {
+				final xCommandHandler handler = ShellUtils.GetCommandHandler();
+				if (handler == null) {
+					xLogRoot.get().warning("No command handler set!");
+				}
+				final boolean result = handler.process(line);
+				if (!result) {
+					xLogRoot.get().warning("Unknown command:", line);
+				}
 			}
 		} // end READER_LOOP
 		if ( ! this.stopping ) {
@@ -256,7 +267,12 @@ public class xAppSteps_Console implements xConsole {
 
 
 
-	@xAppStep( Type=StepType.STARTUP, Title="Console", StepValue=90 )
+	@xAppStep( Type=StepType.STARTUP, Title="Commands", StepValue=90 )
+	public void __STARTUP_commands(final xApp app) {
+		final xCommandHandler handler = new xCommandHandlerImpl();
+		ShellUtils.SetCommandHandler(handler);
+	}
+	@xAppStep( Type=StepType.STARTUP, Title="Console", StepValue=95 )
 	public void __STARTUP_console(final xApp app) {
 		// initialize console and enable colors
 		if (System.console() != null) {
