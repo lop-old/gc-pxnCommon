@@ -2,6 +2,8 @@ package com.poixson.utils;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.poixson.app.xCommandHandler;
+
 
 public class ShellUtils {
 
@@ -48,6 +50,41 @@ public class ShellUtils {
 	}
 	public static String[] RenderAnsi(final String[] lines) {
 		return get().renderAnsi(lines);
+	}
+
+
+
+	// ------------------------------------------------------------------------------- //
+	// commands
+
+
+
+	public static xCommandHandler GetCommandHandler() {
+		return get().getCommandHandler();
+	}
+	public static void SetCommandHandler(final xCommandHandler handler) {
+		get().setCommandHandler(handler);
+	}
+	public static void RegisterCommands(final Object...objs) {
+		get().registerCommands(objs);
+	}
+	public static boolean Process(final String line) {
+		return get().process(line);
+	}
+
+
+
+	public xCommandHandler getCommandHandler() {
+		throw new UnsupportedOperationException("pxnCommon-Shell library is required");
+	}
+	public void setCommandHandler(final xCommandHandler handler) {
+		throw new UnsupportedOperationException("pxnCommon-Shell library is required");
+	}
+	public void registerCommands(final Object...objs) {
+		throw new UnsupportedOperationException("pxnCommon-Shell library is required");
+	}
+	public boolean process(final String line) {
+		throw new UnsupportedOperationException("pxnCommon-Shell library is required");
 	}
 
 
