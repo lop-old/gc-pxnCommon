@@ -14,23 +14,15 @@ public final class xVars {
 
 	// defaults
 	private static final boolean DEFAULT_DEBUG              = false;
-
 	private static final boolean DEFAULT_CONSOLE_COLOR      = true;
 
+	// debug mode
 	public static final int      SEARCH_DEBUG_PARENTS = 1;
 	public static final String[] SEARCH_DEBUG_FILES =
 		new String[] {
 			"debug",
 			".debug"
 		};
-
-
-
-	// ------------------------------------------------------------------------------- //
-
-
-
-	// debug mode
 	private static final AtomicReference<Boolean> debug =
 			new AtomicReference<Boolean>(null);
 

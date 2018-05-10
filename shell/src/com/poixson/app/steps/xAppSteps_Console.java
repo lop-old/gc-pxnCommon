@@ -141,6 +141,7 @@ public class xAppSteps_Console implements xConsole {
 		if (this.running.get())
 			return;
 		this.stopping = false;
+		// start console input thread
 		final Thread thread = new Thread(this);
 		thread.setName(THREAD_NAME);
 		thread.setDaemon(true);

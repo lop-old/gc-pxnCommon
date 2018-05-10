@@ -8,7 +8,7 @@ public class Commands_Standard {
 
 
 
-	@xCommandSpec(Name="exit", Aliases="e,quit")
+	@xCommandSpec(Name="exit", Aliases="e,stop,quit")
 	public void __COMMAND_exit() {
 		xApp.shutdown();
 	}

@@ -16,6 +16,8 @@ import com.poixson.utils.Utils;
 public class ShellArgs {
 
 	protected boolean allowShortFlagValues = false;
+//TODO:
+//	protected Boolean hasUnknownFlags      = null;
 
 	protected final Map<String, String> flags;
 	protected final List<String> commands;
@@ -34,6 +36,8 @@ public class ShellArgs {
 				xVars.setDebug( debugVal.booleanValue() );
 			}
 		}
+//TODO:
+/*
 		// ansi color flags
 		{
 			final Boolean colorVal = argsTool.getFlagBoolean("--color");
@@ -52,6 +56,7 @@ public class ShellArgs {
 			xLog.getConsole()
 				.clear();
 		}
+*/
 		return argsTool;
 	}
 
