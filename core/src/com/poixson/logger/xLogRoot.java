@@ -6,12 +6,14 @@ import com.poixson.app.xVars;
 import com.poixson.logger.printers.xLogPrinter;
 import com.poixson.logger.printers.xLogPrinter_stdio;
 import com.poixson.tools.Keeper;
+import com.poixson.tools.remapped.OutputStreamLineRemapper;
 import com.poixson.utils.Utils;
 
 
 public class xLogRoot extends xLog {
 
 	public static final xLevel DEFAULT_LEVEL = xLevel.FINEST;
+	protected static final boolean OVERRIDE_STDIO = true;
 
 	// root logger
 	private static final AtomicReference<xLogRoot> root =
@@ -51,6 +53,33 @@ public class xLogRoot extends xLog {
 
 	protected xLogRoot() {
 		super(null, null);
+		// override stdio
+		if (OVERRIDE_STDIO) {
+			// capture std-out
+			System.setOut(
+				OutputStreamLineRemapper.toPrintStream(
+					new OutputStreamLineRemapper() {
+						@Override
+						public void line(final String line) {
+							xLogRoot.get()
+								.stdout(line);
+						}
+					}
+				)
+			);
+			// capture std-err
+			System.setErr(
+				OutputStreamLineRemapper.toPrintStream(
+					new OutputStreamLineRemapper() {
+						@Override
+						public void line(final String line) {
+							xLogRoot.get()
+								.stderr(line);
+						}
+					}
+				)
+			);
+		}
 	}
 
 
