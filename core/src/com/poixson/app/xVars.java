@@ -54,7 +54,10 @@ public final class xVars {
 
 	// init
 	static {
-		Keeper.add(new xVars());
+		setOriginalOut( System.out );
+		setOriginalErr( System.err );
+		setOriginalIn(  System.in  );
+		Keeper.add( new xVars() );
 	}
 
 
@@ -111,9 +114,9 @@ public final class xVars {
 			: out
 		);
 	}
-	public static void setOriginalOut(final PrintStream out) {
+	private static void setOriginalOut(final PrintStream out) {
 		if (out != null) {
-			originalOut.set(out);
+			originalOut.compareAndSet(null, out);
 		}
 	}
 
@@ -126,9 +129,9 @@ public final class xVars {
 			: err
 		);
 	}
-	public static void setOriginalErr(final PrintStream err) {
+	private static void setOriginalErr(final PrintStream err) {
 		if (err != null) {
-			originalErr.set(err);
+			originalErr.compareAndSet(null, err);
 		}
 	}
 
@@ -141,9 +144,9 @@ public final class xVars {
 			: in
 		);
 	}
-	public static void setOriginalIn(final InputStream in) {
+	private static void setOriginalIn(final InputStream in) {
 		if (in != null) {
-			originalIn.set(in);
+			originalIn.compareAndSet(null, in);
 		}
 	}
 
