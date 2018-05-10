@@ -1,4 +1,4 @@
-package com.poixson.utils;
+package com.poixson.tools;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,10 +8,12 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import com.poixson.utils.xLogger.xLog;
+import com.poixson.app.xVars;
+import com.poixson.utils.NumberUtils;
+import com.poixson.utils.Utils;
 
 
-public class ShellArgsTool {
+public class ShellArgs {
 
 	protected boolean allowShortFlagValues = false;
 
@@ -23,13 +25,13 @@ public class ShellArgsTool {
 
 
 
-	public static ShellArgsTool Init(final String[] argsArray) {
-		final ShellArgsTool argsTool = new ShellArgsTool(argsArray);
+	public static ShellArgs Init(final String[] argsArray) {
+		final ShellArgs argsTool = new ShellArgs(argsArray);
 		// debug flag
 		{
 			final Boolean debugVal = argsTool.getFlagBoolean("-d", "--debug");
 			if (debugVal != null) {
-				xVars.debug( debugVal.booleanValue() );
+				xVars.setDebug( debugVal.booleanValue() );
 			}
 		}
 		// ansi color flags
@@ -55,7 +57,7 @@ public class ShellArgsTool {
 
 
 
-	public ShellArgsTool(final String[] argsArray) {
+	public ShellArgs(final String[] argsArray) {
 		if (Utils.isEmpty(argsArray)) {
 			this.flags    = Collections.unmodifiableMap(  new HashMap<String, String>(0) );
 			this.commands = Collections.unmodifiableList( new ArrayList<String>(0)       );
