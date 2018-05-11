@@ -312,10 +312,10 @@ public abstract class xApp implements xStartable, AttachedLogger {
 	public void run() {
 		if (Failure.hasFailed()) return;
 		synchronized (this.runLock) {
+			final int stepInt = this.state.get();
 			// finished startup/shutdown
 			if (this.currentSteps.isEmpty()) {
 				this.stopHangCatcher();
-				final int stepInt = this.state.get();
 				if (stepInt == STATE_START || stepInt == STATE_STOP) {
 					this.state.set(STATE_OFF);
 					this.log()
@@ -336,7 +336,6 @@ public abstract class xApp implements xStartable, AttachedLogger {
 			// get current step
 			final xAppStepDAO step = this.grabNextStepDAO();
 			if (Failure.hasFailed()) return;
-			final int stepInt = this.state.get();
 			if (step != null) {
 				if (this.log().isDetailLoggable()) {
 					this.fine(
@@ -414,15 +413,15 @@ public abstract class xApp implements xStartable, AttachedLogger {
 					return null;
 			// shutdown
 			} else {
-				nextStepInt = Integer.MIN_VALUE;
+				nextStepInt = 0;
 				while (it.hasNext()) {
 					final int index = it.next().intValue();
-					if (index > nextStepInt) {
+					if (index < nextStepInt) {
 						nextStepInt = index;
 					}
 				}
 				// no steps left
-				if (nextStepInt == Integer.MIN_VALUE)
+				if (nextStepInt == 0)
 					return null;
 			}
 			this.state.set(nextStepInt);
@@ -534,19 +533,24 @@ public abstract class xApp implements xStartable, AttachedLogger {
 			return;
 		final HangCatcher catcher =
 			new HangCatcher(
-				xTime.getNew("10s").getMS(),
+				xTime.getNew("3s").getMS(),
 				100L,
 				new Runnable() {
 					@Override
 					public void run() {
-//TODO: improve this
+						final int step = xApp.this.state.get();
 						xApp.this.publish(
 							new String[] {
-								"",
-								" *********************** ",
-								" *  Startup has hung!  * ",
-								" *********************** ",
-								""
+								(
+									step > 0
+									? "Startup step: "
+									: "Shutdown step: "
+								) + Integer.toString(step),
+								"                                  ",
+								" ******************************** ",
+								" *  Startup/Shutdown has hung!  * ",
+								" ******************************** ",
+								"                                  "
 							}
 						);
 						ThreadUtils.DisplayStillRunning();
@@ -667,17 +671,21 @@ public abstract class xApp implements xStartable, AttachedLogger {
 
 
 
-//TODO: this will be replaced with ShutdownTask
 	@xAppStep( Type=StepType.SHUTDOWN, Title="Exit", StepValue=2)
 	public void __SHUTDOWN_exit() {
 		final Thread stopThread =
 			new Thread() {
+				private volatile int exitCode = 0;
+				public Thread init(final int exitCode) {
+					this.exitCode = exitCode;
+					return this;
+				}
 				@Override
 				public void run() {
 					ThreadUtils.Sleep(250L);
-					System.exit(0);
+					System.exit(this.exitCode);
 				}
-			};
+			}.init(0);
 		stopThread.start();
 	}
 
