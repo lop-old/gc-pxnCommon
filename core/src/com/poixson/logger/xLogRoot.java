@@ -55,6 +55,8 @@ public class xLogRoot extends xLog {
 		super(null, null);
 		// override stdio
 		if (OVERRIDE_STDIO) {
+			// be sure this gets inited first
+			xVars.isDebug();
 			// capture std-out
 			System.setOut(
 				OutputStreamLineRemapper.toPrintStream(
