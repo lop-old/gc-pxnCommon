@@ -2,6 +2,8 @@ package com.poixson.threadpool.types;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.poixson.threadpool.xThreadPool;
+
 
 public class xThreadPool_Main extends xThreadPool_SingleWorker {
 
@@ -22,8 +24,15 @@ public class xThreadPool_Main extends xThreadPool_SingleWorker {
 		// new instance
 		{
 			final xThreadPool_Main pool = new xThreadPool_Main();
-			if (instance.compareAndSet(null, pool))
+			if (instance.compareAndSet(null, pool)) {
+				final xThreadPool existing =
+					pools.putIfAbsent(MAIN_POOL_NAME, pool);
+				if (existing != null) {
+					instance.set( (xThreadPool_Main) existing );
+					return (xThreadPool_Main) existing;
+				}
 				return pool;
+			}
 			return instance.get();
 		}
 	}

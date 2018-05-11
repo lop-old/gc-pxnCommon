@@ -51,8 +51,7 @@ public class xThreadPool_GUI extends xThreadPool_SingleWorker {
 
 	@Override
 	protected void startNewWorkerIfNeededAndAble() {
-		xThreadPoolWorker worker =
-			this.worker.get();
+		xThreadPoolWorker worker = this.worker.get();
 		if (worker == null) {
 			try {
 				worker = new xThreadPool_GUI_Worker(this);

@@ -315,25 +315,24 @@ public class xAppSteps_Console implements xConsole {
 			for (int i=0; i<5; i++) {
 				if (this.stopping)
 					break RETRY_LOOP;
-				if (this.reading.get()) {
-					try {
-						final LineReader read = getReader();
-						read.callWidget(LineReader.CLEAR);
-						out.println(line);
-						this.drawPrompt();
-						break RETRY_LOOP;
-					} catch (Exception ignore) {}
-					if (this.stopping)
-						break RETRY_LOOP;
-					ThreadUtils.Sleep(20L);
-				} else {
+				if ( ! this.reading.get() ) {
 					out.println(
-						(new StringBuilder())
-							.append('\r')
-							.append(line)
-					);
-					break RETRY_LOOP;
+							(new StringBuilder())
+								.append('\r')
+								.append(line)
+						);
+						break RETRY_LOOP;
 				}
+				try {
+					final LineReader read = getReader();
+					read.callWidget(LineReader.CLEAR);
+					out.println(line);
+					this.drawPrompt();
+					break RETRY_LOOP;
+				} catch (Exception ignore) {}
+				if (this.stopping)
+					break RETRY_LOOP;
+				ThreadUtils.Sleep(20L);
 			} // end RETRY_LOOP
 			out.flush();
 		} catch (Exception ignore) {}

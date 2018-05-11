@@ -122,7 +122,7 @@ public abstract class xThreadPool_MultiWorkers extends xThreadPoolQueue {
 	@Override
 	protected void startNewWorkerIfNeededAndAble() {
 //TODO:
-		
+//use xThreadFactory
 		
 		
 		

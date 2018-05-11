@@ -46,7 +46,13 @@ public class xThreadFactory implements ThreadFactory {
 		final Thread thread = new Thread(this.group, run);
 		thread.setPriority(this.priority);
 		thread.setDaemon(this.daemon);
-		thread.setName(this.name+":"+Integer.toString(id));
+		thread.setName(
+			(new StringBuilder())
+				.append(this.name)
+				.append(':')
+				.append(id)
+				.toString()
+		);
 		return thread;
 	}
 
