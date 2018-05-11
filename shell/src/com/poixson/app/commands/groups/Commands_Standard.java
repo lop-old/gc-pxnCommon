@@ -1,7 +1,7 @@
-package com.poixson.app.commands;
+package com.poixson.app.commands.groups;
 
 import com.poixson.app.xApp;
-import com.poixson.app.xCommandSpec;
+import com.poixson.app.commands.xCommandSpec;
 
 
 public class Commands_Standard {

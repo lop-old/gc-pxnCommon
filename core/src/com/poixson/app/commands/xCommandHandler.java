@@ -1,4 +1,4 @@
-package com.poixson.app;
+package com.poixson.app.commands;
 
 
 public interface xCommandHandler {

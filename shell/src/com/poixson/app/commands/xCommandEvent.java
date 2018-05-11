@@ -1,4 +1,4 @@
-package com.poixson.app;
+package com.poixson.app.commands;
 
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.tools.events.xEventData;

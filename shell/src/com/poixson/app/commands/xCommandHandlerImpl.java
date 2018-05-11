@@ -1,4 +1,4 @@
-package com.poixson.app;
+package com.poixson.app.commands;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

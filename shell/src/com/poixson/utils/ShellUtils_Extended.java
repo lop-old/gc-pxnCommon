@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
-import com.poixson.app.xCommandHandler;
+import com.poixson.app.commands.xCommandHandler;
 
 
 public final class ShellUtils_Extended extends ShellUtils {
