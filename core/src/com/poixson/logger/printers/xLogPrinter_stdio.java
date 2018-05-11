@@ -67,6 +67,7 @@ public class xLogPrinter_stdio extends xLogPrinterBasic {
 					)
 				);
 			}
+			this.out.flush();
 		// print to console handler
 		} else {
 			console.doPublish(

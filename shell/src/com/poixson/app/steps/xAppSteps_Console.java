@@ -335,6 +335,7 @@ public class xAppSteps_Console implements xConsole {
 					break RETRY_LOOP;
 				}
 			} // end RETRY_LOOP
+			out.flush();
 		} catch (Exception ignore) {}
 	}
 
