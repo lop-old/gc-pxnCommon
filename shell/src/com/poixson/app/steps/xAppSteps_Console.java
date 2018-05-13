@@ -40,6 +40,8 @@ public class xAppSteps_Console implements xConsole {
 	protected static final boolean BELL_ENABLED = true;
 	protected static final String THREAD_NAME = "Console-Input";
 
+	protected static final AtomicReference<xAppSteps_Console> instance =
+			new AtomicReference<xAppSteps_Console>(null);
 	protected static final AtomicReference<Terminal>   terminal = new AtomicReference<Terminal>(null);
 	protected static final AtomicReference<LineReader> reader   = new AtomicReference<LineReader>(null);
 	protected static final AtomicReference<History>    history  = new AtomicReference<History>(null);
@@ -51,7 +53,22 @@ public class xAppSteps_Console implements xConsole {
 
 
 
-	public xAppSteps_Console() {
+	public static xAppSteps_Console get() {
+		// existing instance
+		{
+			final xAppSteps_Console console = instance.get();
+			if (console != null)
+				return console;
+		}
+		// new instance
+		{
+			final xAppSteps_Console console = new xAppSteps_Console();
+			if (instance.compareAndSet(null, console))
+				return console;
+			return instance.get();
+		}
+	}
+	protected xAppSteps_Console() {
 		Keeper.add(this);
 	}
 	public void unload() {
