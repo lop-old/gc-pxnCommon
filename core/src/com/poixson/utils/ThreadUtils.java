@@ -14,6 +14,8 @@ public final class ThreadUtils {
 	{ Keeper.add(new ThreadUtils()); }
 
 	public static final String[] ignoreThreadNames = new String[] {
+		"main-w1",
+		"DestroyJavaVM"
 //		"Main-Server-Thread",
 //		"Reference Handler",
 //		"NonBlockingInputStreamThread",
@@ -38,23 +40,25 @@ public final class ThreadUtils {
 		if (threadSet.isEmpty())
 			return null;
 		final Set<String> list = new HashSet<String>();
+		THREAD_LOOP:
 		for (final Thread thread : threadSet) {
 			if (!includeDaemon && thread.isDaemon())
-				continue;
+				continue THREAD_LOOP;
 			final String name = thread.getName();
 			if (Utils.isEmpty(name))
-				continue;
+				continue THREAD_LOOP;
 			if (!includeDaemon && name.startsWith("main:"))
-				continue;
+				continue THREAD_LOOP;
 			// check ignore list
+			//IGNORE_LOOP:
 			for (final String str : ignoreThreadNames) {
 				if (name.equals(str)) {
-					continue;
+					continue THREAD_LOOP;
 				}
-			}
+			} // end IGNORE_LOOP
 			// add to list
 			list.add(thread.getName());
-		}
+		} // end THREAD_LOOP
 		if (list.isEmpty())
 			return null;
 		return list.toArray(new String[0]);
