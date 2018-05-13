@@ -17,7 +17,7 @@ public final class xVars {
 	private static final boolean DEFAULT_CONSOLE_COLOR      = true;
 
 	// debug mode
-	public static final int      SEARCH_DEBUG_PARENTS = 1;
+	public static final int      SEARCH_DEBUG_PARENTS = 2;
 	public static final String[] SEARCH_DEBUG_FILES =
 		new String[] {
 			"debug",

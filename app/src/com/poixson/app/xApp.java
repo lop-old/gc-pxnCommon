@@ -683,6 +683,11 @@ public abstract class xApp implements xStartable, AttachedLogger {
 				@Override
 				public void run() {
 					ThreadUtils.Sleep(250L);
+					if (xVars.isDebug()) {
+						ThreadUtils.DisplayStillRunning();
+					}
+					xVars.getOriginalOut()
+						.println();
 					System.exit(this.exitCode);
 				}
 			}.init(0);
