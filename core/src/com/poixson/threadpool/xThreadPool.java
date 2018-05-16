@@ -98,6 +98,9 @@ public abstract class xThreadPool implements xStartable {
 		this.stopping = true;
 		ThreadUtils.Sleep(20L);
 	}
+	public static void StopAll() {
+		stoppingAll = true;
+	}
 
 
 

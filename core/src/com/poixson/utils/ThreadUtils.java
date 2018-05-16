@@ -14,8 +14,9 @@ public final class ThreadUtils {
 	{ Keeper.add(new ThreadUtils()); }
 
 	public static final String[] ignoreThreadNames = new String[] {
-		"main-w1",
+		"EndThread",
 		"DestroyJavaVM"
+//		"main-w1",
 //		"Main-Server-Thread",
 //		"Reference Handler",
 //		"NonBlockingInputStreamThread",

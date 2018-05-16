@@ -18,6 +18,7 @@ import com.poixson.logger.xLogRoot;
 import com.poixson.threadpool.xThreadPool;
 import com.poixson.threadpool.types.xThreadPool_Main;
 import com.poixson.tools.AppProps;
+import com.poixson.tools.CoolDown;
 import com.poixson.tools.HangCatcher;
 import com.poixson.tools.Keeper;
 import com.poixson.tools.xTime;
@@ -678,8 +679,18 @@ public abstract class xApp implements xStartable, AttachedLogger {
 				}
 				@Override
 				public void run() {
-					ThreadUtils.Sleep(250L);
+					// stop thread pools
+					xThreadPool.StopAll();
 					if (xVars.isDebug()) {
+						final CoolDown cool = CoolDown.getNew("1s");
+						cool.resetRun();
+						try {
+							while ( ! cool.runAgain() ) {
+								Thread.sleep(50L);
+								if (ThreadUtils.CountStillRunning() == 0)
+									break;
+							}
+						} catch (InterruptedException ignore) {}
 						ThreadUtils.DisplayStillRunning();
 					}
 					xVars.getOriginalOut()
@@ -687,6 +698,8 @@ public abstract class xApp implements xStartable, AttachedLogger {
 					System.exit(this.exitCode);
 				}
 			}.init(0);
+		stopThread.setName("EndThread");
+		stopThread.setDaemon(true);
 		stopThread.start();
 	}
 
