@@ -1,94 +1,53 @@
 package com.poixson.app.commands;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
-import com.poixson.logger.xLogRoot;
-import com.poixson.utils.StringUtils;
+import org.jline.reader.Completer;
+
 import com.poixson.utils.Utils;
 
 
-public class xCommandHandlerImpl implements xCommandHandler {
+public class xCommandHandlerJLine extends xCommandHandler {
 
-	protected final CopyOnWriteArrayList<xCommandDAO> commands =
-			new CopyOnWriteArrayList<xCommandDAO>();
+	protected final AtomicReference<Completer> completer =
+			new AtomicReference<Completer>(null);
 
 
 
-	public xCommandHandlerImpl() {
+	public xCommandHandlerJLine() {
+		super();
 	}
 
 
 
 	@Override
-	public void register(final Object...objs) {
-		if (Utils.isEmpty(objs)) return;
-		final List<xCommandDAO> found = new ArrayList<xCommandDAO>();
-		OBJECTS_LOOP:
-		for (final Object o : objs) {
-			if (o == null) continue OBJECTS_LOOP;
-			final Method[] methods = o.getClass().getMethods();
-			if (methods == null) continue OBJECTS_LOOP;
-			METHODS_LOOP:
-			for (final Method m : methods) {
-				final xCommandSpec anno = m.getAnnotation(xCommandSpec.class);
-				if (anno == null) continue METHODS_LOOP;
-				// found command annotation
-				final xCommandDAO dao =
-					new xCommandDAO(
-						anno.Name(),
-						StringUtils.SplitByDelims(anno.Aliases(), ','),
-						o, m
-					);
-				found.add(dao);
-			} // end METHODS_LOOP
-		} // end OBJECTS_LOOP
-		xLogRoot.get()
-			.fine("Found {} commands", found.size());
-		this.commands.addAll(found);
-	}
-
-
-
-	@Override
-	public boolean process(final String line) {
-		if (Utils.isEmpty(line)) return false;
-		final xCommandDAO dao =
-			this.findCommand(
-				StringUtils.PeekFirstPart(line, ' ')
-			);
-		if (dao == null)
+	protected boolean registerMethod(
+			final Object object, final Method method, final xCommand anno) {
+		if ( ! super.registerMethod(object, method, anno) )
 			return false;
-		return dao.invoke(line);
+		this.completer.set(null);
+		return true;
 	}
 
 
 
-	protected xCommandDAO findCommand(final String cmd) {
-		if (Utils.isEmpty(cmd)) return null;
-		// find matching command
-		{
-			final Iterator<xCommandDAO> it = this.commands.iterator();
-			while (it.hasNext()) {
-				final xCommandDAO dao = it.next();
-				if (dao.isCommand(cmd))
-					return dao;
-			}
-		}
-		// find matching alias
-		{
-			final Iterator<xCommandDAO> it = this.commands.iterator();
-			while (it.hasNext()) {
-				final xCommandDAO dao = it.next();
-				if (dao.isAlias(cmd))
-					return dao;
-			}
-		}
-		// no match
-		return null;
+	@Override
+	public void unregisterObject(final Object object) {
+		if (object == null) return;
+		super.unregisterObject(object);
+		this.completer.set(null);
+	}
+	@Override
+	public void unregisterMethod(final Object object, final String methodName) {
+		if (object == null || Utils.isEmpty(methodName)) return;
+		super.unregisterMethod(object, methodName);
+		this.completer.set(null);
+	}
+	@Override
+	public void unregisterAll() {
+		super.unregisterAll();
+		this.completer.set(null);
 	}
 
 

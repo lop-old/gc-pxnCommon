@@ -22,7 +22,7 @@ import com.poixson.app.xAppStep;
 import com.poixson.app.xAppStep.StepType;
 import com.poixson.app.xVars;
 import com.poixson.app.commands.xCommandHandler;
-import com.poixson.app.commands.xCommandHandlerImpl;
+import com.poixson.app.commands.xCommandHandlerJLine;
 import com.poixson.exceptions.IORuntimeException;
 import com.poixson.logger.xConsole;
 import com.poixson.logger.xLogRoot;
@@ -287,7 +287,7 @@ public class xAppSteps_Console implements xConsole {
 
 	@xAppStep( Type=StepType.STARTUP, Title="Commands", StepValue=90 )
 	public void __STARTUP_commands(final xApp app) {
-		final xCommandHandler handler = new xCommandHandlerImpl();
+		final xCommandHandler handler = new xCommandHandlerJLine();
 		ShellUtils.SetCommandHandler(handler);
 	}
 	@xAppStep( Type=StepType.STARTUP, Title="Console", StepValue=95 )
