@@ -64,6 +64,12 @@ public final class ThreadUtils {
 			return null;
 		return list.toArray(new String[0]);
 	}
+	public static int CountStillRunning() {
+		final String[] threadNames = getThreadNames(false);
+		if (threadNames == null)
+			return -1;
+		return threadNames.length;
+	}
 	// display threads still running
 	public static void DisplayStillRunning() {
 		if (xVars.notDebug()) return;
