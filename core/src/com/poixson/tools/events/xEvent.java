@@ -5,19 +5,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.poixson.tools.events.xEventListener.ListenerPriority;
-
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface xEvent {
-
-
-	ListenerPriority priority() default ListenerPriority.NORMAL;
-//TODO:
-//	boolean async()             default false;
-	boolean filterHandled()     default true;
-	boolean filterCancelled()   default true;
 
 
 }
