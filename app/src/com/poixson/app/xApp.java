@@ -179,7 +179,6 @@ public abstract class xApp implements xStartable, AttachedLogger {
 //			new RemappedMethod(this, "stop")
 //		);
 		if (Failure.hasFailed()) return;
-		this.publish();
 		this.title(
 			new String[] { "Starting {}.." },
 			this.getTitle()
@@ -231,7 +230,6 @@ public abstract class xApp implements xStartable, AttachedLogger {
 				return;
 			}
 		}
-		this.publish();
 		this.title(
 			new String[] { "Stopping {}.." },
 			this.getTitle()
