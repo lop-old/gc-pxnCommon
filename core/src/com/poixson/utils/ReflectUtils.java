@@ -55,7 +55,7 @@ public final class ReflectUtils {
 		try {
 			return method.invoke(
 					container,
-					(Object[]) ArgsToClasses(args)
+					args
 			);
 		} catch (IllegalAccessException
 				| IllegalArgumentException

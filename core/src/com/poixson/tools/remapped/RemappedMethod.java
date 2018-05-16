@@ -23,7 +23,7 @@ public class RemappedMethod<V> extends xRunnable {
 		this(
 			null,
 			container,
-			ReflectUtils.getMethodByName(container, methodName),
+			ReflectUtils.getMethodByName(container, methodName, args),
 			args
 		);
 	}
@@ -41,7 +41,7 @@ public class RemappedMethod<V> extends xRunnable {
 		this(
 			taskName,
 			container,
-			ReflectUtils.getMethodByName(container, methodName),
+			ReflectUtils.getMethodByName(container, methodName, args),
 			args
 		);
 	}
