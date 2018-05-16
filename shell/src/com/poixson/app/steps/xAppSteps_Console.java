@@ -230,8 +230,9 @@ public class xAppSteps_Console implements xConsole {
 				if (handler == null) {
 					xLogRoot.get().warning("No command handler set!");
 				}
-				final boolean result = handler.process(line);
-				if (!result) {
+				final boolean result =
+					handler.process(line);
+				if ( ! result ) {
 					xLogRoot.get().warning("Unknown command:", line);
 				}
 			}
@@ -333,17 +334,25 @@ public class xAppSteps_Console implements xConsole {
 				if (this.stopping)
 					break RETRY_LOOP;
 				if ( ! this.reading.get() ) {
-					out.println(
+					if (Utils.isEmpty(line)) {
+						out.println('\r');
+					} else {
+						out.println(
 							(new StringBuilder())
 								.append('\r')
 								.append(line)
 						);
-						break RETRY_LOOP;
+					}
+					break RETRY_LOOP;
 				}
 				try {
 					final LineReader read = getReader();
 					read.callWidget(LineReader.CLEAR);
-					out.println(line);
+					if (Utils.isEmpty(line)) {
+						out.println();
+					} else {
+						out.println(line);
+					}
 					this.drawPrompt();
 					break RETRY_LOOP;
 				} catch (Exception ignore) {}
