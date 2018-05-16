@@ -242,13 +242,12 @@ public class xAppSteps_Console implements xConsole {
 			this.stopping = true;
 		}
 		xVars.setConsole(null);
-		final PrintStream out = xVars.getOriginalOut();
-		out.println();
-		out.flush();
 		this.running.set(false);
 		this.thread.set(null);
 		xLogRoot.get()
 			.finest("Stopped console input thread");
+		final PrintStream out = xVars.getOriginalOut();
+		out.flush();
 		// save command history
 		{
 			final History hist = history.get();

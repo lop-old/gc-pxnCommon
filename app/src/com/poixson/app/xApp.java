@@ -276,7 +276,6 @@ public abstract class xApp implements xStartable, AttachedLogger {
 		}
 	}
 	public static void kill() {
-//TODO:
 		System.exit(1);
 	}
 
@@ -652,11 +651,9 @@ public abstract class xApp implements xStartable, AttachedLogger {
 	public void __SHUTDOWN_gc(final xApp app, final xLog log) {
 		Keeper.remove(this);
 		ThreadUtils.Sleep(50L);
-		System.gc();
-		xVars.getOriginalOut()
-			.println();
 		xVars.getOriginalOut()
 			.flush();
+		System.gc();
 //TODO: is this useful?
 //		xScheduler.clearInstance();
 //		if (xScheduler.hasLoaded()) {
