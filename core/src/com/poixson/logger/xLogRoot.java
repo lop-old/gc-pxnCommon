@@ -12,7 +12,7 @@ import com.poixson.utils.Utils;
 
 public class xLogRoot extends xLog {
 
-	public static final xLevel DEFAULT_LEVEL = xLevel.FINER;
+	public static final xLevel DEFAULT_LEVEL = xLevel.STATS;
 	protected static final boolean OVERRIDE_STDIO = true;
 
 	// root logger
