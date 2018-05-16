@@ -445,12 +445,10 @@ public abstract class xApp implements xStartable, AttachedLogger {
 			final List<String> lines = new ArrayList<String>();
 			lines.add("Found {} {} steps:");
 			// list steps in order
-			final IntComparator compare =
-				new IntComparator(
-					StepType.SHUTDOWN.equals(type)
-				);
 			final TreeSet<Integer> orderedValues =
-				new TreeSet<Integer>( compare );
+				new TreeSet<Integer>(
+					new IntComparator(false)
+				);
 			orderedValues.addAll(
 				this.currentSteps.keySet()
 			);
