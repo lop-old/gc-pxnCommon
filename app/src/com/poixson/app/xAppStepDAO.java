@@ -91,7 +91,7 @@ public class xAppStepDAO implements RunnableNamed {
 			);
 		final xLog log = this.app.log()
 				.getWeak(stepStr);
-		log.finer("Invoking step {}: {}", this.stepValue, this.name);
+		log.finer("Invoking step @|white,bold {}|@: {}", this.stepValue, this.name);
 		final Thread currentThread = Thread.currentThread();
 		final String originalThreadName = currentThread.getName();
 		currentThread.setName(stepStr);

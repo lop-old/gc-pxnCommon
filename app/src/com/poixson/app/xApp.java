@@ -41,8 +41,10 @@ import com.poixson.utils.Utils;
  *   95  start console input - xAppSteps_Console
  *  100  sync clock          - xAppStandard
  *  200  startup time        - xAppStandard
+ *  400  load plugins        - xPluginManager
  *
  * Shutdown sequence
+ *  400  unload plugins      - xPluginManager
  *  150  stop schedulers     - xAppSteps_Scheduler
  *  100  stop thread pools   - xAppStandard
  *   60  display uptime      - xAppStandard
@@ -529,7 +531,7 @@ public abstract class xApp implements xStartable, AttachedLogger {
 			return;
 		final HangCatcher catcher =
 			new HangCatcher(
-				xTime.getNew("3s").getMS(),
+				xTime.getNew("5s").getMS(),
 				100L,
 				new Runnable() {
 					@Override

@@ -78,7 +78,6 @@ public class xThreadPoolTask<V> implements Future<V>, RunnableNamed {
 			if (this.future.isCancelled()) return;
 			if (this.future.isDone()) throw new IllegalStateException("Task already done");
 			// set thread name
-			final String threadName;
 			{
 				final StringBuilder str = new StringBuilder();
 				if (Utils.isEmpty(this.taskName)) {
@@ -87,10 +86,10 @@ public class xThreadPoolTask<V> implements Future<V>, RunnableNamed {
 				} else {
 					str.append(this.taskName);
 				}
-				threadName = str.toString();
+				final String threadName = str.toString();
+				currentThread.setName(threadName);
+				log.finest("Running task:", threadName);
 			}
-			currentThread.setName(threadName);
-			log.finest("Running task:", threadName);
 			// run the task
 			try {
 				this.future.run();
