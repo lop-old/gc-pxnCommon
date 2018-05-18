@@ -1,5 +1,7 @@
-package com.poixson.app;
+package com.poixson.app.steps;
 
+import com.poixson.app.xApp;
+import com.poixson.app.xAppStep;
 import com.poixson.app.xAppStep.StepType;
 import com.poixson.tools.xTime;
 import com.poixson.tools.xTimeU;
