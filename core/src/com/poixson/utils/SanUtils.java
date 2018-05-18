@@ -4,7 +4,7 @@ import com.poixson.tools.Keeper;
 
 public final class SanUtils {
 	private SanUtils() {}
-	{ Keeper.add(new SanUtils()); }
+	static { Keeper.add(new SanUtils()); }
 
 
 

@@ -19,7 +19,7 @@ import com.poixson.tools.Keeper;
 
 public final class Utils {
 	private Utils() {}
-	{ Keeper.add(new Utils()); }
+	static { Keeper.add(new Utils()); }
 
 
 

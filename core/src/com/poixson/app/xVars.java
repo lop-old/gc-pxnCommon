@@ -11,6 +11,7 @@ import com.poixson.tools.Keeper;
 
 public final class xVars {
 	private xVars() {}
+	static { Keeper.add(new xVars()); }
 
 	// defaults
 	private static final boolean DEFAULT_DEBUG              = false;
@@ -49,7 +50,6 @@ public final class xVars {
 		setOriginalOut( System.out );
 		setOriginalErr( System.err );
 		setOriginalIn(  System.in  );
-		Keeper.add( new xVars() );
 	}
 
 

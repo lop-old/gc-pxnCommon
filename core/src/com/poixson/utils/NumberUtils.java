@@ -8,7 +8,7 @@ import com.poixson.tools.Keeper;
 
 public final class NumberUtils {
 	private NumberUtils() {}
-	{ Keeper.add(new NumberUtils()); }
+	static { Keeper.add(new NumberUtils()); }
 
 	/**
 	 * Max valid tcp/udp port number.

@@ -16,7 +16,7 @@ import com.poixson.tools.Keeper;
 
 public class StringUtils extends StringAdvUtils {
 	StringUtils() {}
-	{ Keeper.add(new StringUtils()); }
+	static { Keeper.add(new StringUtils()); }
 
 
 

@@ -9,7 +9,7 @@ import com.poixson.tools.Keeper;
 
 public final class ProcUtils {
 	private ProcUtils() {}
-	{ Keeper.add(new ProcUtils()); }
+	static { Keeper.add(new ProcUtils()); }
 
 	private static volatile Boolean debugWireEnabled = null;
 

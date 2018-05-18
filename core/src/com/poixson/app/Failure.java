@@ -15,7 +15,7 @@ import com.poixson.utils.Utils;
 
 public final class Failure {
 	private Failure() {}
-	{ Keeper.add(new Failure()); }
+	static { Keeper.add(new Failure()); }
 
 	public static final xTime EXIT_TIMEOUT = xTime.getNew("300n");
 

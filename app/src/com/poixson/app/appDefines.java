@@ -5,7 +5,7 @@ import com.poixson.tools.Keeper;
 
 public final class appDefines {
 	private appDefines() {}
-	{ Keeper.add(new appDefines()); }
+	static { Keeper.add(new appDefines()); }
 
 
 

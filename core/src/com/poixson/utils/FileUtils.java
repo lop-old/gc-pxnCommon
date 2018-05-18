@@ -12,7 +12,7 @@ import com.poixson.tools.Keeper;
 
 public final class FileUtils {
 	private FileUtils() {}
-	{ Keeper.add(new FileUtils()); }
+	static { Keeper.add(new FileUtils()); }
 
 	private static volatile String cwd = null;
 	private static volatile String pwd = null;

@@ -78,7 +78,7 @@ public abstract class xApp implements xStartable, AttachedLogger {
 	protected final Object runLock = new Object();
 	protected volatile HangCatcher hangCatcher = null;
 
-	// mvn properties
+	// properties
 	protected final AppProps props;
 
 
@@ -599,11 +599,10 @@ public abstract class xApp implements xStartable, AttachedLogger {
 
 
 	// ------------------------------------------------------------------------------- //
-	// config
+	// properties
 
 
 
-	// mvn properties
 	public String getName() {
 		return this.props.name;
 	}

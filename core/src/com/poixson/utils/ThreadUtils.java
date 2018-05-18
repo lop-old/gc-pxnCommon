@@ -11,7 +11,7 @@ import com.poixson.tools.xTime;
 
 public final class ThreadUtils {
 	private ThreadUtils() {}
-	{ Keeper.add(new ThreadUtils()); }
+	static { Keeper.add(new ThreadUtils()); }
 
 	public static final String[] ignoreThreadNames = new String[] {
 		"EndThread",
