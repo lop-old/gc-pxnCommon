@@ -32,11 +32,12 @@
 	<modules>
 		<module>core</module>
 		<module>app</module>
-		<module>loggers</module>
-		<module>shell</module>
 		<module>config</module>
+		<module>loggers</module>
+		<module>net</module>
 		<module>plugin</module>
 		<module>scheduler</module>
+		<module>shell</module>
 	</modules>
 	<build>
 		<defaultGoal>install</defaultGoal>
