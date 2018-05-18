@@ -17,7 +17,7 @@ import org.xeustechnologies.jcl.context.JclContext;
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.logger.xLog;
 import com.poixson.logger.xLogRoot;
-import com.poixson.tools.config.ConfigUtils;
+import com.poixson.utils.ConfigUtils;
 import com.poixson.utils.Utils;
 import com.poixson.utils.ioUtils;
 
