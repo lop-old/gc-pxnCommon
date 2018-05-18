@@ -180,6 +180,7 @@ public class xAppSteps_Console implements xConsole {
 			try {
 				thread.notifyAll();
 			} catch (Exception ignore) {}
+			ThreadUtils.Sleep(50L);
 		}
 	}
 
@@ -191,11 +192,13 @@ public class xAppSteps_Console implements xConsole {
 		if ( ! this.running.compareAndSet(false, true) )
 			throw new RuntimeException("Console thread already running!");
 		xVars.setConsole(this);
-		if (this.thread.get() == null) {
-			this.thread.compareAndSet(null, Thread.currentThread());
+		final Thread currentThread = Thread.currentThread();
+		{
+			this.thread.compareAndSet(null, currentThread);
+			if (this.thread.get() != currentThread)
+				throw new RuntimeException("Inconsistent console reader threads!");
 		}
-		final Thread thread = this.thread.get();
-		thread.setName(THREAD_NAME);
+		currentThread.setName(THREAD_NAME);
 		if (xVars.isDebug()) {
 			xLogRoot.get()
 				.detail("Starting console input thread..");
