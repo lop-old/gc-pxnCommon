@@ -1,4 +1,4 @@
-package com.poixson.tools.plugin;
+package com.poixson.plugins;
 
 import java.io.File;
 import java.io.IOException;

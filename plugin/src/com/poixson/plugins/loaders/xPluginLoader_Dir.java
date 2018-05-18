@@ -1,10 +1,13 @@
-package com.poixson.tools.plugin;
+package com.poixson.plugins.loaders;
 
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.poixson.exceptions.RequiredArgumentException;
+import com.poixson.plugins.xJavaPlugin;
+import com.poixson.plugins.xPluginDefines;
+import com.poixson.plugins.xPluginManager;
 import com.poixson.utils.FileUtils;
 import com.poixson.utils.Utils;
 

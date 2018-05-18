@@ -1,4 +1,4 @@
-package com.poixson.tools.plugin;
+package com.poixson.plugins;
 
 
 public final class xPluginDefines {
