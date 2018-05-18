@@ -103,19 +103,20 @@ public abstract class xLogPrinterBasic implements xLogPrinter {
 		TIMEOUT_LOOP:
 		for (int i=0; i<50; i++) {
 			try {
-				if (lock.tryLock(10L, xTimeU.MS)) {
+				if (lock.tryLock(50L, xTimeU.MS)) {
 					return;
 				}
 			} catch (InterruptedException e) {
-				throw new IOException("Failed to publish!", e);
+				break TIMEOUT_LOOP;
 			}
 			if (Thread.interrupted())
 				break TIMEOUT_LOOP;
 		} // end TIMEOUT_LOOP
-		throw new IOException("Failed to publish!");
 	}
 	protected void releasePublishLock(final ReentrantLock lock) {
-		lock.unlock();
+		try {
+			lock.unlock();
+		} catch (IllegalMonitorStateException ignore) {}
 	}
 
 
