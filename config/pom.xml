@@ -1,4 +1,4 @@
-<!-- Generated on: January 26, 2018 15:18 UTC -->
+<!-- Generated on: May 18, 2018 15:57 UTC -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
@@ -34,7 +34,7 @@
 
 		<pxnCommon-Core-version>3.6.2</pxnCommon-Core-version>
 		<pxnCommon-App-version>3.6.2</pxnCommon-App-version>
-		<snakeyaml-version>1.19</snakeyaml-version>
+		<snakeyaml-version>1.21</snakeyaml-version>
 
 		<git-commit-id-plugin-version>2.2.2</git-commit-id-plugin-version>
 

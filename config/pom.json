@@ -23,7 +23,7 @@
 			"GroupId": "org.yaml",
 			"ArtifactId": "snakeyaml",
 			"Name": "SnakeYAML",
-			"Version": "1.19"
+			"Version": "1.21"
 		}
 	}
 }
