@@ -11,9 +11,9 @@ import java.lang.annotation.Target;
 public @interface xPlugin {
 
 
-	String name()    default "";
-	String title()   default "";
-	String version() default "";
+	String name();
+	String title();
+	String version();
 
 
 }
