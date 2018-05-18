@@ -49,8 +49,8 @@ public class xAppSteps_Console implements xConsole {
 	protected static final AtomicReference<History>    history  = new AtomicReference<History>(null);
 
 	protected final AtomicReference<Thread> thread = new AtomicReference<Thread>(null);
-	protected final AtomicBoolean running = new AtomicBoolean(false);
-	protected volatile boolean stopping = false;
+	protected final AtomicBoolean running  = new AtomicBoolean(false);
+	protected final AtomicBoolean stopping = new AtomicBoolean(false);
 
 	protected final AtomicBoolean isreading = new AtomicBoolean(false);
 	protected final AtomicReference<CoolDown> readCool =
@@ -162,7 +162,7 @@ public class xAppSteps_Console implements xConsole {
 	public void start() {
 		if (this.running.get())
 			return;
-		this.stopping = false;
+		this.stopping.set(false);
 		// start console input thread
 		final Thread thread = new Thread(this);
 		thread.setName(THREAD_NAME);
@@ -171,7 +171,7 @@ public class xAppSteps_Console implements xConsole {
 	}
 	@Override
 	public void stop() {
-		this.stopping = true;
+		this.stopping.set(true);
 		final Thread thread = this.thread.get();
 		if (thread != null) {
 			try {
@@ -187,7 +187,7 @@ public class xAppSteps_Console implements xConsole {
 
 	@Override
 	public void run() {
-		if (this.stopping) return;
+		if (this.stopping.get()) return;
 		if ( ! this.running.compareAndSet(false, true) )
 			throw new RuntimeException("Console thread already running!");
 		xVars.setConsole(this);
@@ -203,8 +203,8 @@ public class xAppSteps_Console implements xConsole {
 		final LineReader read = getReader();
 		READER_LOOP:
 		while (true) {
-			if (this.stopping)          break READER_LOOP;
-			if (thread.isInterrupted()) break READER_LOOP;
+			if (this.stopping.get())           break READER_LOOP;
+			if (currentThread.isInterrupted()) break READER_LOOP;
 			final String line;
 			try {
 				this.setReadCool();
@@ -241,9 +241,9 @@ public class xAppSteps_Console implements xConsole {
 				}
 			}
 		} // end READER_LOOP
-		if ( ! this.stopping ) {
+		if ( ! this.stopping.get() ) {
 			xApp.kill();
-			this.stopping = true;
+			this.stopping.set(true);
 		}
 		xVars.setConsole(null);
 		this.running.set(false);
@@ -273,13 +273,13 @@ public class xAppSteps_Console implements xConsole {
 
 	@Override
 	public boolean isRunning() {
-		if (this.stopping)
+		if (this.stopping.get())
 			return false;
 		return this.running.get();
 	}
 	@Override
 	public boolean isStopping() {
-		return this.stopping;
+		return this.stopping.get();
 	}
 
 
@@ -396,7 +396,7 @@ public class xAppSteps_Console implements xConsole {
 		try {
 			RETRY_LOOP:
 			for (int i=0; i<5; i++) {
-				if (this.stopping)
+				if (this.stopping.get())
 					break RETRY_LOOP;
 				if (isread) {
 					try {
@@ -406,7 +406,7 @@ public class xAppSteps_Console implements xConsole {
 						term.writer().flush();
 						break RETRY_LOOP;
 					} catch (Exception ignore) {}
-					if (this.stopping)
+					if (this.stopping.get())
 						break RETRY_LOOP;
 					ThreadUtils.Sleep(20L);
 				} else {
