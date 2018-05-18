@@ -464,17 +464,6 @@ public class xAppSteps_Console implements xConsole {
 throw new UnsupportedOperationException("Unfinished");
 	}
 
-	@Override
-	public void drawPrompt() {
-		if (this.reading.get()) {
-			final Terminal   term = getTerminal();
-			final LineReader read = getReader();
-			read.callWidget(LineReader.REDRAW_LINE);
-			read.callWidget(LineReader.REDISPLAY);
-			term.writer().flush();
-		}
-	}
-
 
 
 	// mask
