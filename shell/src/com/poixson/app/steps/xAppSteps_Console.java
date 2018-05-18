@@ -2,6 +2,7 @@ package com.poixson.app.steps;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -26,6 +27,7 @@ import com.poixson.app.commands.xCommandHandlerJLine;
 import com.poixson.exceptions.IORuntimeException;
 import com.poixson.logger.xConsole;
 import com.poixson.logger.xLogRoot;
+import com.poixson.tools.CoolDown;
 import com.poixson.tools.Keeper;
 import com.poixson.utils.FileUtils;
 import com.poixson.utils.ShellUtils;
@@ -48,8 +50,11 @@ public class xAppSteps_Console implements xConsole {
 
 	protected final AtomicReference<Thread> thread = new AtomicReference<Thread>(null);
 	protected final AtomicBoolean running = new AtomicBoolean(false);
-	protected final AtomicBoolean reading = new AtomicBoolean(false);
 	protected volatile boolean stopping = false;
+
+	protected final AtomicBoolean isreading = new AtomicBoolean(false);
+	protected final AtomicReference<CoolDown> readCool =
+			new AtomicReference<CoolDown>(null);
 
 
 
@@ -202,9 +207,7 @@ public class xAppSteps_Console implements xConsole {
 			if (thread.isInterrupted()) break READER_LOOP;
 			final String line;
 			try {
-				synchronized (this.reading) {
-					this.reading.set(true);
-				}
+				this.setReadCool();
 				// read console input
 				line = read.readLine(
 					this.getPrompt(),
@@ -213,6 +216,7 @@ public class xAppSteps_Console implements xConsole {
 			} catch (UserInterruptException ignore) {
 				break READER_LOOP;
 			} catch (Exception e) {
+				this.resetReadCool();
 				xLogRoot.get()
 					.trace(e);
 				try {
@@ -222,7 +226,7 @@ public class xAppSteps_Console implements xConsole {
 				}
 				continue READER_LOOP;
 			} finally {
-				this.reading.set(false);
+				this.resetReadCool();
 			}
 			// handle line
 			if (Utils.notBlank(line)) {
@@ -280,6 +284,37 @@ public class xAppSteps_Console implements xConsole {
 
 
 
+	public boolean waitReadCool() {
+		if ( ! this.isreading.get() )
+			return false;
+		if (this.readCool.get() == null)
+			return true;
+		while (true) {
+			try {
+				Thread.sleep(5L);
+			} catch (InterruptedException ignore) {
+				break;
+			}
+			final CoolDown cool = this.readCool.get();
+			if (cool == null) break;
+			if (cool.runAgain()) {
+				this.readCool.set(null);
+			}
+		}
+		return true;
+	}
+	public void setReadCool() {
+		final CoolDown cool = CoolDown.getNew(20L);
+		this.readCool.set(cool);
+		this.isreading.set(true);
+	}
+	public void resetReadCool() {
+		this.isreading.set(false);
+		this.readCool.set(null);
+	}
+
+
+
 	// ------------------------------------------------------------------------------- //
 	// startup steps
 
@@ -326,53 +361,44 @@ public class xAppSteps_Console implements xConsole {
 
 	@Override
 	public void doPublish(final String line) {
-		try {
-			final PrintStream out = xVars.getOriginalOut();
-			RETRY_LOOP:
-			for (int i=0; i<5; i++) {
-				if (this.stopping)
-					break RETRY_LOOP;
-				if ( ! this.reading.get() ) {
-					if (Utils.isEmpty(line)) {
-						out.println('\r');
-					} else {
-						out.println(
-							(new StringBuilder())
-								.append('\r')
-								.append(line)
-						);
-					}
-					break RETRY_LOOP;
-				}
+		final Terminal   term = getTerminal();
+		final LineReader read = getReader();
+		final PrintWriter out = term.writer();
+		{
+			final boolean isread =
+				this.waitReadCool();
+			if (isread) {
 				try {
-					final LineReader read = getReader();
 					read.callWidget(LineReader.CLEAR);
-					if (Utils.isEmpty(line)) {
-						out.println();
-					} else {
-						out.println(line);
-					}
-					this.drawPrompt();
-					break RETRY_LOOP;
 				} catch (Exception ignore) {}
-				if (this.stopping)
-					break RETRY_LOOP;
-				ThreadUtils.Sleep(20L);
-			} // end RETRY_LOOP
-			out.flush();
-		} catch (Exception ignore) {}
+			}
+		}
+		out.println(line);
+		{
+			final boolean isread =
+				this.waitReadCool();
+			if (isread) {
+				try {
+					read.callWidget(LineReader.REDRAW_LINE);
+					read.callWidget(LineReader.REDISPLAY);
+				} catch (Exception ignore) {}
+			}
+		}
+		out.flush();
 	}
 
 
 
 	@Override
 	public void doClearScreen() {
+		final boolean isread =
+			this.waitReadCool();
 		try {
 			RETRY_LOOP:
 			for (int i=0; i<5; i++) {
 				if (this.stopping)
 					break RETRY_LOOP;
-				if (this.reading.get()) {
+				if (isread) {
 					try {
 						final Terminal   term = getTerminal();
 						final LineReader read = getReader();
@@ -399,14 +425,17 @@ public class xAppSteps_Console implements xConsole {
 	}
 	@Override
 	public void doFlush() {
+		this.waitReadCool();
 		try {
 			getTerminal().flush();
 		} catch (Exception ignore) {}
 	}
 	@Override
 	public void doBeep() {
+		final boolean isread =
+			this.waitReadCool();
 		try {
-			if (this.reading.get()) {
+			if (isread) {
 				getReader().callWidget(LineReader.BEEP);
 			} else {
 				getTerminal().puts(Capability.bell);
