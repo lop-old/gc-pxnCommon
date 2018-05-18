@@ -31,6 +31,7 @@ import com.poixson.tools.CoolDown;
 import com.poixson.tools.Keeper;
 import com.poixson.utils.FileUtils;
 import com.poixson.utils.ShellUtils;
+import com.poixson.utils.StringUtils;
 import com.poixson.utils.ThreadUtils;
 import com.poixson.utils.Utils;
 
@@ -455,7 +456,7 @@ public class xAppSteps_Console implements xConsole {
 
 	// prompt
 	public String getPrompt() {
-		return DEFAULT_PROMPT;
+		return StringUtils.ForceStarts("\r", DEFAULT_PROMPT);
 	}
 	@Override
 	public void setPrompt(final String prompt) {
