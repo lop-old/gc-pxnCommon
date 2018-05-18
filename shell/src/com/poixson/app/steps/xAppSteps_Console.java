@@ -324,12 +324,12 @@ public class xAppSteps_Console implements xConsole {
 
 
 
-	@xAppStep( Type=StepType.STARTUP, Title="Commands", StepValue=90 )
+	@xAppStep( Type=StepType.STARTUP, Title="Commands", StepValue=100 )
 	public void __STARTUP_commands(final xApp app) {
 		final xCommandHandler handler = new xCommandHandlerJLine();
 		ShellUtils.SetCommandHandler(handler);
 	}
-	@xAppStep( Type=StepType.STARTUP, Title="Console", StepValue=95 )
+	@xAppStep( Type=StepType.STARTUP, Title="Console", StepValue=105 )
 	public void __STARTUP_console(final xApp app) {
 		// initialize console and enable colors
 		if (System.console() != null) {
@@ -350,7 +350,7 @@ public class xAppSteps_Console implements xConsole {
 
 
 	// stop console input
-	@xAppStep( Type=StepType.SHUTDOWN, Title="Console", StepValue=30)
+	@xAppStep( Type=StepType.SHUTDOWN, Title="Console", StepValue=105)
 	public void __SHUTDOWN_console() {
 		// stop reading console input
 		this.stop();

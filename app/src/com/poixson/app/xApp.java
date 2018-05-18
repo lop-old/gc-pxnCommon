@@ -37,21 +37,23 @@ import com.poixson.utils.Utils;
  *   50  load configs        - xAppSteps_Config
  *   70  lock file           - xAppSteps_LockFile
  *   80  display logo        - xAppSteps_Logo
- *   90  prepare commands    - xCommandHandler
- *   95  start console input - xAppSteps_Console
- *  100  sync clock          - xAppStandard
+ *   85  sync clock          - xAppStandard
+ *  100  prepare commands    - xCommandHandler
+ *  105  start console input - xAppSteps_Console
  *  200  startup time        - xAppStandard
  *  400  load plugins        - xPluginManager
+ *  405  start plugins       - xPluginManager
  *
  * Shutdown sequence
+ *  405  stop plugins        - xPluginManager
  *  400  unload plugins      - xPluginManager
  *  150  stop schedulers     - xAppSteps_Scheduler
+ *  105  stop console input  - xAppSteps_Console
  *  100  stop thread pools   - xAppStandard
  *   60  display uptime      - xAppStandard
  *   20  release lock file   - xAppSteps_LockFile
- *   30  stop console input  - xAppSteps_Console
  *   10  garbage collect     - xApp
- *   10  final garpage collect
+ *    1  exit
  */
 public abstract class xApp implements xStartable, AttachedLogger {
 
@@ -667,7 +669,7 @@ public abstract class xApp implements xStartable, AttachedLogger {
 
 
 
-	@xAppStep( Type=StepType.SHUTDOWN, Title="Exit", StepValue=2)
+	@xAppStep( Type=StepType.SHUTDOWN, Title="Exit", StepValue=1)
 	public void __SHUTDOWN_exit() {
 		final Thread stopThread =
 			new Thread() {

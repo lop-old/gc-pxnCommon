@@ -46,7 +46,7 @@ public abstract class xAppStandard extends xApp {
 
 //TODO: move this to xVars?
 //	// sync clock
-//	@xAppStep( Type=StepType.STARTUP, Title="Sync Clock", StepValue=100 )
+//	@xAppStep( Type=StepType.STARTUP, Title="Sync Clock", StepValue=85 )
 //	public void __STARTUP_clock() {
 //		xClock.get(true);
 //	}
