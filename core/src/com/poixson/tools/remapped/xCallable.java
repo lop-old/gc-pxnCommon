@@ -21,6 +21,9 @@ public class xCallable<V> extends xRunnable implements Callable<V> {
 		this.call   = null;
 		this.result = null;
 	}
+	public void finalize() {
+		this.releaseCallDepth();
+	}
 	public xCallable(final String taskName) {
 		this(null, null, null);
 		this.taskName = taskName;
@@ -137,7 +140,7 @@ public class xCallable<V> extends xRunnable implements Callable<V> {
 		this.callDepth.set(Boolean.TRUE);
 	}
 	private void releaseCallDepth() {
-		this.callDepth.set(Boolean.FALSE);
+		this.callDepth.remove();
 	}
 
 
