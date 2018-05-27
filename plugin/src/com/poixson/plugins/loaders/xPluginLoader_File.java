@@ -4,7 +4,6 @@ import java.io.File;
 
 import com.poixson.exceptions.RequiredArgumentException;
 import com.poixson.plugins.xJavaPlugin;
-import com.poixson.plugins.xPluginLoader;
 import com.poixson.plugins.xPluginManager;
 import com.poixson.plugins.xPluginYML;
 import com.poixson.utils.Utils;
