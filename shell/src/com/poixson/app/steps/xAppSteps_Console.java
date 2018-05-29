@@ -21,6 +21,7 @@ import com.poixson.app.Failure;
 import com.poixson.app.xApp;
 import com.poixson.app.xAppStep;
 import com.poixson.app.xAppStep.StepType;
+import com.poixson.app.xShellDefines;
 import com.poixson.app.xVars;
 import com.poixson.app.commands.xCommandHandler;
 import com.poixson.app.commands.xCommandHandlerJLine;
@@ -37,10 +38,6 @@ import com.poixson.utils.Utils;
 
 
 public class xAppSteps_Console implements xConsole {
-	protected static final String HISTORY_FILE = "history.txt";
-	protected static final int    HISTORY_SIZE = 1000;
-	protected static final String DEFAULT_PROMPT = " #>";
-	protected static final boolean BELL_ENABLED = true;
 	protected static final String THREAD_NAME = "Console-Input";
 
 	protected static final AtomicReference<xAppSteps_Console> instance =
@@ -126,7 +123,7 @@ public class xAppSteps_Console implements xConsole {
 				return reader.get();
 			read.setVariable(
 				LineReader.BELL_STYLE,
-				BELL_ENABLED ? "audible" : "visible"
+				( xShellDefines.BELL_ENABLED ? "audible" : "visible" )
 			);
 			getHistory();
 			return read;
@@ -141,10 +138,10 @@ public class xAppSteps_Console implements xConsole {
 		}
 		{
 			final String historyFile =
-				FileUtils.MergePaths(",", HISTORY_FILE);
+				FileUtils.MergePaths(",", xShellDefines.HISTORY_FILE);
 			final LineReader read = getReader();
 			read.setVariable(LineReader.HISTORY_FILE, historyFile);
-			read.setVariable(LineReader.HISTORY_SIZE, HISTORY_SIZE);
+			read.setVariable(LineReader.HISTORY_SIZE, xShellDefines.HISTORY_SIZE);
 			final History hist = new DefaultHistory(read);
 			if ( ! history.compareAndSet(null, hist) )
 				return history.get();
@@ -456,7 +453,7 @@ public class xAppSteps_Console implements xConsole {
 
 	// prompt
 	public String getPrompt() {
-		return StringUtils.ForceStarts("\r", DEFAULT_PROMPT);
+		return StringUtils.ForceStarts("\r", xShellDefines.DEFAULT_PROMPT);
 	}
 	@Override
 	public void setPrompt(final String prompt) {
