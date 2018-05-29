@@ -609,9 +609,6 @@ public abstract class xApp implements xStartable, AttachedLogger {
 	public String getTitle() {
 		return this.props.title;
 	}
-	public String getFullTitle() {
-		return this.props.titleFull;
-	}
 	public String getVersion() {
 		return this.props.version;
 	}

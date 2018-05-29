@@ -16,7 +16,6 @@ public class AppProps {
 	// property values
 	public final String name;
 	public final String title;
-	public final String titleFull;
 	public final String version;
 	public final String commitHashFull;
 	public final String commitHashShort;
@@ -60,13 +59,6 @@ public class AppProps {
 		this.orgUrl    = props.getProperty("org_url");
 		this.issueName = props.getProperty("issue_name");
 		this.issueUrl  = props.getProperty("issue_url");
-		// title version
-		this.titleFull =
-			(new StringBuilder())
-				.append(this.title)
-				.append(' ')
-				.append(this.version)
-				.toString();
 		// commit hash
 		{
 			final String hash = props.getProperty("commit");
