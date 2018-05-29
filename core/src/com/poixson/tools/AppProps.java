@@ -11,7 +11,7 @@ import com.poixson.utils.Utils;
 
 public class AppProps {
 
-	public static final String PROPS_FILE = "/app.properties";
+	public static final String PROPS_FILE = "app.properties";
 
 	// property values
 	public final String name;
@@ -33,8 +33,9 @@ public class AppProps {
 		Properties props = null;
 		InputStream in = null;
 		try {
-			props = new Properties();
-			in = clss.getResourceAsStream(PROPS_FILE);
+			in = clss.getResourceAsStream(
+				StringUtils.ForceStarts("/", PROPS_FILE)
+			);
 			if (in == null) {
 				throw new RuntimeException(
 					StringUtils.ReplaceTags(
@@ -43,6 +44,7 @@ public class AppProps {
 					)
 				);
 			}
+			props = new Properties();
 			props.load(in);
 		} catch (IOException e) {
 			Failure.fail(e);
