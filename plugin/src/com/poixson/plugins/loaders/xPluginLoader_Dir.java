@@ -15,7 +15,6 @@ import com.poixson.utils.Utils;
 // load all plugins from dir
 public class xPluginLoader_Dir<T extends xJavaPlugin> extends xPluginLoader_File<T> {
 
-	private static final String DEFAULT_PLUGINS_DIR = xPluginDefines.DEFAULT_PLUGINS_DIR;
 
 
 
@@ -43,9 +42,9 @@ public class xPluginLoader_Dir<T extends xJavaPlugin> extends xPluginLoader_File
 	public Set<T> LoadFromDir(final File path) {
 		final File dir;
 		if (path == null) {
-			if (Utils.isEmpty(DEFAULT_PLUGINS_DIR))
+			if (Utils.isEmpty(xPluginDefines.DEFAULT_PLUGINS_DIR))
 				throw new NullPointerException("DEFAULT_PLUGINS_DIR");
-			dir = new File(DEFAULT_PLUGINS_DIR);
+			dir = new File(xPluginDefines.DEFAULT_PLUGINS_DIR);
 		} else {
 			dir = path;
 		}

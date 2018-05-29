@@ -27,7 +27,7 @@ public abstract class xThreadPool implements xStartable {
 	public static final int GLOBAL_MAX_WORKERS = 50;
 
 	// error messages
-	private static final String ERR_ALREADY_STOPPING = "Cannot start thread pool, already stopping!";
+	protected static final String ERR_ALREADY_STOPPING = "Cannot start thread pool, already stopping!";
 
 	protected static final ConcurrentHashMap<String, xThreadPool> pools =
 			new ConcurrentHashMap<String, xThreadPool>(3);

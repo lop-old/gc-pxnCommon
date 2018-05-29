@@ -13,7 +13,7 @@ import com.poixson.utils.Utils;
 public class xLogRoot extends xLog {
 
 	public static final xLevel DEFAULT_LEVEL = xLevel.STATS;
-	protected static final boolean OVERRIDE_STDIO = true;
+	public static final boolean OVERRIDE_STDIO = true;
 
 	// root logger
 	private static final AtomicReference<xLogRoot> root =

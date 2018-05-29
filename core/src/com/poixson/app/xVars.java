@@ -14,8 +14,8 @@ public final class xVars {
 	static { Keeper.add(new xVars()); }
 
 	// defaults
-	private static final boolean DEFAULT_DEBUG              = false;
-	private static final boolean DEFAULT_CONSOLE_COLOR      = true;
+	public static final boolean DEFAULT_DEBUG         = false;
+	public static final boolean DEFAULT_CONSOLE_COLOR = true;
 
 	// debug mode
 	public static final int      SEARCH_DEBUG_PARENTS = 2;

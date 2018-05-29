@@ -11,8 +11,8 @@ import com.poixson.utils.Utils;
 
 public class HangCatcher implements xStartable {
 
-	private static final long DEFAULT_TIMEOUT = xTime.getNew("10s").getMS();
-	private static final long DEFAULT_SLEEP   = 100L;
+	public static final long DEFAULT_TIMEOUT = 10000L; // 10s
+	public static final long DEFAULT_SLEEP   = 100L;   // 100ms
 
 	protected final AtomicReference<Thread> thread =
 			new AtomicReference<Thread>(null);

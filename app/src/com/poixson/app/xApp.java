@@ -57,10 +57,10 @@ import com.poixson.utils.Utils;
  */
 public abstract class xApp implements xStartable, AttachedLogger {
 
-	private static final String ERR_ALREADY_STOPPING_EXCEPTION    = "Cannot start app, already stopping!";
-	private static final String ERR_INVALID_STATE_EXCEPTION       = "Invalid startup/shutdown state!";
-	private static final String ERR_INVALID_START_STATE_EXCEPTION = "Invalid state, cannot start: {}";
-	private static final String ERR_INVALID_STOP_STATE_EXCEPTION  = "Invalid state, cannot shutdown: {}";
+	protected static final String ERR_ALREADY_STOPPING_EXCEPTION    = "Cannot start app, already stopping!";
+	protected static final String ERR_INVALID_STATE_EXCEPTION       = "Invalid startup/shutdown state!";
+	protected static final String ERR_INVALID_START_STATE_EXCEPTION = "Invalid state, cannot start: {}";
+	protected static final String ERR_INVALID_STOP_STATE_EXCEPTION  = "Invalid state, cannot shutdown: {}";
 
 	// app instances
 	protected static final CopyOnWriteArraySet<xApp> apps =

@@ -17,7 +17,7 @@ import com.poixson.utils.Utils;
 public class TriggerClock extends xSchedulerTrigger {
 
 	public static final String DEFAULT_DATE_FORMAT = "yy/MM/dd HH:mm:ss";
-	private static final long  DEFAULT_GRACE_TIME  = 1000L;
+	public static final long  DEFAULT_GRACE_TIME  = 1000L;
 
 	private volatile Date date = null;
 	private final xTime grace = xTime.getNew();

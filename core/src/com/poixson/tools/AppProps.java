@@ -11,7 +11,7 @@ import com.poixson.utils.Utils;
 
 public class AppProps {
 
-	private static final String PROPS_FILE = "/app.properties";
+	public static final String PROPS_FILE = "/app.properties";
 
 	// property values
 	public final String name;
