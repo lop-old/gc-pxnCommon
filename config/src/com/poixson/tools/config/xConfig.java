@@ -12,13 +12,13 @@ import com.poixson.utils.ObjectUtils;
 import com.poixson.utils.Utils;
 
 
-public abstract class xConfigValues {
+public class xConfig {
 
 	protected final Map<String, Object> datamap;
 
 
 
-	public xConfigValues(final Map<String, Object> datamap) {
+	public xConfig(final Map<String, Object> datamap) {
 		if (datamap == null) throw new RequiredArgumentException("datamap");
 		this.datamap = new ConcurrentHashMap<String, Object>();
 		this.datamap.putAll(datamap);
