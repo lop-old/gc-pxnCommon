@@ -13,10 +13,12 @@ public final class xPluginDefines {
 	public static final String DEFAULT_PLUGIN_CLASS_KEY = "Main Class";
 
 	// plugin.yml keys
-	public static final String PLUGIN_YML_NAME    = "Plugin Name";
-	public static final String PLUGIN_YML_VERSION = "App Version";
-	public static final String PLUGIN_YML_AUTHOR  = "Plugin Author";
-	public static final String PLUGIN_YML_WEBSITE = "Plugin Website";
+	public static final String PLUGIN_YML_NAME        = "Plugin Name";
+	public static final String PLUGIN_YML_VERSION     = "Plugin Version";
+	public static final String PLUGIN_YML_APP_VERSION = "App Version";
+	public static final String PLUGIN_YML_COMMIT      = "Commit";
+	public static final String PLUGIN_YML_AUTHOR      = "Author";
+	public static final String PLUGIN_YML_WEBSITE     = "Website";
 
 
 
