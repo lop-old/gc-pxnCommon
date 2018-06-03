@@ -9,10 +9,11 @@ import org.slf4j.Logger;
 import com.poixson.logger.xLevel;
 import com.poixson.logger.xLog;
 import com.poixson.logger.xLogRoot;
+import com.poixson.utils.Utils;
 
 
 public class slf4jLoggerFactory implements ILoggerFactory {
-	public static final String LOG_NAME = "slf4j-wrapper";
+	public static final String LOG_NAME = "slf4j";
 
 	private final ConcurrentMap<String, Logger> loggers =
 			new ConcurrentHashMap<String, Logger>();
@@ -33,7 +34,7 @@ public class slf4jLoggerFactory implements ILoggerFactory {
 			final Logger newlogger =
 				new slf4jLoggerAdapter(
 					name,
-					getLog()
+					getLog(name)
 				);
 			// cache wrapped logger
 			final Logger existing =
@@ -51,10 +52,19 @@ public class slf4jLoggerFactory implements ILoggerFactory {
 
 
 
-	public static xLog getLog() {
-		final xLog log =
-			xLogRoot.get()
-				.get(LOG_NAME);
+	public static xLog getLog(final String name) {
+		final xLog log;
+		if (Utils.isEmpty(name)) {
+			log = xLogRoot.get()
+					.get(LOG_NAME);
+		} else
+		if (name.startsWith("org.xeustechnologies.jcl.")) {
+			log = xLogRoot.get()
+					.get("jcl");
+		} else {
+			log = xLogRoot.get()
+					.get(LOG_NAME).get(name);
+		}
 		// disable logging if not detail mode
 		if ( ! xLogRoot.get().isDetailLoggable() ) {
 			log.setLevel(xLevel.WARNING);

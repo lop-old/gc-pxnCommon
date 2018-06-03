@@ -67,8 +67,8 @@ public class slf4jLoggerAdapter extends MarkerIgnoringBase {
 	@Override
 	public void trace(final String msg, final Throwable e) {
 		final xLog log = this.getXLog();
-		log.warning(msg);
-		log.trace(e);
+		if (log.isLoggable(xLevel.DETAIL))
+			log.trace(e, msg);
 	}
 
 
@@ -78,12 +78,12 @@ public class slf4jLoggerAdapter extends MarkerIgnoringBase {
 	public boolean isDebugEnabled() {
 		return
 			this.getXLog()
-				.isLoggable(xLevel.FINE);
+				.isLoggable(xLevel.DETAIL);
 	}
 	@Override
 	public void debug(final String msg) {
 		this.getXLog()
-			.fine(msg);
+			.detail(msg);
 	}
 	@Override
 	public void debug(final String format, final Object arg) {
@@ -112,8 +112,12 @@ public class slf4jLoggerAdapter extends MarkerIgnoringBase {
 	@Override
 	public void debug(final String msg, final Throwable e) {
 		final xLog log = this.getXLog();
-		log.warning(msg);
-		log.trace(e);
+		if (log.isLoggable(xLevel.DETAIL)) {
+			if (e == null)
+				log.detail(msg);
+			else
+				log.trace(e, msg);
+		}
 	}
 
 
@@ -157,8 +161,12 @@ public class slf4jLoggerAdapter extends MarkerIgnoringBase {
 	@Override
 	public void info(final String msg, final Throwable e) {
 		final xLog log = this.getXLog();
-		log.warning(msg);
-		log.trace(e);
+		if (log.isLoggable(xLevel.INFO)) {
+			if (e == null)
+				log.info(msg);
+			else
+				log.trace(e, msg);
+		}
 	}
 
 
@@ -202,8 +210,12 @@ public class slf4jLoggerAdapter extends MarkerIgnoringBase {
 	@Override
 	public void warn(final String msg, final Throwable e) {
 		final xLog log = this.getXLog();
-		log.warning(msg);
-		log.trace(e);
+		if (log.isLoggable(xLevel.WARNING)) {
+			if (e == null)
+				log.warning(msg);
+			else
+				log.trace(e, msg);
+		}
 	}
 
 
@@ -247,8 +259,12 @@ public class slf4jLoggerAdapter extends MarkerIgnoringBase {
 	@Override
 	public void error(final String msg, final Throwable e) {
 		final xLog log = this.getXLog();
-		log.severe(msg);
-		log.trace(e);
+		if (log.isLoggable(xLevel.SEVERE)) {
+			if (e == null)
+				log.severe(msg);
+			else
+				log.trace(e, msg);
+		}
 	}
 
 
