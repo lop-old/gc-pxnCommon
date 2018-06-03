@@ -1,8 +1,6 @@
 package com.poixson.utils;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -14,24 +12,6 @@ import com.poixson.exceptions.RequiredArgumentException;
 
 public final class ioUtils {
 	private ioUtils() {}
-
-
-
-	/**
-	 * Open a file and provide the InputStream.
-	 * @param fileStr Path to the file.
-	 * @return InputStream of the open file, or null on failure.
-	 * @throws FileNotFoundException
-	 */
-	public static InputStream OpenFile(final String fileStr)
-			throws FileNotFoundException {
-		if (Utils.isEmpty(fileStr)) throw new RequiredArgumentException("fileStr");
-		final File file = new File(fileStr);
-		if (!file.exists()) return null;
-		final InputStream in =
-			new FileInputStream(file);
-		return in;
-	}
 
 
 

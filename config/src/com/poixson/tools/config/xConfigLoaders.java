@@ -1,6 +1,7 @@
 package com.poixson.tools.config;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
@@ -72,9 +73,7 @@ public final class xConfigLoaders {
 			return null;
 		InputStream in = null;
 		try {
-			in = ioUtils.OpenFile(fileStr);
-			if (in == null)
-				return null;
+			in = new FileInputStream(fileStr);
 			final Map<String, Object> datamap =
 				ConfigUtils.LoadYamlFromStream(in);
 			if (datamap == null)
