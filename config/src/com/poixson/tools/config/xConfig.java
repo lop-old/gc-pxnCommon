@@ -14,19 +14,19 @@ import com.poixson.utils.Utils;
 
 public class xConfig {
 
-	protected final Map<String, Object> datamap;
+	protected final Map<String, Object> datamap =
+			new ConcurrentHashMap<String, Object>();
 
 
 
 	public xConfig(final Map<String, Object> datamap) {
 		if (datamap == null) throw new RequiredArgumentException("datamap");
-		this.datamap = new ConcurrentHashMap<String, Object>();
 		this.datamap.putAll(datamap);
 	}
 
 
 
-	public boolean exists(final String key) {
+	public boolean hasKey(final String key) {
 		return this.datamap.containsKey(key);
 	}
 
@@ -42,7 +42,7 @@ public class xConfig {
 			return null;
 		return this.datamap.get(key);
 	}
-	public Object gt(final String key) {
+	public Object gets(final String key) {
 		try {
 			return this.get(key);
 		} catch (Exception ignore) {}
@@ -162,10 +162,10 @@ public class xConfig {
 			false
 		);
 	}
-	public String getStr(final String key, final String defVal, final boolean strict) {
+	public String getStr(final String key, final String defVal, final boolean blankable) {
 		try {
 			final String value = this.getString(key);
-			if (strict) {
+			if (blankable) {
 				if (value != null)
 					return value;
 			} else {
