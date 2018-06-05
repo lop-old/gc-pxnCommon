@@ -105,8 +105,6 @@ public class xLog implements xLogPrinter {
 
 
 	public xLevel getLevel() {
-		if (xVars.isDebug())
-			return xLevel.DETAIL;
 		return this.level.get();
 	}
 	public xLevel peekLevel() {
@@ -123,7 +121,6 @@ public class xLog implements xLogPrinter {
 	public boolean isLoggable(final xLevel level) {
 		if (level == null) return true;
 		// forced debug mode
-		if (xVars.isDebug()) return true;
 		// check local level
 		final xLevel currentLevel = this.getLevel();
 		if (currentLevel != null) {
